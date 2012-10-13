@@ -2,12 +2,14 @@ Windows Compilation instructions:
 ------------------------------------
 Install the following software IN THE ORDER LISTED into their default locations:
 
-- mingw32               - http://sourceforge.net/projects/mingw/files/latest/download?source=files
+- mingw32               - http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/
      *** Install at least the gcc stuff from mingw32 ***
 
 - Python 2.7 32bit      - http://www.python.org/download/
-- py2exe for python 2.7 - http://sourceforge.net/projects/py2exe/files/latest/download?source=files
-- numpy for python 2.7  - http://sourceforge.net/projects/numpy/files/latest/download?source=files
+- py2exe for python 2.7 - http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/
+     *** Get version for python 2.7 ***
+- numpy for python 2.7  - http://sourceforge.net/projects/numpy/files/NumPy/1.6.2/
+     *** Get version for python 2.7 ***
 
 Once you've installed these, add the following directories to your system path:
 C:\Python27\
