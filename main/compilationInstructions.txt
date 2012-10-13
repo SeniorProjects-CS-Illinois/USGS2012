@@ -13,6 +13,11 @@ Once you've installed these, add the following directories to your system path:
 C:\Python27\
 C:\MinGW\bin\
 
+Navigate to C:\Python27\Lib\distutils and open cygwinccompiler.py in a text editor.  On lines 322-326 remove all references to "-mno-cygwin"
+	See http://bugs.python.org/issue12641 for why this is needed.
+
+
+
 If you did the above, you should be able to double click build.bat in this folder to compile.
 
 After it finishes compiling you can double click main.exe in the dist folder.
