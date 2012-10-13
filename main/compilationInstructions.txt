@@ -1,5 +1,40 @@
+Windows Compilation instructions:
+------------------------------------
+Install the following software IN THE ORDER LISTED into their default locations:
+
+- mingw32               - http://sourceforge.net/projects/mingw/files/latest/download?source=files
+     *** Install at least the gcc stuff from mingw32 ***
+
+- Python 2.7 32bit      - http://www.python.org/download/
+- py2exe for python 2.7 - http://sourceforge.net/projects/py2exe/files/latest/download?source=files
+- numpy for python 2.7  - http://sourceforge.net/projects/numpy/files/latest/download?source=files
+
+Once you've installed these, add the following directories to your system path:
+C:\Python27\
+C:\MinGW\bin\
+
+If you did the above, you should be able to double click build.bat in this folder to compile.
+
+After it finishes compiling you can double click main.exe in the dist folder.
+
+To rebuild from scratch.  Delete the dist and build folders.
+
+
+
+
+
+
+
+
+
+
+
+#########################################################
+### OLD INSTRUCTIONS (Can ignore if batch file works) ###
+#########################################################
+
 How to compile the python code
-python buildPython.py py2exe -p encodings –pPIL
+python buildPython.py py2exe -p encodings -pPIL
 
 How to compile the c code:
 python setup.py build -cmingw32
@@ -14,3 +49,5 @@ This file can be found in C:\Python27\Lib\lib-tk after downloading tkinter
 
 How to run it once you're all done:
 Double click on main.exe in the dist directory, or type main.exe into a command line within that directory.
+
+
