@@ -2,7 +2,11 @@ from distutils.core import setup, Extension
 import os, subprocess
 
 #build the code
-module1 = Extension('MainModule', sources = ['model/main.c'])
+module1 = Extension(
+                    'MainModule', 
+                    sources = ['model/main.c'],
+                    extra_compile_args = [],
+                    extra_link_args = [])
  
 setup (name = 'PackageName',
         version = '1.0',
