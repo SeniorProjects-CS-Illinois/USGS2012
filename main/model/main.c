@@ -105,7 +105,7 @@ void output_image(){
     pFunc = PyDict_GetItemString(pDict, "output_image");
     if (PyCallable_Check(pFunc)) 
     {
-		PyObject* list = (PyObject*)build_data();
+        PyObject* list = (PyObject*)build_data();
 		// parse the list into a tuple
 		PyObject* pArgs = Py_BuildValue("(N)", list);
         pValue = PyObject_CallObject(pFunc, pArgs);
@@ -303,13 +303,17 @@ PyObject* build_data(){
     PyObject* list = PyList_New(size);
     if(!list)
         return NULL;
+
+    // THIS IS THE HARDCODED VALUE FOR WHICH STOCK IS GETTING SENT TO FILE
+
+    int i = MACRO_INDEX;
     PyObject* num =  Py_BuildValue("i", MAP_WIDTH);
     PyList_SET_ITEM(list, 0, num);
-	num = Py_BuildValue("f", hue);
+    num = Py_BuildValue("f", hues[i]);
 	PyList_SET_ITEM(list, 1, num);
     for(index = 2; index < size; index++)
     {
-        num = Py_BuildValue("f", colorValues[(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
+        num = Py_BuildValue("f", colorValues[i][(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
         PyList_SET_ITEM(list, index, num);
     }
     return list;
