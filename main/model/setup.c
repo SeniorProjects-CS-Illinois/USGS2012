@@ -411,21 +411,26 @@ void init_color_values()
 {
     int row = 0;
     int col = 0;
+    int i = 0;
 
 	//initialize colors corresponding to each patch
-    colorValues = malloc(MAP_WIDTH*sizeof(int*));
-    for( col = 0; col < MAP_WIDTH; col++) 
-	{
-        colorValues[col] = malloc(MAP_HEIGHT*sizeof(int));       
-    }   
+    colorValues = malloc(NUM_STOCKS*sizeof(float**));
+    for (i = 0; i < NUM_STOCKS; i++) {
+        colorValues[i] = malloc(MAP_WIDTH*sizeof(float*));
+        for( col = 0; col < MAP_WIDTH; col++)
+        {
+            colorValues[i][col] = malloc(MAP_HEIGHT*sizeof(float));
+        }
 
-    for( col = 0; col < MAP_WIDTH; col++) 
-	{
-        for(row = 0; row < MAP_HEIGHT; row++)
-		{
-            colorValues[col][row] = (255 << 16 ) | (255 << 8) | 255;  // white background
-        }   
+        for( col = 0; col < MAP_WIDTH; col++)
+        {
+            for(row = 0; row < MAP_HEIGHT; row++)
+            {
+                colorValues[i][col][row] = (255 << 16 ) | (255 << 8) | 255;  // white background
+            }
+        }
     }
+    hues = malloc(NUM_STOCKS*sizeof(float));
 }
 
 
