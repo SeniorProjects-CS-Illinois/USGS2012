@@ -55,12 +55,19 @@ void go()
             for(y = 0; y < MAP_HEIGHT; y++) {
                 if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) ) {
                     flow_carbon(x,y);
-                    update_max(x,y);
                 }
             }
         }
         if (nan_trigger) break;
     }
+
+    //Update max values
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            update_max(x,y);
+        }
+    }
+
     // increment tick
     hours++;
 
