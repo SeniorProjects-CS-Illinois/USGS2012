@@ -221,13 +221,25 @@ void create_output_dirs(void) {
     struct stat st = {0};
 
     if (stat("./results", &st) == -1) {
+        #ifdef _WIN32 || _WIN64
+        mkdir("./results");
+        #else
         mkdir("./results", 0775);
+        #endif
     }
     if (stat("./results/data", &st) == -1) {
+        #ifdef _WIN32 || _WIN64
+        mkdir("./results/data");
+        #else
         mkdir("./results/data", 0775);
+        #endif
     }
     if (stat("./results/images", &st) == -1) {
+        #ifdef _WIN32 || _WIN64
+        mkdir("./results/images");
+        #else
         mkdir("./results/images", 0775);
+        #endif
     }
 }
 
