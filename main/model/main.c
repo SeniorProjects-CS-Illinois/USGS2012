@@ -105,6 +105,7 @@ void set_hydro_filenames(const char * filenames) {
         index++;
     }
     check_filenames_array = (char**)malloc(num_unique_files*sizeof(char*));
+    free(filenames_writable_copy);
 }
 
 #else
