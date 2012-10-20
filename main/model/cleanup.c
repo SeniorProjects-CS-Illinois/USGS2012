@@ -18,7 +18,7 @@ void cleanup()
  */
 void clean_patches() 
 {
-    int x,y;
+    int x,y,stock;
     for (x = 0; x < MAP_WIDTH; x++) 
 	{
         for (y = 0; y < MAP_HEIGHT; y++) 
@@ -31,7 +31,12 @@ void clean_patches()
         }
 
         free( patches[x] );
-        free( colorValues[x] );
+    }
+    for (stock = 0; stock < NUM_STOCKS; stock++) {
+        for (x = 0; x < MAP_WIDTH; x++) {
+            free(colorValues[stock][x]);
+        }
+        free(colorValues[stock]);
     }
 
 	free( covered_area );

@@ -1,0 +1,7 @@
+*.pyc
+*.swp
+main/build/*
+main/dist/*
+main/build_log.txt
+*.o
+*.so

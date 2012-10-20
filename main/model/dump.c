@@ -45,30 +45,32 @@ int write_data() {
 
     for(x = 0; x < MAP_WIDTH; x++) {
         for(y=0;y < MAP_HEIGHT; y++) {
-            pxcor = patches[x][y].pxcor;
-            pycor = patches[x][y].pycor;
-            pcolor = patches[x][y].pcolor;
-            px_vector = patches[x][y].px_vector;
-            py_vector = patches[x][y].py_vector;
-            depth = patches[x][y].depth;
-            velocity = patches[x][y].velocity;
-            assimilation = patches[x][y].assimilation;
-            detritus = patches[x][y].detritus;
-            DOC = patches[x][y].DOC;
-            POC = patches[x][y].POC;
-            waterdecomp = patches[x][y].waterdecomp;
-            seddecomp = patches[x][y].seddecomp;
-            macro = patches[x][y].macro;
-            phyto = patches[x][y].phyto;
-            herbivore = patches[x][y].herbivore;
-            sedconsumer = patches[x][y].sedconsumer;
-            peri = patches[x][y].peri;
-            consum = patches[x][y].consum;
+            if( patches[x][y].depth > 0.0) {
+                pxcor = patches[x][y].pxcor;
+                pycor = patches[x][y].pycor;
+                pcolor = patches[x][y].pcolor;
+                px_vector = patches[x][y].px_vector;
+                py_vector = patches[x][y].py_vector;
+                depth = patches[x][y].depth;
+                velocity = patches[x][y].velocity;
+                assimilation = patches[x][y].assimilation;
+                detritus = patches[x][y].detritus;
+                DOC = patches[x][y].DOC;
+                POC = patches[x][y].POC;
+                waterdecomp = patches[x][y].waterdecomp;
+                seddecomp = patches[x][y].seddecomp;
+                macro = patches[x][y].macro;
+                phyto = patches[x][y].phyto;
+                herbivore = patches[x][y].herbivore;
+                sedconsumer = patches[x][y].sedconsumer;
+                peri = patches[x][y].peri;
+                consum = patches[x][y].consum;
 
 
-            fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
-                      velocity,assimilation,detritus,DOC,POC,
-                      waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum);
+                fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
+                          velocity,assimilation,detritus,DOC,POC,
+                          waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum);
+            }
         }
     }
     fclose(f);

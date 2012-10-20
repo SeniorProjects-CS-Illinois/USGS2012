@@ -177,5 +177,20 @@ double sen_macro_coef = 0.08;
 double macro_mas_max = 1000.0;
 double macro_vel_max = 1.0;
 
+// indices for the colorValues array for each stock
+int MACRO_INDEX = 0;
+int PHYTO_INDEX = 1;
+int HERBIVORE_INDEX = 2;
+int WATERDECOMP_INDEX = 3;
+int SEDDECOMP_INDEX = 4;
+int SEDCONSUMER_INDEX = 5;
+int CONSUM_INDEX = 6;
+int DOC_INDEX = 7;
+int POC_INDEX = 8;
+int DETRITUS_INDEX = 9;
+
+// number of different stocks
+int NUM_STOCKS = 10;
+
 
 #endif

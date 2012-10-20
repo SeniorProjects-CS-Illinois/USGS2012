@@ -6,41 +6,109 @@
 #include "dump.c"
 #include "cleanup.c"
 #include "globals.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#ifdef NO_PYTHON
+#ifdef NO_GUI
+int main(){
+    //These values are what was used in the original Python GUI by default.  Hard coding for now.
+    set_hydro_filenames("1?../model/data/HydroSets/100k-new.txt?2?");
+    set_par_file("../model/data/Environmentals/par.txt");
+    set_timestep(1);
+    set_temperature_file("../model/data/Environmentals/water-temp.txt");
+    set_whichstock("phyto");
+    set_TSS(10.0);
+    set_macro_base_temp(19.7);
+    set_gross_macro_coef(0.08);
+    set_resp_macro_coef(0.04);
+    set_sen_macro_coef(0.08);
+    set_macro_mass_max(1000.0);
+    set_macro_vel_max(1.0);
+    set_k_phyto(0.01);
+    set_k_macro(0.01);
+    set_output_frequency(1);
+    set_flow_corners(0);
+
+    create_output_dirs();
+
+    go_command();
+    return 0;
+}
+#else
+//TODO: Program entry point for QT GUI goes here.
+
+#endif
+#endif
 
 
+#ifndef NO_PYTHON
 /* Bind Python function names to our C functions */
 static PyMethodDef MainModule_methods[] = {
     {"goCommand", py_goCommand, METH_VARARGS},
     {"extract_timestep_Command", py_extract_timestep, METH_VARARGS},
     {"extract_whichstock_Command", py_extract_whichstock, METH_VARARGS},
-	{"extract_TSS_Command", py_extract_TSS, METH_VARARGS},
-	{"extract_macro_base_temp_Command", py_extract_macro_base_temp, METH_VARARGS},
-	{"extract_gross_macro_coef_Command", py_extract_gross_macro_coef, METH_VARARGS},
-	{"extract_resp_macro_coef_Command", py_extract_resp_macro_coef, METH_VARARGS},
-	{"extract_sen_macro_coef_Command", py_extract_sen_macro_coef, METH_VARARGS},
-	{"extract_macro_mass_max_Command", py_extract_macro_mass_max, METH_VARARGS},
-	{"extract_macro_vel_max_Command", py_extract_macro_vel_max, METH_VARARGS},
-	{"extract_k_phyto_Command", py_extract_k_phyto, METH_VARARGS},
-	{"extract_k_macro_Command", py_extract_k_macro, METH_VARARGS},
+    {"extract_TSS_Command", py_extract_TSS, METH_VARARGS},
+    {"extract_macro_base_temp_Command", py_extract_macro_base_temp, METH_VARARGS},
+    {"extract_gross_macro_coef_Command", py_extract_gross_macro_coef, METH_VARARGS},
+    {"extract_resp_macro_coef_Command", py_extract_resp_macro_coef, METH_VARARGS},
+    {"extract_sen_macro_coef_Command", py_extract_sen_macro_coef, METH_VARARGS},
+    {"extract_macro_mass_max_Command", py_extract_macro_mass_max, METH_VARARGS},
+    {"extract_macro_vel_max_Command", py_extract_macro_vel_max, METH_VARARGS},
+    {"extract_k_phyto_Command", py_extract_k_phyto, METH_VARARGS},
+    {"extract_k_macro_Command", py_extract_k_macro, METH_VARARGS},
     {"extract_filenames_Command", py_extract_filenames, METH_VARARGS},
     {"extract_par_file_Command", py_extract_par_file, METH_VARARGS},
     {"extract_temperature_file_Command", py_extract_temperature_file, METH_VARARGS},
     {"extract_flowcorners_Command", py_extract_flow_corners, METH_VARARGS},
-	{"extract_output_frequency", py_extract_output_frequency, METH_VARARGS},
+    {"extract_output_frequency", py_extract_output_frequency, METH_VARARGS},
     {NULL, NULL}
 };
+#endif
 
 void count_unique_files(int index)
 {
-  int i;
-  for(i = 0; i < index; i++)
-  {
-    if(strcmp(gui_filenames_array[i], gui_filenames_array[index]) == 0)
-      return;
-  }
-  num_unique_files++;
+    int i;
+    for(i = 0; i < index; i++)
+    {
+        if(strcmp(gui_filenames_array[i], gui_filenames_array[index]) == 0)
+        return;
+    }
+    num_unique_files++;
 }
 
+#ifdef NO_PYTHON
+void set_hydro_filenames(const char * filenames) {
+    char * filenames_writable_copy = strdup(filenames); 
+    char* filename;
+    int index = 0;
+    num_unique_files = 0;
+
+    // First value howmany files the use selected in the GUI
+    filename = strtok(filenames_writable_copy, "?");
+    int fileSize = atoi(filename);
+    gui_filenames_filesize = fileSize;
+    num_hydro_files = fileSize;
+    gui_filenames_array = (char**)malloc(fileSize*sizeof(char*));
+    gui_days_array = (int*)malloc(fileSize*sizeof(int));
+    hydromap_index_array = (int*)malloc(fileSize*sizeof(int));
+
+    // Parse the file name if one exists
+    while((filename = strtok(NULL, "?")) != NULL)
+    {
+        gui_filenames_array[index] = (char*)malloc((strlen(filename)+1)*sizeof(char));
+        strcpy(gui_filenames_array[index],filename);
+        count_unique_files(index);
+        filename = strtok(NULL, "?");
+        gui_days_array[index] = atoi(filename); //Parse howmany days to run current file
+        index++;
+    }
+    check_filenames_array = (char**)malloc(num_unique_files*sizeof(char*));
+    free(filenames_writable_copy);
+}
+
+#else
 static PyObject* py_extract_filenames(PyObject* self, PyObject* args) {
     char* filenames;
     PyArg_ParseTuple(args, "s", &filenames);
@@ -72,28 +140,54 @@ static PyObject* py_extract_filenames(PyObject* self, PyObject* args) {
     
     return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+void set_par_file(const char * filename) {
+    strcpy(gui_photo_radiation_file, filename);
+}
+#else
 static PyObject* py_extract_par_file(PyObject* self, PyObject* args) {
     char* filename;
     PyArg_ParseTuple(args, "s", &filename);
     strcpy(gui_photo_radiation_file, filename);
     return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+void set_timestep(int timestep) {
+    gui_timestep_factor = timestep;
+}
+#else
 static PyObject* py_extract_timestep(PyObject* self, PyObject* args) {
     PyArg_ParseTuple(args, "i", &gui_timestep_factor);
     return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+void set_temperature_file(const char * filename) {
+    strcpy(gui_temperature_file, filename);
+}
+#else
 static PyObject* py_extract_temperature_file(PyObject* self, PyObject* args) {
     char* filename;
     PyArg_ParseTuple(args, "s", &filename);
-    strcpy(gui_temperature_file, filename);   
+    strcpy(gui_temperature_file, filename);
     return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+
+//TODO: Unstub this with c code for image output.
+void output_image(void){
+    return;
+}
+#else
 void output_image(){
-	PyObject *pName, *pModule, *pDict, *pFunc, *pValue;
+    PyObject *pName, *pModule, *pDict, *pFunc, *pValue;
 
     // Build the name object
     pName = PyString_FromString("RiverImage");
@@ -105,9 +199,9 @@ void output_image(){
     pFunc = PyDict_GetItemString(pDict, "output_image");
     if (PyCallable_Check(pFunc)) 
     {
-		PyObject* list = (PyObject*)build_data();
-		// parse the list into a tuple
-		PyObject* pArgs = Py_BuildValue("(N)", list);
+        PyObject* list = (PyObject*)build_data();
+        // parse the list into a tuple
+        PyObject* pArgs = Py_BuildValue("(N)", list);
         pValue = PyObject_CallObject(pFunc, pArgs);
     } else 
     {
@@ -118,13 +212,46 @@ void output_image(){
     Py_DECREF(pModule);
     Py_DECREF(pName);
 }
+#endif
 
-static PyObject* py_goCommand(PyObject* self, PyObject* args) {
-	PyErr_Print();
+
+/**
+ * Creates ./results/data and ./results/images if they don't exist.
+ */
+void create_output_dirs(void) {
+    struct stat st = {0};
+
+    if (stat("./results", &st) == -1) {
+        #ifdef _WIN32
+        mkdir("./results");
+        #else
+        mkdir("./results", 0775);
+        #endif
+    }
+    if (stat("./results/data", &st) == -1) {
+        #ifdef _WIN32
+        mkdir("./results/data");
+        #else
+        mkdir("./results/data", 0775);
+        #endif
+    }
+    if (stat("./results/images", &st) == -1) {
+        #ifdef _WIN32
+        mkdir("./results/images");
+        #else
+        mkdir("./results/images", 0775);
+        #endif
+    }
+}
+
+#ifdef NO_PYTHON
+//XXX: Not sure what the now removed build_data function
+//     was doing aside from creating output dirs.
+void go_command(void) {
     int day;
     int index;
     setup();
-    
+
     gui_days_to_run = 0;
     for(index = 0; index < gui_filenames_filesize; index++)
     {
@@ -132,25 +259,60 @@ static PyObject* py_goCommand(PyObject* self, PyObject* args) {
         gui_days_to_run += gui_days_array[index];  //Set howmany days to run the new hydromap
         hydro_group = (hydromap_index_array[index] + 1); //Set the new hydromap that will run
         hydro_changed = 1;  //Confirm that a new hydro map has been loaded
-        
+
         while( (day = (hours / 24)) < gui_days_to_run)
-        {   
+        {
             printf("Day: %d - Hour: %ld\n", (day+1), (hours)%24);
             go();
-        }   
+        }
     }
-    
-	PyObject* data = (PyObject*)build_data();    
+
+    cleanup();
+
+    printf("\nPROCESSING COMPLETE\n");
+}
+
+#else
+static PyObject* py_goCommand(PyObject* self, PyObject* args) {
+    PyErr_Print();
+    int day;
+    int index;
+    setup();
+
+    gui_days_to_run = 0;
+    for(index = 0; index < gui_filenames_filesize; index++)
+    {
+        printf("RUNNING FILE: %s FOR %d DAYS\n", gui_filenames_array[index], gui_days_array[index]);
+        gui_days_to_run += gui_days_array[index];  //Set howmany days to run the new hydromap
+        hydro_group = (hydromap_index_array[index] + 1); //Set the new hydromap that will run
+        hydro_changed = 1;  //Confirm that a new hydro map has been loaded
+
+        while( (day = (hours / 24)) < gui_days_to_run)
+        {
+            printf("Day: %d - Hour: %ld\n", (day+1), (hours)%24);
+            go();
+        }
+    }
+
+    PyObject* data = (PyObject*)build_data();
     if (!dump_data()) {
         printf("Could not create folder './results' and write the data from the patches\n");
     }
     cleanup();
 
-	printf("\nPROCESSING COMPLETE\n");
+    printf("\nPROCESSING COMPLETE\n");
 
     return data;
 }
+#endif
 
+
+#ifdef NO_PYTHON
+void set_whichstock(const char * stock_name)
+{
+    strcpy(which_stock, stock_name);
+}
+#else
 /**
  * Extracts the whichstocks value from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -164,7 +326,14 @@ static PyObject* py_extract_whichstock(PyObject* self, PyObject* args)
     Py_INCREF(Py_None);
     return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+void set_TSS(double tss)
+{
+    gui_tss = tss;
+}
+#else
 /**
  * Extracts the TSS value from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -172,12 +341,19 @@ static PyObject* py_extract_whichstock(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_TSS(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_tss);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_tss);
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+#endif
+
+#ifdef NO_PYTHON
+void set_macro_base_temp(double macro_base_temp)
+{
+    gui_macro_base_temp = macro_base_temp;
 }
 
-
+#else
 /**
  * Extracts the macro_base_temp value from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -185,13 +361,21 @@ static PyObject* py_extract_TSS(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_macro_base_temp(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_macro_base_temp);
+    PyArg_ParseTuple(args, "d", &gui_macro_base_temp);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
 
+
+#ifdef NO_PYTHON
+void set_gross_macro_coef(double gross_macro_coef)
+{
+    gui_gross_macro_coef = gross_macro_coef;
+}
+#else
 /**
  * Extracts the gross_macro_coef from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -199,13 +383,20 @@ static PyObject* py_extract_macro_base_temp(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_gross_macro_coef(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_gross_macro_coef);
+    PyArg_ParseTuple(args, "d", &gui_gross_macro_coef);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
 
+#ifdef NO_PYTHON
+void set_resp_macro_coef(double resp_macro_coef)
+{
+    gui_resp_macro_coef = resp_macro_coef;
+}
+#else
 /**
  * Extracts the resp_macro_coef from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -213,12 +404,19 @@ static PyObject* py_extract_gross_macro_coef(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_resp_macro_coef(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_resp_macro_coef);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_resp_macro_coef);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
 
+#ifdef NO_PYTHON
+void set_sen_macro_coef(double sen_macro_coef)
+{
+    gui_sen_macro_coef = sen_macro_coef;
+}
+#else
 /**
  * Extracts the sen_macro_coef from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -226,12 +424,19 @@ static PyObject* py_extract_resp_macro_coef(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_sen_macro_coef(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_sen_macro_coef);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_sen_macro_coef);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
 
+#ifdef NO_PYTHON
+void set_macro_mass_max(double macro_mass_max)
+{
+    gui_macro_mass_max = macro_mass_max;
+}
+#else
 /**
  * Extracts the macro_mass_max from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -239,12 +444,19 @@ static PyObject* py_extract_sen_macro_coef(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_macro_mass_max(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_macro_mass_max);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_macro_mass_max);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
 
+#ifdef NO_PYTHON
+void set_macro_vel_max(double macro_vel_max)
+{
+    gui_macro_vel_max = macro_vel_max;
+}
+#else
 /**
  * Extracts the macro_vel_max from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -252,12 +464,19 @@ static PyObject* py_extract_macro_mass_max(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_macro_vel_max(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_macro_vel_max);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_macro_vel_max);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
 
+#ifdef NO_PYTHON
+void set_k_phyto(double k_phyto)
+{
+    gui_k_phyto = k_phyto;
+}
+#else
 /**
  * Extracts the k_phyto from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -265,12 +484,18 @@ static PyObject* py_extract_macro_vel_max(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_k_phyto(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_k_phyto);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_k_phyto);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
-
+#ifdef NO_PYTHON
+void set_k_macro(double k_macro)
+{
+    gui_k_macro = k_macro;
+}
+#else
 /**
  * Extracts the k_macro from the GUI and assigns it in globals.h
  * @param self The python object calling this C function
@@ -278,44 +503,92 @@ static PyObject* py_extract_k_phyto(PyObject* self, PyObject* args)
 */
 static PyObject* py_extract_k_macro(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "d", &gui_k_macro);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "d", &gui_k_macro);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
+
+#ifdef NO_PYTHON
+void set_output_frequency(int new_output_frequency)
+{
+    output_frequency = new_output_frequency;
+}
+#else
 static PyObject* py_extract_output_frequency(PyObject* self, PyObject* args)
 {
-	PyArg_ParseTuple(args, "i", &output_frequency);
-	Py_INCREF(Py_None);
-	return Py_None;
+    PyArg_ParseTuple(args, "i", &output_frequency);
+    Py_INCREF(Py_None);
+    return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+void set_flow_corners(int flow_corners_only)
+{
+    gui_flow_corners_only = flow_corners_only;
+}
+#else
 static PyObject* py_extract_flow_corners(PyObject* self, PyObject* args)
 {
     PyArg_ParseTuple(args, "i", &gui_flow_corners_only);
     Py_INCREF(Py_None);
     return Py_None;
 }
+#endif
 
+#ifdef NO_PYTHON
+/*
 PyObject* build_data(){
     int size = MAP_WIDTH*MAP_HEIGHT + 2;
     int index;
     PyObject* list = PyList_New(size);
     if(!list)
         return NULL;
+
+    // THIS IS THE HARDCODED VALUE FOR WHICH STOCK IS GETTING SENT TO FILE
+
+    int i = MACRO_INDEX;
     PyObject* num =  Py_BuildValue("i", MAP_WIDTH);
     PyList_SET_ITEM(list, 0, num);
-	num = Py_BuildValue("f", hue);
-	PyList_SET_ITEM(list, 1, num);
+    num = Py_BuildValue("f", hues[i]);
+    PyList_SET_ITEM(list, 1, num);
     for(index = 2; index < size; index++)
     {
-        num = Py_BuildValue("f", colorValues[(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
+        num = Py_BuildValue("f", colorValues[i][(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
+        PyList_SET_ITEM(list, index, num);
+    }
+    return list;
+}*/
+#else
+PyObject* build_data(){
+    int size = MAP_WIDTH*MAP_HEIGHT + 2;
+    int index;
+    PyObject* list = PyList_New(size);
+    if(!list)
+        return NULL;
+
+    // THIS IS THE HARDCODED VALUE FOR WHICH STOCK IS GETTING SENT TO FILE
+
+    int i = MACRO_INDEX;
+    PyObject* num =  Py_BuildValue("i", MAP_WIDTH);
+    PyList_SET_ITEM(list, 0, num);
+    num = Py_BuildValue("f", hues[i]);
+    PyList_SET_ITEM(list, 1, num);
+    for(index = 2; index < size; index++)
+    {
+        num = Py_BuildValue("f", colorValues[i][(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
         PyList_SET_ITEM(list, index, num);
     }
     return list;
 }
+#endif
 
+
+#ifndef NO_PYTHON
 /* Python calls this function to let us initialize our module */
 void initMainModule() {
     (void) Py_InitModule("MainModule", MainModule_methods);
 }
+#endif

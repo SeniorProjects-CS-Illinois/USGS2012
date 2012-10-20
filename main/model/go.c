@@ -19,8 +19,8 @@ void go()
 	// Ask patches
     int x, y;
 
-    for(y = 0; y < MAP_HEIGHT; y++) {
-        for(x = 0; x < MAP_WIDTH; x++) {
+    for(x = 0; x < MAP_WIDTH; x++) {
+        for(y = 0; y < MAP_HEIGHT; y++) {
             if(patches[x][y].depth > 0.0){
                 update_patches(x,y);
                 go_macro(x,y);
@@ -51,16 +51,23 @@ void go()
     int t, max_time = 60/gui_timestep_factor;
     nan_trigger = 0;      // set nan to false
     for (t = 0; t < max_time; t++) {
-        for(y = 0; y < MAP_HEIGHT; y++) {
-            for(x = 0; x < MAP_WIDTH; x++) {
+        for(x = 0; x < MAP_WIDTH; x++) {
+            for(y = 0; y < MAP_HEIGHT; y++) {
                 if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) ) {
                     flow_carbon(x,y);
-                    update_max(x,y);
                 }
             }
         }
         if (nan_trigger) break;
     }
+
+    //Update max values
+    for (x = 0; x < MAP_WIDTH; x++) {
+        for (y = 0; y < MAP_HEIGHT; y++) {
+            update_max(x,y);
+        }
+    }
+
     // increment tick
     hours++;
 
@@ -108,8 +115,8 @@ void update_hydro_map() {
     double max_vector = 0;
     int x, y;
 
-    for(y = 0; y < MAP_HEIGHT; y++) {
-        for(x = 0; x < MAP_WIDTH; x++) {
+    for(x = 0; x < MAP_WIDTH; x++) {
+        for(y = 0; y < MAP_HEIGHT; y++) {
             
             // the hydro maps contained information about this patch
             // set the values of px_vector, py_vector, depth and velocity

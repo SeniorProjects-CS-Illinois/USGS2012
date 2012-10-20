@@ -6,18 +6,55 @@
  *   * gcc -m32 -shared -I/usr/include/python2.7/ -lpython2.7 -o MainModule.so main.c
  *    * Don't forget to cp MainModule.so ../controller
  *     */
+
+#ifndef NO_PYTHON
 #include <Python.h>
+#endif
+
 #include "setup.h"
 #include "patch.h"
 #include <sys/types.h>
 #include <stdlib.h>
 
+#ifndef NO_PYTHON
 /* Python calls this to let us initialize our module */
 void initMainModule();
+#endif
 
 /* Calls the Python function to output an image */
 void output_image();
 
+
+void count_unique_files(int index);
+
+
+#ifdef NO_PYTHON
+//Functions for configuring the model
+void set_hydro_filenames(const char * filenames);
+void set_par_file(const char * filename);
+void set_timestep(int timestep);
+void set_temperature_file(const char * filename);
+void set_whichstock(const char * stock_name);
+void set_TSS(double tss);
+void set_macro_base_temp(double macro_base_temp);
+void set_gross_macro_coef(double gross_macro_coef);
+void set_resp_macro_coef(double resp_macro_coef);
+void set_sen_macro_coef(double sen_macro_coef);
+void set_macro_mass_max(double macro_mass_max);
+void set_macro_vel_max(double macro_vel_max);
+void set_k_phyto(double k_phyto);
+void set_k_macro(double k_macro);
+void set_output_frequency(int new_output_frequency);
+void set_flow_corners(int flow_corners_only);
+
+//Adds a location for the images and csv files.
+void create_output_dirs();
+
+//Runs the model
+void go_command(void);
+
+
+#else
 /* Extract the hydro map filenames that the user has selected */
 static PyObject* py_extract_filenames(PyObject* self, PyObject* args);
 
@@ -66,5 +103,7 @@ static PyObject* py_extract_k_macro(PyObject* self, PyObject* args);
 static PyObject* py_extract_flow_corners(PyObject* self, PyObject* args);
 
 PyObject* build_data();
+
+#endif
 
 #endif
