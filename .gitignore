@@ -3,5 +3,7 @@
 main/build/*
 main/dist/*
 main/build_log.txt
+*.exe
 *.o
 *.so
+*.msi
