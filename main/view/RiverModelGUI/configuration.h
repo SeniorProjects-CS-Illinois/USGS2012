@@ -1,13 +1,11 @@
 #ifndef CONFIGURATION_H
 #define CONFIGURATION_H
 
+#include <QString>
 #include <stdint.h>
 #include <iostream>
 #include <fstream>
-
-using std::ofstream;
-using std::ifstream;
-using std::endl;
+#include <string>
 
 struct Configuration
 {
@@ -38,7 +36,7 @@ struct Configuration
   *     Macro temperature                       (float)
   *     Gross macro coefficient                 (float)
   *     Respiration macro coefficient           (float)
-  *     Scenescence macro coefficient           (float)
+  *     Senescence macro coefficient            (float)
   *     Macro mass max                          (float)
   *     Macro velocity max                      (float)
   *     KPhyto                                  (float)
@@ -47,15 +45,32 @@ struct Configuration
 
 public:
     Configuration();
+    Configuration(Configuration const & other);
+
+    ~Configuration();
+
+    Configuration const & operator=(Configuration const & other);
 
     /* Write all data to a file */
-    void write(char* filename) const;
+    void write(const char *filename) const;
 
     /* Read in a file */
-    void read(char* filename);
+    void read(const char *filename);
+
+    /* Sets a filename properly */
+    void setFileName(QString source, char* & dest);
 
     bool adjacent;
-    bool * stocks;
+    bool consum;
+    bool detritus;
+    bool doc;
+    bool herbivore;
+    bool macro;
+    bool poc;
+    bool phyto;
+    bool sedconsumer;
+    bool seddecomp;
+    bool waterdecomp;
 
     char* tempFile;
     char* parFile;
@@ -72,12 +87,19 @@ public:
     float macroTemp;
     float grossMacroCoef;
     float respMacroCoef;
-    float scenescenceMacroCoef;
+    float senescenceMacroCoef;
     float macroMassMax;
     float macroVelocityMax;
     float kPhyto;
     float kMacro;
 
+private:
+    void clear();
+    void copy(Configuration const & other);
+
+    bool convertBool(std::string str);
+    uint8_t convertInt(std::string str);
+    float convertFloat(std::string str);
 };
 
 #endif // CONFIGURATION_H
