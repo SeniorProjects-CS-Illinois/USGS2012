@@ -180,7 +180,7 @@ void find_map_sizes()
 void find_map_width_height(FILE* hydro_file) 
 {
     int patch_info_size = 6;    // first line in the file, pxcor/pycor/depth/px-vector/py-vector/velocity
-    int word_size = 100;
+    const int word_size = 100;
 
     char word[word_size];
     word[0] = '\0';
@@ -361,11 +361,11 @@ void init_patch_values(int col, int row){
 	patches[col][row].waterdecomp_senescence = 0.0;
 	patches[col][row].turbidity = 0.0;
 
-	patches[col][row].available = malloc(num_unique_files*sizeof(int));        
-	patches[col][row].pxv_list = malloc(num_unique_files*sizeof(double));
-	patches[col][row].pyv_list = malloc(num_unique_files*sizeof(double));
-	patches[col][row].depth_list = malloc(num_unique_files*sizeof(double));
-	patches[col][row].v_list = malloc(num_unique_files*sizeof(double));
+	patches[col][row].available = (int *)malloc(num_unique_files*sizeof(int));        
+	patches[col][row].pxv_list = (double *)malloc(num_unique_files*sizeof(double));
+	patches[col][row].pyv_list = (double *)malloc(num_unique_files*sizeof(double));
+	patches[col][row].depth_list = (double *)malloc(num_unique_files*sizeof(double));
+	patches[col][row].v_list = (double *)malloc(num_unique_files*sizeof(double));
 	int index;
 	for(index = 0; index < num_unique_files; index++)
 	{
@@ -388,10 +388,10 @@ void init_patches()
 
 	covered_area = (int*)malloc(num_unique_files*sizeof(int));
 	uncovered_area = (int*)malloc(num_unique_files*sizeof(int));
-    patches = malloc(MAP_WIDTH*sizeof(patch*));
+    patches = (patch **)malloc(MAP_WIDTH*sizeof(patch*));
     for(col = 0; col < MAP_WIDTH; col++) 
 	{
-        patches[col] = malloc(MAP_HEIGHT*sizeof(patch));
+        patches[col] = (patch *)malloc(MAP_HEIGHT*sizeof(patch));
     }
 
     // initialize the arrays for each patch
@@ -414,12 +414,12 @@ void init_color_values()
     int i = 0;
 
 	//initialize colors corresponding to each patch
-    colorValues = malloc(NUM_STOCKS*sizeof(float**));
+    colorValues = (float ***)malloc(NUM_STOCKS*sizeof(float**));
     for (i = 0; i < NUM_STOCKS; i++) {
-        colorValues[i] = malloc(MAP_WIDTH*sizeof(float*));
+        colorValues[i] = (float **)malloc(MAP_WIDTH*sizeof(float*));
         for( col = 0; col < MAP_WIDTH; col++)
         {
-            colorValues[i][col] = malloc(MAP_HEIGHT*sizeof(float));
+            colorValues[i][col] = (float *)malloc(MAP_HEIGHT*sizeof(float));
         }
 
         for( col = 0; col < MAP_WIDTH; col++)
@@ -430,7 +430,7 @@ void init_color_values()
             }
         }
     }
-    hues = malloc(NUM_STOCKS*sizeof(float));
+    hues = (float *)malloc(NUM_STOCKS*sizeof(float));
 }
 
 
@@ -472,7 +472,6 @@ int check_duplicate_files(int index)
 void import_hydro() 
 {
     int i, j, temp_x, temp_y;
-    char file[256];
     FILE* pFile;
     char str[256];
     float value;

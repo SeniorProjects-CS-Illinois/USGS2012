@@ -8,8 +8,8 @@
 #include <time.h>
 
 const char* data_path = "./results/data/"; /* Folder under which we place the data files */
-char* data_template = "map_data_"; /* Each simulation data file has the name 'map_data_timestamp' */
-char* format = ".csv"; /* file format is .csv */
+const char* data_template = "map_data_"; /* Each simulation data file has the name 'map_data_timestamp' */
+const char* format = ".csv"; /* file format is .csv */
 
 /**
  * The file format is as follows:

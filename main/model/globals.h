@@ -13,7 +13,7 @@ double COMPARE_MAX = 0.0; ///< represents the maximum of the x or y vector among
 // GUI variables
 int output_frequency = 0;
 int current_day = 0; ///< Keeps track of how often output should be generated
-char* file_extension = "new";
+const char* file_extension = "new";
 int num_hydro_files = 0;
 char gui_photo_radiation_file[1024];
 char gui_temperature_file[1024];
