@@ -5,56 +5,7 @@ Install the following software IN THE ORDER LISTED into their default locations:
 - mingw32               - http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/
      *** Install at least the gcc stuff from mingw32 ***
 
-- Python 2.7 32bit      - http://www.python.org/download/
-*** Get versions for python 2.7 of the following ***
-- py2exe for python 2.7 - http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/
-- numpy for python 2.7  - http://sourceforge.net/projects/numpy/files/NumPy/1.6.2/
-- Python Imaging Libary - http://www.pythonware.com/products/pil/
-
 Once you've installed these, add the following directories to your system path:
-C:\Python27\
 C:\MinGW\bin\
 
-Navigate to C:\Python27\Lib\distutils and open cygwinccompiler.py in a text editor.  On lines 322-326 remove all references to "-mno-cygwin"
-	See http://bugs.python.org/issue12641 for why this is needed.
-
-
-
 If you did the above, you should be able to double click build.bat in this folder to compile.
-
-After it finishes compiling you can double click main.exe in the dist folder.
-
-To rebuild from scratch.  Delete the dist and build folders.
-
-
-
-
-
-
-
-
-
-
-
-#########################################################
-### OLD INSTRUCTIONS (Can ignore if batch file works) ###
-#########################################################
-
-How to compile the python code
-python buildPython.py py2exe -p encodings -pPIL
-
-How to compile the c code:
-python setup.py build -cmingw32
-Once your c code is compiled, you must move the executable from the build/lib.win32-2.7 to the dist/view directory.
-
-Every time you update the python code:
-Copy paste view and controller into the dist directory
-
-Done once:
-Copy paste tkFileDialog.pyc, tkMessageBox.pyc, and tkCommonDialog into the dist/view directory. 
-This file can be found in C:\Python27\Lib\lib-tk after downloading tkinter
-
-How to run it once you're all done:
-Double click on main.exe in the dist directory, or type main.exe into a command line within that directory.
-
-
