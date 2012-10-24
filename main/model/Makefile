@@ -3,8 +3,11 @@ all: main.c
 	mv MainModule.so ../controller
 
 nogui: main.c
-	gcc -D NO_GUI -D NO_PYTHON -B /usr/lib/x86_64-linux-gnu -g -Wall -o rivermodel main.c -lm
+	g++ -D NO_GUI -D NO_PYTHON -B /usr/lib/x86_64-linux-gnu -g -Wall -o rivermodel main.c -lm
 
 clean:
 	rm -f *.so
 	rm -f ../controller/MainModule.so
+
+distclean: clean
+	rm -f rivermodel
