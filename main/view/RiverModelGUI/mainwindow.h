@@ -7,7 +7,8 @@
 #include "ui_mainwindow.h"
 #include "configuration.h"
 
-namespace Ui {
+namespace Ui
+{
     class MainWindow;
 }
 
@@ -46,10 +47,10 @@ public slots:
 private slots:
 
     /* Save the current configuration to a file */
-    void on_actionSave_Configuration_triggered();
+    void saveConfiguration();
 
     /* Load a configuration file */
-    void on_actionLoad_Configuration_triggered();
+    void loadConfiguration();
 
 public:
 
@@ -71,6 +72,7 @@ public:
 
     uint8_t getOutputFreq() const;
     uint8_t getTimestep() const;
+    uint8_t getNumHydroMaps() const;
 
     float getTSS() const;
     float getMacroTemp() const;
@@ -82,6 +84,11 @@ public:
     float getKPhyto() const;
     float getKMacro() const;
 
+    QString getTempFile() const;
+    QString getPARFile() const;
+
+    QList<uint8_t> getDaysToRun() const;
+    QList<QString> getHydroMaps() const;
 
     /* SETTERS */
     void setConsum(bool val);
@@ -109,10 +116,22 @@ public:
     void setKPhyto(float val);
     void setKMacro(float val);
 
+    void setTempFile(char* filename);
+    void setPARFile(char* filename);
+
+    void setHydroMaps(char** filenames, uint8_t* daysToRun, size_t num);
+
 private:
 
     Ui::MainWindow *ui;
 
+    QString wholeTempFile;
+    QString wholePARFile;
+
+    QList<QString> wholeHydroMapFiles;
+    QList<uint8_t> daysToRun;
+
+    /* Used to make file selection faster */
     char* defaultFileLocation() const;
 
     /* Reset error message output box - all slots should call this in the beginning */
@@ -130,8 +149,23 @@ private:
     /* Set an error message */
     void displayErrors(char * message) const;
 
+    /* Add hydro map information to list */
+    void addHydroMap(QString filename, QString days, bool addInfo);
+
     /* Strips off all path info except file name*/
     QString stripFile(QString path) const;
+
+    /** Format for a QListWidgetItem:
+      *     <Filename>: <Days To Run> Days
+      *     <Filename> = char*
+      *     <Days To Run> = int
+      */
+
+    /* Get the days to run value from the given item */
+    uint8_t parseDaysToRun(QListWidgetItem* item) const;
+
+    /* Get the hydro map file name from the given item */
+    QString parseHydroMapName(QListWidgetItem* item) const;
 };
 
 #endif // MAINWINDOW_H
