@@ -556,7 +556,7 @@ PyObject* build_data(){
     PyList_SET_ITEM(list, 1, num);
     for(index = 2; index < size; index++)
     {
-        num = Py_BuildValue("f", colorValues[i][(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
+        num = Py_BuildValue("f", colorValues[i][getIndex((index-1)%MAP_WIDTH, (index-1)/MAP_WIDTH)]);
         PyList_SET_ITEM(list, index, num);
     }
     return list;
@@ -578,7 +578,7 @@ PyObject* build_data(){
     PyList_SET_ITEM(list, 1, num);
     for(index = 2; index < size; index++)
     {
-        num = Py_BuildValue("f", colorValues[i][(index-1)%MAP_WIDTH][(index-1)/MAP_WIDTH]);
+        num = Py_BuildValue("f", colorValues[i][getIndex((index-1)%MAP_WIDTH, (index-1)/MAP_WIDTH)];
         PyList_SET_ITEM(list, index, num);
     }
     return list;

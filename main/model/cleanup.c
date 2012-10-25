@@ -33,9 +33,6 @@ void clean_patches()
         free( patches[x] );
     }
     for (stock = 0; stock < NUM_STOCKS; stock++) {
-        for (x = 0; x < MAP_WIDTH; x++) {
-            free(colorValues[stock][x]);
-        }
         free(colorValues[stock]);
     }
 
