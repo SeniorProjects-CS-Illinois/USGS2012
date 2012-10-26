@@ -1,8 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "setup.h"
-#include "patch.h"
+#include "model/setup.h"
+#include "model/patch.h"
 #include <sys/types.h>
 #include <stdlib.h>
 

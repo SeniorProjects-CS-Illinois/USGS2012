@@ -1,24 +1,24 @@
 #include "main.h"
 #include <stdio.h>
-#include "setup.cpp"
-#include "go.cpp"
-#include "patch.cpp"
-#include "dump.cpp"
-#include "cleanup.cpp"
-#include "globals.h"
+#include "model/setup.cpp"
+#include "model/go.cpp"
+#include "model/patch.cpp"
+#include "model/dump.cpp"
+#include "model/cleanup.cpp"
+#include "model/globals.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <QtGui/QApplication>
-#include "../view/RiverModelGUI/mainwindow.h"
+#include "view/RiverModelGUI/mainwindow.h"
 
 #ifdef NO_GUI
 int main(int argc, char *argv[])
     //These values are what was used in the original Python GUI by default.  Hard coding for now.
-    set_hydro_filenames("1?../model/data/HydroSets/100k-new.txt?2?");
-    set_par_file("../model/data/Environmentals/par.txt");
+    set_hydro_filenames("1?model/data/HydroSets/100k-new.txt?2?");
+    set_par_file("model/data/Environmentals/par.txt");
     set_timestep(1);
-    set_temperature_file("../model/data/Environmentals/water-temp.txt");
+    set_temperature_file("model/data/Environmentals/water-temp.txt");
     set_whichstock("phyto");
     set_TSS(10.0);
     set_macro_base_temp(19.7);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.setToolTips();
     w.show();
-    
+
     return a.exec();
 }
 
