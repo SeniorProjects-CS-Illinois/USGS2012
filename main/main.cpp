@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <QtGui/QApplication>
-#include "view/RiverModelGUI/mainwindow.h"
+#include "view/mainwindow.h"
 
 #ifdef NO_GUI
 int main(int argc, char *argv[])

@@ -11,10 +11,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        view/RiverModelGUI/mainwindow.cpp \
-    view/RiverModelGUI/configuration.cpp
+        view/mainwindow.cpp \
+    view/configuration.cpp
 
-HEADERS  += view/RiverModelGUI/mainwindow.h \
-    view/RiverModelGUI/configuration.h
+HEADERS  += view/mainwindow.h \
+    view/configuration.h
 
-FORMS    += view/RiverModelGUI/mainwindow.ui
+FORMS    += view/mainwindow.ui
