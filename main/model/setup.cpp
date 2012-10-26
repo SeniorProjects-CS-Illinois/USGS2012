@@ -188,21 +188,25 @@ void find_map_width_height(FILE* hydro_file)
     int max_x = 0;
     int max_y = 0;
     int counter = 0;
-    while(fscanf(hydro_file, "%s", word) != EOF) 
+    while(fscanf(hydro_file, "%s", word) != EOF)
 	{
         // pxcor
-        if(counter%patch_info_size == 0) 
+        if(counter%patch_info_size == 0)
 		{
             int value = atoi(word);
             if(value > max_x)
-                    max_x = value;            
+            {
+                    max_x = value;
+            }
         }        
         // pycor
-        else if(counter%patch_info_size == 1) 
+        else if(counter%patch_info_size == 1)
 		{
             int value = atoi(word);
             if(value > max_y)
+            {
                 max_y = value;
+            }
         }
         counter++;
     }
@@ -211,8 +215,8 @@ void find_map_width_height(FILE* hydro_file)
     MAP_HEIGHT = max_y+1;
 }
 
-void init_patch_values(int col, int row){
-
+void init_patch_values(int col, int row)
+{
 	patches[col][row].max_vector = 0.0;
     patches[col][row].pxcor = col; 
     patches[col][row].pycor = row;
@@ -414,19 +418,16 @@ void init_color_values()
     int i = 0;
 
 	//initialize colors corresponding to each patch
-    colorValues = (float ***)malloc(NUM_STOCKS*sizeof(float**));
-    for (i = 0; i < NUM_STOCKS; i++) {
-        colorValues[i] = (float **)malloc(MAP_WIDTH*sizeof(float*));
-        for( col = 0; col < MAP_WIDTH; col++)
-        {
-            colorValues[i][col] = (float *)malloc(MAP_HEIGHT*sizeof(float));
-        }
-
+    colorValues = (float **)malloc(NUM_STOCKS*sizeof(float*));
+    for (i = 0; i < NUM_STOCKS; i++)
+    {
+        colorValues[i] = (float *)malloc(MAP_WIDTH*MAP_HEIGHT*sizeof(float));
         for( col = 0; col < MAP_WIDTH; col++)
         {
             for(row = 0; row < MAP_HEIGHT; row++)
             {
-                colorValues[i][col][row] = (255 << 16 ) | (255 << 8) | 255;  // white background
+                colorValues[i][getIndex(col, row)] = (255 << 16 ) | (255 << 8) | 255;  // white background
+                //colorValues[i][getIndex(col, row)] = 0xFFFFFF;
             }
         }
     }
