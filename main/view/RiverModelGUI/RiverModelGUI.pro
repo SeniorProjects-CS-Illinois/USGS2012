@@ -10,7 +10,7 @@ TARGET = RiverModelGUI
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
+SOURCES += ../../model/main.cpp\
         mainwindow.cpp \
     configuration.cpp
 

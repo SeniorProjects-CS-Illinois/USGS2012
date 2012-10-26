@@ -2,8 +2,8 @@
 #include "globals.h"
 #include "math.h"
 #include "main.h"
-#include "pred.c"
-#include "color.c"
+#include "pred.cpp"
+#include "color.cpp"
 
 #include <sys/types.h>
 #include <time.h>

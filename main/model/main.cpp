@@ -1,17 +1,19 @@
 #include "main.h"
 #include <stdio.h>
-#include "setup.c"
-#include "go.c"
-#include "patch.c"
-#include "dump.c"
-#include "cleanup.c"
+#include "setup.cpp"
+#include "go.cpp"
+#include "patch.cpp"
+#include "dump.cpp"
+#include "cleanup.cpp"
 #include "globals.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <QtGui/QApplication>
+#include "../view/RiverModelGUI/mainwindow.h"
 
 #ifdef NO_GUI
-int main(){
+int main(int argc, char *argv[])
     //These values are what was used in the original Python GUI by default.  Hard coding for now.
     set_hydro_filenames("1?../model/data/HydroSets/100k-new.txt?2?");
     set_par_file("../model/data/Environmentals/par.txt");
@@ -37,6 +39,15 @@ int main(){
 }
 #else
 //TODO: Program entry point for QT GUI goes here.
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.setToolTips();
+    w.show();
+    
+    return a.exec();
+}
 
 #endif
 
