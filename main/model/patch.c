@@ -8,21 +8,21 @@
 */
 void update_patches(int x, int y){
 
-	patches[x][y].turbidity = ( .29587 + gui_tss) + (gui_k_phyto * (patches[x][y].phyto/ 900.0) ) + (gui_k_macro * (patches[x][y].macro / 900.0) );
+        patches[x][y].turbidity = ( .29587 + gui_tss) + (gui_k_phyto * (patches[x][y].phyto/ 900.0) ) + (gui_k_macro * (patches[x][y].macro / 900.0) );
 
-	if(patches[x][y].turbidity > 30.0){
-		patches[x][y].turbidity = 30.0;
-	}
-	if(patches[x][y].turbidity < 0.0){
-		patches[x][y].turbidity = 0.01;
-	}
+        if(patches[x][y].turbidity > 30.0){
+                patches[x][y].turbidity = 30.0;
+        }
+        if(patches[x][y].turbidity < 0.0){
+                patches[x][y].turbidity = 0.01;
+        }
 
-	//the amount of light that reaches the bottom of a water column
-	patches[x][y].bottom_light = (photo_radiation * exp( (-1*patches[x][y].depth)*patches[x][y].turbidity )); 
-	Aj_peri = patches[x][y].macro / 10.0 ;
-	Gj_peri = patches[x][y].macro / 2.0;
-	Aj_seddecomp = patches[x][y].detritus / 20.0;
-	Gj_seddecomp = patches[x][y].detritus / 5.0;
+        //the amount of light that reaches the bottom of a water column
+        patches[x][y].bottom_light = (photo_radiation * exp( (-1*patches[x][y].depth)*patches[x][y].turbidity )); 
+        Aj_peri = patches[x][y].macro / 10.0 ;
+        Gj_peri = patches[x][y].macro / 2.0;
+        Aj_seddecomp = patches[x][y].detritus / 20.0;
+        Gj_seddecomp = patches[x][y].detritus / 5.0;
 }
 
 
@@ -43,62 +43,66 @@ double assertRange(double value, double low, double high){
 }
 
 void go_macro(int x, int y){
-	Q10 = pow(theta, (temperature - macro_base_temp));
+        Q10 = pow(theta, (temperature - macro_base_temp));
 
-	if(patches[x][y].velocity < macro_vel_max){
-		patches[x][y].K = max_area * (gui_macro_mass_max - (gui_macro_mass_max  / gui_macro_vel_max) * patches[x][y].velocity);
-	}
-	else{
-		patches[x][y].K = 0.01;
-	}
-	//Same at bottom-light
-	double macro_light = photo_radiation * exp( (-1*patches[x][y].depth) * patches[x][y].turbidity );
-	
-	patches[x][y].gross_photo_macro = (gui_gross_macro_coef * patches[x][y].macro * ( macro_light / ( macro_light + 10.0)) * Q10 * 
-		                               (patches[x][y].K - patches[x][y].macro) / patches[x][y].K);
+        if(patches[x][y].velocity < macro_vel_max){
+                patches[x][y].K = max_area * (gui_macro_mass_max - (gui_macro_mass_max  / gui_macro_vel_max) * patches[x][y].velocity);
+        }
+        else{
+                patches[x][y].K = 0.01;
+        }
+        //Same at bottom-light
+        double macro_light = photo_radiation * exp( (-1*patches[x][y].depth) * patches[x][y].turbidity );
+        
+        patches[x][y].gross_photo_macro = (gui_gross_macro_coef * patches[x][y].macro * ( macro_light / ( macro_light + 10.0)) * Q10 * 
+                                               (patches[x][y].K - patches[x][y].macro) / patches[x][y].K);
 
-	patches[x][y].respiration_macro = (resp_macro_coef / 24.0) * patches[x][y].macro * Q10;
+        patches[x][y].respiration_macro = (resp_macro_coef / 24.0) * patches[x][y].macro * Q10;
 
-	patches[x][y].senescence_macro = sen_macro_coef * patches[x][y].macro / 24.0;
+        patches[x][y].senescence_macro = sen_macro_coef * patches[x][y].macro / 24.0;
 
-	patches[x][y].growth_macro = patches[x][y].gross_photo_macro - patches[x][y].respiration_macro - patches[x][y].senescence_macro
-		                          - patches[x][y].scouring_macro;
+        patches[x][y].growth_macro = patches[x][y].gross_photo_macro - patches[x][y].respiration_macro - patches[x][y].senescence_macro
+                                          - patches[x][y].scouring_macro;
 
-	patches[x][y].macro += patches[x][y].growth_macro;
+        patches[x][y].macro += patches[x][y].growth_macro;
 
-	if(patches[x][y].macro < 0.001)
-		patches[x][y].macro = 0.001; //minimum biomass based on seed bank
+        if(patches[x][y].macro < 0.001)
+                patches[x][y].macro = 0.001; //minimum biomass based on seed bank
 }
 
 void go_phyto(int x,int y){ 
-	//minimum and maximum caps on biomass
-	if( patches[x][y].phyto > 900000.0){
-		patches[x][y].phyto = 900000.0;
-	}
-	if( patches[x][y].phyto < 0.001){
-		patches[x][y].phyto = 0.001;
-	}
-	double base_temperature = 8.0; //base temperature for nominal growth
-	Q10 = pow(theta, (temperature - base_temperature));
-	double km = 10; //half saturation constant
-	//this is the attenuation coefficient of phytoplank m^2/g of phyto plankton
-	double light_k = 0.4;
-	patches[x][y].respiration_phyto = 0.1 / 24.0 * patches[x][y].phyto * Q10;
-	double pre_ln = (0.01 + photo_radiation  * exp(-1*patches[x][y].phyto * gui_k_phyto * patches[x][y].depth));
-	double be = (km + (photo_radiation * exp(-1 * patches[x][y].phyto * gui_k_phyto * patches[x][y].depth)));
-	//photosynthesis from phytoplankton derived from Huisman Weissing 1994
+        //minimum and maximum caps on biomass
+        if( patches[x][y].phyto > 900000.0){
+                patches[x][y].phyto = 900000.0;
+        }
+        if( patches[x][y].phyto < 0.001){
+                patches[x][y].phyto = 0.001;
+        }
+        double base_temperature = 8.0; //base temperature for nominal growth
+        Q10 = pow(theta, (temperature - base_temperature));
+        double km = 10; //half saturation constant
 
-	patches[x][y].gross_photo_phyto = fabs(pre_ln / be) * (1.0 / patches[x][y].depth) * (patches[x][y].phyto / patches[x][y].turbidity) * Q10;
-	patches[x][y].excretion_phyto = 0.05 / 24.0 * patches[x][y].phyto;
-	patches[x][y].senescence_phyto = 0.02 / 24.0 * patches[x][y].phyto;
-	patches[x][y].growth_phyto = patches[x][y].gross_photo_phyto - patches[x][y].excretion_phyto - 
+        //this is the attenuation coefficient of phytoplank m^2/g of phyto plankton
+        //TODO  Figure out if the uncommented light_k line was lost in translation from netgui
+        //double light_k = 0.4;
+
+
+        patches[x][y].respiration_phyto = 0.1 / 24.0 * patches[x][y].phyto * Q10;
+        double pre_ln = (0.01 + photo_radiation  * exp(-1*patches[x][y].phyto * gui_k_phyto * patches[x][y].depth));
+        double be = (km + (photo_radiation * exp(-1 * patches[x][y].phyto * gui_k_phyto * patches[x][y].depth)));
+        //photosynthesis from phytoplankton derived from Huisman Weissing 1994
+
+        patches[x][y].gross_photo_phyto = fabs(pre_ln / be) * (1.0 / patches[x][y].depth) * (patches[x][y].phyto / patches[x][y].turbidity) * Q10;
+        patches[x][y].excretion_phyto = 0.05 / 24.0 * patches[x][y].phyto;
+        patches[x][y].senescence_phyto = 0.02 / 24.0 * patches[x][y].phyto;
+        patches[x][y].growth_phyto = patches[x][y].gross_photo_phyto - patches[x][y].excretion_phyto - 
                                  patches[x][y].respiration_phyto - patches[x][y].senescence_phyto;
 }
 
 void go_herbivore(int x, int y){
 
-	patches[x][y].herbivore_phyto_prey_limitation = patches[x][y].phyto / (Ai_herbivore_phyto - Gi_herbivore_phyto);
-	patches[x][y].herbivore_phyto_prey_limitation = assertRange(patches[x][y].herbivore_phyto_prey_limitation, 0.0, 1.0);
+        patches[x][y].herbivore_phyto_prey_limitation = patches[x][y].phyto / (Ai_herbivore_phyto - Gi_herbivore_phyto);
+        patches[x][y].herbivore_phyto_prey_limitation = assertRange(patches[x][y].herbivore_phyto_prey_limitation, 0.0, 1.0);
 
     patches[x][y].herbivore_peri_prey_limitation = patches[x][y].peri / (Ai_herbivore_peri - Gi_herbivore_peri);
     patches[x][y].herbivore_peri_prey_limitation = assertRange( patches[x][y].herbivore_peri_prey_limitation, 0.0, 1.0);
