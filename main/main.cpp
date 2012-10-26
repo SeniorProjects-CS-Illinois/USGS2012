@@ -8,6 +8,7 @@
 #include "model/globals.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <direct.h>
 //#include <unistd.h>
 #include <QtGui/QApplication>
 #include "view/mainwindow.h"
@@ -128,21 +129,21 @@ void create_output_dirs(void) {
 
     if (stat("./results", &st) == -1) {
         #ifdef _WIN32
-        mkdir("./results");
+        _mkdir("./results");
         #else
         mkdir("./results", 0775);
         #endif
     }
     if (stat("./results/data", &st) == -1) {
         #ifdef _WIN32
-        mkdir("./results/data");
+        _mkdir("./results/data");
         #else
         mkdir("./results/data", 0775);
         #endif
     }
     if (stat("./results/images", &st) == -1) {
         #ifdef _WIN32
-        mkdir("./results/images");
+        _mkdir("./results/images");
         #else
         mkdir("./results/images", 0775);
         #endif
@@ -178,7 +179,8 @@ void go_command(void) {
 
 void set_whichstock(const char * stock_name)
 {
-    strcpy(which_stock, stock_name);
+    size_t len = strlen(stock_name);
+    strcpy_s(which_stock, len, stock_name);
 }
 
 void set_TSS(double tss)

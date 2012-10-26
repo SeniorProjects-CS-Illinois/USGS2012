@@ -8,19 +8,24 @@
  */
 int write_data() {
     time_t rawtime;
-    struct tm * timeinfo;
+    struct tm timeinfo;
     time(&rawtime);
-    timeinfo = localtime(&rawtime);
+    localtime_s(&timeinfo, &rawtime);
 	char buffer[80];
 	//strftime(buffer, 80, "%b_%a_%d_%I:%M:%S%p", timeinfo);
-	strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
+    strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", &timeinfo);
 	
     char file_name[300]; file_name[0] = '\0';
-    strcat(file_name,data_path);
-    strcat(file_name,data_template);
-    //strcat(file_name, asctime(timeinfo) );
-	strcat(file_name, buffer);
-    strcat(file_name, format);
+    size_t len = strlen(data_path);
+    strcat_s(file_name, len, data_path);
+    len = strlen(data_template);
+    strcat_s(file_name, len, data_template);
+    //len = strlen(asctime(&timeinfo));
+    //strcat(file_name, len, asctime(&timeinfo) );
+    len = strlen(buffer);
+    strcat_s(file_name, len, buffer);
+    len = strlen(format);
+    strcat_s(file_name, len, format);
 	
 	file_name[strlen(file_name)] = '\0';
     FILE* f;
