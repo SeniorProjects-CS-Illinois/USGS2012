@@ -1,7 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
-#include "math.h"
-#include "string.h"
+#include <math.h>
+#include <string.h>
     /**
       * Function description copy-pasted from Netlogo documentation:
       *

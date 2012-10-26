@@ -148,8 +148,9 @@ void find_map_sizes()
     int index;
     for(index = 0; index < num_hydro_files; index++) 
 	{
-		FILE* file = fopen(gui_filenames_array[index], "r");
-		if (file == NULL) 
+        FILE* file;
+        errno_t err = fopen_s(&file, gui_filenames_array[index], "r");
+        if (err)
 		{
 			fputs("error opening the hydro map", stderr);
 			exit(-1);
@@ -188,7 +189,7 @@ void find_map_width_height(FILE* hydro_file)
     int max_x = 0;
     int max_y = 0;
     int counter = 0;
-    while(fscanf(hydro_file, "%s", word) != EOF)
+    while(fscanf_s(hydro_file, "%s", word) != EOF)
 	{
         // pxcor
         if(counter%patch_info_size == 0)
@@ -441,28 +442,30 @@ void init_color_values()
 */
 int check_duplicate_files(int index)
 {
-  if(index == 0)
-  {
-    check_filenames_array[index] = (char*)malloc((strlen(gui_filenames_array[index]) + 1)*sizeof(char));
-    strcpy(check_filenames_array[index], gui_filenames_array[index]);
-    hydromap_index_array[index] = index;
-    return 0;
-  }
-  int i;
-  for(i = 0; i < current_file_index; i++)
-  {
-    // We found a duplicate file
-    if(strcmp(check_filenames_array[i], gui_filenames_array[index]) == 0)
+    if(index == 0)
     {
-      hydromap_index_array[index] = i;
-      return 1;
+        size_t len = strlen(gui_filenames_array[index]) + 1;
+        check_filenames_array[index] = (char*)malloc((len)*sizeof(char));
+        strcpy_s(check_filenames_array[index], len, gui_filenames_array[index]);
+        hydromap_index_array[index] = index;
+        return 0;
     }
-  }
-  // Not a duplicate fil,e so add to the unique file array
-  check_filenames_array[current_file_index] = (char*)malloc((strlen(gui_filenames_array[index]) + 1)*sizeof(char));
-  strcpy(check_filenames_array[current_file_index], gui_filenames_array[index]);
-  hydromap_index_array[index] = current_file_index;
-  return 0;
+    int i;
+    for(i = 0; i < current_file_index; i++)
+    {
+        // We found a duplicate file
+        if(strcmp(check_filenames_array[i], gui_filenames_array[index]) == 0)
+        {
+            hydromap_index_array[index] = i;
+            return 1;
+        }
+    }
+    // Not a duplicate fil,e so add to the unique file array
+    size_t len = strlen(gui_filenames_array[index]) + 1;
+    check_filenames_array[current_file_index] = (char*)malloc((len)*sizeof(char));
+    strcpy_s(check_filenames_array[current_file_index], len, gui_filenames_array[index]);
+    hydromap_index_array[index] = current_file_index;
+    return 0;
 }
 
 /**
@@ -484,8 +487,8 @@ void import_hydro()
         if(check_duplicate_files(i) == 1)
           continue;
         
-        pFile = fopen(gui_filenames_array[i], "r");
-        if(pFile == NULL)
+        errno_t err = fopen_s(&pFile, gui_filenames_array[i], "r");
+        if(err)
         {
             printf("Failed to open the hydromap");
             exit(1);
@@ -494,24 +497,25 @@ void import_hydro()
         // Skip the file layout
         for(j = 0; j < 6; j++)
         {
-            fscanf(pFile, "%s", str);
+            fscanf_s(pFile, "%s", str);
+            // TODO: error handling?
         }
 		int covered_cells = 0;
 		int uncovered_cells = 0;
 
         // Scan through the files and assign the values
-        while(fscanf(pFile, "%s", str) != EOF)
+        while(fscanf_s(pFile, "%s", str) != EOF)
         {
             temp_x = atoi(str);
-            fscanf(pFile, "%s", str);
+            fscanf_s(pFile, "%s", str);
             temp_y = atoi(str);
-            fscanf(pFile, "%f", &value);
+            fscanf_s(pFile, "%f", &value);
             temp_depth = value;
-            fscanf(pFile, "%f", &value);
+            fscanf_s(pFile, "%f", &value);
             temp_px_vector = value;
-            fscanf(pFile, "%f", &value);
+            fscanf_s(pFile, "%f", &value);
             temp_py_vector = value;
-            fscanf(pFile, "%f", &value);
+            fscanf_s(pFile, "%f", &value);
             temp_velocity = value;
             
             patches[temp_x][temp_y].available[current_file_index] = 1;
@@ -551,8 +555,9 @@ void set_photo_radiation()
 {
 	char* filename = gui_photo_radiation_file;
 
-	FILE* file = fopen(filename, "r");
-	if (file == NULL)
+    FILE* file;
+    errno_t err = fopen_s(&file, filename, "r");
+    if (err)
 	{
 		perror ("Error opening photo_radiation file");
 	}
@@ -591,8 +596,9 @@ void set_temperature()
 {
 	char* filename = gui_temperature_file;
 
-	FILE* file = fopen(filename, "r");
-	if (file == NULL)
+    FILE* file;
+    errno_t err = fopen_s(&file, filename, "r");
+    if (err)
 	{
 		perror ("Error opening water-temperature file");
 	}

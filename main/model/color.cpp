@@ -1,6 +1,4 @@
 #include "color.h"
-#include <math.h>
-
 
 /**
  * Scales the color of the patch
@@ -18,15 +16,15 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
         return;
     }
 
-    if(value <= minVal || isnan(value)) {
+    if(value <= minVal || /*isnan(value)*/ (value != value)) {
         returnValue = 0.0;
     }
     else if(value >= maxVal) {
         returnValue = 1.0;
     }
     else {
-        float rangeValues = fabs(maxVal - minVal);
-        returnValue = (value / rangeValues);
+        float rangeValues = (float)fabs(maxVal - minVal);
+        returnValue = (float)(value / rangeValues);
     }
     colorValues[stockIndex][getIndex(x, y)] = returnValue;
 }
@@ -40,16 +38,16 @@ void update_color() {
     int y = 0;
 
     // set hue values for each stock (magic numbers?)
-    hues[MACRO_INDEX] = 120.0 / 360.0;
-    hues[PHYTO_INDEX] = 120.0 / 360.0;
-    hues[WATERDECOMP_INDEX] = 120.0 / 360.0;
-    hues[POC_INDEX] = 240.0 / 360.0;
-    hues[DETRITUS_INDEX] = 19.6 / 360.0;
-    hues[SEDCONSUMER_INDEX] = 60.0 / 360.0;
-    hues[SEDDECOMP_INDEX] = 240.0 / 360.0;
-    hues[HERBIVORE_INDEX] = 300.0 / 360.0;
-    hues[CONSUM_INDEX] = 300.0 / 360.0;
-    hues[DOC_INDEX] = 60.0 / 360.0;
+    hues[MACRO_INDEX] = (float)(120.0 / 360.0);
+    hues[PHYTO_INDEX] = (float)(120.0 / 360.0);
+    hues[WATERDECOMP_INDEX] = (float)(120.0 / 360.0);
+    hues[POC_INDEX] = (float)(240.0 / 360.0);
+    hues[DETRITUS_INDEX] = (float)(19.6 / 360.0);
+    hues[SEDCONSUMER_INDEX] = (float)(60.0 / 360.0);
+    hues[SEDDECOMP_INDEX] = (float)(240.0 / 360.0);
+    hues[HERBIVORE_INDEX] = (float)(300.0 / 360.0);
+    hues[CONSUM_INDEX] = (float)(300.0 / 360.0);
+    hues[DOC_INDEX] = (float)(60.0 / 360.0);
 
     // calculate all relevant averages
     // TODO: is it safe to only do this calculation once?

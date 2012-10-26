@@ -8,7 +8,7 @@
 #include "model/globals.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <QtGui/QApplication>
 #include "view/mainwindow.h"
 
@@ -63,14 +63,16 @@ void count_unique_files(int index)
     num_unique_files++;
 }
 
-void set_hydro_filenames(const char * filenames) {
-    char * filenames_writable_copy = strdup(filenames); 
+void set_hydro_filenames(const char * filenames)
+{
+    char * filenames_writable_copy = _strdup(filenames);
     char* filename;
+    char* nextTok;
     int index = 0;
     num_unique_files = 0;
 
     // First value howmany files the use selected in the GUI
-    filename = strtok(filenames_writable_copy, "?");
+    filename = strtok_s(filenames_writable_copy, "?", &nextTok);
     int fileSize = atoi(filename);
     gui_filenames_filesize = fileSize;
     num_hydro_files = fileSize;
@@ -79,12 +81,13 @@ void set_hydro_filenames(const char * filenames) {
     hydromap_index_array = (int*)malloc(fileSize*sizeof(int));
 
     // Parse the file name if one exists
-    while((filename = strtok(NULL, "?")) != NULL)
+    while((filename = strtok_s(NULL, "?", &nextTok)) != NULL)
     {
-        gui_filenames_array[index] = (char*)malloc((strlen(filename)+1)*sizeof(char));
-        strcpy(gui_filenames_array[index],filename);
+        size_t len = (strlen(filename)+1);
+        gui_filenames_array[index] = (char*)malloc(len*sizeof(char));
+        strcpy_s(gui_filenames_array[index], len, filename);
         count_unique_files(index);
-        filename = strtok(NULL, "?");
+        filename = strtok_s(NULL, "?", &nextTok);
         gui_days_array[index] = atoi(filename); //Parse howmany days to run current file
         index++;
     }
@@ -93,21 +96,27 @@ void set_hydro_filenames(const char * filenames) {
 }
 
 
-void set_par_file(const char * filename) {
-    strcpy(gui_photo_radiation_file, filename);
+void set_par_file(const char * filename)
+{
+    size_t len = strlen(filename) + 1;
+    strcpy_s(gui_photo_radiation_file, len, filename);
 }
 
-void set_timestep(int timestep) {
+void set_timestep(int timestep)
+{
     gui_timestep_factor = timestep;
 }
 
-void set_temperature_file(const char * filename) {
-    strcpy(gui_temperature_file, filename);
+void set_temperature_file(const char * filename)
+{
+    size_t len = strlen(filename) + 1;
+    strcpy_s(gui_temperature_file, len, filename);
 }
 
 
 //TODO: Unstub this with c code for image output.
-void output_image(void){
+void output_image(void)
+{
     return;
 }
 

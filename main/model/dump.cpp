@@ -23,8 +23,9 @@ int write_data() {
     strcat(file_name, format);
 	
 	file_name[strlen(file_name)] = '\0';
-    FILE* f = fopen(file_name, "w");
-    if (f == NULL) { 
+    FILE* f;
+    errno_t err = fopen_s(&f, file_name, "w");
+    if (err) {
         printf("file name: %s could not be opened\n", file_name);
         return 0;
     }
