@@ -439,28 +439,30 @@ void init_color_values()
 */
 int check_duplicate_files(int index)
 {
-  if(index == 0)
-  {
-    g.check_filenames_array[index] = (char*)malloc((strlen(g.gui_filenames_array[index]) + 1)*sizeof(char));
-    strcpy(g.check_filenames_array[index], g.gui_filenames_array[index]);
-    g.hydromap_index_array[index] = index;
-    return 0;
-  }
-  int i;
-  for(i = 0; i < g.current_file_index; i++)
-  {
-    // We found a duplicate file
-    if(strcmp(g.check_filenames_array[i], g.gui_filenames_array[index]) == 0)
+    if(index == 0)
     {
-      g.hydromap_index_array[index] = i;
-      return 1;
+        size_t len = strlen(g.gui_filenames_array[index]) + 1;
+        g.check_filenames_array[index] = (char*)malloc((len)*sizeof(char));
+        strncpy(g.check_filenames_array[index], g.gui_filenames_array[index], len);
+        g.hydromap_index_array[index] = index;
+        return 0;
     }
-  }
-  // Not a duplicate fil,e so add to the unique file array
-  g.check_filenames_array[g.current_file_index] = (char*)malloc((strlen(g.gui_filenames_array[index]) + 1)*sizeof(char));
-  strcpy(g.check_filenames_array[g.current_file_index], g.gui_filenames_array[index]);
-  g.hydromap_index_array[index] = g.current_file_index;
-  return 0;
+    int i;
+    for(i = 0; i < g.current_file_index; i++)
+    {
+        // We found a duplicate file
+        if(strcmp(g.check_filenames_array[i], g.gui_filenames_array[index]) == 0)
+        {
+            g.hydromap_index_array[index] = i;
+            return 1;
+        }
+    }
+    // Not a duplicate fil,e so add to the unique file array
+    size_t len = strlen(g.gui_filenames_array[index]) + 1;
+    g.check_filenames_array[g.current_file_index] = (char*)malloc((len)*sizeof(char));
+    strncpy(g.check_filenames_array[g.current_file_index], g.gui_filenames_array[index], len);
+    g.hydromap_index_array[index] = g.current_file_index;
+    return 0;
 }
 
 /**
@@ -493,6 +495,7 @@ void import_hydro()
         for(j = 0; j < 6; j++)
         {
             fscanf(pFile, "%s", str);
+            // TODO: error handling?
         }
 		int covered_cells = 0;
 		int uncovered_cells = 0;

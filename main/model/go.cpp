@@ -41,10 +41,14 @@ void go()
     // flow carbon
     int t, max_time = 60/g.gui_timestep_factor;
     g.nan_trigger = 0;      // set nan to false
-    for (t = 0; t < max_time; t++) {
-        for(x = 0; x < g.MAP_WIDTH; x++) {
-            for(y = 0; y < g.MAP_HEIGHT; y++) {
-                if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) ) {
+    for (t = 0; t < max_time; t++)
+    {
+        for(x = 0; x < g.MAP_WIDTH; x++)
+        {
+            for(y = 0; y < g.MAP_HEIGHT; y++)
+            {
+                if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) )
+                {
                     flow_carbon(x,y);
                 }
             }
@@ -53,8 +57,10 @@ void go()
     }
 
     //Update max values
-    for (x = 0; x < g.MAP_WIDTH; x++) {
-        for (y = 0; y < g.MAP_HEIGHT; y++) {
+    for (x = 0; x < g.MAP_WIDTH; x++)
+    {
+        for (y = 0; y < g.MAP_HEIGHT; y++)
+        {
             update_max(x,y);
         }
     }
@@ -63,11 +69,13 @@ void go()
     g.hours++;
 
     int day = g.hours%24;
-    if (day == 0){
+    if (day == 0)
+    {
         update_color();
-                g.current_day++;
-                if(g.current_day == g.output_frequency){
-                        output_image();
+        g.current_day++;
+        if(g.current_day == g.output_frequency)
+        {
+        output_image();
             dump_data();
                         g.current_day = 0;
                 }
@@ -102,27 +110,35 @@ void update_environmentals()
  * Iterates through all the patches and sets the different components
  * inside the patch, it also computes the maximum_vector in the river and sets it to COMPARE_MAX 
  */
-void update_hydro_map() {
+void update_hydro_map()
+{
     double max_vector = 0;
     int x, y;
 
-    for(x = 0; x < g.MAP_WIDTH; x++) {
-        for(y = 0; y < g.MAP_HEIGHT; y++) {
-            
+    for (x = 0; x < g.MAP_WIDTH; x++)
+    {
+        for (y = 0; y < g.MAP_HEIGHT; y++)
+        {
             // the hydro maps contained information about this patch
             // set the values of px_vector, py_vector, depth and velocity
-            if(patches[x][y].available[g.hydro_group-1]) {
+            if (patches[x][y].available[g.hydro_group-1])
+            {
                 patches[x][y].px_vector = patches[x][y].pxv_list[g.hydro_group-1];
                 patches[x][y].py_vector = patches[x][y].pyv_list[g.hydro_group-1];
                 patches[x][y].depth = patches[x][y].depth_list[g.hydro_group-1];
                 patches[x][y].velocity = patches[x][y].v_list[g.hydro_group-1];
 
-                if( fabs(patches[x][y].px_vector) > fabs(patches[x][y].py_vector) ) {
+                if (fabs(patches[x][y].px_vector) > fabs(patches[x][y].py_vector))
+                {
                     patches[x][y].max_vector = fabs(patches[x][y].px_vector);
-                } else {
+                }
+                else
+                {
                     patches[x][y].max_vector = fabs(patches[x][y].py_vector);
                 }
-            } else {
+            }
+            else
+            {
                 patches[x][y].px_vector = 0.0;
                 patches[x][y].py_vector = 0.0;
                 patches[x][y].depth = 0.0;
@@ -130,7 +146,8 @@ void update_hydro_map() {
                 patches[x][y].max_vector = 0.0;
             }
             // update miscellanous variables inside the patch
-            if( (patches[x][y].current_depth > 0.0) && (patches[x][y].depth == 0.0) ) {
+            if ((patches[x][y].current_depth > 0.0) && (patches[x][y].depth == 0.0))
+            {
                 patches[x][y].detritus += patches[x][y].DOC + patches[x][y].POC + patches[x][y].phyto + 
                                           patches[x][y].macro + patches[x][y].waterdecomp +
                                           patches[x][y].seddecomp + patches[x][y].herbivore + patches[x][y].sedconsumer + patches[x][y].consum;
@@ -145,13 +162,15 @@ void update_hydro_map() {
                 patches[x][y].sedconsumer = 0.0;
                 patches[x][y].consum = 0.0;
             }
-            if( (patches[x][y].current_depth == 0.0) && (patches[x][y].depth > 0.0) ){
+            if ((patches[x][y].current_depth == 0.0) && (patches[x][y].depth > 0.0))
+            {
                 patches[x][y].detritus *= 0.5;
             }
             patches[x][y].current_depth = patches[x][y].depth;
 
             // update the max_vector value
-            if(patches[x][y].max_vector > max_vector){
+            if (patches[x][y].max_vector > max_vector)
+            {
                 max_vector = patches[x][y].max_vector;
             }
         }// endfor y
@@ -177,34 +196,50 @@ void update_temp()
  */
 void update_par()
 {
-        g.photo_radiation_index++;
-        g.photo_radiation = g.photo_radiation_data[g.photo_radiation_index];
-        g.photo_radiation = g.photo_radiation - (g.photo_radiation * g.par_dif);
+    g.photo_radiation_index++;
+    g.photo_radiation = g.photo_radiation_data[g.photo_radiation_index];
+    g.photo_radiation = g.photo_radiation - (int)(g.photo_radiation * g.par_dif);
 }
 
 /**
  * @return the max_timestep based on the greatest x-y vector
  */
-int get_timestep() {
+double get_timestep()
+{
     if (g.COMPARE_MAX == 0.0)
+    {
         return 1.0;
+    }
     return (((double)g.patch_length)/((double)g.COMPARE_MAX));
 }
 
-int is_nan(int x, int y, double move_factor) {
-  if ( isnan( patches[x][y].DOC + patches[x][y].DOC*move_factor ) ) {
-      return 1;
-  }
-  if ( isnan( patches[x][y].POC + patches[x][y].POC*move_factor ) ) {
-      return 1;
-  }
-  if ( isnan( patches[x][y].phyto + patches[x][y].phyto*move_factor ) ) {
-      return 1;
-  }
-  if ( isnan( patches[x][y].waterdecomp + patches[x][y].waterdecomp*move_factor ) ) {
-      return 1;
-  }
-  return 0;
+int is_nan(int x, int y, double move_factor)
+{
+    if ( /*isnan( patches[x][y].DOC + patches[x][y].DOC*move_factor )*/ 
+        patches[x][y].DOC + patches[x][y].DOC*move_factor 
+            != patches[x][y].DOC + patches[x][y].DOC*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( patches[x][y].POC + patches[x][y].POC*move_factor )*/ 
+            patches[x][y].POC + patches[x][y].POC*move_factor 
+                != patches[x][y].POC + patches[x][y].POC*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( patches[x][y].phyto + patches[x][y].phyto*move_factor )*/ 
+            patches[x][y].phyto + patches[x][y].phyto*move_factor 
+                != patches[x][y].phyto + patches[x][y].phyto*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( patches[x][y].waterdecomp + patches[x][y].waterdecomp*move_factor )*/ 
+            patches[x][y].waterdecomp + patches[x][y].waterdecomp*move_factor 
+                != patches[x][y].waterdecomp + patches[x][y].waterdecomp*move_factor)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -219,11 +254,11 @@ void flow_carbon(int x, int y) {
     double rl_patch = fabs( patches[x][y].px_vector*( g.patch_length - fabs(patches[x][y].py_vector) ) )/g.max_area;
 
     // if a neighbor patch is dry, the carbon does not move in that direction
-    int max_timestep = get_timestep();
+    double max_timestep = get_timestep();
     int tb_moved = 0, corner_moved = 0, rl_moved = 0;
 
-    int px = (int)(((double)max_timestep)*patches[x][y].px_vector);
-    int py = (int)(((double)max_timestep)*patches[x][y].py_vector);
+    int px = (int)(max_timestep * patches[x][y].px_vector);
+    int py = (int)(max_timestep * patches[x][y].py_vector);
 
     if (g.gui_flow_corners_only)
     {

@@ -6,7 +6,13 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#else
 #include <unistd.h>
+#endif
+
 #include <QtGui/QApplication>
 
 #include "model/globals.h"

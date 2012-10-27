@@ -28,11 +28,16 @@ int write_data() {
 	strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
 	
     char file_name[300]; file_name[0] = '\0';
-    strcat(file_name,data_path);
-    strcat(file_name,data_template);
-    //strcat(file_name, asctime(timeinfo) );
-	strcat(file_name, buffer);
-    strcat(file_name, format);
+    size_t len = strlen(data_path);
+    strncat(file_name, data_path, len);
+    len = strlen(data_template);
+    strncat(file_name, data_template, len);
+    //len = strlen(asctime(timeinfo));
+    //strcat(file_name, asctime(timeinfo), len );
+    len = strlen(buffer);
+    strncat(file_name, buffer, len);
+    len = strlen(format);
+    strncat(file_name, format, len);
 	
 	file_name[strlen(file_name)] = '\0';
     FILE* f = fopen(file_name, "w");

@@ -1,8 +1,8 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include "math.h"
-#include "string.h"
+#include <math.h>
+#include <string.h>
 
 #include "globals.h"
 
