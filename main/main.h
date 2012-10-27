@@ -1,10 +1,21 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "model/setup.h"
-#include "model/patch.h"
 #include <sys/types.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <QtGui/QApplication>
+
+#include "model/globals.h"
+#include "model/setup.h"
+#include "model/patch.h"
+#include "model/go.h"
+#include "model/dump.h"
+#include "model/cleanup.h"
+#include "view/mainwindow.h"
 
 /* Outputs an image */
 void output_image();

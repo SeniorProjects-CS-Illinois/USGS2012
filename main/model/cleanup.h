@@ -1,10 +1,12 @@
 #ifndef _CLEANUP
 #define _CLEANUP
 
-#include "patch.h"
-#include "globals.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "globals.h"
+#include "patch.h"
+#include "color.h"
 
 /**
  * Frees the allocated structures in the application

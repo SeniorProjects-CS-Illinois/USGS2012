@@ -1,6 +1,18 @@
 #include "dump.h"
 
 /**
+ * Defining non extern versions from header file...
+ */
+/* Folder under which we place the data files */
+const char* data_path = "./results/data/";
+/* Each simulation data file has the name 'map_data_timestamp' */
+const char* data_template = "map_data_";
+/* file format is .csv */
+const char* format = ".csv";
+
+
+
+/**
  * The file format is as follows:
  * First line: GUI_VARIABLES separated by a comma
  * Each line represents one coordinate (x,y) in the River and holds the values of the DOCs in a patch.
@@ -32,19 +44,20 @@ int write_data() {
     // GUI variables used    
     fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
     
-    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",gui_timestep_factor,gui_days_to_run,gui_tss,gui_k_phyto,gui_k_macro,gui_sen_macro_coef
-                                                              ,gui_resp_macro_coef,gui_macro_base_temp,gui_macro_mass_max
-                                                              ,gui_macro_vel_max,gui_gross_macro_coef,which_stock);
+    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n", g.gui_timestep_factor, g.gui_days_to_run, g.gui_tss, g.gui_k_phyto, g.gui_k_macro, g.gui_sen_macro_coef, g.gui_resp_macro_coef, g.gui_macro_base_temp, g.gui_macro_mass_max, g.gui_macro_vel_max, g.gui_gross_macro_coef, g.which_stock);
     
     fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");
 
     int x,y;
-    int pxcor,pycor,pcolor;
-    double px_vector,py_vector,depth,velocity;
-    double assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum;
+    int pxcor, pycor, pcolor;
+    double px_vector, py_vector;
+    double depth;
+    double velocity;
+    double assimilation;
+    double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consum;
 
-    for(x = 0; x < MAP_WIDTH; x++) {
-        for(y=0;y < MAP_HEIGHT; y++) {
+    for(x = 0; x < g.MAP_WIDTH; x++) {
+        for(y=0;y < g.MAP_HEIGHT; y++) {
             if( patches[x][y].depth > 0.0) {
                 pxcor = patches[x][y].pxcor;
                 pycor = patches[x][y].pycor;

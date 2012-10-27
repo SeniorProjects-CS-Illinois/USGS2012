@@ -1,7 +1,11 @@
 #ifndef COLOR_H
 #define COLOR_H
+
 #include "math.h"
 #include "string.h"
+
+#include "globals.h"
+
     /**
       * Function description copy-pasted from Netlogo documentation:
       *
@@ -27,10 +31,10 @@
     /**
       * Turn a 2D index into a 1D index
       */
-    int getIndex(int x, int y) { return x + (y * MAP_WIDTH); }
+    int getIndex(int x, int y);
 
-    float** colorValues;
+    extern float** colorValues;
 
-    float* hues;
+    extern float* hues;
 
 #endif

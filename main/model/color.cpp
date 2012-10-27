@@ -1,6 +1,10 @@
 #include "color.h"
-#include <math.h>
 
+/**
+ * Defining non-extern versions of variables in h file
+ */
+float ** colorValues;
+float * hues;
 
 /**
  * Scales the color of the patch
@@ -40,16 +44,16 @@ void update_color() {
     int y = 0;
 
     // set hue values for each stock (magic numbers?)
-    hues[MACRO_INDEX] = 120.0 / 360.0;
-    hues[PHYTO_INDEX] = 120.0 / 360.0;
-    hues[WATERDECOMP_INDEX] = 120.0 / 360.0;
-    hues[POC_INDEX] = 240.0 / 360.0;
-    hues[DETRITUS_INDEX] = 19.6 / 360.0;
-    hues[SEDCONSUMER_INDEX] = 60.0 / 360.0;
-    hues[SEDDECOMP_INDEX] = 240.0 / 360.0;
-    hues[HERBIVORE_INDEX] = 300.0 / 360.0;
-    hues[CONSUM_INDEX] = 300.0 / 360.0;
-    hues[DOC_INDEX] = 60.0 / 360.0;
+    hues[g.MACRO_INDEX] = 120.0 / 360.0;
+    hues[g.PHYTO_INDEX] = 120.0 / 360.0;
+    hues[g.WATERDECOMP_INDEX] = 120.0 / 360.0;
+    hues[g.POC_INDEX] = 240.0 / 360.0;
+    hues[g.DETRITUS_INDEX] = 19.6 / 360.0;
+    hues[g.SEDCONSUMER_INDEX] = 60.0 / 360.0;
+    hues[g.SEDDECOMP_INDEX] = 240.0 / 360.0;
+    hues[g.HERBIVORE_INDEX] = 300.0 / 360.0;
+    hues[g.CONSUM_INDEX] = 300.0 / 360.0;
+    hues[g.DOC_INDEX] = 60.0 / 360.0;
 
     // calculate all relevant averages
     // TODO: is it safe to only do this calculation once?
@@ -61,9 +65,9 @@ void update_color() {
     double total_seddecomp = 0;
     double total_DOC = 0;
 
-    for(x = 0; x < MAP_WIDTH; x++)
+    for(x = 0; x < g.MAP_WIDTH; x++)
     {
-        for(y=0; y < MAP_HEIGHT; y++)
+        for(y=0; y < g.MAP_HEIGHT; y++)
         {
             if(patches[x][y].depth > 0.0)
             {
@@ -87,36 +91,40 @@ void update_color() {
     // don't do averages for: macro, sedconsumer, herbivore, or consum
 
     // set color values appropriately
-    for(y = 0; y < MAP_HEIGHT; y++)
+    for(y = 0; y < g.MAP_HEIGHT; y++)
     {
-        for(x = 0; x < MAP_WIDTH; x++)
+        for(x = 0; x < g.MAP_WIDTH; x++)
         {
             if (patches[x][y].depth == 0.0)
             {
-                colorValues[MACRO_INDEX][getIndex(x, y)] = -1;
-                colorValues[PHYTO_INDEX][getIndex(x, y)] = -1;
-                colorValues[WATERDECOMP_INDEX][getIndex(x, y)] = -1;
-                colorValues[POC_INDEX][getIndex(x, y)] = -1;
-                colorValues[DETRITUS_INDEX][getIndex(x, y)] = -1;
-                colorValues[SEDCONSUMER_INDEX][getIndex(x, y)] = -1;
-                colorValues[SEDDECOMP_INDEX][getIndex(x, y)] = -1;
-                colorValues[HERBIVORE_INDEX][getIndex(x, y)] = -1;
-                colorValues[CONSUM_INDEX][getIndex(x, y)] = -1;
-                colorValues[DOC_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.MACRO_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.PHYTO_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.WATERDECOMP_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.POC_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.DETRITUS_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.SEDCONSUMER_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.SEDDECOMP_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.HERBIVORE_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.CONSUM_INDEX][getIndex(x, y)] = -1;
+                colorValues[g.DOC_INDEX][getIndex(x, y)] = -1;
             }
             else
             {
-                scale_color(patches[x][y].macro, MAX_MACRO, 0.0, x, y, MACRO_INDEX);
-                scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, PHYTO_INDEX);
-                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, WATERDECOMP_INDEX);
-                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, POC_INDEX);
-                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, DETRITUS_INDEX);
-                scale_color(patches[x][y].sedconsumer, MAX_SEDCONSUMER, 0.0, x, y, SEDCONSUMER_INDEX);
-                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, SEDDECOMP_INDEX);
-                scale_color(patches[x][y].herbivore, MAX_HERBIVORE, 0.0, x, y, HERBIVORE_INDEX);
-                scale_color(patches[x][y].consum, MAX_CONSUM, 0.0, x, y, CONSUM_INDEX);
-                scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, DOC_INDEX);
+                scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX);
+                scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX);
+                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);
+                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX);
+                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX);
+                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX);
+                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX);
+                scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
+                scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
+                scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
             }
         }
     }
+}
+
+int getIndex(int x, int y) {
+    return x + (y * g.MAP_WIDTH);
 }
