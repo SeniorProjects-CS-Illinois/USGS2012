@@ -398,7 +398,7 @@ bool MainWindow::isStockSelected(QCheckBox * const input) const
     return input->isChecked();
 }
 
-void MainWindow::displayErrors(char *message) const
+void MainWindow::displayErrors(const char *message) const
 {
     ui->textBrowserErrors->setText(tr(message));
 }
