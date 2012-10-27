@@ -1,8 +1,9 @@
-*.pyc
 *.swp
-main/build/*
-main/dist/*
-main/build_log.txt
+main/debug/*
+main/release/*
+main/results/*
+main/Makefile*
+main/RiverModel.exe
 *.o
 *.so
 *.user

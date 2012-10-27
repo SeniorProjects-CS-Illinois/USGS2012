@@ -13,15 +13,17 @@
 #include <unistd.h>
 #endif
 
-#include <QtGui/QApplication>
-
 #include "model/globals.h"
 #include "model/setup.h"
 #include "model/patch.h"
 #include "model/go.h"
 #include "model/dump.h"
 #include "model/cleanup.h"
+
+#ifndef NO_GUI
+#include <QtGui/QApplication>
 #include "view/mainwindow.h"
+#endif
 
 /* Outputs an image */
 void output_image();
