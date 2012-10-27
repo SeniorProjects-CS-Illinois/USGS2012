@@ -5,3 +5,5 @@ main/dist/*
 main/build_log.txt
 *.o
 *.so
+*.user
+*Qt_SDK__Debug
