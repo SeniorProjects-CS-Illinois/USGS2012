@@ -4,6 +4,7 @@ main/release/*
 main/results/*
 main/Makefile*
 main/RiverModel.exe
+main/RiverModel
 *.o
 *.so
 *.user
