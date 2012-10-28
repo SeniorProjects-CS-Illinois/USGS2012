@@ -6,8 +6,12 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef _WIN32
+#include <direct.h>
+#else
 #include <unistd.h>
-#include <QtGui/QApplication>
+#endif
 
 #include "model/globals.h"
 #include "model/setup.h"
@@ -15,7 +19,11 @@
 #include "model/go.h"
 #include "model/dump.h"
 #include "model/cleanup.h"
+
+#ifndef NO_GUI
+#include <QtGui/QApplication>
 #include "view/mainwindow.h"
+#endif
 
 /* Outputs an image */
 void output_image();

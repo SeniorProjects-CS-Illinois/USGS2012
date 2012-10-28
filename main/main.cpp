@@ -1,4 +1,6 @@
 #include "main.h"
+//#include <direct.h>
+//#include <unistd.h>
 
 #ifdef NO_GUI
 int main(int argc, char *argv[]) {
@@ -55,8 +57,14 @@ void count_unique_files(int index)
     g.num_unique_files++;
 }
 
-void set_hydro_filenames(const char * filenames) {
-    char * filenames_writable_copy = strdup(filenames); 
+
+//TODO: Re-write this function to use C++ strings
+//TODO: Replace strtok with an equivilent C++ function of our design
+void set_hydro_filenames(const char * filenames)
+{
+    size_t filenames_len = strlen(filenames);
+    char * filenames_writable_copy = (char *)malloc(filenames_len * sizeof(char));
+    strncpy(filenames_writable_copy, filenames, filenames_len);
     char* filename;
     int index = 0;
     g.num_unique_files = 0;
@@ -73,8 +81,9 @@ void set_hydro_filenames(const char * filenames) {
     // Parse the file name if one exists
     while((filename = strtok(NULL, "?")) != NULL)
     {
-        g.gui_filenames_array[index] = (char*)malloc((strlen(filename)+1)*sizeof(char));
-        strcpy(g.gui_filenames_array[index],filename);
+        size_t len = (strlen(filename)+1);
+        g.gui_filenames_array[index] = (char*)malloc(len*sizeof(char));
+        strncpy(g.gui_filenames_array[index], filename, len);
         count_unique_files(index);
         filename = strtok(NULL, "?");
         g.gui_days_array[index] = atoi(filename); //Parse howmany days to run current file
@@ -85,21 +94,27 @@ void set_hydro_filenames(const char * filenames) {
 }
 
 
-void set_par_file(const char * filename) {
-    strcpy(g.gui_photo_radiation_file, filename);
+void set_par_file(const char * filename)
+{
+    size_t len = strlen(filename) + 1;
+    strncpy(g.gui_photo_radiation_file, filename, len);
 }
 
-void set_timestep(int timestep) {
+void set_timestep(int timestep)
+{
     g.gui_timestep_factor = timestep;
 }
 
-void set_temperature_file(const char * filename) {
-    strcpy(g.gui_temperature_file, filename);
+void set_temperature_file(const char * filename)
+{
+    size_t len = strlen(filename) + 1;
+    strncpy(g.gui_temperature_file, filename, len);
 }
 
 
-//TODO: Unstub this with c code for image output.
-void output_image(void){
+//TODO: Unstub this with C/C++ code for image output.
+void output_image(void)
+{
     return;
 }
 
@@ -111,21 +126,21 @@ void create_output_dirs(void) {
 
     if (stat("./results", &st) == -1) {
         #ifdef _WIN32
-        mkdir("./results");
+        _mkdir("./results");
         #else
         mkdir("./results", 0775);
         #endif
     }
     if (stat("./results/data", &st) == -1) {
         #ifdef _WIN32
-        mkdir("./results/data");
+        _mkdir("./results/data");
         #else
         mkdir("./results/data", 0775);
         #endif
     }
     if (stat("./results/images", &st) == -1) {
         #ifdef _WIN32
-        mkdir("./results/images");
+        _mkdir("./results/images");
         #else
         mkdir("./results/images", 0775);
         #endif
@@ -161,7 +176,8 @@ void go_command(void) {
 
 void set_whichstock(const char * stock_name)
 {
-    strcpy(g.which_stock, stock_name);
+    size_t len = strlen(stock_name);
+    strncpy(g.which_stock, stock_name, len);
 }
 
 void set_TSS(double tss)

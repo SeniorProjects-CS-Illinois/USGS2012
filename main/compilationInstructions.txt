@@ -1,11 +1,32 @@
-Windows Compilation instructions:
+Windows Setup instructions:
 ------------------------------------
-Install the following software IN THE ORDER LISTED into their default locations:
+Install the following software:
 
-- mingw32               - http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/
-     *** Install at least the gcc stuff from mingw32 ***
+- mingw32      - http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/
+     *** Install at least the g++ stuff and any make that is provided ***
+- QT SDK       - http://qt-project.org/downloads/#qt-other
 
 Once you've installed these, add the following directories to your system path:
 C:\MinGW\bin\
+C:\QtSDK\Desktop\Qt\4.8.1\mingw\bin
 
-If you did the above, you should be able to double click build.bat in this folder to compile.
+
+Compiling:
+-------------------------------------
+Once you've done the above you can run the GUI by opening the following file in QT Creator.
+     main/RiverModelGUI.pro
+
+To compile a version of the program with no GUI, run the following commands from the main
+directory:
+
+     qmake RiverModel.pro
+     make
+
+This will output an executable in your main folder which can be run via the command line.
+To compile a faster, non-debug version of the program use "make release" instead.
+
+To remove previously compiled object files run:
+     make clean
+
+To remove the makefiles, executable, and object files run:
+     make distclean

@@ -147,7 +147,7 @@ private:
     bool isStockSelected(QCheckBox * const input) const;
 
     /* Set an error message */
-    void displayErrors(char * message) const;
+    void displayErrors(const char * message) const;
 
     /* Add hydro map information to list */
     void addHydroMap(QString filename, QString days, bool addInfo);

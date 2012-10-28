@@ -43,7 +43,7 @@ void update_par();
 /**
  * @return the max_timestep based on the greatest x-y vector
  */
-int get_timestep();
+double get_timestep();
 
 /**
  * @return 1 if DOC, POC, phyto, waterdecomp are NaN 0 otherwise

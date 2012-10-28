@@ -22,15 +22,15 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
         return;
     }
 
-    if(value <= minVal || isnan(value)) {
+    if(value <= minVal || /*isnan(value)*/ (value != value)) {
         returnValue = 0.0;
     }
     else if(value >= maxVal) {
         returnValue = 1.0;
     }
     else {
-        float rangeValues = fabs(maxVal - minVal);
-        returnValue = (value / rangeValues);
+        float rangeValues = (float)fabs(maxVal - minVal);
+        returnValue = (float)(value / rangeValues);
     }
     colorValues[stockIndex][getIndex(x, y)] = returnValue;
 }
@@ -44,16 +44,16 @@ void update_color() {
     int y = 0;
 
     // set hue values for each stock (magic numbers?)
-    hues[g.MACRO_INDEX] = 120.0 / 360.0;
-    hues[g.PHYTO_INDEX] = 120.0 / 360.0;
-    hues[g.WATERDECOMP_INDEX] = 120.0 / 360.0;
-    hues[g.POC_INDEX] = 240.0 / 360.0;
-    hues[g.DETRITUS_INDEX] = 19.6 / 360.0;
-    hues[g.SEDCONSUMER_INDEX] = 60.0 / 360.0;
-    hues[g.SEDDECOMP_INDEX] = 240.0 / 360.0;
-    hues[g.HERBIVORE_INDEX] = 300.0 / 360.0;
-    hues[g.CONSUM_INDEX] = 300.0 / 360.0;
-    hues[g.DOC_INDEX] = 60.0 / 360.0;
+    hues[g.MACRO_INDEX] = (float)(120.0 / 360.0);
+    hues[g.PHYTO_INDEX] = (float)(120.0 / 360.0);
+    hues[g.WATERDECOMP_INDEX] = (float)(120.0 / 360.0);
+    hues[g.POC_INDEX] = (float)(240.0 / 360.0);
+    hues[g.DETRITUS_INDEX] = (float)(19.6 / 360.0);
+    hues[g.SEDCONSUMER_INDEX] = (float)(60.0 / 360.0);
+    hues[g.SEDDECOMP_INDEX] = (float)(240.0 / 360.0);
+    hues[g.HERBIVORE_INDEX] = (float)(300.0 / 360.0);
+    hues[g.CONSUM_INDEX] = (float)(300.0 / 360.0);
+    hues[g.DOC_INDEX] = (float)(60.0 / 360.0);
 
     // calculate all relevant averages
     // TODO: is it safe to only do this calculation once?
