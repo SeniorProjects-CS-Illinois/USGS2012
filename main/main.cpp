@@ -62,7 +62,7 @@ void count_unique_files(int index)
 //TODO: Replace strtok with an equivilent C++ function of our design
 void set_hydro_filenames(const char * filenames)
 {
-    size_t filenames_len = strlen(filenames);
+    size_t filenames_len = strlen(filenames) + 1;
     char * filenames_writable_copy = (char *)malloc(filenames_len * sizeof(char));
     strncpy(filenames_writable_copy, filenames, filenames_len);
     char* filename;
