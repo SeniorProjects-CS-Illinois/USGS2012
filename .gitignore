@@ -7,3 +7,4 @@ main/build_log.txt
 *.so
 *.user
 *Qt_SDK__Debug
+*~
