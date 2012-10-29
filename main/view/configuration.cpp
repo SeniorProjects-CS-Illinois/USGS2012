@@ -168,7 +168,6 @@ void Configuration::read(const char* filename)
 
     std::getline(file, str);
     tss = convertFloat(str);
-    cout << str << endl;
     std::getline(file, str);
     macroTemp = convertFloat(str);
     std::getline(file, str);

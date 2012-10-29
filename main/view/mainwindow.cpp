@@ -133,7 +133,8 @@ void MainWindow::selectPARFileClicked()
 void MainWindow::runClicked()
 {
     clearErrors();
-    displayErrors("Not mimplemented yet");
+    getAllInput();
+    go_command();
 }
 
 void MainWindow::timestepUpdate(int newVal)
@@ -148,9 +149,14 @@ void MainWindow::timestepUpdate(int newVal)
 
 void MainWindow::saveConfiguration()
 {
-    Configuration conf;
     QString name = QFileDialog::getSaveFileName(this, tr("Save Configuration As"),
                                                 tr(defaultFileLocation()), tr("Config Files (*.conf)"));
+    saveConfiguration(name);
+}
+
+void MainWindow::saveConfiguration(QString file) const
+{
+    Configuration conf;
 
     // set all values for configuration
     conf.adjacent               = getAdjacent();
@@ -190,16 +196,20 @@ void MainWindow::saveConfiguration()
     conf.setFileName(getPARFile(), conf.parFile);
     conf.setFileName(getTempFile(), conf.tempFile);
 
-    conf.write(name.toStdString().c_str());
+    conf.write(file.toStdString().c_str());
 }
 
 void MainWindow::loadConfiguration()
 {
-    Configuration conf;
     QString name = QFileDialog::getOpenFileName(this, tr("Open Configuration"),
                                                 tr(defaultFileLocation()), tr("Config Files (*.conf)"));
+    loadConfiguration(name);
+}
 
-    conf.read(name.toStdString().c_str());
+void MainWindow::loadConfiguration(QString file)
+{
+    Configuration conf;
+    conf.read(file.toStdString().c_str());
 
     // set all values
     setConsum(conf.consum);
@@ -443,6 +453,47 @@ char* MainWindow::defaultFileLocation() const
 {
     // change output to wherever data dir is
     return  "C:/Users/Owner/Desktop/data";
+}
+
+void MainWindow::getAllInput() const
+{
+    // TODO: is this confusing with the different naming conventions?
+    set_hydro_filenames(formatHydroMaps().toStdString().c_str());
+    set_par_file(getPARFile().toStdString().c_str()); //"model/data/Environmentals/par.txt");
+    set_temperature_file(getTempFile().toStdString().c_str()); //"model/data/Environmentals/water-temp.txt");
+    set_timestep(getTimestep());
+    // TODO: need separate dropdown for this, re-configure GUI a bit
+    set_whichstock("phyto");
+    set_TSS(getTSS());
+    set_macro_base_temp(getMacroTemp());
+    set_gross_macro_coef(getGrossMacroCoef());
+    set_resp_macro_coef(getRespirationMacroCoef());
+    set_sen_macro_coef(getSenescenceMacroCoef());
+    set_macro_mass_max(getMacroMassMax());
+    set_macro_vel_max(getMacroVelocityMax());
+    set_k_phyto(getKPhyto());
+    set_k_macro(getKMacro());
+    set_output_frequency(getOutputFreq());
+    // TODO: is this the "adjacent cells only" boolean?
+    set_flow_corners(getAdjacent());
+
+    //saveConfiguration(QString(defaultFileLocation()));
+}
+
+QString MainWindow::formatHydroMaps() const
+{
+    QList<QString> maps = getHydroMaps();
+    QList<uint8_t> days = getDaysToRun();
+    size_t numMaps = maps.size();
+    QString builder;
+    builder.append(QString::number(numMaps) + "?");
+    for (size_t i = 0; i < numMaps; i++)
+    {
+        builder.append(maps.at(i) + "?");
+        builder.append(QString::number(days.at(i)) + "?");
+    }
+
+    return builder;
 }
 
 /* END private functions */

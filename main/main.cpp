@@ -2,6 +2,9 @@
 //#include <direct.h>
 //#include <unistd.h>
 
+using std::cout;
+using std::endl;
+
 #ifdef NO_GUI
 int main(int argc, char *argv[]) {
     initialize_globals();
@@ -34,12 +37,14 @@ int main(int argc, char *argv[]) {
 int main(int argc, char *argv[])
 {
     initialize_globals();
+    create_output_dirs();
 
     QApplication a(argc, argv);
     MainWindow w;
     w.setToolTips();
     w.show();
 
+    // TODO: this is probably the place to add some basic threading for the GUI
     return a.exec();
 }
 
@@ -60,6 +65,7 @@ void count_unique_files(int index)
 
 //TODO: Re-write this function to use C++ strings
 //TODO: Replace strtok with an equivilent C++ function of our design
+//      or just pass in files and days to run separately so no parsing necessary
 void set_hydro_filenames(const char * filenames)
 {
     size_t filenames_len = strlen(filenames) + 1;
@@ -157,21 +163,22 @@ void go_command(void) {
     g.gui_days_to_run = 0;
     for(index = 0; index < g.gui_filenames_filesize; index++)
     {
-        printf("RUNNING FILE: %s FOR %d DAYS\n", g.gui_filenames_array[index], g.gui_days_array[index]);
+        cout << "RUNNING FILE: " << g.gui_filenames_array[index];
+        cout << " FOR " << g.gui_days_array[index] << " DAYS" << endl;
         g.gui_days_to_run += g.gui_days_array[index];  //Set howmany days to run the new hydromap
         g.hydro_group = (g.hydromap_index_array[index] + 1); //Set the new hydromap that will run
         g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
 
         while( (day = (g.hours / 24)) < g.gui_days_to_run)
         {
-            printf("Day: %d - Hour: %ld\n", (day+1), (g.hours)%24);
+            cout << "Day: " << (day+1) << " - Hour: " << ((g.hours)%24) << endl;
             go();
         }
     }
 
     cleanup();
 
-    printf("\nPROCESSING COMPLETE\n");
+    cout << endl << "PROCESSING COMPLETE" << endl;
 }
 
 void set_whichstock(const char * stock_name)

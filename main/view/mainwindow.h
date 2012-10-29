@@ -7,6 +7,8 @@
 #include "ui_mainwindow.h"
 #include "configuration.h"
 
+#include "../main.h"
+
 namespace Ui
 {
     class MainWindow;
@@ -152,13 +154,19 @@ private:
     /* Add hydro map information to list */
     void addHydroMap(QString filename, QString days, bool addInfo);
 
+    /* Save the configuration to the given file */
+    void saveConfiguration(QString file) const;
+
+    /* Load the configuration from the given file */
+    void loadConfiguration(QString file);
+
     /* Strips off all path info except file name*/
     QString stripFile(QString path) const;
 
     /** Format for a QListWidgetItem:
       *     <Filename>: <Days To Run> Days
-      *     <Filename> = char*
-      *     <Days To Run> = int
+      *         <Filename> = char*
+      *         <Days To Run> = int
       */
 
     /* Get the days to run value from the given item */
@@ -166,6 +174,12 @@ private:
 
     /* Get the hydro map file name from the given item */
     QString parseHydroMapName(QListWidgetItem* item) const;
+
+    /* Get all the input from the GUI and set appropriate globals */
+    void getAllInput() const;
+
+    /* Turns hydro map info int properly formatted string expected by given code */
+    QString formatHydroMaps() const;
 };
 
 #endif // MAINWINDOW_H
