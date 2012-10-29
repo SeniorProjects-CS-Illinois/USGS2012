@@ -19,9 +19,9 @@ void cleanup()
 void clean_patches() 
 {
     int x,y,stock;
-    for (x = 0; x < MAP_WIDTH; x++) 
+    for (x = 0; x < g.MAP_WIDTH; x++) 
 	{
-        for (y = 0; y < MAP_HEIGHT; y++) 
+        for (y = 0; y < g.MAP_HEIGHT; y++) 
 		{
             free( patches[x][y].available );
             free( patches[x][y].pxv_list );
@@ -32,12 +32,12 @@ void clean_patches()
 
         free( patches[x] );
     }
-    for (stock = 0; stock < NUM_STOCKS; stock++) {
+    for (stock = 0; stock < g.NUM_STOCKS; stock++) {
         free(colorValues[stock]);
     }
 
-	free( covered_area );
-	free( uncovered_area );
+	free( g.covered_area );
+	free( g.uncovered_area );
     free( patches );
     free( colorValues );
 }
@@ -49,12 +49,12 @@ void clean_patches()
 void clean_gui_filenames_and_days() 
 {
     int index;
-    for(index = 0; index < gui_filenames_filesize; index++)
+    for(index = 0; index < g.gui_filenames_filesize; index++)
 	{
-        free(gui_filenames_array[index]);
+        free(g.gui_filenames_array[index]);
     }
-    free(gui_filenames_array);
-    free(gui_days_array);
+    free(g.gui_filenames_array);
+    free(g.gui_days_array);
 }
 
 
@@ -63,7 +63,7 @@ void clean_gui_filenames_and_days()
 */
 void clean_hydromap_index_array() 
 {
-	free(hydromap_index_array);
+	free(g.hydromap_index_array);
 }
 
 
@@ -72,10 +72,10 @@ void clean_hydromap_index_array()
 */
 void clean_check_filenames_array() {
   int index;
-  for(index = 0; index < num_unique_files; index++){
-    free(check_filenames_array[index]);
+  for(index = 0; index < g.num_unique_files; index++){
+    free(g.check_filenames_array[index]);
   }
-  free(check_filenames_array);
+  free(g.check_filenames_array);
 }
 
 
@@ -83,12 +83,12 @@ void clean_check_filenames_array() {
  * Frees the photo_radiation_data array
 */
 void clean_photo_radiation_data() {
-    free( photo_radiation_data );
+    free( g.photo_radiation_data );
 }
 
 /**
  * Frees the temperature_data array
  */
 void clean_temperature_data() {
-    free( temperature_data );
+    free( g.temperature_data );
 }

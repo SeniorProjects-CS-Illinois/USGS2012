@@ -10,11 +10,28 @@ TARGET = RiverModelGUI
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        view/mainwindow.cpp \
+SOURCES += main.cpp \
+    model/globals.cpp \
+    model/cleanup.cpp \
+    model/color.cpp \
+    model/dump.cpp \
+    model/go.cpp \
+    model/patch.cpp \
+    model/pred.cpp \
+    model/setup.cpp \
+    view/mainwindow.cpp \
     view/configuration.cpp
 
-HEADERS  += view/mainwindow.h \
+HEADERS  += main.h \
+    model/cleanup.h \
+    model/color.h \
+    model/dump.h \
+    model/globals.h \
+    model/go.h \
+    model/patch.h \
+    model/pred.h \
+    model/setup.h \
+    view/mainwindow.h \
     view/configuration.h
 
 FORMS    += view/mainwindow.ui

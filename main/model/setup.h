@@ -1,11 +1,13 @@
 #ifndef _SETUP
 #define _SETUP
 
-#include "globals.h"
-#include "go.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include "globals.h"
+#include "go.h"
+#include "color.h"
 
 /**
  * Calls the helper functions import_hydro and setup_environmentals

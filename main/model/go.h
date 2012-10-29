@@ -1,8 +1,15 @@
 #ifndef GO_H
 #define GO_H
 
+#include "math.h"
+#include <sys/types.h>
+#include <time.h>
+
 #include "globals.h"
 #include "dump.h"
+#include "../main.h"
+#include "pred.h"
+#include "color.h"
 
 /* Runs the model */
 void go();
