@@ -25,7 +25,7 @@ public:
 
 public slots:
 
-    /* Open up dialog for selecting hydro map file */
+    /* Open dialog for selecting hydro map file */
     void selectHydroMapClicked();
 
     /* Adds the selected hydro map to the model */
@@ -33,6 +33,9 @@ public slots:
 
     /* Removes the selected hydro map from the model */
     void removeHydroMapClicked();
+
+    /* Open dialog for selecting a discharge file */
+    void selectDischargeFileClicked();
 
     /* Open dialog for selecting temperature file */
     void selectTemperatureFileClicked();
@@ -86,6 +89,7 @@ public:
     float getKPhyto() const;
     float getKMacro() const;
 
+    QString getWhichStock() const;
     QString getTempFile() const;
     QString getPARFile() const;
 
@@ -133,9 +137,6 @@ private:
     QList<QString> wholeHydroMapFiles;
     QList<uint8_t> daysToRun;
 
-    /* Used to make file selection faster */
-    char* defaultFileLocation() const;
-
     /* Reset error message output box - all slots should call this in the beginning */
     void clearErrors() const;
 
@@ -152,7 +153,7 @@ private:
     void displayErrors(const char * message) const;
 
     /* Add hydro map information to list */
-    void addHydroMap(QString filename, QString days, bool addInfo);
+    void addHydroMap(QString file, QString days, bool addInfo);
 
     /* Save the configuration to the given file */
     void saveConfiguration(QString file) const;
@@ -180,6 +181,18 @@ private:
 
     /* Turns hydro map info int properly formatted string expected by given code */
     QString formatHydroMaps() const;
+
+    /* Takes a discharge file and populates hydro map information */
+    void dischargeToHydro(QString file);
+
+    /* Finds the appropriate hydro file based on the given integer */
+    QString intToHydroFile(int hydro, QString base) const;
+
+    /* Convert QString to const char* */
+    const char* qstringToCStr(const QString & input) const;
+
+    /* Used to make file selection faster */
+    char* defaultFileLocation() const;
 };
 
 #endif // MAINWINDOW_H

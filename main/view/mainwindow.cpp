@@ -1,13 +1,19 @@
 #include "mainwindow.h"
 #include <iostream>
 
+using std::ifstream;
+using std::string;
 using std::cout;
 using std::endl;
 
 /** TODO
-  *     - load from .conf file
+  *     - whole bunch of stock input
+  *         1) set values
+  *         2) tool tips
+  *         3) save/load from configuration
   *     - dynamic slider tooltip
   *     - error checking for run
+  *     - break this hideously long file into more
   */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -94,6 +100,21 @@ void MainWindow::removeHydroMapClicked()
     }
 }
 
+void MainWindow::selectDischargeFileClicked()
+{
+    clearErrors();
+
+    // open prompt to select file
+    QString selected = QFileDialog::getOpenFileName(this, tr("Select Discharge File"),
+                                                    tr(defaultFileLocation()), tr("Text Files (*.txt)"));
+
+    // make sure a discharge file was selected
+    if (!selected.isEmpty())
+    {
+        dischargeToHydro(selected);
+    }
+}
+
 void MainWindow::selectTemperatureFileClicked()
 {
     clearErrors();
@@ -151,7 +172,10 @@ void MainWindow::saveConfiguration()
 {
     QString name = QFileDialog::getSaveFileName(this, tr("Save Configuration As"),
                                                 tr(defaultFileLocation()), tr("Config Files (*.conf)"));
-    saveConfiguration(name);
+    if (!name.isEmpty())
+    {
+        saveConfiguration(name);
+    }
 }
 
 void MainWindow::saveConfiguration(QString file) const
@@ -203,7 +227,10 @@ void MainWindow::loadConfiguration()
 {
     QString name = QFileDialog::getOpenFileName(this, tr("Open Configuration"),
                                                 tr(defaultFileLocation()), tr("Config Files (*.conf)"));
-    loadConfiguration(name);
+    if (!name.isEmpty())
+    {
+        loadConfiguration(name);
+    }
 }
 
 void MainWindow::loadConfiguration(QString file)
@@ -252,6 +279,7 @@ void MainWindow::setToolTips()
     ui->pushButtonSelectHydroMap->setToolTip(tr("Push to select hydro map data file"));
     ui->pushButtonSelectPARFile->setToolTip(tr("Push to select PAR data file"));
     ui->pushButtonSelectTempFile->setToolTip(tr("Push to add temperature data file"));
+    ui->pushButtonSelectDischargeFile->setToolTip(tr("Push to add hydro files based on a discharge file"));
 
     // Check Boxes
     ui->checkBoxAdjacentCells->setToolTip(tr("Check this box if you want carbon flows to be limited to only adjacent cells"));
@@ -286,6 +314,9 @@ void MainWindow::setToolTips()
 
     // Sliders
     ui->horizontalSliderTimestep->setToolTip(QString::number(getTimestep()));
+
+    // Combo Boxes
+    ui->comboBoxWhichStock->setToolTip("Which stock");
 
     // Text Input Boxes
     ui->lineEditDaysToRun->setToolTip(tr("Enter a positive integer"));
@@ -331,6 +362,7 @@ float MainWindow::getMacroVelocityMax() const { return ui->lineEditMacroVelocity
 float MainWindow::getKPhyto() const { return ui->lineEditKPhyto->text().toFloat(); }
 float MainWindow::getKMacro() const { return ui->lineEditKMacro->text().toFloat(); }
 
+QString MainWindow::getWhichStock() const { return ui->comboBoxWhichStock->currentText(); }
 QString MainWindow::getTempFile() const { return wholeTempFile; }
 QString MainWindow::getPARFile() const { return wholePARFile; }
 
@@ -413,15 +445,15 @@ void MainWindow::displayErrors(const char *message) const
     ui->textBrowserErrors->setText(tr(message));
 }
 
-void MainWindow::addHydroMap(QString filename, QString days, bool addInfo)
+void MainWindow::addHydroMap(QString file, QString days, bool addInfo)
 {
     if (addInfo)
     {
-        wholeHydroMapFiles.append(filename);
+        wholeHydroMapFiles.append(file);
         daysToRun.append(days.toInt());
-        filename = stripFile(filename);
+        file = stripFile(file);
     }
-    QString output = filename + ": " + days + " Days";
+    QString output = file + ": " + days + " Day" + (days != "1" ? "s" : "");
     ui->listWidgetHydroMap->addItem(new QListWidgetItem(output, ui->listWidgetHydroMap));
 }
 
@@ -449,12 +481,6 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
     return text.mid(0, colonIndex);
 }
 
-char* MainWindow::defaultFileLocation() const
-{
-    // change output to wherever data dir is
-    return  "C:/Users/Owner/Desktop/data";
-}
-
 void MainWindow::getAllInput() const
 {
     // TODO: is this confusing with the different naming conventions?
@@ -463,7 +489,7 @@ void MainWindow::getAllInput() const
     set_temperature_file(getTempFile().toStdString().c_str()); //"model/data/Environmentals/water-temp.txt");
     set_timestep(getTimestep());
     // TODO: need separate dropdown for this, re-configure GUI a bit
-    set_whichstock("phyto");
+    set_whichstock(getWhichStock().toStdString().c_str());
     set_TSS(getTSS());
     set_macro_base_temp(getMacroTemp());
     set_gross_macro_coef(getGrossMacroCoef());
@@ -494,6 +520,49 @@ QString MainWindow::formatHydroMaps() const
     }
 
     return builder;
+}
+
+void MainWindow::dischargeToHydro(QString file)
+{
+    ifstream fStream;
+    fStream.open(file.toStdString().c_str());
+    string str;
+
+    // TODO: need a better way to do this
+    QString hydroMapBase(defaultFileLocation());
+    hydroMapBase.append("/hydroSets");
+
+    std::getline(fStream, str);
+    size_t count = 1;
+    while (!str.empty())
+    {
+        int hydro = atoi(str.c_str());
+        QString hydroFile = intToHydroFile(hydro, hydroMapBase);
+        // TODO: do a smart update of count
+        addHydroMap(hydroFile, QString::number(count), true);
+        std::getline(fStream, str);
+    }
+    fStream.close();
+}
+
+QString MainWindow::intToHydroFile(int hydro, QString base) const
+{
+    // TODO: should this be floor function?
+    QString file("0k-new.txt");
+    file.prepend(QString::number(hydro/10000));
+    return base + "/" + file;
+}
+
+const char* MainWindow::qstringToCStr(const QString & input) const
+{
+    // TODO: this function has serious scoping problems, the returned char* is immediately invalid
+    return input.toStdString().c_str();
+}
+
+char* MainWindow::defaultFileLocation() const
+{
+    // change output to wherever data dir is
+    return  "C:/cygwin/home/Owner/cs492/USGS2012/main/model/data";
 }
 
 /* END private functions */
