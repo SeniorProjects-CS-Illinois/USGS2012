@@ -643,7 +643,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </item>
      </widget>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="labelWhichStock">
       <property name="geometry">
        <rect>
         <x>80</x>
@@ -732,7 +732,7 @@ p, li { white-space: pre-wrap; }
      <zorder>lineEditDaysToRun</zorder>
      <zorder>pushButtonRemoveHydroMap</zorder>
      <zorder>checkBoxHerbivore</zorder>
-     <zorder>label</zorder>
+     <zorder>labelWhichStock</zorder>
     </widget>
     <widget class="QWidget" name="tabStocks">
      <attribute name="title">
@@ -2014,7 +2014,7 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditConsumerREspiration">
+     <widget class="QLineEdit" name="lineEditConsumerRespiration">
       <property name="geometry">
        <rect>
         <x>560</x>
@@ -2826,7 +2826,7 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditGrossMacroCoef">
+     <widget class="QLineEdit" name="lineEditMacroGrossCoef">
       <property name="geometry">
        <rect>
         <x>560</x>
@@ -2839,7 +2839,7 @@ p, li { white-space: pre-wrap; }
        <string>0.08</string>
       </property>
      </widget>
-     <widget class="QLabel" name="labelGrossMacroCoef">
+     <widget class="QLabel" name="labelMacroGrossCoef">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -2849,7 +2849,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Gross Macro Coef:</string>
+       <string>Macro Gross:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

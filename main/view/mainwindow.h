@@ -80,15 +80,92 @@ public:
     uint8_t getNumHydroMaps() const;
 
     float getTSS() const;
-    float getMacroTemp() const;
-    float getGrossMacroCoef() const;
-    float getRespirationMacroCoef() const;
-    float getSenescenceMacroCoef() const;
-    float getMacroMassMax() const;
-    float getMacroVelocityMax() const;
     float getKPhyto() const;
     float getKMacro() const;
 
+    // Stock parameters
+    float getPhytoSenescence() const;
+    float getPhytoRespiration() const;
+    float getPhytoExcretion() const;
+    float getPhytoAj() const;
+    float getPhytoGj() const;
+
+    float getHerbivoreAiPhyto() const;
+    float getHerbivoreGiPhyto() const;
+    float getHerbivorePrefPhyto() const;
+    float getHerbivoreAiPeri() const;
+    float getHerbivoreGiPeri() const;
+    float getHerbivorePrefPeri() const;
+    float getHerbivoreAiWaterdecomp() const;
+    float getHerbivoreGiWaterdecomp() const;
+    float getHerbivorePrefWaterdecomp() const;
+    float getHerbivoreAj() const;
+    float getHerbivoreGj() const;
+    float getHerbivoreRespiration() const;
+    float getHerbivoreExcretion() const;
+    float getHerbivoreEgestion() const;
+    float getHerbivoreSenescence() const;
+    float getHerbivoreMax() const;
+
+    float getWaterdecompAiDoc() const;
+    float getWaterdecompGiDoc() const;
+    float getWaterdecompPrefDoc() const;
+    float getWaterdecompAiPoc() const;
+    float getWaterdecompGiPoc() const;
+    float getWaterdecompPrefPoc() const;
+    float getWaterdecompAj() const;
+    float getWaterdecompGj() const;
+    float getWaterdecompRespiration() const;
+    float getWaterdecompExcretion() const;
+    float getWaterdecompSenescence() const;
+    float getWaterdecompMax() const;
+
+    float getSeddecompAiDetritus() const;
+    float getSeddecompGiDetritus() const;
+    float getSeddecompPrefDetritus() const;
+    float getSeddecompAj() const;
+    float getSeddecompGj() const;
+    float getSeddecompRespiration() const;
+    float getSeddecompExcretion() const;
+    float getSeddecompSenescence() const;
+    float getSeddecompMax() const;
+
+    float getConsumerAiHerbivore() const;
+    float getConsumerGiHerbivore() const;
+    float getConsumerPrefHerbivore() const;
+    float getConsumerAiSedconsumer() const;
+    float getConsumerGiSedconsumer() const;
+    float getConsumerPrefSedconsumer() const;
+    float getConsumerAj() const;
+    float getConsumerGj() const;
+    float getConsumerRespiration() const;
+    float getConsumerExcretion() const;
+    float getConsumerSenescence() const;
+    float getConsumerEgestion() const;
+    float getConsumerMax() const;
+
+    float getMacroSenescence() const;
+    float getMacroRespiration() const;
+    float getMacroExcretion() const;
+    float getMacroTemp() const;
+    float getMacroGross() const;
+    float getMacroMassMax() const;
+    float getMacroVelocityMax() const;
+
+    float getSedconsumerAiDetritus() const;
+    float getSedconsumerGiDetritus() const;
+    float getSedconsumerPrefDetritus() const;
+    float getSedconsumerAiSeddecomp() const;
+    float getSedconsumerGiSeddecomp() const;
+    float getSedconsumerPrefSeddecomp() const;
+    float getSedconsumerAj() const;
+    float getSedconsumerGj() const;
+    float getSedconsumerRespiration() const;
+    float getSedconsumerExcretion() const;
+    float getSedconsumerSenescence() const;
+    float getSedconsumerMax() const;
+
+    // Files
     QString getWhichStock() const;
     QString getTempFile() const;
     QString getPARFile() const;
@@ -113,18 +190,96 @@ public:
     void setTimestep(uint8_t val);
 
     void setTSS(float val);
-    void setMacroTemp(float val);
-    void setGrossMacroCoef(float val);
-    void setRespirationMacroCoef(float val);
-    void setSenescenceMacroCoef(float val);
-    void setMacroMassMax(float val);
-    void setMacroVelocityMax(float val);
     void setKPhyto(float val);
     void setKMacro(float val);
 
+    // Stock parameters
+    void setWhichStock(char* stock);
+
+    void setPhytoSenescence(float val);
+    void setPhytoRespiration(float val);
+    void setPhytoExretion(float val);
+    void setPhytoAj(float val);
+    void setPhytoGj(float val);
+
+    void setHerbivoreAiPhyto(float val);
+    void setHerbivoreGiPhyto(float val);
+    void setHerbivorePrefPhyto(float val);
+    void setHerbivoreAiPeri(float val);
+    void setHerbivoreGiPeri(float val);
+    void setHerbivorePrefPeri(float val);
+    void setHerbivoreAiWaterdecomp(float val);
+    void setHerbivoreGiWaterdecomp(float val);
+    void setHerbivorePrefWaterdecomp(float val);
+    void setHerbivoreAj(float val);
+    void setHerbivoreGj(float val);
+    void setHerbivoreRespiration(float val);
+    void setHerbivoreExcretion(float val);
+    void setHerbivoreEgestion(float val);
+    void setHerbivoreSenescence(float val);
+    void setHerbivoreMax(float val);
+
+    void setWaterdecompAiDoc(float val);
+    void setWaterdecompGiDoc(float val);
+    void setWaterdecompPrefDoc(float val);
+    void setWaterdecompAiPoc(float val);
+    void setWaterdecompGiPoc(float val);
+    void setWaterdecompPrefPoc(float val);
+    void setWaterdecompAj(float val);
+    void setWaterdecompGj(float val);
+    void setWaterdecompRespiration(float val);
+    void setWaterdecompExcretion(float val);
+    void setWaterdecompSenescence(float val);
+    void setWaterdecompMax(float val);
+
+    void setSeddecompAiDetritus(float val);
+    void setSeddecompGiDetritus(float val);
+    void setSeddecompPrefDetritus(float val);
+    void setSeddecompAj(float val);
+    void setSeddecompGj(float val);
+    void setSeddecompRespiration(float val);
+    void setSeddecompExcretion(float val);
+    void setSeddecompSenescence(float val);
+    void setSeddecompMax(float val);
+
+    void setConsumerAiHerbivore(float val);
+    void setConsumerGiHerbivore(float val);
+    void setConsumerPrefHerbivore(float val);
+    void setConsumerAiSedconsumer(float val);
+    void setConsumerGiSedconsumer(float val);
+    void setConsumerPrefSedconsumer(float val);
+    void setConsumerAj(float val);
+    void setConsumerGj(float val);
+    void setConsumerRespiration(float val);
+    void setConsumerExcretion(float val);
+    void setConsumerSenescence(float val);
+    void setConsumerEgestion(float val);
+    void setConsumerMax(float val);
+
+    void setMacroSenescence(float val);
+    void setMacroRespiration(float val);
+    void setMacroExcretion(float val);
+    void setMacroTemp(float val);
+    void setMacroGross(float val);
+    void setMacroMassMax(float val);
+    void setMacroVelocityMax(float val);
+
+    void setSedconsumerAiDetritus(float val);
+    void setSedconsumerGiDetritus(float val);
+    void setSedconsumerPrefDetritus(float val);
+    void setSedconsumerAiSeddecomp(float val);
+    void setSedconsumerGiSeddecomp(float val);
+    void setSedconsumerPrefSeddecomp(float val);
+    void setSedconsumerAj(float val);
+    void setSedconsumerGj(float val);
+    void setSedconsumerRespiration(float val);
+    void setSedconsumerExcretion(float val);
+    void setSedconsumerSenescence(float val);
+    void setSedconsumerMax(float val);
+
+    // Files
     void setTempFile(char* filename);
     void setPARFile(char* filename);
-
     void setHydroMaps(char** filenames, uint8_t* daysToRun, size_t num);
 
 private:
@@ -149,11 +304,14 @@ private:
     /* Check if given stock value has been checked */
     bool isStockSelected(QCheckBox * const input) const;
 
+    /* Get the index of the given string in the stock combo box */
+    int stockIndex(char* stock) const;
+
     /* Set an error message */
     void displayErrors(const char * message) const;
 
     /* Add hydro map information to list */
-    void addHydroMap(QString file, QString days, bool addInfo);
+    void addHydroMap(QString file, QString days, bool addInfo, bool display = true);
 
     /* Save the configuration to the given file */
     void saveConfiguration(QString file) const;
@@ -179,6 +337,9 @@ private:
     /* Get all the input from the GUI and set appropriate globals */
     void getAllInput() const;
 
+    /* Get all the stock input from the GUI and set globals */
+    void getAllStockInput() const;
+
     /* Turns hydro map info int properly formatted string expected by given code */
     QString formatHydroMaps() const;
 
@@ -187,6 +348,12 @@ private:
 
     /* Finds the appropriate hydro file based on the given integer */
     QString intToHydroFile(int hydro, QString base) const;
+
+    /* Combines all adjacent same-name files and sums their DTR */
+    void compressHydroFiles();
+
+    /* Write all hydro map data to screen */
+    void displayHydroFiles();
 
     /* Convert QString to const char* */
     const char* qstringToCStr(const QString & input) const;
