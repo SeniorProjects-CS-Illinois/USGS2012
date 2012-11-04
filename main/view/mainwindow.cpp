@@ -79,23 +79,30 @@ void MainWindow::removeHydroMapClicked()
     clearErrors();
 
     QListWidget* list = ui->listWidgetHydroMap;
+    QMutableListIterator<QString> itHydro(wholeHydroMapFiles);
+    QMutableListIterator<uint8_t> itDays(daysToRun);
     bool anyRemoved = false;
     size_t size = list->count();
 
     // loop through all items, remove selected items
     for (size_t i = 0; i < size; i++)
     {
+        itHydro.next(); itDays.next();
         if (list->item(i)->isSelected())
         {
-            list->takeItem(i); // may need to delete this here
-            wholeHydroMapFiles.removeAt(i);
-            daysToRun.removeAt(i);
+            itHydro.remove();
+            itDays.remove();
             anyRemoved = true;
         }
     }
+
     if (!anyRemoved)
     {
         displayErrors("No files selected for removal");
+    }
+    else
+    {
+        displayHydroFiles(); // this will clear and refresh the list
     }
 }
 
@@ -795,8 +802,13 @@ void MainWindow::dischargeToHydro(QString file)
 
 QString MainWindow::intToHydroFile(int hydro, QString base) const
 {
-    // TODO: should this be floor function?
+    // TODO: should this round?
     QString file("0k-new.txt");
+    if (hydro < 10000)
+    {
+        hydro = 10000;
+    }
+    hydro += 5000; // this is to make rounding accurate
     file.prepend(QString::number(hydro/10000));
     return base + "/" + file;
 }
@@ -816,7 +828,6 @@ void MainWindow::compressHydroFiles()
     size_t count = daysToRun.at(0);
     for (size_t i = 1; i < size; i++)
     {
-        cout << currFile.toStdString() << ", " << wholeHydroMapFiles.at(i).toStdString() << ", " << currFile.compare(wholeHydroMapFiles.at(i)) << endl;
         if (currFile.compare(wholeHydroMapFiles.at(i)) == 0) // they are the same
         {
             count += daysToRun.at(i);
@@ -839,10 +850,16 @@ void MainWindow::compressHydroFiles()
 
 void MainWindow::displayHydroFiles()
 {
+    clearHydroFiles();
     for (size_t i = 0; i < wholeHydroMapFiles.size(); i++)
     {
         addHydroMap(stripFile(wholeHydroMapFiles.at(i)), QString::number(daysToRun.at(i)), false);
     }
+}
+
+void MainWindow::clearHydroFiles()
+{
+    ui->listWidgetHydroMap->clear();
 }
 
 const char* MainWindow::qstringToCStr(const QString & input) const

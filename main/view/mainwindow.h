@@ -355,6 +355,9 @@ private:
     /* Write all hydro map data to screen */
     void displayHydroFiles();
 
+    /* Clear the display of all hydro map data on the screen */
+    void clearHydroFiles();
+
     /* Convert QString to const char* */
     const char* qstringToCStr(const QString & input) const;
 
