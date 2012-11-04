@@ -8,11 +8,10 @@ using std::endl;
 
 /** TODO
   *     - whole bunch of stock input
-  *         1) tool tips
-  *         2) save/load from configuration
-  *     - dynamic slider tooltip
+  *         - tool tips
+  *         - save/load from configuration
   *     - error checking for run
-  *     - break this hideously long file into more
+  *     - break this hideously long file into several
   */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -173,6 +172,8 @@ void MainWindow::timestepUpdate(int newVal)
 {
     clearErrors();
     ui->horizontalSliderTimestep->setToolTip(QString::number(newVal));
+    ui->labelTimestepVal->setText(QString::number(newVal));
+    ui->labelTimestepVal->move(320 + (140*newVal)/60, ui->labelTimestepVal->y());
 }
 
 /* END public slots */

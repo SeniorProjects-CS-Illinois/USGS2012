@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabConfig">
      <attribute name="title">
@@ -355,7 +355,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>270</x>
-        <y>420</y>
+        <y>430</y>
         <width>50</width>
         <height>15</height>
        </rect>
@@ -410,7 +410,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>320</x>
-        <y>420</y>
+        <y>430</y>
         <width>150</width>
         <height>20</height>
        </rect>
@@ -420,6 +420,9 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="maximum">
        <number>60</number>
+      </property>
+      <property name="value">
+       <number>1</number>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -659,6 +662,54 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QLabel" name="labelTimestepMin">
+      <property name="geometry">
+       <rect>
+        <x>322</x>
+        <y>450</y>
+        <width>12</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelTimestepMax">
+      <property name="geometry">
+       <rect>
+        <x>460</x>
+        <y>450</y>
+        <width>12</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>60</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelTimestepVal">
+      <property name="geometry">
+       <rect>
+        <x>322</x>
+        <y>410</y>
+        <width>12</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>1</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
      <zorder>lineEditTSS</zorder>
      <zorder>labelOutputFreq</zorder>
      <zorder>checkBoxPhyto</zorder>
@@ -733,6 +784,9 @@ p, li { white-space: pre-wrap; }
      <zorder>pushButtonRemoveHydroMap</zorder>
      <zorder>checkBoxHerbivore</zorder>
      <zorder>labelWhichStock</zorder>
+     <zorder>labelTimestepMin</zorder>
+     <zorder>labelTimestepMax</zorder>
+     <zorder>labelTimestepVal</zorder>
     </widget>
     <widget class="QWidget" name="tabStocks">
      <attribute name="title">
