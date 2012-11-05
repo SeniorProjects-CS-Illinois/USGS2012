@@ -51,7 +51,6 @@ void initialize_globals(void){
     g.MAX_POC = 0.0;
     g.MAX_DETRITUS = 0.0;
 
-
     g.max_waterdecomp = 6.26/24.0;
     g.max_seddecomp = 6.26/24.0;
     g.max_herbivore = 1.0/24.0;

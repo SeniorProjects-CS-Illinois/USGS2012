@@ -2,6 +2,9 @@
 //#include <direct.h>
 //#include <unistd.h>
 
+using std::cout;
+using std::endl;
+
 #ifdef NO_GUI
 int main(int argc, char *argv[]) {
     initialize_globals();
@@ -25,7 +28,6 @@ int main(int argc, char *argv[]) {
     set_flow_corners(0);
 
     create_output_dirs();
-
     go_command();
     return 0;
 }
@@ -34,6 +36,7 @@ int main(int argc, char *argv[]) {
 int main(int argc, char *argv[])
 {
     initialize_globals();
+    create_output_dirs();
 
     QApplication a(argc, argv);
     MainWindow w;
@@ -60,6 +63,7 @@ void count_unique_files(int index)
 
 //TODO: Re-write this function to use C++ strings
 //TODO: Replace strtok with an equivilent C++ function of our design
+//      or just pass in files and days to run separately so no parsing necessary
 void set_hydro_filenames(const char * filenames)
 {
     size_t filenames_len = strlen(filenames) + 1;
@@ -157,21 +161,22 @@ void go_command(void) {
     g.gui_days_to_run = 0;
     for(index = 0; index < g.gui_filenames_filesize; index++)
     {
-        printf("RUNNING FILE: %s FOR %d DAYS\n", g.gui_filenames_array[index], g.gui_days_array[index]);
+        cout << "RUNNING FILE: " << g.gui_filenames_array[index];
+        cout << " FOR " << g.gui_days_array[index] << " DAYS" << endl;
         g.gui_days_to_run += g.gui_days_array[index];  //Set howmany days to run the new hydromap
         g.hydro_group = (g.hydromap_index_array[index] + 1); //Set the new hydromap that will run
         g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
 
         while( (day = (g.hours / 24)) < g.gui_days_to_run)
         {
-            printf("Day: %d - Hour: %ld\n", (day+1), (g.hours)%24);
+            cout << "Day: " << (day+1) << " - Hour: " << ((g.hours)%24) << endl;
             go();
         }
     }
 
     cleanup();
 
-    printf("\nPROCESSING COMPLETE\n");
+    cout << endl << "PROCESSING COMPLETE" << endl;
 }
 
 void set_whichstock(const char * stock_name)
@@ -180,59 +185,102 @@ void set_whichstock(const char * stock_name)
     strncpy(g.which_stock, stock_name, len);
 }
 
-void set_TSS(double tss)
-{
-    g.gui_tss = tss;
-}
+void set_macro_base_temp(double macro_base_temp) { g.gui_macro_base_temp = macro_base_temp; }
+void set_gross_macro_coef(double gross_macro_coef) { g.gui_gross_macro_coef = gross_macro_coef; }
+void set_resp_macro_coef(double resp_macro_coef) { g.gui_resp_macro_coef = resp_macro_coef; }
+void set_sen_macro_coef(double sen_macro_coef) { g.gui_sen_macro_coef = sen_macro_coef; }
+void set_macro_mass_max(double macro_mass_max) { g.gui_macro_mass_max = macro_mass_max; }
+void set_macro_vel_max(double macro_vel_max) { g.gui_macro_vel_max = macro_vel_max; }
 
-void set_macro_base_temp(double macro_base_temp)
-{
-    g.gui_macro_base_temp = macro_base_temp;
-}
+void set_TSS(double tss) { g.gui_tss = tss; }
+void set_k_phyto(double k_phyto) { g.gui_k_phyto = k_phyto; }
+void set_k_macro(double k_macro) { g.gui_k_macro = k_macro; }
 
+void set_output_frequency(int new_output_frequency) { g.output_frequency = new_output_frequency; }
 
+void set_flow_corners(int flow_corners_only) { g.gui_flow_corners_only = flow_corners_only; }
 
-void set_gross_macro_coef(double gross_macro_coef)
-{
-    g.gui_gross_macro_coef = gross_macro_coef;
-}
+void set_ai_waterdecomp_doc(double ai_waterdecomp_doc) { g.Ai_waterdecomp_DOC = ai_waterdecomp_doc; }
+void set_ai_waterdecomp_poc(double ai_waterdecomp_poc) { g.Ai_waterdecomp_POC = ai_waterdecomp_poc; }
+void set_ai_peri_doc(double ai_peri_doc) { g.Ai_Peri_DOC = ai_peri_doc; }
+void set_ai_peri_poc(double ai_peri_poc) { g.Ai_Peri_POC = ai_peri_poc; }
+void set_ai_seddecomp_detritus(double ai_seddecomp_detritus) { g.Ai_seddecomp_detritus = ai_seddecomp_detritus; }
+void set_ai_herbivore_phyto(double ai_herbivore_phyto) { g.Ai_herbivore_phyto = ai_herbivore_phyto; }
+void set_ai_herbivore_waterdecomp(double ai_herbivore_waterdecomp) { g.Ai_herbivore_waterdecomp = ai_herbivore_waterdecomp; }
+void set_ai_herbivore_peri(double ai_herbivore_peri) { g.Ai_herbivore_peri = ai_herbivore_peri; }
+void set_ai_sedconsumer_seddecomp(double ai_sedconsumer_seddecomp) { g.Ai_sedconsumer_seddecomp = ai_sedconsumer_seddecomp; }
+void set_ai_sedconsumer_peri(double ai_sedconsumer_peri) { g.Ai_sedconsumer_peri = ai_sedconsumer_peri; }
+void set_ai_sedconsumer_detritus(double ai_sedconsumer_detritus) { g.Ai_sedconsumer_detritus = ai_sedconsumer_detritus; }
+void set_ai_consum_herbivore(double ai_consum_herbivore) { g.Ai_consum_herbivore = ai_consum_herbivore; }
+void set_ai_consum_sedconsumer(double ai_consum_sedconsumer) { g.Ai_consum_sedconsumer = ai_consum_sedconsumer; }
 
-void set_resp_macro_coef(double resp_macro_coef)
-{
-    g.gui_resp_macro_coef = resp_macro_coef;
-}
+void set_gi_waterdecomp_doc(double gi_waterdecomp_doc) { g.Gi_waterdecomp_DOC = gi_waterdecomp_doc; }
+void set_gi_waterdecomp_poc(double gi_waterdecomp_poc) { g.Gi_waterdecomp_POC = gi_waterdecomp_poc; }
+void set_gi_peri_doc(double gi_peri_doc) { g.Gi_Peri_DOC = gi_peri_doc; }
+void set_gi_peri_poc(double gi_peri_poc) { g.Gi_Peri_POC = gi_peri_poc; }
+void set_gi_seddecomp_detritus(double gi_seddecomp_detritus) { g.Gi_seddecomp_detritus = gi_seddecomp_detritus; }
+void set_gi_herbivore_phyto(double gi_herbivore_phyto) { g.Gi_herbivore_phyto = gi_herbivore_phyto; }
+void set_gi_herbivore_waterdecomp(double gi_herbivore_waterdecomp) { g.Gi_herbivore_waterdecomp = gi_herbivore_waterdecomp; }
+void set_gi_herbivore_peri(double gi_herbivore_peri) { g.Gi_herbivore_peri = gi_herbivore_peri; }
+void set_gi_sedconsumer_seddecomp(double gi_sedconsumer_seddecomp) { g.Gi_sedconsumer_seddecomp = gi_sedconsumer_seddecomp; }
+void set_gi_sedconsumer_peri(double gi_sedconsumer_peri) { g.Gi_sedconsumer_peri = gi_sedconsumer_peri; }
+void set_gi_sedconsumer_detritus(double gi_sedconsumer_detritus) { g.Gi_sedconsumer_detritus = gi_sedconsumer_detritus; }
+void set_gi_consum_herbivore(double gi_consum_herbivore) { g.Gi_consum_herbivore = gi_consum_herbivore; }
+void set_gi_consum_sedconsumer(double gi_consum_sedconsumer) { g.Gi_consum_sedconsumer = gi_consum_sedconsumer; }
 
-void set_sen_macro_coef(double sen_macro_coef)
-{
-    g.gui_sen_macro_coef = sen_macro_coef;
-}
+void set_pref_waterdecomp_doc(double pref_waterdecomp_doc) { g.pref_waterdecomp_DOC = pref_waterdecomp_doc; }
+void set_pref_waterdecomp_poc(double pref_waterdecomp_poc) { g.pref_waterdecomp_POC = pref_waterdecomp_poc; }
+void set_pref_peri_doc(double pref_peri_doc) { g.pref_Peri_DOC = pref_peri_doc; }
+void set_pref_peri_poc(double pref_peri_poc) { g.pref_Peri_POC = pref_peri_poc; }
+void set_pref_seddecomp_detritus(double pref_seddecomp_detritus) { g.pref_seddecomp_detritus = pref_seddecomp_detritus; }
+void set_pref_herbivore_phyto(double pref_herbivore_phyto) { g.pref_herbivore_phyto = pref_herbivore_phyto; }
+void set_pref_herbivore_waterdecomp(double pref_herbivore_waterdecomp) { g.pref_herbivore_waterdecomp = pref_herbivore_waterdecomp; }
+void set_pref_herbivore_peri(double pref_herbivore_peri) { g.pref_herbivore_peri = pref_herbivore_peri; }
+void set_pref_sedconsumer_seddecomp(double pref_sedconsumer_seddecomp) { g.pref_sedconsumer_seddecomp = pref_sedconsumer_seddecomp; }
+void set_pref_sedconsumer_peri(double pref_sedconsumer_peri) { g.pref_sedconsumer_peri = pref_sedconsumer_peri; }
+void set_pref_sedconsumer_detritus(double pref_sedconsumer_detritus) { g.pref_sedconsumer_detritus = pref_sedconsumer_detritus; }
+void set_pref_consum_herbivore(double pref_consum_herbivore) { g.pref_consum_herbivore = pref_consum_herbivore; }
+void set_pref_consum_sedconsumer(double pref_consum_sedconsumer) { g.pref_consum_sedconsumer = pref_consum_sedconsumer; }
 
-void set_macro_mass_max(double macro_mass_max)
-{
-    g.gui_macro_mass_max = macro_mass_max;
-}
+void set_aj_phyto(double aj_phyto) { g.Aj_phyto = aj_phyto; }
+void set_aj_waterdecomp(double aj_waterdecomp) { g.Aj_waterdecomp = aj_waterdecomp; }
+void set_aj_seddecomp(double aj_seddecomp) { g.Aj_seddecomp = aj_seddecomp; }
+void set_aj_herbivore(double aj_herbivore) { g.Aj_herbivore = aj_herbivore; }
+void set_aj_sedconsumer(double aj_sedconsumer) { g.Aj_sedconsumer = aj_sedconsumer; }
+void set_aj_consum(double aj_consum) { g.Aj_consum = aj_consum; }
+void set_aj_peri(double aj_peri) { g.Aj_peri = aj_peri; }
 
-void set_macro_vel_max(double macro_vel_max)
-{
-    g.gui_macro_vel_max = macro_vel_max;
-}
+void set_gj_phyto(double gj_phyto) { g.Gj_phyto = gj_phyto; }
+void set_gj_waterdecomp(double gj_waterdecomp) { g.Gj_waterdecomp = gj_waterdecomp; }
+void set_gj_seddecomp(double gj_seddecomp) { g.Gj_seddecomp = gj_seddecomp; }
+void set_gj_herbivore(double gj_herbivore) { g.Gj_herbivore = gj_herbivore; }
+void set_gj_sedconsumer(double gj_sedconsumer) { g.Gj_sedconsumer = gj_sedconsumer; }
+void set_gj_consum(double gj_consum) { g.Gj_consum = gj_consum; }
+void set_gj_peri(double gj_peri) { g.Gj_peri = gj_peri; }
 
-void set_k_phyto(double k_phyto)
-{
-    g.gui_k_phyto = k_phyto;
-}
-void set_k_macro(double k_macro)
-{
-    g.gui_k_macro = k_macro;
-}
+void set_max_waterdecomp(double max_waterdecomp) { g.max_waterdecomp = max_waterdecomp; }
+void set_max_seddecomp(double max_seddecomp) { g.max_seddecomp = max_seddecomp; }
+void set_max_herbivore(double max_herbivore) { g.max_herbivore = max_herbivore; }
+void set_max_sedconsumer(double max_sedconsumer) { g.max_sedconsumer = max_sedconsumer; }
+void set_max_consum(double max_consum) { g.max_consum = max_consum; }
 
+void set_excretion_waterdecomp(double excretion_waterdecomp) { g.e_waterdecomp = excretion_waterdecomp; }
+void set_excretion_seddecomp(double excretion_seddecomp) { g.e_seddecomp = excretion_seddecomp; }
+void set_excretion_herbivore(double excretion_herbivore) { g.e_herbivore = excretion_herbivore; }
+void set_excretion_sedconsumer(double excretion_sedconsumer) { g.e_sedconsumer = excretion_sedconsumer; }
+void set_excretion_consum(double excretion_consum) { g.e_consum = excretion_consum; }
 
-void set_output_frequency(int new_output_frequency)
-{
-    g.output_frequency = new_output_frequency;
-}
+void set_respiration_waterdecomp(double respiration_waterdecomp) { g.r_waterdecomp = respiration_waterdecomp; }
+void set_respiration_seddecomp(double respiration_seddecomp) { g.r_seddecomp = respiration_seddecomp; }
+void set_respiration_herbivore(double respiration_herbivore) { g.r_herbivore = respiration_herbivore; }
+void set_respiration_sedconsumer(double respiration_sedconsumer) { g.r_sedconsumer = respiration_sedconsumer; }
+void set_respiration_consum(double respiration_consum) { g.r_consum = respiration_consum; }
 
-void set_flow_corners(int flow_corners_only)
-{
-    g.gui_flow_corners_only = flow_corners_only;
-}
+void set_senescence_waterdecomp(double senescence_waterdecomp) { g.s_waterdecomp = senescence_waterdecomp; }
+void set_senescence_seddecomp(double senescence_seddecomp) { g.s_seddecomp = senescence_seddecomp; }
+void set_senescence_herbivore(double senescence_herbivore) { g.s_herbivore = senescence_herbivore; }
+void set_senescence_sedconsumer(double senescence_sedconsumer) { g.s_sedconsumer = senescence_sedconsumer; }
+void set_senescence_consum(double senescence_consum) { g.s_consum = senescence_consum; }
+
+void set_herbivore_egestion(double herbivore_egestion) { g.herbivore_egestion = herbivore_egestion; }
+void set_consum_egestion(double consum_egestion) { g.consum_egestion = consum_egestion; }
