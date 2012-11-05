@@ -77,7 +77,7 @@ public:
 
     uint8_t getOutputFreq() const;
     uint8_t getTimestep() const;
-    uint8_t getNumHydroMaps() const;
+    uint16_t getNumHydroMaps() const;
 
     float getTSS() const;
     float getKPhyto() const;
@@ -170,7 +170,7 @@ public:
     QString getTempFile() const;
     QString getPARFile() const;
 
-    QList<uint8_t> getDaysToRun() const;
+    QList<uint16_t> getDaysToRun() const;
     QList<QString> getHydroMaps() const;
 
     /* SETTERS */
@@ -280,7 +280,7 @@ public:
     // Files
     void setTempFile(char* filename);
     void setPARFile(char* filename);
-    void setHydroMaps(char** filenames, uint8_t* daysToRun, size_t num);
+    void setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num);
 
 private:
 
@@ -290,7 +290,7 @@ private:
     QString wholePARFile;
 
     QList<QString> wholeHydroMapFiles;
-    QList<uint8_t> daysToRun;
+    QList<uint16_t> daysToRun;
 
     /* Reset error message output box - all slots should call this in the beginning */
     void clearErrors() const;
@@ -329,7 +329,7 @@ private:
       */
 
     /* Get the days to run value from the given item */
-    uint8_t parseDaysToRun(QListWidgetItem* item) const;
+    uint16_t parseDaysToRun(QListWidgetItem* item) const;
 
     /* Get the hydro map file name from the given item */
     QString parseHydroMapName(QListWidgetItem* item) const;

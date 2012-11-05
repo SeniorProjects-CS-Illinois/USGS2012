@@ -27,10 +27,11 @@ Configuration::Configuration() :
     timestep(-1),
     daysToRun(NULL),
     tss(-1.0),
+    macroSenescence(-1.0),
+    macroRespiration(-1.0),
+    macroExcretion(-1.0),
     macroTemp(-1.0),
-    grossMacroCoef(-1.0),
-    respMacroCoef(-1.0),
-    senescenceMacroCoef(-1.0),
+    macroGross(-1.0),
     macroMassMax(-1.0),
     macroVelocityMax(-1.0),
     kPhyto(-1.0),
@@ -89,23 +90,26 @@ void Configuration::write(const char* filename) const
     }
 
     // write integer values
-    file << (int)outputFreq << endl;
-    file << (int)timestep << endl;
     for (int hydro = 0; hydro < numHydroMaps; hydro++)
     {
         file << (int)daysToRun[hydro] << endl;
     }
+    file << (int)outputFreq << endl;
+    file << (int)timestep << endl;
 
     // write floating point values
     file << tss << endl;
-    file << macroTemp << endl;
-    file << grossMacroCoef << endl;
-    file << respMacroCoef << endl;
-    file << senescenceMacroCoef << endl;
-    file << macroMassMax << endl;
-    file << macroVelocityMax << endl;
     file << kPhyto << endl;
     file << kMacro << endl;
+
+    // all the stock parameters
+    file << macroSenescence << endl;
+    file << macroRespiration << endl;
+    file << macroExcretion << endl;
+    file << macroTemp << endl;
+    file << macroGross << endl;
+    file << macroMassMax << endl;
+    file << macroVelocityMax << endl;
 
     file.close();
 }
@@ -116,74 +120,48 @@ void Configuration::read(const char* filename)
     file.open(filename);
     string str;
 
-    std::getline(file, str);
-    adjacent = convertBool(str);
-    std::getline(file, str);
-    consum = convertBool(str);
-    std::getline(file, str);
-    detritus = convertBool(str);
-    std::getline(file, str);
-    doc = convertBool(str);
-    std::getline(file, str);
-    herbivore = convertBool(str);
-    std::getline(file, str);
-    macro = convertBool(str);
-    std::getline(file, str);
-    poc = convertBool(str);
-    std::getline(file, str);
-    phyto = convertBool(str);
-    std::getline(file, str);
-    sedconsumer = convertBool(str);
-    std::getline(file, str);
-    seddecomp = convertBool(str);
-    std::getline(file, str);
-    waterdecomp = convertBool(str);
+    adjacent = nextBool(file, str);
+    consum = nextBool(file, str);
+    detritus = nextBool(file, str);
+    doc = nextBool(file, str);
+    herbivore = nextBool(file, str);
+    macro = nextBool(file, str);
+    poc = nextBool(file, str);
+    phyto = nextBool(file, str);
+    sedconsumer = nextBool(file, str);
+    seddecomp = nextBool(file, str);
+    waterdecomp = nextBool(file, str);
 
-    std::getline(file, str);
-    setFileName(QString::fromStdString(str), tempFile);
-    std::getline(file, str);
-    setFileName(QString::fromStdString(str), parFile);
+    setFileName(QString::fromStdString(nextLine(file, str)), tempFile);
+    setFileName(QString::fromStdString(nextLine(file, str)), parFile);
 
-    std::getline(file, str);
-    numHydroMaps = convertInt(str);
-
+    numHydroMaps = nextInt(file, str);
     hydroMaps = new char*[numHydroMaps];
     for (size_t i = 0; i < numHydroMaps; i++)
     {
-        std::getline(file, str);
-        setFileName(QString::fromStdString(str), hydroMaps[i]);
+        setFileName(QString::fromStdString(nextLine(file, str)), hydroMaps[i]);
     }
 
-    std::getline(file, str);
-    outputFreq = convertInt(str);
-    std::getline(file, str);
-    timestep = convertInt(str);
-
-    daysToRun = new uint8_t[numHydroMaps];
+    daysToRun = new uint16_t[numHydroMaps];
     for (size_t i = 0; i < numHydroMaps; i++)
-    {
-        std::getline(file, str);
-        daysToRun[i] = convertInt(str);
+    {        
+        daysToRun[i] = nextInt(file, str);
     }
 
-    std::getline(file, str);
-    tss = convertFloat(str);
-    std::getline(file, str);
-    macroTemp = convertFloat(str);
-    std::getline(file, str);
-    grossMacroCoef = convertFloat(str);
-    std::getline(file, str);
-    respMacroCoef = convertFloat(str);
-    std::getline(file, str);
-    senescenceMacroCoef = convertFloat(str);
-    std::getline(file, str);
-    macroMassMax = convertFloat(str);
-    std::getline(file, str);
-    macroVelocityMax = convertFloat(str);
-    std::getline(file, str);
-    kPhyto = convertFloat(str);
-    std::getline(file, str);
-    kMacro = convertFloat(str);
+    outputFreq = nextInt(file, str);
+    timestep = nextInt(file, str);
+    tss = nextFloat(file, str);
+    kPhyto = nextFloat(file, str);
+    kMacro = nextFloat(file, str);
+
+    // stock parameters
+    macroSenescence = nextFloat(file, str);
+    macroRespiration = nextFloat(file, str);
+    macroGross = nextFloat(file, str);
+    macroTemp = nextFloat(file, str);
+    macroGross = nextFloat(file, str);
+    macroMassMax = nextFloat(file, str);
+    macroVelocityMax = nextFloat(file, str);
 
     file.close();
 }
@@ -194,19 +172,25 @@ void Configuration::setFileName(QString source, char* & dest)
     strcpy(dest, source.toStdString().c_str());
 }
 
-bool Configuration::convertBool(string str)
+bool Configuration::nextBool(ifstream & file, string & str)
 {
-    return str[0] == '1';
+    return nextLine(file, str)[0] == '1';
 }
 
-uint8_t Configuration::convertInt(string str)
+uint16_t Configuration::nextInt(ifstream & file, string & str)
 {
-    return QString::fromStdString(str).toInt();
+    return QString::fromStdString(nextLine(file, str)).toInt();
 }
 
-float Configuration::convertFloat(string str)
+float Configuration::nextFloat(ifstream & file, string & str)
 {
-    return QString::fromStdString(str).toFloat();
+    return QString::fromStdString(nextLine(file, str)).toFloat();
+}
+
+string & Configuration::nextLine(ifstream & file, string & str) const
+{
+    std::getline(file, str);
+    return str;
 }
 
 void Configuration::clear()
@@ -243,9 +227,9 @@ void Configuration::copy(const Configuration &other)
     daysToRun               = other.daysToRun;
     tss                     = other.tss;
     macroTemp               = other.macroTemp;
-    grossMacroCoef          = other.grossMacroCoef;
-    respMacroCoef           = other.respMacroCoef;
-    senescenceMacroCoef     = other.senescenceMacroCoef;
+    macroGross              = other.macroGross;
+    macroRespiration        = other.macroRespiration;
+    macroSenescence         = other.macroSenescence;
     macroMassMax            = other.macroMassMax;
     macroVelocityMax        = other.macroVelocityMax;
     kPhyto                  = other.kPhyto;
