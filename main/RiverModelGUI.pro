@@ -9,6 +9,7 @@ QT       += core gui
 TARGET = RiverModelGUI
 TEMPLATE = app
 
+CONFIG += static
 
 SOURCES += main.cpp \
     model/globals.cpp \
