@@ -369,7 +369,7 @@ bool MainWindow::getAdjacent() const { return ui->checkBoxAdjacentCells->isCheck
 
 uint8_t MainWindow::getOutputFreq() const { return ui->lineEditOutputFreq->text().toInt(); }
 uint8_t MainWindow::getTimestep() const { return ui->horizontalSliderTimestep->value(); }
-uint16_t MainWindow::getNumHydroMaps() const { return ui->listWidgetHydroMap->count(); }
+uint16_t MainWindow::getNumHydroMaps() const { return wholeHydroMapFiles.size(); }
 
 float MainWindow::getTSS() const { return ui->lineEditTSS->text().toFloat(); }
 float MainWindow::getKPhyto() const { return ui->lineEditKPhyto->text().toFloat(); }
