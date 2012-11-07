@@ -1,15 +1,20 @@
 #ifndef DUMP_H
 #define DUMP_H
 
-#include "globals.h"
-#include "patch.h"
+#include <cstring>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <time.h>
 
-const char* data_path = "./results/data/"; /* Folder under which we place the data files */
-const char* data_template = "map_data_"; /* Each simulation data file has the name 'map_data_timestamp' */
-const char* format = ".csv"; /* file format is .csv */
+#include "globals.h"
+#include "patch.h"
+
+/* Folder under which we place the data files */
+extern const char* data_path;
+/* Each simulation data file has the name 'map_data_timestamp' */
+extern const char* data_template;
+/* file format is .csv */
+extern const char* format;
 
 /**
  * The file format is as follows:

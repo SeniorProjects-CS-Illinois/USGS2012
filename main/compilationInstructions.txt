@@ -1,60 +1,32 @@
-Windows Compilation instructions:
+Windows Setup instructions:
 ------------------------------------
-Install the following software IN THE ORDER LISTED into their default locations:
+Install the following software:
 
-- mingw32               - http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/
-     *** Install at least the gcc stuff from mingw32 ***
-
-- Python 2.7 32bit      - http://www.python.org/download/
-*** Get versions for python 2.7 of the following ***
-- py2exe for python 2.7 - http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/
-- numpy for python 2.7  - http://sourceforge.net/projects/numpy/files/NumPy/1.6.2/
-- Python Imaging Libary - http://www.pythonware.com/products/pil/
+- mingw32      - http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/
+     *** Install at least the g++ stuff and any make that is provided ***
+- QT SDK       - http://qt-project.org/downloads/#qt-other
 
 Once you've installed these, add the following directories to your system path:
-C:\Python27\
 C:\MinGW\bin\
-
-Navigate to C:\Python27\Lib\distutils and open cygwinccompiler.py in a text editor.  On lines 322-326 remove all references to "-mno-cygwin"
-	See http://bugs.python.org/issue12641 for why this is needed.
+C:\QtSDK\Desktop\Qt\4.8.1\mingw\bin
 
 
+Compiling:
+-------------------------------------
+Once you've done the above you can run the GUI by opening the following file in QT Creator.
+     main/RiverModelGUI.pro
 
-If you did the above, you should be able to double click build.bat in this folder to compile.
+To compile a version of the program with no GUI, run the following commands from the main
+directory:
 
-After it finishes compiling you can double click main.exe in the dist folder.
+     qmake RiverModel.pro
+     make
 
-To rebuild from scratch.  Delete the dist and build folders.
+This will output an executable in your main folder which can be run via the command line.
+To compile a faster, non-debug version of the program use "make release" instead.
 
+To remove previously compiled object files run:
+     make clean
 
-
-
-
-
-
-
-
-
-
-#########################################################
-### OLD INSTRUCTIONS (Can ignore if batch file works) ###
-#########################################################
-
-How to compile the python code
-python buildPython.py py2exe -p encodings -pPIL
-
-How to compile the c code:
-python setup.py build -cmingw32
-Once your c code is compiled, you must move the executable from the build/lib.win32-2.7 to the dist/view directory.
-
-Every time you update the python code:
-Copy paste view and controller into the dist directory
-
-Done once:
-Copy paste tkFileDialog.pyc, tkMessageBox.pyc, and tkCommonDialog into the dist/view directory. 
-This file can be found in C:\Python27\Lib\lib-tk after downloading tkinter
-
-How to run it once you're all done:
-Double click on main.exe in the dist directory, or type main.exe into a command line within that directory.
-
-
+To remove the makefiles, executable, and object files run:
+     make distclean
