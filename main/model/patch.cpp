@@ -1,5 +1,6 @@
 #include "patch.h"
 
+patch** patches;
 
 /**
  * Updates the patches
@@ -8,7 +9,7 @@
 */
 void update_patches(int x, int y){
 
-        patches[x][y].turbidity = ( .29587 + gui_tss) + (gui_k_phyto * (patches[x][y].phyto/ 900.0) ) + (gui_k_macro * (patches[x][y].macro / 900.0) );
+        patches[x][y].turbidity = ( .29587 + g.gui_tss) + (g.gui_k_phyto * (patches[x][y].phyto/ 900.0) ) + (g.gui_k_macro * (patches[x][y].macro / 900.0) );
 
         if(patches[x][y].turbidity > 30.0){
                 patches[x][y].turbidity = 30.0;
@@ -18,11 +19,11 @@ void update_patches(int x, int y){
         }
 
         //the amount of light that reaches the bottom of a water column
-        patches[x][y].bottom_light = (photo_radiation * exp( (-1*patches[x][y].depth)*patches[x][y].turbidity )); 
-        Aj_peri = patches[x][y].macro / 10.0 ;
-        Gj_peri = patches[x][y].macro / 2.0;
-        Aj_seddecomp = patches[x][y].detritus / 20.0;
-        Gj_seddecomp = patches[x][y].detritus / 5.0;
+        patches[x][y].bottom_light = (g.photo_radiation * exp( (-1*patches[x][y].depth)*patches[x][y].turbidity )); 
+        g.Aj_peri = patches[x][y].macro / 10.0 ;
+        g.Gj_peri = patches[x][y].macro / 2.0;
+        g.Aj_seddecomp = patches[x][y].detritus / 20.0;
+        g.Gj_seddecomp = patches[x][y].detritus / 5.0;
 }
 
 
@@ -43,23 +44,23 @@ double assertRange(double value, double low, double high){
 }
 
 void go_macro(int x, int y){
-        Q10 = pow(theta, (temperature - macro_base_temp));
+        g.Q10 = pow(g.theta, (g.temperature - g.macro_base_temp));
 
-        if(patches[x][y].velocity < macro_vel_max){
-                patches[x][y].K = max_area * (gui_macro_mass_max - (gui_macro_mass_max  / gui_macro_vel_max) * patches[x][y].velocity);
+        if(patches[x][y].velocity < g.macro_vel_max){
+                patches[x][y].K = g.max_area * (g.gui_macro_mass_max - (g.gui_macro_mass_max  / g.gui_macro_vel_max) * patches[x][y].velocity);
         }
         else{
                 patches[x][y].K = 0.01;
         }
         //Same at bottom-light
-        double macro_light = photo_radiation * exp( (-1*patches[x][y].depth) * patches[x][y].turbidity );
+        double macro_light = g.photo_radiation * exp( (-1*patches[x][y].depth) * patches[x][y].turbidity );
         
-        patches[x][y].gross_photo_macro = (gui_gross_macro_coef * patches[x][y].macro * ( macro_light / ( macro_light + 10.0)) * Q10 * 
+        patches[x][y].gross_photo_macro = (g.gui_gross_macro_coef * patches[x][y].macro * ( macro_light / ( macro_light + 10.0)) * g.Q10 * 
                                                (patches[x][y].K - patches[x][y].macro) / patches[x][y].K);
 
-        patches[x][y].respiration_macro = (resp_macro_coef / 24.0) * patches[x][y].macro * Q10;
+        patches[x][y].respiration_macro = (g.resp_macro_coef / 24.0) * patches[x][y].macro * g.Q10;
 
-        patches[x][y].senescence_macro = sen_macro_coef * patches[x][y].macro / 24.0;
+        patches[x][y].senescence_macro = g.sen_macro_coef * patches[x][y].macro / 24.0;
 
         patches[x][y].growth_macro = patches[x][y].gross_photo_macro - patches[x][y].respiration_macro - patches[x][y].senescence_macro
                                           - patches[x][y].scouring_macro;
@@ -79,7 +80,7 @@ void go_phyto(int x,int y){
                 patches[x][y].phyto = 0.001;
         }
         double base_temperature = 8.0; //base temperature for nominal growth
-        Q10 = pow(theta, (temperature - base_temperature));
+        g.Q10 = pow(g.theta, (g.temperature - base_temperature));
         double km = 10; //half saturation constant
 
         //this is the attenuation coefficient of phytoplank m^2/g of phyto plankton
@@ -87,12 +88,12 @@ void go_phyto(int x,int y){
         //double light_k = 0.4;
 
 
-        patches[x][y].respiration_phyto = 0.1 / 24.0 * patches[x][y].phyto * Q10;
-        double pre_ln = (0.01 + photo_radiation  * exp(-1*patches[x][y].phyto * gui_k_phyto * patches[x][y].depth));
-        double be = (km + (photo_radiation * exp(-1 * patches[x][y].phyto * gui_k_phyto * patches[x][y].depth)));
+        patches[x][y].respiration_phyto = 0.1 / 24.0 * patches[x][y].phyto * g.Q10;
+        double pre_ln = (0.01 + g.photo_radiation  * exp(-1*patches[x][y].phyto * g.gui_k_phyto * patches[x][y].depth));
+        double be = (km + (g.photo_radiation * exp(-1 * patches[x][y].phyto * g.gui_k_phyto * patches[x][y].depth)));
         //photosynthesis from phytoplankton derived from Huisman Weissing 1994
 
-        patches[x][y].gross_photo_phyto = fabs(pre_ln / be) * (1.0 / patches[x][y].depth) * (patches[x][y].phyto / patches[x][y].turbidity) * Q10;
+        patches[x][y].gross_photo_phyto = fabs(pre_ln / be) * (1.0 / patches[x][y].depth) * (patches[x][y].phyto / patches[x][y].turbidity) * g.Q10;
         patches[x][y].excretion_phyto = 0.05 / 24.0 * patches[x][y].phyto;
         patches[x][y].senescence_phyto = 0.02 / 24.0 * patches[x][y].phyto;
         patches[x][y].growth_phyto = patches[x][y].gross_photo_phyto - patches[x][y].excretion_phyto - 
@@ -101,73 +102,73 @@ void go_phyto(int x,int y){
 
 void go_herbivore(int x, int y){
 
-        patches[x][y].herbivore_phyto_prey_limitation = patches[x][y].phyto / (Ai_herbivore_phyto - Gi_herbivore_phyto);
+        patches[x][y].herbivore_phyto_prey_limitation = patches[x][y].phyto / (g.Ai_herbivore_phyto - g.Gi_herbivore_phyto);
         patches[x][y].herbivore_phyto_prey_limitation = assertRange(patches[x][y].herbivore_phyto_prey_limitation, 0.0, 1.0);
 
-    patches[x][y].herbivore_peri_prey_limitation = patches[x][y].peri / (Ai_herbivore_peri - Gi_herbivore_peri);
+    patches[x][y].herbivore_peri_prey_limitation = patches[x][y].peri / (g.Ai_herbivore_peri - g.Gi_herbivore_peri);
     patches[x][y].herbivore_peri_prey_limitation = assertRange( patches[x][y].herbivore_peri_prey_limitation, 0.0, 1.0);
 
-    patches[x][y].herbivore_waterdecomp_prey_limitation = patches[x][y].waterdecomp / (Ai_herbivore_waterdecomp - Gi_herbivore_waterdecomp);
+    patches[x][y].herbivore_waterdecomp_prey_limitation = patches[x][y].waterdecomp / (g.Ai_herbivore_waterdecomp - g.Gi_herbivore_waterdecomp);
     patches[x][y].herbivore_waterdecomp_prey_limitation = assertRange(patches[x][y].herbivore_waterdecomp_prey_limitation, 0.0, 1.0);
 
-    patches[x][y].herbivore_space_limitation = 1.0 - ((patches[x][y].herbivore - Aj_herbivore) /(Gj_herbivore - Aj_herbivore));
+    patches[x][y].herbivore_space_limitation = 1.0 - ((patches[x][y].herbivore - g.Aj_herbivore) /(g.Gj_herbivore - g.Aj_herbivore));
     patches[x][y].herbivore_space_limitation = assertRange(patches[x][y].herbivore_space_limitation, 0.0, 1.0);
 
-    patches[x][y].herbivore_pred_phyto = pref_herbivore_phyto * max_herbivore * patches[x][y].herbivore * 
+    patches[x][y].herbivore_pred_phyto = g.pref_herbivore_phyto * g.max_herbivore * patches[x][y].herbivore * 
                                          patches[x][y].herbivore_space_limitation * patches[x][y].herbivore_phyto_prey_limitation;
 
-    patches[x][y].herbivore_ingest_phyto = patches[x][y].herbivore_pred_phyto * (1.0 - herbivore_egestion);
+    patches[x][y].herbivore_ingest_phyto = patches[x][y].herbivore_pred_phyto * (1.0 - g.herbivore_egestion);
 
-    patches[x][y].herbivore_pred_peri = pref_herbivore_peri * max_herbivore * patches[x][y].herbivore
+    patches[x][y].herbivore_pred_peri = g.pref_herbivore_peri * g.max_herbivore * patches[x][y].herbivore
                                         * patches[x][y].herbivore_space_limitation * patches[x][y].herbivore_peri_prey_limitation;
 
-    patches[x][y].herbivore_ingest_peri = patches[x][y].herbivore_pred_peri * (1.0 - herbivore_egestion);
+    patches[x][y].herbivore_ingest_peri = patches[x][y].herbivore_pred_peri * (1.0 - g.herbivore_egestion);
 
-    patches[x][y].herbivore_pred_waterdecomp = pref_herbivore_waterdecomp * max_herbivore *
+    patches[x][y].herbivore_pred_waterdecomp = g.pref_herbivore_waterdecomp * g.max_herbivore *
                                                patches[x][y].herbivore * patches[x][y].herbivore_space_limitation * patches[x][y].herbivore_waterdecomp_prey_limitation;
 
-    patches[x][y].herbivore_ingest_waterdecomp = patches[x][y].herbivore_pred_waterdecomp * (1.0 - herbivore_egestion);
+    patches[x][y].herbivore_ingest_waterdecomp = patches[x][y].herbivore_pred_waterdecomp * (1.0 - g.herbivore_egestion);
 
-    patches[x][y].herbivore_respiration = r_herbivore * patches[x][y].herbivore;
+    patches[x][y].herbivore_respiration = g.r_herbivore * patches[x][y].herbivore;
 
-    patches[x][y].herbivore_excretion = e_herbivore * patches[x][y].herbivore;
+    patches[x][y].herbivore_excretion = g.e_herbivore * patches[x][y].herbivore;
 
-    patches[x][y].herbivore_senescence = s_herbivore * patches[x][y].herbivore;
+    patches[x][y].herbivore_senescence = g.s_herbivore * patches[x][y].herbivore;
 }
 
 void go_waterdecomp(int x, int y){
 
-    patches[x][y].waterdecomp_doc_prey_limitation = patches[x][y].DOC / (Ai_waterdecomp_DOC - Gi_waterdecomp_DOC);
+    patches[x][y].waterdecomp_doc_prey_limitation = patches[x][y].DOC / (g.Ai_waterdecomp_DOC - g.Gi_waterdecomp_DOC);
     patches[x][y].waterdecomp_doc_prey_limitation = assertRange(patches[x][y].waterdecomp_doc_prey_limitation, 0.0, 1.0);
 
-    patches[x][y].waterdecomp_poc_prey_limitation = patches[x][y].POC / (Ai_waterdecomp_POC - Gi_waterdecomp_POC);
+    patches[x][y].waterdecomp_poc_prey_limitation = patches[x][y].POC / (g.Ai_waterdecomp_POC - g.Gi_waterdecomp_POC);
     patches[x][y].waterdecomp_poc_prey_limitation = assertRange(patches[x][y].waterdecomp_poc_prey_limitation, 0.0, 1.0);
 
-    patches[x][y].waterdecomp_space_limitation = 1.0 - ((patches[x][y].waterdecomp - Aj_waterdecomp) / (Gj_waterdecomp - Aj_waterdecomp));
+    patches[x][y].waterdecomp_space_limitation = 1.0 - ((patches[x][y].waterdecomp - g.Aj_waterdecomp) / (g.Gj_waterdecomp - g.Aj_waterdecomp));
     patches[x][y].waterdecomp_space_limitation = assertRange(patches[x][y].waterdecomp_space_limitation, 0.0, 1.0);
 
-    patches[x][y].waterdecomp_pred_doc = (pref_waterdecomp_DOC * max_waterdecomp * patches[x][y].waterdecomp * 
+    patches[x][y].waterdecomp_pred_doc = (g.pref_waterdecomp_DOC * g.max_waterdecomp * patches[x][y].waterdecomp * 
                                           patches[x][y].waterdecomp_space_limitation * patches[x][y].waterdecomp_doc_prey_limitation);
 
     patches[x][y].waterdecomp_ingest_doc = patches[x][y].waterdecomp_pred_doc;
 
-    patches[x][y].waterdecomp_pred_poc = pref_waterdecomp_POC * max_waterdecomp * patches[x][y].waterdecomp * 
+    patches[x][y].waterdecomp_pred_poc = g.pref_waterdecomp_POC * g.max_waterdecomp * patches[x][y].waterdecomp * 
                                          patches[x][y].waterdecomp_space_limitation * patches[x][y].waterdecomp_poc_prey_limitation;
 
     patches[x][y].waterdecomp_ingest_poc = patches[x][y].waterdecomp_pred_poc;
 
-    patches[x][y].waterdecomp_respiration = r_waterdecomp * patches[x][y].waterdecomp;
+    patches[x][y].waterdecomp_respiration = g.r_waterdecomp * patches[x][y].waterdecomp;
 
-    patches[x][y].waterdecomp_excretion = e_waterdecomp * patches[x][y].waterdecomp;
+    patches[x][y].waterdecomp_excretion = g.e_waterdecomp * patches[x][y].waterdecomp;
 
-    patches[x][y].waterdecomp_senescence = s_waterdecomp * patches[x][y].waterdecomp;
+    patches[x][y].waterdecomp_senescence = g.s_waterdecomp * patches[x][y].waterdecomp;
 }
 
 
 void go_seddecomp(int x, int y) {
     
     // update seddecomp_detritus_prey_limitation
-    patches[x][y].seddecomp_detritus_prey_limitation = patches[x][y].detritus / (Ai_seddecomp_detritus - Gi_seddecomp_detritus);
+    patches[x][y].seddecomp_detritus_prey_limitation = patches[x][y].detritus / (g.Ai_seddecomp_detritus - g.Gi_seddecomp_detritus);
 
     if(patches[x][y].seddecomp_detritus_prey_limitation > 1.0)
         patches[x][y].seddecomp_detritus_prey_limitation = 1.0;
@@ -175,8 +176,8 @@ void go_seddecomp(int x, int y) {
         patches[x][y].seddecomp_detritus_prey_limitation = 0.0;
 
     // update seddecomp_space_limitation
-    if( (Gj_seddecomp - Aj_seddecomp) != 0.0 ) {
-        patches[x][y].seddecomp_space_limitation = 1.0 - ((patches[x][y].seddecomp - Aj_seddecomp)/(Gj_seddecomp - Aj_seddecomp));
+    if( (g.Gj_seddecomp - g.Aj_seddecomp) != 0.0 ) {
+        patches[x][y].seddecomp_space_limitation = 1.0 - ((patches[x][y].seddecomp - g.Aj_seddecomp)/(g.Gj_seddecomp - g.Aj_seddecomp));
     } else {
         patches[x][y].seddecomp_space_limitation = 0.0;
     }
@@ -187,7 +188,7 @@ void go_seddecomp(int x, int y) {
         patches[x][y].seddecomp_space_limitation = 0.0;
 
     // update seddecomp_pred_detritus
-    patches[x][y].seddecomp_pred_detritus = pref_seddecomp_detritus*max_seddecomp*patches[x][y].seddecomp*
+    patches[x][y].seddecomp_pred_detritus = g.pref_seddecomp_detritus*g.max_seddecomp*patches[x][y].seddecomp*
                                             patches[x][y].seddecomp_detritus_prey_limitation *
                                             patches[x][y].seddecomp_space_limitation;
 
@@ -195,19 +196,19 @@ void go_seddecomp(int x, int y) {
     patches[x][y].seddecomp_ingest_detritus = patches[x][y].seddecomp_pred_detritus;
 
     // update seddecomp_respiration
-    patches[x][y].seddecomp_respiration = r_seddecomp * patches[x][y].seddecomp;
+    patches[x][y].seddecomp_respiration = g.r_seddecomp * patches[x][y].seddecomp;
 
     // update seddecomp_excretion
-    patches[x][y].seddecomp_excretion = e_seddecomp * patches[x][y].seddecomp;
+    patches[x][y].seddecomp_excretion = g.e_seddecomp * patches[x][y].seddecomp;
 
     // update seddecomp_senescence
-    patches[x][y].seddecomp_senescence = s_seddecomp * patches[x][y].seddecomp;
+    patches[x][y].seddecomp_senescence = g.s_seddecomp * patches[x][y].seddecomp;
 }
 
 void go_sedconsumer(int x, int y) {
     
     // update sedconsumer_seddecomp_prey_limitation
-    patches[x][y].sedconsumer_seddecomp_prey_limitation = patches[x][y].seddecomp / (Ai_sedconsumer_seddecomp - Gi_sedconsumer_seddecomp);
+    patches[x][y].sedconsumer_seddecomp_prey_limitation = patches[x][y].seddecomp / (g.Ai_sedconsumer_seddecomp - g.Gi_sedconsumer_seddecomp);
 
     if( patches[x][y].sedconsumer_seddecomp_prey_limitation > 1.0 )
         patches[x][y].sedconsumer_seddecomp_prey_limitation = 1.0;
@@ -215,7 +216,7 @@ void go_sedconsumer(int x, int y) {
         patches[x][y].sedconsumer_seddecomp_prey_limitation = 0.0;
 
     // update sedconsumer_peri_prey_limitation
-    patches[x][y].sedconsumer_peri_prey_limitation = patches[x][y].peri / (Ai_sedconsumer_peri - Gi_sedconsumer_peri);
+    patches[x][y].sedconsumer_peri_prey_limitation = patches[x][y].peri / (g.Ai_sedconsumer_peri - g.Gi_sedconsumer_peri);
 
     if( patches[x][y].sedconsumer_peri_prey_limitation > 1.0 )
         patches[x][y].sedconsumer_peri_prey_limitation = 1.0;
@@ -223,7 +224,7 @@ void go_sedconsumer(int x, int y) {
         patches[x][y].sedconsumer_peri_prey_limitation = 0.0;
 
     // update sedconsumer_detritus_prey_limitation
-    patches[x][y].sedconsumer_detritus_prey_limitation = patches[x][y].detritus / (Ai_sedconsumer_detritus - Gi_sedconsumer_detritus);
+    patches[x][y].sedconsumer_detritus_prey_limitation = patches[x][y].detritus / (g.Ai_sedconsumer_detritus - g.Gi_sedconsumer_detritus);
 
     if( patches[x][y].sedconsumer_detritus_prey_limitation > 1.0 )
         patches[x][y].sedconsumer_detritus_prey_limitation = 1.0;
@@ -231,7 +232,7 @@ void go_sedconsumer(int x, int y) {
         patches[x][y].sedconsumer_detritus_prey_limitation = 0.0;
 
     // update sedconsumer_space_limitation
-    patches[x][y].sedconsumer_space_limitation = 1.0 - ((patches[x][y].sedconsumer - Aj_sedconsumer)/(Gj_sedconsumer - Aj_sedconsumer));
+    patches[x][y].sedconsumer_space_limitation = 1.0 - ((patches[x][y].sedconsumer - g.Aj_sedconsumer)/(g.Gj_sedconsumer - g.Aj_sedconsumer));
 
     if( patches[x][y].sedconsumer_space_limitation > 1.0 )
         patches[x][y].sedconsumer_space_limitation = 1.0;
@@ -239,86 +240,86 @@ void go_sedconsumer(int x, int y) {
         patches[x][y].sedconsumer_space_limitation = 0.0;
 
     // update sedconsumer_pred_peri
-    patches[x][y].sedconsumer_pred_peri = pref_sedconsumer_peri * max_sedconsumer * patches[x][y].sedconsumer *
+    patches[x][y].sedconsumer_pred_peri = g.pref_sedconsumer_peri * g.max_sedconsumer * patches[x][y].sedconsumer *
                                           patches[x][y].sedconsumer_space_limitation * 
                                           patches[x][y].sedconsumer_peri_prey_limitation;
 
     // update sedconsumer_ingest_peri
-    patches[x][y].sedconsumer_ingest_peri = patches[x][y].sedconsumer_pred_peri * (1.0 - sedconsumer_egestion_seddecomp);
+    patches[x][y].sedconsumer_ingest_peri = patches[x][y].sedconsumer_pred_peri * (1.0 - g.sedconsumer_egestion_seddecomp);
 
     // update sedconsumer_pred_seddecomp
-    patches[x][y].sedconsumer_pred_seddecomp = pref_sedconsumer_seddecomp * max_sedconsumer * patches[x][y].sedconsumer *
+    patches[x][y].sedconsumer_pred_seddecomp = g.pref_sedconsumer_seddecomp * g.max_sedconsumer * patches[x][y].sedconsumer *
                                                patches[x][y].sedconsumer_space_limitation *
                                                patches[x][y].sedconsumer_seddecomp_prey_limitation;
 
     // update sedconsumer_ingest_seddecomp
-    patches[x][y].sedconsumer_ingest_seddecomp = patches[x][y].sedconsumer_pred_seddecomp * (1.0 - sedconsumer_egestion_seddecomp);
+    patches[x][y].sedconsumer_ingest_seddecomp = patches[x][y].sedconsumer_pred_seddecomp * (1.0 - g.sedconsumer_egestion_seddecomp);
 
     // update sedconsumer_pred_detritus
-    patches[x][y].sedconsumer_pred_detritus = pref_sedconsumer_detritus * max_sedconsumer * patches[x][y].sedconsumer *
+    patches[x][y].sedconsumer_pred_detritus = g.pref_sedconsumer_detritus * g.max_sedconsumer * patches[x][y].sedconsumer *
                                               patches[x][y].sedconsumer_space_limitation * 
                                               patches[x][y].sedconsumer_detritus_prey_limitation;
 
     // update sedconsumer_ingest_detritus
-    patches[x][y].sedconsumer_ingest_detritus = patches[x][y].sedconsumer_pred_detritus * (1.0 - sedconsumer_egestion_detritus);
+    patches[x][y].sedconsumer_ingest_detritus = patches[x][y].sedconsumer_pred_detritus * (1.0 - g.sedconsumer_egestion_detritus);
 
     // update sedconsumer_respiration
-    patches[x][y].sedconsumer_respiration = r_sedconsumer * patches[x][y].sedconsumer;
+    patches[x][y].sedconsumer_respiration = g.r_sedconsumer * patches[x][y].sedconsumer;
 
     // update sedconsumer_excretion
-    patches[x][y].sedconsumer_excretion = e_sedconsumer * patches[x][y].sedconsumer;
+    patches[x][y].sedconsumer_excretion = g.e_sedconsumer * patches[x][y].sedconsumer;
 
     // update sedconsumer_senescence
-    patches[x][y].sedconsumer_senescence = s_sedconsumer * patches[x][y].sedconsumer;
+    patches[x][y].sedconsumer_senescence = g.s_sedconsumer * patches[x][y].sedconsumer;
 }
 
 void go_consum(int x,int y) {
 
     // update consum_sedconsumer_prey_limitation
-    patches[x][y].consum_sedconsumer_prey_limitation = patches[x][y].sedconsumer / (Ai_consum_sedconsumer - Gi_consum_sedconsumer);
+    patches[x][y].consum_sedconsumer_prey_limitation = patches[x][y].sedconsumer / (g.Ai_consum_sedconsumer - g.Gi_consum_sedconsumer);
     if( patches[x][y].consum_sedconsumer_prey_limitation > 1.0 )
         patches[x][y].consum_sedconsumer_prey_limitation = 1.0;
     else if ( patches[x][y].consum_sedconsumer_prey_limitation < 0.0 )
         patches[x][y].consum_sedconsumer_prey_limitation = 0.0;
 
     // update consum_herbivore_prey_limitation
-    patches[x][y].consum_herbivore_prey_limitation = patches[x][y].herbivore / (Ai_consum_herbivore - Gi_consum_herbivore);
+    patches[x][y].consum_herbivore_prey_limitation = patches[x][y].herbivore / (g.Ai_consum_herbivore - g.Gi_consum_herbivore);
     if( patches[x][y].consum_herbivore_prey_limitation > 1.0 )
         patches[x][y].consum_herbivore_prey_limitation = 1.0;
     else if ( patches[x][y].consum_herbivore_prey_limitation < 0.0 )
         patches[x][y].consum_herbivore_prey_limitation = 0.0;
 
     // update consum_space_limitation
-    patches[x][y].consum_space_limitation = 1.0 - ((patches[x][y].consum - Aj_consum)/(Gj_consum - Aj_consum));
+    patches[x][y].consum_space_limitation = 1.0 - ((patches[x][y].consum - g.Aj_consum)/(g.Gj_consum - g.Aj_consum));
     if( patches[x][y].consum_space_limitation > 1.0 )
         patches[x][y].consum_space_limitation = 1.0;
     else if ( patches[x][y].consum_space_limitation < 0.0 )
         patches[x][y].consum_space_limitation = 0.0;
 
     // update consum_pred_herbivore
-    patches[x][y].consum_pred_herbivore = pref_consum_herbivore * max_consum * patches[x][y].consum *
+    patches[x][y].consum_pred_herbivore = g.pref_consum_herbivore * g.max_consum * patches[x][y].consum *
                                           patches[x][y].consum_space_limitation * 
                                           patches[x][y].consum_herbivore_prey_limitation;
 
     // update consum_ingest_herbivore
-    patches[x][y].consum_ingest_herbivore = patches[x][y].consum_pred_herbivore * (1.0- consum_egestion);
+    patches[x][y].consum_ingest_herbivore = patches[x][y].consum_pred_herbivore * (1.0- g.consum_egestion);
 
     // update consum_pred_sedconsumer
-    patches[x][y].consum_pred_sedconsumer = pref_consum_sedconsumer * max_consum * patches[x][y].consum *
+    patches[x][y].consum_pred_sedconsumer = g.pref_consum_sedconsumer * g.max_consum * patches[x][y].consum *
                                             patches[x][y].consum_space_limitation *
                                             patches[x][y].consum_sedconsumer_prey_limitation;
 
     // update consum_ingest_sedconsumer
-    patches[x][y].consum_ingest_sedconsumer = patches[x][y].consum_pred_sedconsumer * (1.0 - consum_egestion);
+    patches[x][y].consum_ingest_sedconsumer = patches[x][y].consum_pred_sedconsumer * (1.0 - g.consum_egestion);
 
     // update consum_respiration
-    patches[x][y].consum_respiration = r_consum * patches[x][y].consum;
+    patches[x][y].consum_respiration = g.r_consum * patches[x][y].consum;
 
     // update consum_excretion
-    patches[x][y].consum_excretion = e_consum * patches[x][y].consum;
+    patches[x][y].consum_excretion = g.e_consum * patches[x][y].consum;
 
     // update consum_senescence
-    patches[x][y].consum_senescence = s_consum * patches[x][y].consum;
+    patches[x][y].consum_senescence = g.s_consum * patches[x][y].consum;
 }
 
 void go_DOC(int x, int y)
@@ -392,7 +393,7 @@ void go_detritus(int x, int y)
                                 patches[x][y].waterdecomp_senescence * 0.3 + patches[x][y].herbivore_senescence + 
                                 patches[x][y].sedconsumer_senescence + patches[x][y].consum_senescence + 0.07 * patches[x][y].peri_senescence;
 
-    patches[x][y].egestion = herbivore_egestion + patches[x][y].sedconsumer_egestion + consum_egestion;
+    patches[x][y].egestion = g.herbivore_egestion + patches[x][y].sedconsumer_egestion + g.consum_egestion;
 
     patches[x][y].detritus_growth = patches[x][y].large_death + patches[x][y].POC_detritus_transfer + 
                                     patches[x][y].egestion + patches[x][y].macro_death;

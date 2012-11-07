@@ -1,7 +1,12 @@
-*.pyc
 *.swp
-main/build/*
-main/dist/*
-main/build_log.txt
+main/debug/*
+main/release/*
+main/results/*
+main/Makefile*
+main/RiverModel.exe
+main/RiverModel
 *.o
 *.so
+*.user
+*Qt_SDK__Debug
+*~

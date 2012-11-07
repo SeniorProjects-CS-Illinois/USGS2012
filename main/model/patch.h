@@ -2,6 +2,7 @@
 #define _PATCH
 
 #include "math.h"
+
 #include "globals.h"
 
 // comments can be found in patch.c
@@ -193,6 +194,6 @@ typedef struct _patch {
 	double turbidity;                       ///< metric of suspended solids in water column
 } patch;
 
-patch** patches; ///< 2D array of patches (pixel) objects that forms a map
+extern patch** patches; ///< 2D array of patches (pixel) objects that forms a map
 
 #endif 
