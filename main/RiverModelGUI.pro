@@ -11,6 +11,8 @@ TEMPLATE = app
 
 CONFIG += static
 
+QMAKE_LFLAGS_RELEASE += -static -static-libgcc
+
 SOURCES += main.cpp \
     model/globals.cpp \
     model/cleanup.cpp \
