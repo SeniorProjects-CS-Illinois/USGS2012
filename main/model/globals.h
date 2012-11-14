@@ -188,6 +188,8 @@ typedef struct {
     int POC_INDEX;
     int DETRITUS_INDEX;
 
+    char** stock_names;
+
     // number of different stocks
     int NUM_STOCKS;
 } Globals;

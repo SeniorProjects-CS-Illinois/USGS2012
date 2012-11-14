@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <png.h>
 
 #ifdef _WIN32
 #include <direct.h>
@@ -27,7 +28,7 @@
 
 /* Outputs an image */
 void output_image();
-
+void pixels_to_png(pixel_t** pixel_map, int index);
 void count_unique_files(int index);
 
 //Functions for configuring the model

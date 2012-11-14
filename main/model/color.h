@@ -37,4 +37,15 @@
 
     extern float* hues;
 
+    typedef struct pixel{
+        float red;
+        float green;
+        float blue;
+    }pixel_t;
+
+    struct bitmap{
+        pixel* pixels;
+        int width;
+    }bitmap_t;
+
 #endif

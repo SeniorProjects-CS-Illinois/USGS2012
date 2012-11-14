@@ -161,6 +161,17 @@ void initialize_globals(void){
     g.POC_INDEX = 8;
     g.DETRITUS_INDEX = 9;
 
+    g.stock_name[0] = "macro";
+    g.stock_name[1] = "phyto";
+    g.stock_name[2] = "herbivore";
+    g.stock_name[3] = "waterdecomp";
+    g.stock_name[4] = "seddecomp";
+    g.stock_name[5] = "sedconsumer";
+    g.stock_name[6] = "consum";
+    g.stock_name[7] = "doc";
+    g.stock_name[8] = "poc";
+    g.stock_name[9] = "detritus";
+
     // number of different stocks
     g.NUM_STOCKS = 10;
 

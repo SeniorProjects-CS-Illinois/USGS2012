@@ -17,7 +17,8 @@ SOURCES += main.cpp \
     model/go.cpp \
     model/patch.cpp \
     model/pred.cpp \
-    model/setup.cpp 
+    model/setup.cpp \
+    lib/libpng/libpng.cpp
 
 HEADERS  += main.h \
     model/cleanup.h \
@@ -28,3 +29,5 @@ HEADERS  += main.h \
     model/patch.h \
     model/pred.h \
     model/setup.h 
+
+LIBS += -lpng
