@@ -5,8 +5,8 @@ DESTDIR = ./
 TEMPLATE = app
 
 CONFIG -= qt
-CONFIG += console \
-	static
+CONFIG += console
+win32:CONFIG += static
 
 DEFINES += NO_GUI
 
