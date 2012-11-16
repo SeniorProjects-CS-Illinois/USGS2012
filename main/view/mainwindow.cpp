@@ -611,7 +611,7 @@ QList<QString> MainWindow::getHydroMaps() const { return wholeHydroMapFiles; }
 
 
 /* SETTERS */
-void MainWindow::setAdjacent(bool val) { ui->checkBoxWaterdecomp->setChecked(val); }
+void MainWindow::setAdjacent(bool val) { ui->checkBoxAdjacentCells->setChecked(val); }
 
 void MainWindow::setOutputFreq(uint8_t val) { ui->lineEditOutputFreq->setText(QString::number(val)); }
 void MainWindow::setTimestep(uint8_t val) { ui->horizontalSliderTimestep->setValue(val); }
