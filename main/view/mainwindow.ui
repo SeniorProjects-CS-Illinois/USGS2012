@@ -711,44 +711,11 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
      <zorder>lineEditTSS</zorder>
-     <zorder>labelOutputFreq</zorder>
-     <zorder>checkBoxPhyto</zorder>
-     <zorder>labelErrors</zorder>
-     <zorder>pushButtonSelectPARFile</zorder>
-     <zorder>labelDaysToRun</zorder>
-     <zorder>textBrowserErrors</zorder>
-     <zorder>checkBoxWaterdecomp</zorder>
-     <zorder>pushButtonSelectDischargeFile</zorder>
-     <zorder>pushButtonAddHydroMap</zorder>
      <zorder>labelTSS</zorder>
-     <zorder>listWidgetHydroMap</zorder>
-     <zorder>checkBoxAdjacentCells</zorder>
-     <zorder>checkBoxMacro</zorder>
-     <zorder>labelHydroMap</zorder>
-     <zorder>labelPARFile</zorder>
-     <zorder>lineEditOutputFreq</zorder>
-     <zorder>pushButtonSelectHydroMap</zorder>
-     <zorder>checkBoxPOC</zorder>
-     <zorder>checkBoxSeddecomp</zorder>
-     <zorder>labelSelectedPAR</zorder>
-     <zorder>labelSelectedMap</zorder>
-     <zorder>checkBoxConsum</zorder>
-     <zorder>labelTimestep</zorder>
      <zorder>labelKPhyto</zorder>
      <zorder>lineEditKMacro</zorder>
      <zorder>lineEditKPhyto</zorder>
-     <zorder>horizontalSliderTimestep</zorder>
-     <zorder>checkBoxDOC</zorder>
-     <zorder>labelTempFile</zorder>
-     <zorder>pushButtonRun</zorder>
-     <zorder>pushButtonSelectTempFile</zorder>
      <zorder>labelKMacro</zorder>
-     <zorder>checkBoxDetritus</zorder>
-     <zorder>checkBoxSedconsumer</zorder>
-     <zorder>labelSelectedTemp</zorder>
-     <zorder>lineEditDaysToRun</zorder>
-     <zorder>pushButtonRemoveHydroMap</zorder>
-     <zorder>checkBoxHerbivore</zorder>
      <zorder>comboBoxWhichStock</zorder>
      <zorder>labelOutputFreq</zorder>
      <zorder>checkBoxPhyto</zorder>

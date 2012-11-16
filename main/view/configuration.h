@@ -156,6 +156,66 @@ public:
     float kMacro;
 
     // stock values
+    float phytoSenescence;
+    float phytoRespiration;
+    float phytoExcretion;
+    float phytoAj;
+    float phytoGj;
+
+    float herbivoreAiPhyto;
+    float herbivoreGiPhyto;
+    float herbivorePrefPhyto;
+    float herbivoreAiPeri;
+    float herbivoreGiPeri;
+    float herbivorePrefPeri;
+    float herbivoreAiWaterdecomp;
+    float herbivoreGiWaterdecomp;
+    float herbivorePrefWaterdecomp;
+    float herbivoreAj;
+    float herbivoreGj;
+    float herbivoreRespiration;
+    float herbivoreExcretion;
+    float herbivoreEgestion;
+    float herbivoreSenescence;
+    float herbivoreMax;
+
+    float waterdecompAiDoc;
+    float waterdecompGiDoc;
+    float waterdecompPrefDoc;
+    float waterdecompAiPoc;
+    float waterdecompGiPoc;
+    float waterdecompPrefPoc;
+    float waterdecompAj;
+    float waterdecompGj;
+    float waterdecompRespiration;
+    float waterdecompExcretion;
+    float waterdecompSenescence;
+    float waterdecompMax;
+
+    float seddecompAiDetritus;
+    float seddecompGiDetritus;
+    float seddecompPrefDetritus;
+    float seddecompAj;
+    float seddecompGj;
+    float seddecompRespiration;
+    float seddecompExcretion;
+    float seddecompSenescence;
+    float seddecompMax;
+
+    float consumerAiHerbivore;
+    float consumerGiHerbivore;
+    float consumerPrefHerbivore;
+    float consumerAiSedconsumer;
+    float consumerGiSedconsumer;
+    float consumerPrefSedconsumer;
+    float consumerAj;
+    float consumerGj;
+    float consumerRespiration;
+    float consumerExcretion;
+    float consumerSenescence;
+    float consumerEgestion;
+    float consumerMax;
+
     float macroSenescence;
     float macroRespiration;
     float macroExcretion;
@@ -163,6 +223,20 @@ public:
     float macroGross;
     float macroMassMax;
     float macroVelocityMax;
+
+    float sedconsumerAiDetritus;
+    float sedconsumerGiDetritus;
+    float sedconsumerPrefDetritus;
+    float sedconsumerAiSeddecomp;
+    float sedconsumerGiSeddecomp;
+    float sedconsumerPrefSeddecomp;
+    float sedconsumerAj;
+    float sedconsumerGj;
+    float sedconsumerRespiration;
+    float sedconsumerExcretion;
+    float sedconsumerSenescence;
+    float sedconsumerMax;
+
 
 private:
     void clear();

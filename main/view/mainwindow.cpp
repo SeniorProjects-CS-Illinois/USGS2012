@@ -9,7 +9,6 @@ using std::endl;
 /** TODO
   *     - whole bunch of stock input
   *         - tool tips
-  *         - save/load from configuration
   *     - error checking for run
   *     - fail gracefully
   *     - break this hideously long file into several
@@ -196,32 +195,105 @@ void MainWindow::saveConfiguration(QString file) const
     Configuration conf;
 
     // set all values for configuration
-    conf.consum                 = getConsum();
-    conf.detritus               = getDetritus();
-    conf.doc                    = getDOC();
-    conf.herbivore              = getHerbivore();
-    conf.macro                  = getMacro();
-    conf.poc                    = getPOC();
-    conf.phyto                  = getPhyto();
-    conf.sedconsumer            = getSedconsumer();
-    conf.seddecomp              = getSeddecomp();
-    conf.waterdecomp            = getWaterdecomp();
-    conf.adjacent               = getAdjacent();
-    conf.outputFreq             = getOutputFreq();
-    conf.timestep               = getTimestep();
-    conf.numHydroMaps           = getNumHydroMaps();
-    conf.tss                    = getTSS();
-    conf.kMacro                 = getKMacro();
-    conf.kPhyto                 = getKPhyto();
+    conf.consum                     = getConsum();
+    conf.detritus                   = getDetritus();
+    conf.doc                        = getDOC();
+    conf.herbivore                  = getHerbivore();
+    conf.macro                      = getMacro();
+    conf.poc                        = getPOC();
+    conf.phyto                      = getPhyto();
+    conf.sedconsumer                = getSedconsumer();
+    conf.seddecomp                  = getSeddecomp();
+    conf.waterdecomp                = getWaterdecomp();
+    conf.adjacent                   = getAdjacent();
+    conf.outputFreq                 = getOutputFreq();
+    conf.timestep                   = getTimestep();
+    conf.numHydroMaps               = getNumHydroMaps();
+    conf.tss                        = getTSS();
+    conf.kMacro                     = getKMacro();
+    conf.kPhyto                     = getKPhyto();
 
     // stock parameters
-    conf.macroSenescence        = getMacroSenescence();
-    conf.macroRespiration       = getMacroRespiration();
-    conf.macroExcretion         = getMacroExcretion();
-    conf.macroTemp              = getMacroTemp();
-    conf.macroGross             = getMacroGross();
-    conf.macroMassMax           = getMacroMassMax();
-    conf.macroVelocityMax       = getMacroVelocityMax();
+    conf.phytoSenescence            = getPhytoSenescence();
+    conf.phytoRespiration           = getPhytoRespiration();
+    conf.phytoExcretion             = getPhytoExcretion();
+    conf.phytoAj                    = getPhytoAj();
+    conf.phytoGj                    = getPhytoGj();
+
+    conf.herbivoreAiPhyto           = getHerbivoreAiPhyto();
+    conf.herbivoreGiPhyto           = getHerbivoreGiPhyto();
+    conf.herbivorePrefPhyto         = getHerbivorePrefPhyto();
+    conf.herbivoreAiPeri            = getHerbivoreAiPeri();
+    conf.herbivoreGiPeri            = getHerbivoreGiPeri();
+    conf.herbivorePrefPeri          = getHerbivorePrefPeri();
+    conf.herbivoreAiWaterdecomp     = getHerbivoreAiWaterdecomp();
+    conf.herbivoreGiWaterdecomp     = getHerbivoreGiWaterdecomp();
+    conf.herbivorePrefWaterdecomp   = getHerbivorePrefWaterdecomp();
+    conf.herbivoreAj                = getHerbivoreAj();
+    conf.herbivoreGj                = getHerbivoreGj();
+    conf.herbivoreRespiration       = getHerbivoreRespiration();
+    conf.herbivoreExcretion         = getHerbivoreExcretion();
+    conf.herbivoreEgestion          = getHerbivoreEgestion();
+    conf.herbivoreSenescence        = getHerbivoreSenescence();
+    conf.herbivoreMax               = getHerbivoreMax();
+
+    conf.waterdecompAiDoc           = getWaterdecompAiDoc();
+    conf.waterdecompGiDoc           = getWaterdecompGiDoc();
+    conf.waterdecompPrefDoc         = getWaterdecompPrefDoc();
+    conf.waterdecompAiPoc           = getWaterdecompAiPoc();
+    conf.waterdecompGiPoc           = getWaterdecompGiPoc();
+    conf.waterdecompPrefPoc         = getWaterdecompPrefPoc();
+    conf.waterdecompAj              = getWaterdecompAj();
+    conf.waterdecompGj              = getWaterdecompGj();
+    conf.waterdecompRespiration     = getWaterdecompRespiration();
+    conf.waterdecompExcretion       = getWaterdecompExcretion();
+    conf.waterdecompSenescence      = getWaterdecompSenescence();
+    conf.waterdecompMax             = getWaterdecompMax();
+
+    conf.seddecompAiDetritus        = getSeddecompAiDetritus();
+    conf.seddecompGiDetritus        = getSeddecompGiDetritus();
+    conf.seddecompPrefDetritus      = getSeddecompPrefDetritus();
+    conf.seddecompAj                = getSeddecompAj();
+    conf.seddecompGj                = getSeddecompGj();
+    conf.seddecompRespiration       = getSeddecompRespiration();
+    conf.seddecompExcretion         = getSeddecompExcretion();
+    conf.seddecompSenescence        = getSeddecompSenescence();
+    conf.seddecompMax               = getSeddecompMax();
+
+    conf.consumerAiHerbivore        = getConsumerAiHerbivore();
+    conf.consumerGiHerbivore        = getConsumerGiHerbivore();
+    conf.consumerPrefHerbivore      = getConsumerPrefHerbivore();
+    conf.consumerAiSedconsumer      = getConsumerAiSedconsumer();
+    conf.consumerGiSedconsumer      = getConsumerGiSedconsumer();
+    conf.consumerPrefSedconsumer    = getConsumerPrefSedconsumer();
+    conf.consumerAj                 = getConsumerAj();
+    conf.consumerGj                 = getConsumerGj();
+    conf.consumerRespiration        = getConsumerRespiration();
+    conf.consumerExcretion          = getConsumerExcretion();
+    conf.consumerSenescence         = getConsumerSenescence();
+    conf.consumerEgestion           = getConsumerEgestion();
+    conf.consumerMax                = getConsumerMax();
+
+    conf.macroSenescence            = getMacroSenescence();
+    conf.macroRespiration           = getMacroRespiration();
+    conf.macroExcretion             = getMacroExcretion();
+    conf.macroTemp                  = getMacroTemp();
+    conf.macroGross                 = getMacroGross();
+    conf.macroMassMax               = getMacroMassMax();
+    conf.macroVelocityMax           = getMacroVelocityMax();
+
+    conf.sedconsumerAiDetritus      = getSedconsumerAiDetritus();
+    conf.sedconsumerGiDetritus      = getSedconsumerGiDetritus();
+    conf.sedconsumerPrefDetritus    = getSedconsumerPrefDetritus();
+    conf.sedconsumerAiSeddecomp     = getSedconsumerAiSeddecomp();
+    conf.sedconsumerGiSeddecomp     = getSedconsumerGiSeddecomp();
+    conf.sedconsumerPrefSeddecomp   = getSedconsumerPrefDetritus();
+    conf.sedconsumerAj              = getSedconsumerAj();
+    conf.sedconsumerGj              = getSedconsumerGj();
+    conf.sedconsumerRespiration     = getSedconsumerRespiration();
+    conf.sedconsumerExcretion       = getSedconsumerExcretion();
+    conf.sedconsumerSenescence      = getSedconsumerSenescence();
+    conf.sedconsumerMax             = getSedconsumerMax();
 
     // file names need special attention
     QList<QString> hydromaps = getHydroMaps();
@@ -254,7 +326,7 @@ void MainWindow::loadConfiguration(QString file)
     Configuration conf;
     conf.read(file.toStdString().c_str());
 
-    // set all values
+    // basic values
     setConsum(conf.consum);
     setDetritus(conf.detritus);
     setDOC(conf.doc);
@@ -273,6 +345,66 @@ void MainWindow::loadConfiguration(QString file)
     setKMacro(conf.kMacro);
 
     // stock parameters
+    setPhytoSenescence(conf.phytoSenescence);
+    setPhytoRespiration(conf.phytoRespiration);
+    setPhytoExretion(conf.phytoExcretion);
+    setPhytoAj(conf.phytoAj);
+    setPhytoGj(conf.phytoGj);
+
+    setHerbivoreAiPhyto(conf.herbivoreAiPhyto);
+    setHerbivoreGiPhyto(conf.herbivoreGiPhyto);
+    setHerbivorePrefPhyto(conf.herbivorePrefPhyto);
+    setHerbivoreAiPeri(conf.herbivoreAiPeri);
+    setHerbivoreGiPeri(conf.herbivoreGiPeri);
+    setHerbivorePrefPeri(conf.herbivorePrefPeri);
+    setHerbivoreAiWaterdecomp(conf.herbivoreAiWaterdecomp);
+    setHerbivoreGiWaterdecomp(conf.herbivoreGiWaterdecomp);
+    setHerbivorePrefWaterdecomp(conf.herbivorePrefWaterdecomp);
+    setHerbivoreAj(conf.herbivoreAj);
+    setHerbivoreGj(conf.herbivoreGj);
+    setHerbivoreRespiration(conf.herbivoreRespiration);
+    setHerbivoreExcretion(conf.herbivoreExcretion);
+    setHerbivoreEgestion(conf.herbivoreEgestion);
+    setHerbivoreSenescence(conf.herbivoreSenescence);
+    setHerbivoreMax(conf.herbivoreMax);
+
+    setWaterdecompAiDoc(conf.waterdecompAiDoc);
+    setWaterdecompGiDoc(conf.waterdecompGiDoc);
+    setWaterdecompPrefDoc(conf.waterdecompPrefDoc);
+    setWaterdecompAiPoc(conf.waterdecompAiPoc);
+    setWaterdecompGiPoc(conf.waterdecompGiPoc);
+    setWaterdecompPrefPoc(conf.waterdecompPrefPoc);
+    setWaterdecompAj(conf.waterdecompAj);
+    setWaterdecompGj(conf.waterdecompGj);
+    setWaterdecompRespiration(conf.waterdecompRespiration);
+    setWaterdecompExcretion(conf.waterdecompExcretion);
+    setWaterdecompSenescence(conf.waterdecompSenescence);
+    setWaterdecompMax(conf.waterdecompMax);
+
+    setSeddecompAiDetritus(conf.seddecompAiDetritus);
+    setSeddecompGiDetritus(conf.seddecompGiDetritus);
+    setSeddecompPrefDetritus(conf.seddecompPrefDetritus);
+    setSeddecompAj(conf.seddecompAj);
+    setSeddecompGj(conf.seddecompGj);
+    setSeddecompRespiration(conf.seddecompRespiration);
+    setSeddecompExcretion(conf.seddecompExcretion);
+    setSeddecompSenescence(conf.seddecompSenescence);
+    setSeddecompMax(conf.seddecompMax);
+
+    setConsumerAiHerbivore(conf.consumerAiHerbivore);
+    setConsumerGiHerbivore(conf.consumerGiHerbivore);
+    setConsumerPrefHerbivore(conf.consumerPrefHerbivore);
+    setConsumerAiSedconsumer(conf.consumerAiSedconsumer);
+    setConsumerGiSedconsumer(conf.consumerGiSedconsumer);
+    setConsumerPrefSedconsumer(conf.consumerPrefSedconsumer);
+    setConsumerAj(conf.consumerAj);
+    setConsumerGj(conf.consumerGj);
+    setConsumerRespiration(conf.consumerRespiration);
+    setConsumerExcretion(conf.consumerExcretion);
+    setConsumerSenescence(conf.consumerSenescence);
+    setConsumerEgestion(conf.consumerEgestion);
+    setConsumerMax(conf.consumerMax);
+
     setMacroSenescence(conf.macroSenescence);
     setMacroRespiration(conf.macroRespiration);
     setMacroExcretion(conf.macroExcretion);
@@ -280,6 +412,21 @@ void MainWindow::loadConfiguration(QString file)
     setMacroGross(conf.macroGross);
     setMacroMassMax(conf.macroMassMax);
     setMacroVelocityMax(conf.macroVelocityMax);
+
+    setSedconsumerAiDetritus(conf.sedconsumerAiDetritus);
+    setSedconsumerGiDetritus(conf.sedconsumerGiDetritus);
+    setSedconsumerPrefDetritus(conf.sedconsumerPrefDetritus);
+    setSedconsumerAiSeddecomp(conf.sedconsumerAiSeddecomp);
+    setSedconsumerGiSeddecomp(conf.sedconsumerGiSeddecomp);
+    setSedconsumerPrefSeddecomp(conf.sedconsumerPrefSeddecomp);
+    setSedconsumerAj(conf.sedconsumerAj);
+    setSedconsumerGj(conf.sedconsumerGj);
+    setSedconsumerRespiration(conf.sedconsumerRespiration);
+    setSedconsumerExcretion(conf.sedconsumerExcretion);
+    setSedconsumerSenescence(conf.sedconsumerSenescence);
+    setSedconsumerMax(conf.sedconsumerMax);
+
+    // files
     setTempFile(conf.tempFile);
     setPARFile(conf.parFile);
     setHydroMaps(conf.hydroMaps, conf.daysToRun, conf.numHydroMaps);
