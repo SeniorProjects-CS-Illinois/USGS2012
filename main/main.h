@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <png.h>
 
 #ifdef _WIN32
 #include <direct.h>

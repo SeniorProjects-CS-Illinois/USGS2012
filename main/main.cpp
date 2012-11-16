@@ -1,4 +1,7 @@
 #include "main.h"
+#include <QString>
+#include <QImage>
+#include <QImageWriter>
 //#include <direct.h>
 //#include <unistd.h>
 
@@ -114,56 +117,30 @@ void set_temperature_file(const char * filename)
 
 //TODO: Unstub this with C/C++ code for image output.
 void output_image(void) {
-    pixel_t pixel_map[g.MAP_WIDTH][g.MAP_HEIGHT];
-    pixel_t pixel;
+
+    QString fileName("output.png");
+    QImageWriter * writer = new QImageWriter ( & fileName);
+    QImage * image = new QIamage(MAP_WIDTH, MAP_HEIGHT, QImage::Format_RGB32);
 
     for(int i=0; i < g.NUM_STOCKS; i++){
+        QString fileName(g.STOCK_NAMES[i] + ".png");
+        writer.setFileName(fileName);
         for(int x=0; x < g.MAP_WIDTH; x++){
             for(int y=0; y < g.MAP_HEIGHT; y++){
                 float color = colorValues[i][getIndex(x, y)];
-                pixel.red = color && (255 << 16);
-                pixel.green = color && (255 << 8);
-                pixel.blue = color && 255;
+                int red = color && (255 << 16);
+                int green = color && (255 << 8);
+                int blue = color && 255;
+                QRgb value = qRgb(red, green, blue);
                 pixel_map[x][y] = pixel;
+                image.setPixel(x, y, value);
             }
         }
-        pixels_to_png(pixel_map**, i);
+        writer.write(image);
     }
     return;
 }
 
-void pixels_to_png(pixel_t** pixel_map, int index) {
-    FILE* map_out;
-    png_structp png_ptr = NULL;
-    png_infop info_ptr = NULL;
-    png_byte** row_pointers = NULL;
-
-    map_out = fopen(g.stock_names[index], "w+");
-
-    if(! map_out) {
-        printf("file open failed");
-    }
-
-    png_ptr = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (png_ptr == NULL) {
-        printf("png create write struct failed");
-    }
-
-    row_pointers = png_malloc (png_ptr, MAP_HEIGHT * sizeof (png_byte *));
-    for(int y = 0; y < g.MAP_HEIGHT; ++y){
-        png_byte *row =
-            png_malloc (png_ptr, sizeof(uint8_t) * MAP_WIDTH * pixel_size);
-        row_pointers[y] = row;
-        for(int x = 0; x < g.MAP_WIDTH; ++x) {
-        }
-    }
-
-    png_init_io(png_ptr, map_out);
-    png_set_rows(png_ptr, info_ptr, row_pointers);
-    png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
-
-    return;
-}
 /**
  * Creates ./results/data and ./results/images if they don't exist.
  */
