@@ -845,9 +845,11 @@ void MainWindow::getAllStockInput() const
                getDetritusBase(),
                getConsumerBase());
 
-    //getPhytoSenescence()/24
-    //getPhytoRespiration()/24
-    //getPhytoExcretion()/24
+    // All values with /24 at the end are per hour
+    //   values passed in as per day values
+    set_senescence_phyto(getPhytoSenescence()/24);
+    set_respiration_phyto(getPhytoRespiration()/24);
+    set_excretion_phyto(getPhytoExcretion()/24);
     set_aj_phyto(getPhytoAj());
     set_gj_phyto(getPhytoGj());
 
@@ -907,7 +909,7 @@ void MainWindow::getAllStockInput() const
 
     set_sen_macro_coef(getMacroSenescence()/24);
     set_resp_macro_coef(getMacroRespiration()/24);
-    //getMacroExcretion()
+    set_excretion_macro(getMacroExcretion());
     set_macro_base_temp(getMacroTemp());
     set_gross_macro_coef(getMacroGross());
     set_macro_mass_max(getMacroMassMax());
