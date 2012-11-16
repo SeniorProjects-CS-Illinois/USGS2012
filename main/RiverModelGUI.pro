@@ -11,7 +11,7 @@ TEMPLATE = app
 
 CONFIG += static
 
-QMAKE_LFLAGS_RELEASE += -static -static-libgcc
+QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 
 SOURCES += main.cpp \
     model/globals.cpp \
