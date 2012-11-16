@@ -12,6 +12,7 @@ using std::endl;
   *     - error checking for run
   *     - fail gracefully
   *     - break this hideously long file into several
+  *     - threading
   */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -833,11 +834,22 @@ void MainWindow::getAllInput() const
 
 void MainWindow::getAllStockInput() const
 {
+    set_stocks(getMacroBase(),
+               getPhytoBase(),
+               getDecompBase(),
+               getSeddecompBase(),
+               getHerbivoreBase(),
+               getSedconsumerBase(),
+               getDocBase(),
+               getPocBase(),
+               getDetritusBase(),
+               getConsumerBase());
+
     //getPhytoSenescence()/24
     //getPhytoRespiration()/24
     //getPhytoExcretion()/24
-    //getPhytoAj()
-    //getPhytoGj()
+    set_aj_phyto(getPhytoAj());
+    set_gj_phyto(getPhytoGj());
 
     set_ai_herbivore_phyto(getHerbivoreAiPhyto());
     set_gi_herbivore_phyto(getHerbivoreGiPhyto());
