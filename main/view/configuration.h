@@ -35,6 +35,17 @@ struct Configuration
   *     TSS                                     (float)
   *     KPhyto                                  (float)
   *     KMacro                                  (float)
+  *     Which Stock                             (char*)
+  *     Macro                                   (float)
+  *     Phyto                                   (float)
+  *     Consumer                                (float)
+  *     Decomp                                  (float)
+  *     Sedconsumer                             (float)
+  *     Seddecomp                               (float)
+  *     Herbivore                               (float)
+  *     Detritus                                (float)
+  *     POC                                     (float)
+  *     DOC                                     (float)
   *     Phyto Senescence                        (float)
   *     Phyto Respiration                       (float)
   *     Phyto Excretion                         (float)
@@ -129,16 +140,6 @@ public:
     void setFileName(QString source, char* & dest);
 
     bool adjacent;
-    bool consum;
-    bool detritus;
-    bool doc;
-    bool herbivore;
-    bool macro;
-    bool poc;
-    bool phyto;
-    bool sedconsumer;
-    bool seddecomp;
-    bool waterdecomp;
 
     char* tempFile;
     char* parFile;
@@ -156,6 +157,19 @@ public:
     float kMacro;
 
     // stock values
+    char* whichStock;
+
+    float macro;
+    float phyto;
+    float consumer;
+    float decomp;
+    float sedconsumer;
+    float seddecomp;
+    float herbivore;
+    float detritus;
+    float poc;
+    float doc;
+
     float phytoSenescence;
     float phytoRespiration;
     float phytoExcretion;

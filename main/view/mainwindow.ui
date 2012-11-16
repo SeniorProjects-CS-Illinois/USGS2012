@@ -56,19 +56,6 @@
        <string>Output Frequency (# Days):</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxPhyto">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>150</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Phyto</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="labelErrors">
       <property name="geometry">
        <rect>
@@ -126,19 +113,6 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;None&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxWaterdecomp">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>210</y>
-        <width>91</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Waterdecomp</string>
       </property>
      </widget>
      <widget class="QPushButton" name="pushButtonSelectDischargeFile">
@@ -212,19 +186,6 @@ p, li { white-space: pre-wrap; }
        <string>Adjacent Cells Only?</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxMacro">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>110</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Macro</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="labelHydroMap">
       <property name="geometry">
        <rect>
@@ -280,32 +241,6 @@ p, li { white-space: pre-wrap; }
        <string>Select Hydro Map</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxPOC">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>130</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>POC</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxSeddecomp">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>190</y>
-        <width>81</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Seddecomp</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="labelSelectedPAR">
       <property name="geometry">
        <rect>
@@ -336,19 +271,6 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxConsum">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>30</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Consum</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelTimestep">
@@ -434,19 +356,6 @@ p, li { white-space: pre-wrap; }
        <number>30</number>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxDOC">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>70</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>DOC</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="labelTempFile">
       <property name="geometry">
        <rect>
@@ -505,32 +414,6 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBoxDetritus">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>50</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Detritus</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxSedconsumer">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>170</y>
-        <width>91</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Sedconsumer</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="labelSelectedTemp">
       <property name="geometry">
        <rect>
@@ -571,19 +454,6 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Remove Selected Hydro Map</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBoxHerbivore">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>90</y>
-        <width>70</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Herbivore</string>
       </property>
      </widget>
      <widget class="QComboBox" name="comboBoxWhichStock">
@@ -710,6 +580,296 @@ p, li { white-space: pre-wrap; }
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
+     <widget class="QLineEdit" name="lineEditDetritus">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>180</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditSeddecomp">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>140</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelDecomp">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>100</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Decomp:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelMacro">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>40</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Macro:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditDoc">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>220</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditConsumer">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>80</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelConsumer">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>80</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Consumer:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditHerbivore">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>160</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelPhyto">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>60</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Phyto:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelDoc">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>220</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>DOC:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelSeddecomp">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>140</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Seddecomp:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditPoc">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>200</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelPoc">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>200</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>POC:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelHerbivore">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>160</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Herbivore:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditDecomp">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>100</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditMacro">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>40</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditPhyto">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>60</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelSedconsumer">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sedconsumer:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditSedconsumer">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>120</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelDetritus">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>180</y>
+        <width>120</width>
+        <height>15</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Detritus</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
      <zorder>lineEditTSS</zorder>
      <zorder>labelTSS</zorder>
      <zorder>labelKPhyto</zorder>
@@ -718,42 +878,52 @@ p, li { white-space: pre-wrap; }
      <zorder>labelKMacro</zorder>
      <zorder>comboBoxWhichStock</zorder>
      <zorder>labelOutputFreq</zorder>
-     <zorder>checkBoxPhyto</zorder>
      <zorder>labelErrors</zorder>
      <zorder>pushButtonSelectPARFile</zorder>
      <zorder>labelDaysToRun</zorder>
      <zorder>textBrowserErrors</zorder>
-     <zorder>checkBoxWaterdecomp</zorder>
      <zorder>pushButtonSelectDischargeFile</zorder>
      <zorder>pushButtonAddHydroMap</zorder>
      <zorder>listWidgetHydroMap</zorder>
      <zorder>checkBoxAdjacentCells</zorder>
-     <zorder>checkBoxMacro</zorder>
      <zorder>labelHydroMap</zorder>
      <zorder>labelPARFile</zorder>
      <zorder>lineEditOutputFreq</zorder>
      <zorder>pushButtonSelectHydroMap</zorder>
-     <zorder>checkBoxPOC</zorder>
-     <zorder>checkBoxSeddecomp</zorder>
      <zorder>labelSelectedPAR</zorder>
      <zorder>labelSelectedMap</zorder>
-     <zorder>checkBoxConsum</zorder>
      <zorder>labelTimestep</zorder>
      <zorder>horizontalSliderTimestep</zorder>
-     <zorder>checkBoxDOC</zorder>
      <zorder>labelTempFile</zorder>
      <zorder>pushButtonRun</zorder>
      <zorder>pushButtonSelectTempFile</zorder>
-     <zorder>checkBoxDetritus</zorder>
-     <zorder>checkBoxSedconsumer</zorder>
      <zorder>labelSelectedTemp</zorder>
      <zorder>lineEditDaysToRun</zorder>
      <zorder>pushButtonRemoveHydroMap</zorder>
-     <zorder>checkBoxHerbivore</zorder>
      <zorder>labelWhichStock</zorder>
      <zorder>labelTimestepMin</zorder>
      <zorder>labelTimestepMax</zorder>
      <zorder>labelTimestepVal</zorder>
+     <zorder>lineEditDetritus</zorder>
+     <zorder>lineEditSeddecomp</zorder>
+     <zorder>labelDecomp</zorder>
+     <zorder>labelMacro</zorder>
+     <zorder>lineEditDoc</zorder>
+     <zorder>lineEditConsumer</zorder>
+     <zorder>labelConsumer</zorder>
+     <zorder>lineEditHerbivore</zorder>
+     <zorder>labelPhyto</zorder>
+     <zorder>labelDoc</zorder>
+     <zorder>labelSeddecomp</zorder>
+     <zorder>lineEditPoc</zorder>
+     <zorder>labelPoc</zorder>
+     <zorder>labelHerbivore</zorder>
+     <zorder>lineEditDecomp</zorder>
+     <zorder>lineEditMacro</zorder>
+     <zorder>lineEditPhyto</zorder>
+     <zorder>labelSedconsumer</zorder>
+     <zorder>lineEditSedconsumer</zorder>
+     <zorder>labelDetritus</zorder>
     </widget>
     <widget class="QWidget" name="tabStocks">
      <attribute name="title">
@@ -972,7 +1142,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>0.01</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelHerbivoreGiPhyto">
@@ -1001,7 +1171,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>3</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelHerbivorePrefPhyto">
@@ -1104,7 +1274,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>3</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEditHerbivoreAj">
@@ -1191,7 +1361,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>0.01</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelHerbivoreGj">
@@ -2699,7 +2869,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string/>
+       <string>0.04</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="lineEditWaterdecompPrefPoc">
@@ -2828,7 +2998,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>1.0</string>
+       <string>1</string>
       </property>
      </widget>
      <widget class="QLabel" name="labelMacroVelocityMax">

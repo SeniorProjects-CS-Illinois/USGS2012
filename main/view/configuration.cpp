@@ -8,16 +8,6 @@ using std::endl;
 
 Configuration::Configuration() :
     adjacent(false),
-    consum(false),
-    detritus(false),
-    doc(false),
-    herbivore(false),
-    macro(false),
-    poc(false),
-    phyto(false),
-    sedconsumer(false),
-    seddecomp(false),
-    waterdecomp(false),
     tempFile(NULL),
     parFile(NULL),
     hydroMaps(NULL),
@@ -29,6 +19,17 @@ Configuration::Configuration() :
     tss(-1.0),
     kPhyto(-1.0),
     kMacro(-1.0),
+    whichStock("Consum"),
+    macro(-1.0),
+    phyto(-1.0),
+    consumer(-1.0),
+    decomp(-1.0),
+    sedconsumer(-1.0),
+    seddecomp(-1.0),
+    herbivore(-1.0),
+    detritus(-1.0),
+    poc(-1.0),
+    doc(-1.0),
     phytoSenescence(-1.0),
     phytoRespiration(-1.0),
     phytoExcretion(-1.0),
@@ -134,16 +135,6 @@ void Configuration::write(const char* filename) const
 
     // write booleans
     file << adjacent << endl;
-    file << consum << endl;
-    file << detritus << endl;
-    file << doc << endl;
-    file << herbivore << endl;
-    file << macro << endl;
-    file << poc << endl;
-    file << phyto << endl;
-    file << sedconsumer << endl;
-    file << seddecomp << endl;
-    file << waterdecomp << endl;
 
     // write file names
     file << tempFile << endl;
@@ -170,6 +161,17 @@ void Configuration::write(const char* filename) const
     file << kMacro << endl;
 
     // write stock parameters
+    file << macro << endl;
+    file << phyto << endl;
+    file << consumer << endl;
+    file << decomp << endl;
+    file << sedconsumer << endl;
+    file << seddecomp << endl;
+    file << herbivore << endl;
+    file << detritus << endl;
+    file << poc << endl;
+    file << doc << endl;
+
     file << phytoSenescence << endl;
     file << phytoRespiration << endl;
     file << phytoExcretion << endl;
@@ -261,16 +263,6 @@ void Configuration::read(const char* filename)
     string str;
 
     adjacent = nextBool(file, str);
-    consum = nextBool(file, str);
-    detritus = nextBool(file, str);
-    doc = nextBool(file, str);
-    herbivore = nextBool(file, str);
-    macro = nextBool(file, str);
-    poc = nextBool(file, str);
-    phyto = nextBool(file, str);
-    sedconsumer = nextBool(file, str);
-    seddecomp = nextBool(file, str);
-    waterdecomp = nextBool(file, str);
 
     setFileName(QString::fromStdString(nextLine(file, str)), tempFile);
     setFileName(QString::fromStdString(nextLine(file, str)), parFile);
@@ -295,6 +287,17 @@ void Configuration::read(const char* filename)
     kMacro = nextFloat(file, str);
 
     // stock parameters
+    macro = nextFloat(file, str);
+    phyto = nextFloat(file, str);
+    consumer = nextFloat(file, str);
+    decomp = nextFloat(file, str);
+    sedconsumer = nextFloat(file, str);
+    seddecomp = nextFloat(file, str);
+    herbivore = nextFloat(file, str);
+    detritus = nextFloat(file, str);
+    poc = nextFloat(file, str);
+    doc = nextFloat(file, str);
+
     phytoSenescence = nextFloat(file, str);
     phytoRespiration = nextFloat(file, str);
     phytoExcretion = nextFloat(file, str);
@@ -423,16 +426,6 @@ void Configuration::copy(const Configuration &other)
 {
     // basic copy for bools and ints
     adjacent                = other.adjacent;
-    consum                  = other.consum;
-    detritus                = other.detritus;
-    doc                     = other.doc;
-    herbivore               = other.herbivore;
-    macro                   = other.macro;
-    poc                     = other.poc;
-    phyto                   = other.phyto;
-    sedconsumer             = other.sedconsumer;
-    seddecomp               = other.seddecomp;
-    waterdecomp             = other.waterdecomp;
     numStocks               = other.numStocks;
     numHydroMaps            = other.numHydroMaps;
     outputFreq              = other.outputFreq;
@@ -443,6 +436,17 @@ void Configuration::copy(const Configuration &other)
     kMacro                  = other.kMacro;
 
     // stock parameters
+    macro                   = other.macro;
+    phyto                   = other.phyto;
+    consumer                = other.consumer;
+    decomp                  = other.decomp;
+    sedconsumer             = other.sedconsumer;
+    seddecomp               = other.seddecomp;
+    herbivore               = other.herbivore;
+    detritus                = other.detritus;
+    poc                     = other.poc;
+    doc                     = other.doc;
+
     phytoSenescence         = other.phytoSenescence;
     phytoRespiration        = other.phytoRespiration;
     phytoExcretion          = other.phytoExcretion;
