@@ -5,7 +5,8 @@ DESTDIR = ./
 TEMPLATE = app
 
 CONFIG -= qt
-CONFIG += console
+CONFIG += console \
+	static
 
 DEFINES += NO_GUI
 

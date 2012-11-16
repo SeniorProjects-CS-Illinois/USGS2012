@@ -41,7 +41,7 @@ void MainWindow::selectHydroMapClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Hydro Map File"),
-                                                    tr(defaultFileLocation()), tr("Text Files (*.txt)"));
+                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a hydro map file was selected
     if (!selected.isEmpty())
@@ -112,7 +112,7 @@ void MainWindow::selectDischargeFileClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Discharge File"),
-                                                    tr(defaultFileLocation()), tr("Text Files (*.txt)"));
+                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a discharge file was selected
     if (!selected.isEmpty())
@@ -132,7 +132,7 @@ void MainWindow::selectTemperatureFileClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Temperature Data File"),
-                                                    tr(defaultFileLocation()), tr("Text Files (*.txt)"));
+                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a temperature file was selected
     if (!selected.isEmpty())
@@ -150,7 +150,7 @@ void MainWindow::selectPARFileClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select PAR Data File"),
-                                                    tr(defaultFileLocation()), tr("Text Files (*.txt)"));
+                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a par file was selected
     if (!selected.isEmpty())
@@ -184,7 +184,7 @@ void MainWindow::timestepUpdate(int newVal)
 void MainWindow::saveConfiguration()
 {
     QString name = QFileDialog::getSaveFileName(this, tr("Save Configuration As"),
-                                                tr(defaultFileLocation()), tr("Config Files (*.conf)"));
+                                                defaultFileLocation(), tr("Config Files (*.conf)"));
     if (!name.isEmpty())
     {
         saveConfiguration(name);
@@ -316,7 +316,7 @@ void MainWindow::saveConfiguration(QString file) const
 void MainWindow::loadConfiguration()
 {
     QString name = QFileDialog::getOpenFileName(this, tr("Open Configuration"),
-                                                tr(defaultFileLocation()), tr("Config Files (*.conf)"));
+                                                defaultFileLocation(), tr("Config Files (*.conf)"));
     if (!name.isEmpty())
     {
         loadConfiguration(name);
@@ -1038,10 +1038,10 @@ const char* MainWindow::qstringToCStr(const QString & input) const
     return input.toStdString().c_str();
 }
 
-char* MainWindow::defaultFileLocation() const
+QString MainWindow::defaultFileLocation() const
 {
     // change output to wherever data dir is
-    return  "C:/cygwin/home/Owner/cs492/USGS2012/main/model/data";
+    return  QDir::currentPath().append("/data");
 }
 
 /* END private functions */

@@ -365,7 +365,7 @@ private:
     const char* qstringToCStr(const QString & input) const;
 
     /* Used to make file selection faster */
-    char* defaultFileLocation() const;
+    QString defaultFileLocation() const;
 };
 
 #endif // MAINWINDOW_H
