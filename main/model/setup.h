@@ -72,7 +72,12 @@ void set_temperature();
 
 /**
  * Sets up the 10 stocks, currently has default values
- * Will get these values as input later
  */
 void setup_stocks();
+
+/**
+ * Sets up the 10 stocks to input values
+ */
+void set_stocks(float macro, float phyto, float waterdecomp, float seddecomp, float herbivore,
+                float sedconsumer, float doc, float poc, float detritus, float consum);
 #endif

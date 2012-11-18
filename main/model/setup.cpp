@@ -628,9 +628,25 @@ void set_temperature()
 
 /**
  * Sets up the 10 stocks, currently has default values
- * Will get these values as input later
  */
 void setup_stocks()
+{
+    set_stocks(1.0, 10.0, 10.0, 1.0, 1.0, 1.0, 10.0, 10.0, 1.0, 0.1);
+}
+
+/**
+ * Sets up the 10 stocks to input values
+ */
+void set_stocks(float macro,
+                float phyto,
+                float waterdecomp,
+                float seddecomp,
+                float herbivore,
+                float sedconsumer,
+                float doc,
+                float poc,
+                float detritus,
+                float consum)
 {
     int x, y;
     for(x = 0; x < g.MAP_WIDTH; x++)
@@ -639,16 +655,16 @@ void setup_stocks()
         {
             if(patches[x][y].depth > 0.0)
             {
-                patches[x][y].macro = 1.0;
-                patches[x][y].phyto = 10.0;
-                patches[x][y].waterdecomp = 10.0;
-                patches[x][y].seddecomp = 1.0;
-                patches[x][y].herbivore = 1.0;
-                patches[x][y].sedconsumer = 1.0;
-                patches[x][y].DOC = 10.0;
-                patches[x][y].POC = 10.0;
-                patches[x][y].detritus = 1.0;
-                patches[x][y].consum = 0.1;
+                patches[x][y].macro = macro;
+                patches[x][y].phyto = phyto;
+                patches[x][y].waterdecomp = waterdecomp;
+                patches[x][y].seddecomp = seddecomp;
+                patches[x][y].herbivore = herbivore;
+                patches[x][y].sedconsumer = sedconsumer;
+                patches[x][y].DOC = doc;
+                patches[x][y].POC = poc;
+                patches[x][y].detritus = detritus;
+                patches[x][y].consum = consum;
             }
         }
     }

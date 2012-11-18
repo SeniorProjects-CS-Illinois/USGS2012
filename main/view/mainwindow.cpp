@@ -9,10 +9,10 @@ using std::endl;
 /** TODO
   *     - whole bunch of stock input
   *         - tool tips
-  *         - save/load from configuration
   *     - error checking for run
   *     - fail gracefully
   *     - break this hideously long file into several
+  *     - threading
   */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -196,32 +196,106 @@ void MainWindow::saveConfiguration(QString file) const
     Configuration conf;
 
     // set all values for configuration
-    conf.consum                 = getConsum();
-    conf.detritus               = getDetritus();
-    conf.doc                    = getDOC();
-    conf.herbivore              = getHerbivore();
-    conf.macro                  = getMacro();
-    conf.poc                    = getPOC();
-    conf.phyto                  = getPhyto();
-    conf.sedconsumer            = getSedconsumer();
-    conf.seddecomp              = getSeddecomp();
-    conf.waterdecomp            = getWaterdecomp();
-    conf.adjacent               = getAdjacent();
-    conf.outputFreq             = getOutputFreq();
-    conf.timestep               = getTimestep();
-    conf.numHydroMaps           = getNumHydroMaps();
-    conf.tss                    = getTSS();
-    conf.kMacro                 = getKMacro();
-    conf.kPhyto                 = getKPhyto();
+    conf.adjacent                   = getAdjacent();
+    conf.outputFreq                 = getOutputFreq();
+    conf.timestep                   = getTimestep();
+    conf.numHydroMaps               = getNumHydroMaps();
+    conf.tss                        = getTSS();
+    conf.kMacro                     = getKMacro();
+    conf.kPhyto                     = getKPhyto();
 
     // stock parameters
-    conf.macroSenescence        = getMacroSenescence();
-    conf.macroRespiration       = getMacroRespiration();
-    conf.macroExcretion         = getMacroExcretion();
-    conf.macroTemp              = getMacroTemp();
-    conf.macroGross             = getMacroGross();
-    conf.macroMassMax           = getMacroMassMax();
-    conf.macroVelocityMax       = getMacroVelocityMax();
+    conf.macro                      = getMacroBase();
+    conf.phyto                      = getPhytoBase();
+    conf.consumer                   = getConsumerBase();
+    conf.decomp                     = getDecompBase();
+    conf.sedconsumer                = getSedconsumerBase();
+    conf.seddecomp                  = getSeddecompBase();
+    conf.herbivore                  = getHerbivoreBase();
+    conf.detritus                   = getDetritusBase();
+    conf.poc                        = getPocBase();
+    conf.doc                        = getDocBase();
+
+    conf.phytoSenescence            = getPhytoSenescence();
+    conf.phytoRespiration           = getPhytoRespiration();
+    conf.phytoExcretion             = getPhytoExcretion();
+    conf.phytoAj                    = getPhytoAj();
+    conf.phytoGj                    = getPhytoGj();
+
+    conf.herbivoreAiPhyto           = getHerbivoreAiPhyto();
+    conf.herbivoreGiPhyto           = getHerbivoreGiPhyto();
+    conf.herbivorePrefPhyto         = getHerbivorePrefPhyto();
+    conf.herbivoreAiPeri            = getHerbivoreAiPeri();
+    conf.herbivoreGiPeri            = getHerbivoreGiPeri();
+    conf.herbivorePrefPeri          = getHerbivorePrefPeri();
+    conf.herbivoreAiWaterdecomp     = getHerbivoreAiWaterdecomp();
+    conf.herbivoreGiWaterdecomp     = getHerbivoreGiWaterdecomp();
+    conf.herbivorePrefWaterdecomp   = getHerbivorePrefWaterdecomp();
+    conf.herbivoreAj                = getHerbivoreAj();
+    conf.herbivoreGj                = getHerbivoreGj();
+    conf.herbivoreRespiration       = getHerbivoreRespiration();
+    conf.herbivoreExcretion         = getHerbivoreExcretion();
+    conf.herbivoreEgestion          = getHerbivoreEgestion();
+    conf.herbivoreSenescence        = getHerbivoreSenescence();
+    conf.herbivoreMax               = getHerbivoreMax();
+
+    conf.waterdecompAiDoc           = getWaterdecompAiDoc();
+    conf.waterdecompGiDoc           = getWaterdecompGiDoc();
+    conf.waterdecompPrefDoc         = getWaterdecompPrefDoc();
+    conf.waterdecompAiPoc           = getWaterdecompAiPoc();
+    conf.waterdecompGiPoc           = getWaterdecompGiPoc();
+    conf.waterdecompPrefPoc         = getWaterdecompPrefPoc();
+    conf.waterdecompAj              = getWaterdecompAj();
+    conf.waterdecompGj              = getWaterdecompGj();
+    conf.waterdecompRespiration     = getWaterdecompRespiration();
+    conf.waterdecompExcretion       = getWaterdecompExcretion();
+    conf.waterdecompSenescence      = getWaterdecompSenescence();
+    conf.waterdecompMax             = getWaterdecompMax();
+
+    conf.seddecompAiDetritus        = getSeddecompAiDetritus();
+    conf.seddecompGiDetritus        = getSeddecompGiDetritus();
+    conf.seddecompPrefDetritus      = getSeddecompPrefDetritus();
+    conf.seddecompAj                = getSeddecompAj();
+    conf.seddecompGj                = getSeddecompGj();
+    conf.seddecompRespiration       = getSeddecompRespiration();
+    conf.seddecompExcretion         = getSeddecompExcretion();
+    conf.seddecompSenescence        = getSeddecompSenescence();
+    conf.seddecompMax               = getSeddecompMax();
+
+    conf.consumerAiHerbivore        = getConsumerAiHerbivore();
+    conf.consumerGiHerbivore        = getConsumerGiHerbivore();
+    conf.consumerPrefHerbivore      = getConsumerPrefHerbivore();
+    conf.consumerAiSedconsumer      = getConsumerAiSedconsumer();
+    conf.consumerGiSedconsumer      = getConsumerGiSedconsumer();
+    conf.consumerPrefSedconsumer    = getConsumerPrefSedconsumer();
+    conf.consumerAj                 = getConsumerAj();
+    conf.consumerGj                 = getConsumerGj();
+    conf.consumerRespiration        = getConsumerRespiration();
+    conf.consumerExcretion          = getConsumerExcretion();
+    conf.consumerSenescence         = getConsumerSenescence();
+    conf.consumerEgestion           = getConsumerEgestion();
+    conf.consumerMax                = getConsumerMax();
+
+    conf.macroSenescence            = getMacroSenescence();
+    conf.macroRespiration           = getMacroRespiration();
+    conf.macroExcretion             = getMacroExcretion();
+    conf.macroTemp                  = getMacroTemp();
+    conf.macroGross                 = getMacroGross();
+    conf.macroMassMax               = getMacroMassMax();
+    conf.macroVelocityMax           = getMacroVelocityMax();
+
+    conf.sedconsumerAiDetritus      = getSedconsumerAiDetritus();
+    conf.sedconsumerGiDetritus      = getSedconsumerGiDetritus();
+    conf.sedconsumerPrefDetritus    = getSedconsumerPrefDetritus();
+    conf.sedconsumerAiSeddecomp     = getSedconsumerAiSeddecomp();
+    conf.sedconsumerGiSeddecomp     = getSedconsumerGiSeddecomp();
+    conf.sedconsumerPrefSeddecomp   = getSedconsumerPrefSeddecomp();
+    conf.sedconsumerAj              = getSedconsumerAj();
+    conf.sedconsumerGj              = getSedconsumerGj();
+    conf.sedconsumerRespiration     = getSedconsumerRespiration();
+    conf.sedconsumerExcretion       = getSedconsumerExcretion();
+    conf.sedconsumerSenescence      = getSedconsumerSenescence();
+    conf.sedconsumerMax             = getSedconsumerMax();
 
     // file names need special attention
     QList<QString> hydromaps = getHydroMaps();
@@ -254,17 +328,7 @@ void MainWindow::loadConfiguration(QString file)
     Configuration conf;
     conf.read(file.toStdString().c_str());
 
-    // set all values
-    setConsum(conf.consum);
-    setDetritus(conf.detritus);
-    setDOC(conf.doc);
-    setHerbivore(conf.herbivore);
-    setMacro(conf.macro);
-    setPOC(conf.poc);
-    setPhyto(conf.phyto);
-    setSedconsumer(conf.sedconsumer);
-    setSeddecomp(conf.seddecomp);
-    setWaterdecomp(conf.waterdecomp);
+    // basic values
     setAdjacent(conf.adjacent);
     setOutputFreq(conf.outputFreq);
     setTimestep(conf.timestep);
@@ -273,6 +337,77 @@ void MainWindow::loadConfiguration(QString file)
     setKMacro(conf.kMacro);
 
     // stock parameters
+    setMacroBase(conf.macro);
+    setPhytoBase(conf.phyto);
+    setConsumerBase(conf.consumer);
+    setDecompBase(conf.decomp);
+    setSedconsumerBase(conf.sedconsumer);
+    setSeddecompBase(conf.seddecomp);
+    setHerbivoreBase(conf.herbivore);
+    setDetritusBase(conf.detritus);
+    setPocBase(conf.poc);
+    setDocBase(conf.doc);
+
+    setPhytoSenescence(conf.phytoSenescence);
+    setPhytoRespiration(conf.phytoRespiration);
+    setPhytoExretion(conf.phytoExcretion);
+    setPhytoAj(conf.phytoAj);
+    setPhytoGj(conf.phytoGj);
+
+    setHerbivoreAiPhyto(conf.herbivoreAiPhyto);
+    setHerbivoreGiPhyto(conf.herbivoreGiPhyto);
+    setHerbivorePrefPhyto(conf.herbivorePrefPhyto);
+    setHerbivoreAiPeri(conf.herbivoreAiPeri);
+    setHerbivoreGiPeri(conf.herbivoreGiPeri);
+    setHerbivorePrefPeri(conf.herbivorePrefPeri);
+    setHerbivoreAiWaterdecomp(conf.herbivoreAiWaterdecomp);
+    setHerbivoreGiWaterdecomp(conf.herbivoreGiWaterdecomp);
+    setHerbivorePrefWaterdecomp(conf.herbivorePrefWaterdecomp);
+    setHerbivoreAj(conf.herbivoreAj);
+    setHerbivoreGj(conf.herbivoreGj);
+    setHerbivoreRespiration(conf.herbivoreRespiration);
+    setHerbivoreExcretion(conf.herbivoreExcretion);
+    setHerbivoreEgestion(conf.herbivoreEgestion);
+    setHerbivoreSenescence(conf.herbivoreSenescence);
+    setHerbivoreMax(conf.herbivoreMax);
+
+    setWaterdecompAiDoc(conf.waterdecompAiDoc);
+    setWaterdecompGiDoc(conf.waterdecompGiDoc);
+    setWaterdecompPrefDoc(conf.waterdecompPrefDoc);
+    setWaterdecompAiPoc(conf.waterdecompAiPoc);
+    setWaterdecompGiPoc(conf.waterdecompGiPoc);
+    setWaterdecompPrefPoc(conf.waterdecompPrefPoc);
+    setWaterdecompAj(conf.waterdecompAj);
+    setWaterdecompGj(conf.waterdecompGj);
+    setWaterdecompRespiration(conf.waterdecompRespiration);
+    setWaterdecompExcretion(conf.waterdecompExcretion);
+    setWaterdecompSenescence(conf.waterdecompSenescence);
+    setWaterdecompMax(conf.waterdecompMax);
+
+    setSeddecompAiDetritus(conf.seddecompAiDetritus);
+    setSeddecompGiDetritus(conf.seddecompGiDetritus);
+    setSeddecompPrefDetritus(conf.seddecompPrefDetritus);
+    setSeddecompAj(conf.seddecompAj);
+    setSeddecompGj(conf.seddecompGj);
+    setSeddecompRespiration(conf.seddecompRespiration);
+    setSeddecompExcretion(conf.seddecompExcretion);
+    setSeddecompSenescence(conf.seddecompSenescence);
+    setSeddecompMax(conf.seddecompMax);
+
+    setConsumerAiHerbivore(conf.consumerAiHerbivore);
+    setConsumerGiHerbivore(conf.consumerGiHerbivore);
+    setConsumerPrefHerbivore(conf.consumerPrefHerbivore);
+    setConsumerAiSedconsumer(conf.consumerAiSedconsumer);
+    setConsumerGiSedconsumer(conf.consumerGiSedconsumer);
+    setConsumerPrefSedconsumer(conf.consumerPrefSedconsumer);
+    setConsumerAj(conf.consumerAj);
+    setConsumerGj(conf.consumerGj);
+    setConsumerRespiration(conf.consumerRespiration);
+    setConsumerExcretion(conf.consumerExcretion);
+    setConsumerSenescence(conf.consumerSenescence);
+    setConsumerEgestion(conf.consumerEgestion);
+    setConsumerMax(conf.consumerMax);
+
     setMacroSenescence(conf.macroSenescence);
     setMacroRespiration(conf.macroRespiration);
     setMacroExcretion(conf.macroExcretion);
@@ -280,6 +415,21 @@ void MainWindow::loadConfiguration(QString file)
     setMacroGross(conf.macroGross);
     setMacroMassMax(conf.macroMassMax);
     setMacroVelocityMax(conf.macroVelocityMax);
+
+    setSedconsumerAiDetritus(conf.sedconsumerAiDetritus);
+    setSedconsumerGiDetritus(conf.sedconsumerGiDetritus);
+    setSedconsumerPrefDetritus(conf.sedconsumerPrefDetritus);
+    setSedconsumerAiSeddecomp(conf.sedconsumerAiSeddecomp);
+    setSedconsumerGiSeddecomp(conf.sedconsumerGiSeddecomp);
+    setSedconsumerPrefSeddecomp(conf.sedconsumerPrefSeddecomp);
+    setSedconsumerAj(conf.sedconsumerAj);
+    setSedconsumerGj(conf.sedconsumerGj);
+    setSedconsumerRespiration(conf.sedconsumerRespiration);
+    setSedconsumerExcretion(conf.sedconsumerExcretion);
+    setSedconsumerSenescence(conf.sedconsumerSenescence);
+    setSedconsumerMax(conf.sedconsumerMax);
+
+    // files
     setTempFile(conf.tempFile);
     setPARFile(conf.parFile);
     setHydroMaps(conf.hydroMaps, conf.daysToRun, conf.numHydroMaps);
@@ -302,16 +452,6 @@ void MainWindow::setToolTips()
 
     // Check Boxes
     ui->checkBoxAdjacentCells->setToolTip(tr("Check this box if you want carbon flows to be limited to only adjacent cells"));
-    ui->checkBoxConsum->setToolTip(tr("Consum Stock"));
-    ui->checkBoxDetritus->setToolTip(tr("Detritus stock"));
-    ui->checkBoxDOC->setToolTip(tr("DOC stock"));
-    ui->checkBoxHerbivore->setToolTip(tr("Herbivore stock"));
-    ui->checkBoxMacro->setToolTip(tr("Macro stock"));
-    ui->checkBoxPhyto->setToolTip(tr("Phyto stock"));
-    ui->checkBoxPOC->setToolTip(tr("POC stock"));
-    ui->checkBoxSedconsumer->setToolTip(tr("Sedconsumer stock"));
-    ui->checkBoxSeddecomp->setToolTip(tr("Seddecomp stock"));
-    ui->checkBoxWaterdecomp->setToolTip(tr("Waterdecomp"));
 
     // Labels
     ui->labelDaysToRun->setToolTip(tr("The number of days to simulate for this model"));
@@ -320,6 +460,9 @@ void MainWindow::setToolTips()
     ui->labelHydroMap->setToolTip(tr("No file selected yet"));
     ui->labelKMacro->setToolTip(tr("I have no idea what this is..."));
     ui->labelKPhyto->setToolTip(tr("I have no idea what this is..."));
+    ui->labelTSS->setToolTip(tr("I have no idea what this is..."));
+
+        // stock parameters
     ui->labelMacroMassMax->setToolTip(tr("I have no idea what this is..."));
     ui->labelMacroTemp->setToolTip(tr("I have no idea what this is..."));
     ui->labelMacroVelocityMax->setToolTip(tr("I have no idea what this is..."));
@@ -329,7 +472,6 @@ void MainWindow::setToolTips()
     ui->labelMacroSenescence->setToolTip(tr("I have no idea what this is..."));
     ui->labelTempFile->setToolTip(tr("No file selected yet"));
     ui->labelTimestep->setToolTip(tr("Granularity of calculation"));
-    ui->labelTSS->setToolTip(tr("I have no idea what this is..."));
 
     // Sliders
     ui->horizontalSliderTimestep->setToolTip(QString::number(getTimestep()));
@@ -342,29 +484,22 @@ void MainWindow::setToolTips()
     ui->lineEditMacroGrossCoef->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKMacro->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKPhyto->setToolTip(tr("Enter a number between 0.0 and 1.0"));
+    ui->lineEditTSS->setToolTip(tr("Enter a number between 0.0 and 20.0"));
+
+        // stock parameters
     ui->lineEditMacroMassMax->setToolTip(tr("Enter a value between 500.0 and 1500.0"));
     ui->lineEditMacroTemp->setToolTip(tr("Enter a number between 11.7 and 27.7"));
     ui->lineEditMacroVelocityMax->setToolTip(tr("Enter a value between 0.2 and 1.6"));
     ui->lineEditOutputFreq->setToolTip(tr("Enter a positive integer"));
     ui->lineEditMacroRespiration->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditMacroSenescence->setToolTip(tr("Enter a value between 0.0 and 1.0"));
-    ui->lineEditTSS->setToolTip(tr("Enter a number between 0.0 and 20.0"));
 
     // Text Output Boxes
     ui->listWidgetHydroMap->setToolTip(tr("The currently selected hydro map data files"));
     ui->textBrowserErrors->setToolTip(tr("Shows erros with current configuration"));
 }
 
-bool MainWindow::getConsum() const { return ui->checkBoxConsum->isChecked(); }
-bool MainWindow::getDetritus() const { return ui->checkBoxDetritus->isChecked(); }
-bool MainWindow::getDOC() const { return ui->checkBoxDOC->isChecked(); }
-bool MainWindow::getHerbivore() const { return ui->checkBoxHerbivore->isChecked(); }
-bool MainWindow::getMacro() const { return ui->checkBoxMacro->isChecked(); }
-bool MainWindow::getPOC() const { return ui->checkBoxPOC->isChecked(); }
-bool MainWindow::getPhyto() const { return ui->checkBoxPhyto->isChecked(); }
-bool MainWindow::getSedconsumer() const { return ui->checkBoxSedconsumer->isChecked(); }
-bool MainWindow::getSeddecomp() const { return ui->checkBoxSeddecomp->isChecked(); }
-bool MainWindow::getWaterdecomp() const { return ui->checkBoxWaterdecomp->isChecked(); }
+/* GETTERS */
 bool MainWindow::getAdjacent() const { return ui->checkBoxAdjacentCells->isChecked(); }
 
 uint8_t MainWindow::getOutputFreq() const { return ui->lineEditOutputFreq->text().toInt(); }
@@ -374,6 +509,18 @@ uint16_t MainWindow::getNumHydroMaps() const { return wholeHydroMapFiles.size();
 float MainWindow::getTSS() const { return ui->lineEditTSS->text().toFloat(); }
 float MainWindow::getKPhyto() const { return ui->lineEditKPhyto->text().toFloat(); }
 float MainWindow::getKMacro() const { return ui->lineEditKMacro->text().toFloat(); }
+
+// stock parameters
+float MainWindow::getMacroBase() const { return ui->lineEditMacro->text().toFloat(); }
+float MainWindow::getPhytoBase() const { return ui->lineEditPhyto->text().toFloat(); }
+float MainWindow::getConsumerBase() const { return ui->lineEditConsumer->text().toFloat(); }
+float MainWindow::getDecompBase() const { return ui->lineEditDecomp->text().toFloat(); }
+float MainWindow::getSedconsumerBase() const { return ui->lineEditSedconsumer->text().toFloat(); }
+float MainWindow::getSeddecompBase() const { return ui->lineEditSeddecomp->text().toFloat(); }
+float MainWindow::getHerbivoreBase() const { return ui->lineEditHerbivore->text().toFloat(); }
+float MainWindow::getDetritusBase() const { return ui->lineEditDetritus->text().toFloat(); }
+float MainWindow::getPocBase() const { return ui->lineEditPoc->text().toFloat(); }
+float MainWindow::getDocBase() const { return ui->lineEditDoc->text().toFloat(); }
 
 float MainWindow::getPhytoSenescence() const { return ui->lineEditPhytoSenescence->text().toFloat(); }
 float MainWindow::getPhytoRespiration() const { return ui->lineEditPhytoRespiration->text().toFloat(); }
@@ -465,17 +612,7 @@ QList<QString> MainWindow::getHydroMaps() const { return wholeHydroMapFiles; }
 
 
 /* SETTERS */
-void MainWindow::setConsum(bool val) { ui->checkBoxConsum->setChecked(val); }
-void MainWindow::setDetritus(bool val) { ui->checkBoxDetritus->setChecked(val); }
-void MainWindow::setDOC(bool val) { ui->checkBoxDOC->setChecked(val); }
-void MainWindow::setHerbivore(bool val) { ui->checkBoxHerbivore->setChecked(val); }
-void MainWindow::setMacro(bool val) { ui->checkBoxMacro->setChecked(val); }
-void MainWindow::setPOC(bool val) { ui->checkBoxPOC->setChecked(val); }
-void MainWindow::setPhyto(bool val) { ui->checkBoxPhyto->setChecked(val); }
-void MainWindow::setSedconsumer(bool val) { ui->checkBoxSedconsumer->setChecked(val); }
-void MainWindow::setSeddecomp(bool val) { ui->checkBoxSeddecomp->setChecked(val); }
-void MainWindow::setWaterdecomp(bool val) { ui->checkBoxSeddecomp->setChecked(val); }
-void MainWindow::setAdjacent(bool val) { ui->checkBoxWaterdecomp->setChecked(val); }
+void MainWindow::setAdjacent(bool val) { ui->checkBoxAdjacentCells->setChecked(val); }
 
 void MainWindow::setOutputFreq(uint8_t val) { ui->lineEditOutputFreq->setText(QString::number(val)); }
 void MainWindow::setTimestep(uint8_t val) { ui->horizontalSliderTimestep->setValue(val); }
@@ -484,7 +621,19 @@ void MainWindow::setKPhyto(float val) { ui->lineEditKPhyto->setText(QString::num
 void MainWindow::setKMacro(float val) { ui->lineEditKMacro->setText(QString::number(val)); }
 void MainWindow::setTSS(float val) { ui->lineEditTSS->setText(QString::number(val)); }
 
+// stock parameters
 void MainWindow::setWhichStock(char *stock) { ui->comboBoxWhichStock->setCurrentIndex(stockIndex(stock)); }
+
+void MainWindow::setMacroBase(float val) { ui->lineEditMacro->setText(QString::number(val)); }
+void MainWindow::setPhytoBase(float val) { ui->lineEditPhyto->setText(QString::number(val)); }
+void MainWindow::setConsumerBase(float val) { ui->lineEditConsumer->setText(QString::number(val)); }
+void MainWindow::setDecompBase(float val) { ui->lineEditDecomp->setText(QString::number(val)); }
+void MainWindow::setSedconsumerBase(float val) { ui->lineEditSedconsumer->setText(QString::number(val)); }
+void MainWindow::setSeddecompBase(float val) { ui->lineEditSeddecomp->setText(QString::number(val)); }
+void MainWindow::setHerbivoreBase(float val) { ui->lineEditHerbivore->setText(QString::number(val)); }
+void MainWindow::setDetritusBase(float val) { ui->lineEditDetritus->setText(QString::number(val)); }
+void MainWindow::setPocBase(float val) { ui->lineEditPoc->setText(QString::number(val)); }
+void MainWindow::setDocBase(float val) { ui->lineEditDoc->setText(QString::number(val)); }
 
 void MainWindow::setPhytoSenescence(float val) { ui->lineEditPhytoSenescence->setText(QString::number(val)); }
 void MainWindow::setPhytoRespiration(float val) { ui->lineEditPhytoRespiration->setText(QString::number(val)); }
@@ -685,11 +834,24 @@ void MainWindow::getAllInput() const
 
 void MainWindow::getAllStockInput() const
 {
-    //getPhytoSenescence()/24
-    //getPhytoRespiration()/24
-    //getPhytoExcretion()/24
-    //getPhytoAj()
-    //getPhytoGj()
+    set_stocks(getMacroBase(),
+               getPhytoBase(),
+               getDecompBase(),
+               getSeddecompBase(),
+               getHerbivoreBase(),
+               getSedconsumerBase(),
+               getDocBase(),
+               getPocBase(),
+               getDetritusBase(),
+               getConsumerBase());
+
+    // All values with /24 at the end are per hour
+    //   values passed in as per day values
+    set_senescence_phyto(getPhytoSenescence()/24);
+    set_respiration_phyto(getPhytoRespiration()/24);
+    set_excretion_phyto(getPhytoExcretion()/24);
+    set_aj_phyto(getPhytoAj());
+    set_gj_phyto(getPhytoGj());
 
     set_ai_herbivore_phyto(getHerbivoreAiPhyto());
     set_gi_herbivore_phyto(getHerbivoreGiPhyto());
@@ -747,7 +909,7 @@ void MainWindow::getAllStockInput() const
 
     set_sen_macro_coef(getMacroSenescence()/24);
     set_resp_macro_coef(getMacroRespiration()/24);
-    //getMacroExcretion()
+    set_excretion_macro(getMacroExcretion());
     set_macro_base_temp(getMacroTemp());
     set_gross_macro_coef(getMacroGross());
     set_macro_mass_max(getMacroMassMax());

@@ -113,18 +113,22 @@ void set_max_herbivore(double max_herbivore);
 void set_max_sedconsumer(double max_sedconsumer);
 void set_max_consum(double max_consum);
 
+void set_excretion_macro(double excretion_macro);
+void set_excretion_phyto(double excretion_phyto);
 void set_excretion_waterdecomp(double excretion_waterdecomp);
 void set_excretion_seddecomp(double excretion_seddecomp);
 void set_excretion_herbivore(double excretion_herbivore);
 void set_excretion_sedconsumer(double excretion_sedconsumer);
 void set_excretion_consum(double excretion_consum);
 
+void set_respiration_phyto(double respiration_phyto);
 void set_respiration_waterdecomp(double respiration_waterdecomp);
 void set_respiration_seddecomp(double respiration_seddecomp);
 void set_respiration_herbivore(double respiration_herbivore);
 void set_respiration_sedconsumer(double respiration_sedconsumer);
 void set_respiration_consum(double respiration_consum);
 
+void set_senescence_phyto(double senescence_phyto);
 void set_senescence_waterdecomp(double senescence_waterdecomp);
 void set_senescence_seddecomp(double senescence_seddecomp);
 void set_senescence_herbivore(double senescence_herbivore);
