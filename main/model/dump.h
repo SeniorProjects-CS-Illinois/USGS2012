@@ -30,4 +30,7 @@ int write_data();
  */
 int dump_data();
 
+/* Outputs an image */
+void output_image();
+
 #endif

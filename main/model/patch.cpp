@@ -88,14 +88,14 @@ void go_phyto(int x,int y){
         //double light_k = 0.4;
 
 
-        patches[x][y].respiration_phyto = 0.1 / 24.0 * patches[x][y].phyto * g.Q10;
+        patches[x][y].respiration_phyto = g.r_phyto * patches[x][y].phyto * g.Q10;
         double pre_ln = (0.01 + g.photo_radiation  * exp(-1*patches[x][y].phyto * g.gui_k_phyto * patches[x][y].depth));
         double be = (km + (g.photo_radiation * exp(-1 * patches[x][y].phyto * g.gui_k_phyto * patches[x][y].depth)));
         //photosynthesis from phytoplankton derived from Huisman Weissing 1994
 
         patches[x][y].gross_photo_phyto = fabs(pre_ln / be) * (1.0 / patches[x][y].depth) * (patches[x][y].phyto / patches[x][y].turbidity) * g.Q10;
-        patches[x][y].excretion_phyto = 0.05 / 24.0 * patches[x][y].phyto;
-        patches[x][y].senescence_phyto = 0.02 / 24.0 * patches[x][y].phyto;
+        patches[x][y].excretion_phyto = g.e_phyto * patches[x][y].phyto;
+        patches[x][y].senescence_phyto = g.s_phyto * patches[x][y].phyto;
         patches[x][y].growth_phyto = patches[x][y].gross_photo_phyto - patches[x][y].excretion_phyto - 
                                  patches[x][y].respiration_phyto - patches[x][y].senescence_phyto;
 }
@@ -325,7 +325,7 @@ void go_consum(int x,int y) {
 void go_DOC(int x, int y)
 {
     // 4% of photosynthetic gets released into the water column. Wetzel lit.
-    patches[x][y].macro_exudation = .04 * patches[x][y].macro;
+    patches[x][y].macro_exudation = g.e_macro * patches[x][y].macro;
 
     // Dead objects < 1um are considered DOC in Wetzel book..
     patches[x][y].micro_death = patches[x][y].senescence_macro * .01 + patches[x][y].senescence_phyto * .01;
