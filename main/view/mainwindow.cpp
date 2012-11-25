@@ -166,7 +166,7 @@ void MainWindow::runClicked()
 {
     clearErrors();
     getAllInput();
-    go_command();
+    model.run();
 }
 
 void MainWindow::timestepUpdate(int newVal)
@@ -811,29 +811,31 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
     return text.mid(0, colonIndex);
 }
 
-void MainWindow::getAllInput() const
+void MainWindow::getAllInput()
 {
     // TODO: is this confusing with the different naming conventions?
-    set_hydro_filenames(formatHydroMaps().toStdString().c_str());
-    set_par_file(getPARFile().toStdString().c_str());
-    set_temperature_file(getTempFile().toStdString().c_str());
-    set_timestep(getTimestep());
+    model.set_hydro_filenames(formatHydroMaps().toStdString().c_str());
+    model.set_par_file(getPARFile().toStdString().c_str());
+    model.set_temperature_file(getTempFile().toStdString().c_str());
+    model.set_timestep(getTimestep());
     // TODO: need separate dropdown for this, re-configure GUI a bit
-    set_whichstock(getWhichStock().toStdString().c_str());
-    set_TSS(getTSS());
-    set_k_phyto(getKPhyto());
-    set_k_macro(getKMacro());
-    set_output_frequency(getOutputFreq());
+    model.set_whichstock(getWhichStock().toStdString().c_str());
+    model.set_TSS(getTSS());
+    model.set_k_phyto(getKPhyto());
+    model.set_k_macro(getKMacro());
+    model.set_output_frequency(getOutputFreq());
     // TODO: is this the "adjacent cells only" boolean?
-    set_flow_corners(getAdjacent());
+    model.set_flow_corners(getAdjacent());
 
     getAllStockInput(); // There are so many, it would be best to separate this
 
     //saveConfiguration(QString(defaultFileLocation())); // save configuration for next time
 }
 
-void MainWindow::getAllStockInput() const
+void MainWindow::getAllStockInput()
 {
+    //TODO: Configuration of the model should be done by passing the model a Configuration object.
+    //TODO: Calling set_stocks directly (part of setup.h) partially breaks the model/view separation.
     set_stocks(getMacroBase(),
                getPhytoBase(),
                getDecompBase(),
@@ -847,87 +849,87 @@ void MainWindow::getAllStockInput() const
 
     // All values with /24 at the end are per hour
     //   values passed in as per day values
-    set_senescence_phyto(getPhytoSenescence()/24);
-    set_respiration_phyto(getPhytoRespiration()/24);
-    set_excretion_phyto(getPhytoExcretion()/24);
-    set_aj_phyto(getPhytoAj());
-    set_gj_phyto(getPhytoGj());
+    model.set_senescence_phyto(getPhytoSenescence()/24);
+    model.set_respiration_phyto(getPhytoRespiration()/24);
+    model.set_excretion_phyto(getPhytoExcretion()/24);
+    model.set_aj_phyto(getPhytoAj());
+    model.set_gj_phyto(getPhytoGj());
 
-    set_ai_herbivore_phyto(getHerbivoreAiPhyto());
-    set_gi_herbivore_phyto(getHerbivoreGiPhyto());
-    set_pref_herbivore_phyto(getHerbivorePrefPhyto());
-    set_ai_herbivore_peri(getHerbivoreAiPeri());
-    set_gi_herbivore_peri(getHerbivoreGiPeri());
-    set_pref_herbivore_peri(getHerbivorePrefPeri());
-    set_ai_herbivore_waterdecomp(getHerbivoreAiWaterdecomp());
-    set_gi_herbivore_waterdecomp(getHerbivoreGiWaterdecomp());
-    set_pref_herbivore_waterdecomp(getHerbivorePrefWaterdecomp());
-    set_aj_herbivore(getHerbivoreAj());
-    set_gj_herbivore(getHerbivoreGj());
-    set_respiration_herbivore(getHerbivoreRespiration()/24);
-    set_excretion_herbivore(getHerbivoreExcretion()/24);
-    set_herbivore_egestion(getHerbivoreEgestion());
-    set_senescence_herbivore(getHerbivoreSenescence()/24);
-    set_max_herbivore(getHerbivoreMax()/24);
+    model.set_ai_herbivore_phyto(getHerbivoreAiPhyto());
+    model.set_gi_herbivore_phyto(getHerbivoreGiPhyto());
+    model.set_pref_herbivore_phyto(getHerbivorePrefPhyto());
+    model.set_ai_herbivore_peri(getHerbivoreAiPeri());
+    model.set_gi_herbivore_peri(getHerbivoreGiPeri());
+    model.set_pref_herbivore_peri(getHerbivorePrefPeri());
+    model.set_ai_herbivore_waterdecomp(getHerbivoreAiWaterdecomp());
+    model.set_gi_herbivore_waterdecomp(getHerbivoreGiWaterdecomp());
+    model.set_pref_herbivore_waterdecomp(getHerbivorePrefWaterdecomp());
+    model.set_aj_herbivore(getHerbivoreAj());
+    model.set_gj_herbivore(getHerbivoreGj());
+    model.set_respiration_herbivore(getHerbivoreRespiration()/24);
+    model.set_excretion_herbivore(getHerbivoreExcretion()/24);
+    model.set_herbivore_egestion(getHerbivoreEgestion());
+    model.set_senescence_herbivore(getHerbivoreSenescence()/24);
+    model.set_max_herbivore(getHerbivoreMax()/24);
 
-    set_ai_waterdecomp_doc(getWaterdecompAiDoc());
-    set_gi_waterdecomp_doc(getWaterdecompGiDoc());
-    set_pref_waterdecomp_doc(getWaterdecompPrefDoc());
-    set_ai_waterdecomp_poc(getWaterdecompAiPoc());
-    set_gi_waterdecomp_poc(getWaterdecompGiPoc());
-    set_pref_waterdecomp_poc(getWaterdecompPrefPoc());
-    set_aj_waterdecomp(getWaterdecompAj());
-    set_gj_waterdecomp(getWaterdecompGj());
-    set_respiration_waterdecomp(getWaterdecompRespiration()/24);
-    set_excretion_waterdecomp(getWaterdecompExcretion()/24);
-    set_senescence_waterdecomp(getWaterdecompSenescence()/24);
-    set_max_waterdecomp(getWaterdecompMax()/24);
+    model.set_ai_waterdecomp_doc(getWaterdecompAiDoc());
+    model.set_gi_waterdecomp_doc(getWaterdecompGiDoc());
+    model.set_pref_waterdecomp_doc(getWaterdecompPrefDoc());
+    model.set_ai_waterdecomp_poc(getWaterdecompAiPoc());
+    model.set_gi_waterdecomp_poc(getWaterdecompGiPoc());
+    model.set_pref_waterdecomp_poc(getWaterdecompPrefPoc());
+    model.set_aj_waterdecomp(getWaterdecompAj());
+    model.set_gj_waterdecomp(getWaterdecompGj());
+    model.set_respiration_waterdecomp(getWaterdecompRespiration()/24);
+    model.set_excretion_waterdecomp(getWaterdecompExcretion()/24);
+    model.set_senescence_waterdecomp(getWaterdecompSenescence()/24);
+    model.set_max_waterdecomp(getWaterdecompMax()/24);
 
-    set_ai_seddecomp_detritus(getSeddecompAiDetritus());
-    set_gi_seddecomp_detritus(getSeddecompGiDetritus());
-    set_pref_seddecomp_detritus(getSeddecompPrefDetritus());
-    set_aj_seddecomp(getSeddecompAj());
-    set_gj_seddecomp(getSeddecompGj());
-    set_respiration_seddecomp(getSeddecompRespiration()/24);
-    set_excretion_seddecomp(getSeddecompExcretion()/24);
-    set_senescence_seddecomp(getSeddecompSenescence()/24);
-    set_max_seddecomp(getSeddecompMax()/24);
+    model.set_ai_seddecomp_detritus(getSeddecompAiDetritus());
+    model.set_gi_seddecomp_detritus(getSeddecompGiDetritus());
+    model.set_pref_seddecomp_detritus(getSeddecompPrefDetritus());
+    model.set_aj_seddecomp(getSeddecompAj());
+    model.set_gj_seddecomp(getSeddecompGj());
+    model.set_respiration_seddecomp(getSeddecompRespiration()/24);
+    model.set_excretion_seddecomp(getSeddecompExcretion()/24);
+    model.set_senescence_seddecomp(getSeddecompSenescence()/24);
+    model.set_max_seddecomp(getSeddecompMax()/24);
 
-    set_ai_consum_herbivore(getConsumerAiHerbivore());
-    set_gi_consum_herbivore(getConsumerGiHerbivore());
-    set_pref_consum_herbivore(getConsumerPrefHerbivore());
-    set_ai_consum_sedconsumer(getConsumerAiSedconsumer());
-    set_gi_consum_sedconsumer(getConsumerGiSedconsumer());
-    set_pref_consum_sedconsumer(getConsumerPrefSedconsumer());
-    set_aj_consum(getConsumerAj());
-    set_gj_consum(getConsumerGj());
-    set_respiration_consum(getConsumerRespiration()/24);
-    set_excretion_consum(getConsumerExcretion()/24);
-    set_senescence_consum(getConsumerSenescence()/24);
-    set_consum_egestion(getConsumerEgestion());
-    set_max_consum(getConsumerMax()/24);
+    model.set_ai_consum_herbivore(getConsumerAiHerbivore());
+    model.set_gi_consum_herbivore(getConsumerGiHerbivore());
+    model.set_pref_consum_herbivore(getConsumerPrefHerbivore());
+    model.set_ai_consum_sedconsumer(getConsumerAiSedconsumer());
+    model.set_gi_consum_sedconsumer(getConsumerGiSedconsumer());
+    model.set_pref_consum_sedconsumer(getConsumerPrefSedconsumer());
+    model.set_aj_consum(getConsumerAj());
+    model.set_gj_consum(getConsumerGj());
+    model.set_respiration_consum(getConsumerRespiration()/24);
+    model.set_excretion_consum(getConsumerExcretion()/24);
+    model.set_senescence_consum(getConsumerSenescence()/24);
+    model.set_consum_egestion(getConsumerEgestion());
+    model.set_max_consum(getConsumerMax()/24);
 
-    set_sen_macro_coef(getMacroSenescence()/24);
-    set_resp_macro_coef(getMacroRespiration()/24);
-    set_excretion_macro(getMacroExcretion());
-    set_macro_base_temp(getMacroTemp());
-    set_gross_macro_coef(getMacroGross());
-    set_macro_mass_max(getMacroMassMax());
-    set_macro_vel_max(getMacroVelocityMax());
+    model.set_sen_macro_coef(getMacroSenescence()/24);
+    model.set_resp_macro_coef(getMacroRespiration()/24);
+    model.set_excretion_macro(getMacroExcretion());
+    model.set_macro_base_temp(getMacroTemp());
+    model.set_gross_macro_coef(getMacroGross());
+    model.set_macro_mass_max(getMacroMassMax());
+    model.set_macro_vel_max(getMacroVelocityMax());
 
-    set_ai_sedconsumer_detritus(getSedconsumerAiDetritus());
-    set_gi_sedconsumer_detritus(getSedconsumerGiDetritus());
-    set_pref_sedconsumer_detritus(getSedconsumerPrefDetritus());
-    set_ai_sedconsumer_seddecomp(getSedconsumerAiSeddecomp());
-    set_gi_sedconsumer_seddecomp(getSedconsumerGiSeddecomp());
-    set_pref_sedconsumer_seddecomp(getSedconsumerPrefSeddecomp());
+    model.set_ai_sedconsumer_detritus(getSedconsumerAiDetritus());
+    model.set_gi_sedconsumer_detritus(getSedconsumerGiDetritus());
+    model.set_pref_sedconsumer_detritus(getSedconsumerPrefDetritus());
+    model.set_ai_sedconsumer_seddecomp(getSedconsumerAiSeddecomp());
+    model.set_gi_sedconsumer_seddecomp(getSedconsumerGiSeddecomp());
+    model.set_pref_sedconsumer_seddecomp(getSedconsumerPrefSeddecomp());
     // TODO: peri?
-    set_aj_sedconsumer(getSedconsumerAj());
-    set_gj_sedconsumer(getSedconsumerGj());
-    set_respiration_sedconsumer(getSedconsumerRespiration()/24);
-    set_excretion_sedconsumer(getSedconsumerExcretion()/24);
-    set_senescence_sedconsumer(getSedconsumerSenescence()/24);
-    set_max_sedconsumer(getSedconsumerMax()/24);
+    model.set_aj_sedconsumer(getSedconsumerAj());
+    model.set_gj_sedconsumer(getSedconsumerGj());
+    model.set_respiration_sedconsumer(getSedconsumerRespiration()/24);
+    model.set_excretion_sedconsumer(getSedconsumerExcretion()/24);
+    model.set_senescence_sedconsumer(getSedconsumerSenescence()/24);
+    model.set_max_sedconsumer(getSedconsumerMax()/24);
 }
 
 QString MainWindow::formatHydroMaps() const
