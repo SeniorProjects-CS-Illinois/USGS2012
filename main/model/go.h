@@ -7,7 +7,6 @@
 
 #include "globals.h"
 #include "dump.h"
-#include "../main.h"
 #include "pred.h"
 #include "color.h"
 
