@@ -26,7 +26,7 @@ int Status::getTimeRemaining(void){
     {
         return INT_MAX;
     }
-    return (int)( (workUnits - workUnitsProcessed)/ (float)workUnitsProcessed ) * getTimeElapsed();
+    return (int)(( (workUnits - workUnitsProcessed) * getTimeElapsed() )/ (float)workUnitsProcessed);
 }
 
 Status::Status(void){

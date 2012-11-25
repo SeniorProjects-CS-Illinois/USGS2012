@@ -50,6 +50,14 @@ void RiverModel::set_hydro_filenames(const char * filenames)
     }
     g.check_filenames_array = (char**)malloc(g.num_unique_files*sizeof(char*));
     free(filenames_writable_copy);
+
+    //TODO: When refactoring, handle the following calculation elsewhere
+    int days = 0;
+    for(int i = 0; i < g.num_hydro_files; i++){
+        days += g.gui_days_array[i];
+    }
+    unsigned long workUnits = (days * 24);
+    modelStatus.setWorkUnitsToProcess(workUnits);
 }
 
 
@@ -79,6 +87,12 @@ void RiverModel::run(void) {
     int index;
     setup();
 
+    //TODO: Once we configure using a Configuration object, move the following line to the proper place.
+    modelStatus.setState(Status::READY);
+
+    modelStatus.setState(Status::RUNNING);
+
+
     g.gui_days_to_run = 0;
     for(index = 0; index < g.gui_filenames_filesize; index++)
     {
@@ -90,14 +104,18 @@ void RiverModel::run(void) {
 
         while( (day = (g.hours / 24)) < g.gui_days_to_run)
         {
-            cout << "Day: " << (day+1) << " - Hour: " << ((g.hours)%24) << endl;
+            cout << "Day: " << (day+1) << " - Hour: " << ((g.hours)%24) \
+                << " | Progress: " << (int)(modelStatus.getProgress()*100) << "% - Time Elapsed (seconds): " \
+                << modelStatus.getTimeElapsed() << " - Time Remaining: " << modelStatus.getTimeRemaining() << endl;
             go();
+            modelStatus.updateProgress();
         }
     }
 
     cleanup();
 
     cout << endl << "PROCESSING COMPLETE" << endl;
+    modelStatus.setState(Status::COMPLETE);
 }
 
 void RiverModel::set_whichstock(const char * stock_name)
