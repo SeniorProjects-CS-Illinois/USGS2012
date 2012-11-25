@@ -8,10 +8,8 @@ void go()
         update_environmentals();
 
         // Ask patches
-    int x, y;
-
-    for(x = 0; x < g.MAP_WIDTH; x++) {
-        for(y = 0; y < g.MAP_HEIGHT; y++) {
+    for(int x = 0; x < g.MAP_WIDTH; x++) {
+        for(int y = 0; y < g.MAP_HEIGHT; y++) {
             if(patches[x][y].depth > 0.0){
                 update_patches(x,y);
                 go_macro(x,y);
@@ -39,27 +37,18 @@ void go()
     }
 
     // flow carbon
-    int t, max_time = 60/g.gui_timestep_factor;
+    int max_time = 60/g.gui_timestep_factor;
     g.nan_trigger = 0;      // set nan to false
-    for (t = 0; t < max_time; t++)
+    for (int t = 0; t < max_time; t++)
     {
-        for(x = 0; x < g.MAP_WIDTH; x++)
-        {
-            for(y = 0; y < g.MAP_HEIGHT; y++)
-            {
-                if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) )
-                {
-                    flow_carbon(x,y);
-                }
-            }
-        }
+        flow_carbon();
         if (g.nan_trigger) break;
     }
 
     //Update max values
-    for (x = 0; x < g.MAP_WIDTH; x++)
+    for (int x = 0; x < g.MAP_WIDTH; x++)
     {
-        for (y = 0; y < g.MAP_HEIGHT; y++)
+        for (int y = 0; y < g.MAP_HEIGHT; y++)
         {
             update_max(x,y);
         }
@@ -242,6 +231,22 @@ int is_nan(int x, int y, double move_factor)
     return 0;
 }
 
+/**
+ * Flows carbon stocks DOC, POC, Phyto, and waterDecomp for one timestep
+ */
+void flow_carbon(void) {
+
+    for(int x = 0; x < g.MAP_WIDTH; x++)
+    {
+        for(int y = 0; y < g.MAP_HEIGHT; y++)
+        {
+            if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) )
+            {
+                flow_carbon(x,y);
+            }
+        }
+    }
+}
 /**
  * Flows carbon from the current patch at (x,y) to your neighbor patches
  * @param x: the x-coordinate of the patch

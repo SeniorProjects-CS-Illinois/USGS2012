@@ -48,6 +48,12 @@ double get_timestep();
  * @return 1 if DOC, POC, phyto, waterdecomp are NaN 0 otherwise
  */
 int is_nan(int x, int y, double move_factor);
+
+/**
+ * Flows DOC, POC, Phyto, and waterDecomp stocks for one time step.
+ */
+void flow_carbon(void);
+
 /**
  * Flows carbon from the current patch at (x,y) to your neighbor patches
  * @param x: the x-coordinate of the patch
