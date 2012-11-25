@@ -102,3 +102,11 @@ int write_data() {
 int dump_data() {
     return write_data();
 }
+
+
+//TODO: Unstub this with C/C++ code for image output.
+void output_image(void)
+{
+    return;
+}
+
