@@ -129,10 +129,10 @@ char* make_file_name(int index) {
     struct tm * timeinfo;
     time(&rawtime);
     timeinfo = localtime(&rawtime);
-    char buffer[80];
-    strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
+    char buffer[100];
+    strftime(buffer, 100, "%b_%a_%d_%I_%M_%S", timeinfo);
 
-    char file_name[300]; file_name[0] = '\0';
+    char file_name[320]; file_name[0] = '\0';
     size_t len = strlen(path);
     strncat(file_name, path, len);
     len = strlen(img_template);

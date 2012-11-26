@@ -14,8 +14,8 @@ using namespace std;
  * @param x The x coord of the patch
  * @param y The y coord of the patch
  */
-void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex) {
-    int returnValue = 0xffffff;
+void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex) {
+    int returnValue = 0xffff00;
     if(maxVal == minVal) {
         returnValue = 0;
         return;
@@ -26,12 +26,13 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
         g.images[stockIndex]->setPixel(x, y, g.value);
     }
     else if(value >= maxVal) {
-        g.value = qRgb(0, 0, 0);
+        g.value = qRgb(0, 206, 0);
         g.images[stockIndex]->setPixel(x, y, g.value);
     }
     else {
         int rangeValues = (int)fabs(maxVal - minVal);
         returnValue = (int)(value * 255 / rangeValues);
+        returnValue = returnValue << 8*colorIndex;
 
         if( minVal > maxVal) {
             returnValue = 255 - returnValue;
@@ -102,16 +103,16 @@ void update_color() {
             }
             else
             {
-                scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX);
-                scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX);
-                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);
-                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX);
-                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX);
-                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX);
-                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX);
-                scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
-                scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
-                scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
+                scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX, 1);
+                scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX, 1);
+                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX, 1);
+                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX, 1);
+                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX, 1);
+                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX, 1);
+                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX, 1);
+                scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX, 1);
+                scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX, 1);
+                scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX, 1);
             }
         }
     }

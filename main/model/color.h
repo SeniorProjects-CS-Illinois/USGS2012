@@ -21,7 +21,7 @@
       * If number is greater than range2, then the lightest shade of color
       * is chosen.
       */
-    void scale_color( double value, double maxVal, double minVal, int x, int y, int stockIndex);
+    void scale_color( double value, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex);
 
 	/**
       * Updates the color of the patch
