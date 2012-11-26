@@ -1,4 +1,5 @@
 #include "go.h"
+#include <algorithm>
 
 /**
  * This function runs the model
@@ -8,10 +9,8 @@ void go()
         update_environmentals();
 
         // Ask patches
-    int x, y;
-
-    for(x = 0; x < g.MAP_WIDTH; x++) {
-        for(y = 0; y < g.MAP_HEIGHT; y++) {
+    for(int x = 0; x < g.MAP_WIDTH; x++) {
+        for(int y = 0; y < g.MAP_HEIGHT; y++) {
             if(patches[x][y].depth > 0.0){
                 update_patches(x,y);
                 go_macro(x,y);
@@ -38,28 +37,30 @@ void go()
         }
     }
 
+    Grid<FlowData> * source = new Grid<FlowData>(g.MAP_WIDTH, g.MAP_HEIGHT);
+    Grid<FlowData> * dest = new Grid<FlowData>(g.MAP_WIDTH, g.MAP_HEIGHT);
+    copyFlowData(*dest);
+
     // flow carbon
-    int t, max_time = 60/g.gui_timestep_factor;
+    int max_time = 60/g.gui_timestep_factor;
     g.nan_trigger = 0;      // set nan to false
-    for (t = 0; t < max_time; t++)
+    for (int t = 0; t < max_time; t++)
     {
-        for(x = 0; x < g.MAP_WIDTH; x++)
-        {
-            for(y = 0; y < g.MAP_HEIGHT; y++)
-            {
-                if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) )
-                {
-                    flow_carbon(x,y);
-                }
-            }
+        std::swap(source, dest);
+        flow_carbon(*source, *dest);
+        if (g.nan_trigger) {
+            break;
         }
-        if (g.nan_trigger) break;
     }
 
+    storeFlowData(*dest);
+    delete source;
+    delete dest;
+
     //Update max values
-    for (x = 0; x < g.MAP_WIDTH; x++)
+    for (int x = 0; x < g.MAP_WIDTH; x++)
     {
-        for (y = 0; y < g.MAP_HEIGHT; y++)
+        for (int y = 0; y < g.MAP_HEIGHT; y++)
         {
             update_max(x,y);
         }
@@ -242,89 +243,125 @@ int is_nan(int x, int y, double move_factor)
     return 0;
 }
 
+int is_nan(int x, int y, double move_factor, Grid<FlowData> & dst)
+{
+    if ( /*isnan( dst(x,y).DOC + dst(x,y).DOC*move_factor )*/ 
+        dst(x,y).DOC + dst(x,y).DOC*move_factor 
+            != dst(x,y).DOC + dst(x,y).DOC*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( dst(x,y).POC + dst(x,y).POC*move_factor )*/ 
+            dst(x,y).POC + dst(x,y).POC*move_factor 
+                != dst(x,y).POC + dst(x,y).POC*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( dst(x,y).phyto + dst(x,y).phyto*move_factor )*/ 
+            dst(x,y).phyto + dst(x,y).phyto*move_factor 
+                != dst(x,y).phyto + dst(x,y).phyto*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor )*/ 
+            dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor 
+                != dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 /**
- * Flows carbon from the current patch at (x,y) to your neighbor patches
- * @param x: the x-coordinate of the patch
- * @param y: the y-coordinate of the patch
+ * Flow each cell's flowable stocks to neighbor cells based on flow vectors
  */
-void flow_carbon(int x, int y) {
-
-    double corner_patch = fabs( patches[x][y].py_vector * patches[x][y].px_vector )/g.max_area;
-    double tb_patch = fabs( patches[x][y].py_vector*( g.patch_length - fabs(patches[x][y].px_vector) ) )/g.max_area;
-    double rl_patch = fabs( patches[x][y].px_vector*( g.patch_length - fabs(patches[x][y].py_vector) ) )/g.max_area;
-
-    // if a neighbor patch is dry, the carbon does not move in that direction
-    double max_timestep = get_timestep();
-    int tb_moved = 0, corner_moved = 0, rl_moved = 0;
-
-    int px = (int)(max_timestep * patches[x][y].px_vector);
-    int py = (int)(max_timestep * patches[x][y].py_vector);
-
-    if (g.gui_flow_corners_only)
+void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest)
+{
+    for(int x = 0; x < g.MAP_WIDTH; x++)
     {
-        if (px >= 1) px = 1;
-        else if (px <= -1) px = -1;
-        else px = 0;
-
-        if (py >= 1) py = 1;
-        else if (py <= -1) py = -1;
-        else py = 0;
-    }
-    
-    // flow carbon to the top/bottom patches
-    if ( is_valid_patch(x, y+py) && (py!=0) )
-    {
-        if (is_nan(x,y+py,tb_patch)) {
-            g.nan_trigger = 1;  
-        }
-        else
+        for(int y = 0; y < g.MAP_HEIGHT; y++)
         {
-            patches[x][y+py].DOC += patches[x][y].DOC*tb_patch;
-            patches[x][y+py].POC += patches[x][y].POC*tb_patch;
-            patches[x][y+py].phyto += patches[x][y].phyto*tb_patch;
-            patches[x][y+py].waterdecomp += patches[x][y].waterdecomp*tb_patch;
-            tb_moved = 1;
+            if( (source(x,y).depth > 0.0) && (source(x,y).velocity > 0.0) )
+            {
+                double corner_patch = fabs( source(x,y).py_vector * source(x,y).px_vector )/g.max_area;
+                double tb_patch = fabs( source(x,y).py_vector*( g.patch_length - fabs(source(x,y).px_vector) ) )/g.max_area;
+                double rl_patch = fabs( source(x,y).px_vector*( g.patch_length - fabs(source(x,y).py_vector) ) )/g.max_area;
+
+                // if a neighbor patch is dry, the carbon does not move in that direction
+                double max_timestep = get_timestep();
+                int tb_moved = 0, corner_moved = 0, rl_moved = 0;
+
+                int px = (int)(max_timestep * source(x,y).px_vector);
+                int py = (int)(max_timestep * source(x,y).py_vector);
+
+                if (g.gui_flow_corners_only)
+                {
+                    if (px >= 1) px = 1;
+                    else if (px <= -1) px = -1;
+                    else px = 0;
+
+                    if (py >= 1) py = 1;
+                    else if (py <= -1) py = -1;
+                    else py = 0;
+                }
+
+                // flow carbon to the top/bottom patches
+                if ( is_valid_patch(x, y+py) && (py!=0) )
+                {
+                    if (is_nan(x,y+py,tb_patch, dest)) {
+                        g.nan_trigger = 1;  
+                    }
+                    else
+                    {
+                        dest(x, y+py).DOC += source(x,y).DOC*tb_patch;
+                        dest(x, y+py).POC += source(x,y).POC*tb_patch;
+                        dest(x, y+py).phyto += source(x,y).phyto*tb_patch;
+                        dest(x, y+py).waterdecomp += source(x,y).waterdecomp*tb_patch;
+                        tb_moved = 1;
+                    }
+                }
+
+                // flow carbon to the corner patch
+                if ( is_valid_patch(x+px, y+py) && (px!=0) && (py!=0))
+                {
+                    if (is_nan(x+px,y+py,corner_patch)) {
+                        g.nan_trigger = 1;
+                    }
+                    else
+                    {
+                        dest(x+px, y+py).DOC += source(x,y).DOC*corner_patch;
+                        dest(x+px, y+py).POC += source(x,y).POC*corner_patch;
+                        dest(x+px, y+py).phyto += source(x,y).phyto*corner_patch;
+                        dest(x+px, y+py).waterdecomp += source(x,y).waterdecomp*corner_patch;
+                        corner_moved = 1;
+                    }
+                }
+
+                // flow carbon to the left/right patches
+                if ( is_valid_patch(x+px, y) && (px!=0) ) 
+                {
+                    if ( is_nan(x+px,y,rl_patch) ) {
+                        g.nan_trigger = 1;
+                    }
+                    else
+                    {
+                        dest(x+px, y).DOC += source(x,y).DOC*rl_patch;
+                        dest(x+px, y).POC += source(x,y).POC*rl_patch;
+                        dest(x+px, y).phyto += source(x,y).phyto*rl_patch;
+                        dest(x+px, y).waterdecomp += source(x,y).waterdecomp*rl_patch;
+                        rl_moved = 1;
+                    }
+                }
+
+                // how much components did we loose
+                double patch_loss = tb_patch*tb_moved + corner_patch*corner_moved + rl_patch*rl_moved;
+                dest(x,y).DOC = source(x,y).DOC - source(x,y).DOC*patch_loss;
+                dest(x,y).POC = source(x,y).POC - source(x,y).POC*patch_loss;
+                dest(x,y).phyto = source(x,y).phyto - source(x,y).phyto*patch_loss;
+                dest(x,y).waterdecomp = source(x,y).waterdecomp - source(x,y).waterdecomp*patch_loss;
+            }
         }
     }
-
-    // flow carbon to the corner patch
-    if ( is_valid_patch(x+px, y+py) && (px!=0) && (py!=0))
-    {
-        if (is_nan(x+px,y+py,corner_patch)) {
-            g.nan_trigger = 1;
-        }
-        else
-        {
-            patches[x+px][y+py].DOC += patches[x][y].DOC*corner_patch;
-            patches[x+px][y+py].POC += patches[x][y].POC*corner_patch;
-            patches[x+px][y+py].phyto += patches[x][y].phyto*corner_patch;
-            patches[x+px][y+py].waterdecomp += patches[x][y].waterdecomp*corner_patch;
-            corner_moved = 1;
-        }
-    }
-
-    // flow carbon to the left/right patches
-    if ( is_valid_patch(x+px, y) && (px!=0) ) 
-    {
-        if ( is_nan(x+px,y,rl_patch) ) {
-            g.nan_trigger = 1;
-        }
-        else
-        {
-            patches[x+px][y].DOC += patches[x][y].DOC*rl_patch;
-            patches[x+px][y].POC += patches[x][y].POC*rl_patch;
-            patches[x+px][y].phyto += patches[x][y].phyto*rl_patch;
-            patches[x+px][y].waterdecomp += patches[x][y].waterdecomp*rl_patch;
-            rl_moved = 1;
-        }
-    }
-
-    // how much components did we loose
-    double patch_loss = tb_patch*tb_moved + corner_patch*corner_moved + rl_patch*rl_moved;
-    patches[x][y].DOC = patches[x][y].DOC - patches[x][y].DOC*patch_loss;
-    patches[x][y].POC = patches[x][y].POC - patches[x][y].POC*patch_loss;
-    patches[x][y].phyto = patches[x][y].phyto - patches[x][y].phyto*patch_loss;
-    patches[x][y].waterdecomp = patches[x][y].waterdecomp - patches[x][y].waterdecomp*patch_loss;
 }
 
 
@@ -385,4 +422,41 @@ void update_max(int x, int y) {
     if ( patches[x][y].detritus > g.MAX_DETRITUS ) {
         g.MAX_DETRITUS = patches[x][y].detritus;
     }
+}
+
+void copyFlowData(Grid<FlowData> & flowData)
+{
+    for(int x = 0; x < g.MAP_WIDTH; x++)
+    {
+        for(int y = 0; y < g.MAP_HEIGHT; y++)
+        {
+            flowData(x,y).depth       = patches[x][y].depth;
+            flowData(x,y).velocity    = patches[x][y].velocity;
+            flowData(x,y).py_vector   = patches[x][y].py_vector;
+            flowData(x,y).px_vector   = patches[x][y].px_vector;
+            flowData(x,y).DOC         = patches[x][y].DOC;
+            flowData(x,y).POC         = patches[x][y].POC;
+            flowData(x,y).phyto       = patches[x][y].phyto;
+            flowData(x,y).waterdecomp = patches[x][y].waterdecomp;
+        }
+    }
+}
+
+void storeFlowData(Grid<FlowData> & flowData)
+{
+    for(int x = 0; x < g.MAP_WIDTH; x++)
+    {
+        for(int y = 0; y < g.MAP_HEIGHT; y++)
+        {
+            patches[x][y].depth = flowData(x,y).depth;
+            patches[x][y].velocity = flowData(x,y).velocity;
+            patches[x][y].py_vector = flowData(x,y).py_vector;
+            patches[x][y].px_vector = flowData(x,y).px_vector;
+            patches[x][y].DOC = flowData(x,y).DOC;
+            patches[x][y].POC = flowData(x,y).POC;
+            patches[x][y].phyto = flowData(x,y).phyto;
+            patches[x][y].waterdecomp = flowData(x,y).waterdecomp;
+        }
+    }
+
 }

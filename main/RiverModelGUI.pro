@@ -11,7 +11,11 @@ TEMPLATE = app
 
 CONFIG += static
 
+win32:QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
+
 SOURCES += main.cpp \
+    model/rivermodel.cpp \
+    model/status.cpp \
     model/globals.cpp \
     model/cleanup.cpp \
     model/color.cpp \
@@ -23,7 +27,8 @@ SOURCES += main.cpp \
     view/mainwindow.cpp \
     view/configuration.cpp
 
-HEADERS  += main.h \
+HEADERS  += model/rivermodel.h \
+    model/status.h \
     model/cleanup.h \
     model/color.h \
     model/dump.h \
@@ -33,6 +38,7 @@ HEADERS  += main.h \
     model/pred.h \
     model/setup.h \
     view/mainwindow.h \
-    view/configuration.h
+    view/configuration.h \
+    model/grid.h
 
 FORMS    += view/mainwindow.ui

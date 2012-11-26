@@ -4,13 +4,15 @@ TARGET = RiverModel
 DESTDIR = ./
 TEMPLATE = app
 
-CONFIG -= qt
-CONFIG += console \
-	static
+#CONFIG -= qt
+CONFIG += console
+win32:CONFIG += static
 
 DEFINES += NO_GUI
 
 SOURCES += main.cpp \
+    model/rivermodel.cpp \
+    model/status.cpp \
     model/globals.cpp \
     model/cleanup.cpp \
     model/color.cpp \
@@ -18,9 +20,10 @@ SOURCES += main.cpp \
     model/go.cpp \
     model/patch.cpp \
     model/pred.cpp \
-    model/setup.cpp 
+    model/setup.cpp \
 
-HEADERS  += main.h \
+HEADERS  += model/rivermodel.h \
+    model/status.h \
     model/cleanup.h \
     model/color.h \
     model/dump.h \
@@ -28,4 +31,5 @@ HEADERS  += main.h \
     model/go.h \
     model/patch.h \
     model/pred.h \
-    model/setup.h 
+    model/setup.h \
+    model/grid.h
