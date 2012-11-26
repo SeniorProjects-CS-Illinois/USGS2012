@@ -38,6 +38,7 @@ HEADERS  += model/rivermodel.h \
     model/pred.h \
     model/setup.h \
     view/mainwindow.h \
-    view/configuration.h
+    view/configuration.h \
+    model/grid.h
 
 FORMS    += view/mainwindow.ui

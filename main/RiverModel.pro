@@ -31,5 +31,5 @@ HEADERS  += model/rivermodel.h \
     model/go.h \
     model/patch.h \
     model/pred.h \
-    model/setup.h 
-
+    model/setup.h \
+    model/grid.h
