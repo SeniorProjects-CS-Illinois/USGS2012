@@ -19,6 +19,9 @@ SOURCES += main.cpp \
     model/patch.cpp \
     model/pred.cpp \
     model/setup.cpp \
+    model/grid.cpp \
+    model/rivermodel.cpp \
+    model/status.cpp \
     view/mainwindow.cpp \
     view/configuration.cpp \
     view/modelthread.cpp
@@ -32,6 +35,10 @@ HEADERS  += main.h \
     model/patch.h \
     model/pred.h \
     model/setup.h \
+    model/flowdata.h \
+    model/grid.h \
+    model/rivermodel.h \
+    model/status.h \
     view/mainwindow.h \
     view/configuration.h \
     view/modelthread.h
