@@ -391,3 +391,40 @@ void update_max(int x, int y) {
         g.MAX_DETRITUS = patches[x][y].detritus;
     }
 }
+
+void copyFlowData(Grid<FlowData> & flowData)
+{
+   for(int x = 0; x < g.MAP_WIDTH; x)
+   {
+        for(int y = 0; y < g.MAP_HEIGHT; y)
+        {
+            flowData(x,y).depth       = g.patches[x][y].depth;
+            flowData(x,y).velocity    = g.patches[x][y].velocity;
+            flowData(x,y).py_vector   = g.patches[x][y].py_vector;
+            flowData(x,y).px_vector   = g.patches[x][y].px_vector;
+            flowData(x,y).DOC         = g.patches[x][y].DOC;
+            flowData(x,y).POC         = g.patches[x][y].POC;
+            flowData(x,y).phyto       = g.patches[x][y].phyto;
+            flowData(x,y).waterdecomp = g.patches[x][y].waterdecomp;
+        }
+   }
+}
+
+void storeFlowData(Grid<FlowData> & flowData)
+{
+   for(int x = 0; x < g.MAP_WIDTH; x)
+   {
+        for(int y = 0; y < g.MAP_HEIGHT; y)
+        {
+            g.patches[x][y].depth = flowData(x,y).depth;
+            g.patches[x][y].velocity = flowData(x,y).velocity;
+            g.patches[x][y].py_vector = flowData(x,y).py_vector;
+            g.patches[x][y].px_vector = flowData(x,y).px_vector;
+            g.patches[x][y].DOC = flowData(x,y).DOC;
+            g.patches[x][y].POC = flowData(x,y).POC:
+            g.patches[x][y].phyto = flowData(x,y).phyto;
+            g.patches[x][y].waterdecomp = flowData(x,y).waterdecomp;
+        }
+   }
+
+}

@@ -9,6 +9,8 @@
 #include "dump.h"
 #include "pred.h"
 #include "color.h"
+#include "flowdata.h"
+#include "grid.h"
 
 /* Runs the model */
 void go();
@@ -80,4 +82,16 @@ int get_day();
  * @param y: the y-coordinate of the patch
  */
 void update_max(int x, int y);
+
+/**
+ * Copies the flow data from patches into a grid object.
+ * @param flowData: The grid object to copy the patches data into.
+ */
+void copyFlowData(Grid<FlowData> & flowData)
+
+/**
+ * Writes the flow data back into patches array.
+ * @param flowData: The grid object to copy the data from.
+ */
+void storeFlowData(Grid<FlowData> & flowData)
 #endif
