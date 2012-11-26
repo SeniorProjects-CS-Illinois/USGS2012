@@ -17,36 +17,32 @@ float * hues;
  * @param y The y coord of the patch
  */
 void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex) {
-    int returnVal = 0xffffff;
-    float returnValue;
+    int returnValue = 0xffffff;
     if(maxVal == minVal) {
-        returnValue = 0.0;
+        returnValue = 0;
         colorValues[stockIndex][getIndex(x, y)] = returnValue;
         return;
     }
 
     if(value <= minVal || /*isnan(value)*/ (value != value)) {
-        returnVal = 0;
-        returnValue = 0.0;
+        returnValue = 0;
     }
     else if(value >= maxVal) {
-        returnVal = 255;
-        returnValue = 1.0;
+        returnValue = 255;
     }
     else {
-        float rangeValues = (float)fabs(maxVal - minVal);
-        returnVal = (int)(value * 255 / rangeValues);
-        returnValue = (float)(value / rangeValues);
+        int rangeValues = (int)fabs(maxVal - minVal);
+        returnValue = (int)(value * 255 / rangeValues);
     }
     if( minVal > maxVal) {
-        returnVal = 255 - returnVal;
+        returnValue = 255 - returnValue;
     }
     colorValues[stockIndex][getIndex(x, y)] = returnValue;
-    int red =  returnVal & (255 << 16);
-    int green = returnVal& (255 << 8);
-    int blue = returnVal & 255;
+    int red =  returnValue & (255 << 16);
+    int green = returnValue & (255 << 8);
+    int blue = returnValue & 255;
     g.value = qRgb(red, green, blue);
-    g.images[stockIndex]->setPixel(x, y, value);
+    g.images[stockIndex]->setPixel(x, y, g.value);
 }
 
 

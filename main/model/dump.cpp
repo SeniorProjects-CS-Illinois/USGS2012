@@ -104,4 +104,55 @@ int dump_data() {
 }
 
 
+void output_image(void) {
+
+    QString fileName("output.png");
+    QImageWriter writer;
+    writer.setFormat("png");
+
+    for(int i=0; i < g.NUM_STOCKS; i++){
+       /* for(int x=0; x < g.MAP_WIDTH; x++){
+            for(int y=0; y < g.MAP_HEIGHT; y++){
+                float color = colorValues[i][getIndex(x, y)];
+                int red = color && (255 << 16);
+                int green = color && (255 << 8);
+                int blue = color && 255;
+                g.value = qRgb(red, green, blue);
+                pixel_map[x][y] = pixel;
+                image.setPixel(x, y, value);
+            }
+        }*/
+        char* file_name = make_file_name(i);
+        QString fileName(file_name);
+        writer.setFileName(fileName);
+        writer.write(*g.images[i]);
+    }
+    return;
+}
+
+char* make_file_name(int index) {
+    char* path = "./results/images/";
+    char* img_template = g.stock_names[index];
+    char* format = ".png";
+
+    time_t rawtime;
+    struct tm * timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+	char buffer[80];
+	strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
+	
+    char file_name[300]; file_name[0] = '\0';
+    size_t len = strlen(path);
+    strncat(file_name, path, len);
+    len = strlen(img_template);
+    strncat(file_name, img_template, len);
+    len = strlen(buffer);
+    strncat(file_name, buffer, len);
+    len = strlen(format);
+    strncat(file_name, format, len);
+	
+	file_name[strlen(file_name)] = '\0';
+    return file_name;
+}
 

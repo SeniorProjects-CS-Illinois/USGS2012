@@ -32,5 +32,6 @@ int dump_data();
 
 /* Outputs an image */
 void output_image();
+char* make_file_name(int index);
 
 #endif

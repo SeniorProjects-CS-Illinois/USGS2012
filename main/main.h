@@ -26,8 +26,6 @@
 #endif
 
 /* Outputs an image */
-void output_image();
-char* make_file_name(int index);
 void count_unique_files(int index);
 
 //Functions for configuring the model

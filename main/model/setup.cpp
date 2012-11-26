@@ -407,8 +407,7 @@ void init_color_values() {
             for(row = 0; row < g.MAP_HEIGHT; row++) {
 		g.value = qRgb(255, 255, 255);
 		g.images[i]->setPixel(col, row, g.value);
-                colorValues[i][getIndex(col, row)] = (255 << 16 ) | (255 << 8) | 255;  // white background
-                //colorValues[i][getIndex(col, row)] = 0xFFFFFF;
+                colorValues[i][getIndex(col, row)] = 0xEBEBEB; //grey background
             }
         }
     }
