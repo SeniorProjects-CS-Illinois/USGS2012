@@ -9,13 +9,8 @@ QT       += core gui
 TARGET = RiverModelGUI
 TEMPLATE = app
 
-CONFIG += static
-
-win32:QMAKE_LFLAGS_RELEASE += -static -static-libgcc -static-libstdc++
 
 SOURCES += main.cpp \
-    model/rivermodel.cpp \
-    model/status.cpp \
     model/globals.cpp \
     model/cleanup.cpp \
     model/color.cpp \
@@ -25,10 +20,10 @@ SOURCES += main.cpp \
     model/pred.cpp \
     model/setup.cpp \
     view/mainwindow.cpp \
-    view/configuration.cpp
+    view/configuration.cpp \
+    view/modelthread.cpp
 
-HEADERS  += model/rivermodel.h \
-    model/status.h \
+HEADERS  += main.h \
     model/cleanup.h \
     model/color.h \
     model/dump.h \
@@ -39,6 +34,6 @@ HEADERS  += model/rivermodel.h \
     model/setup.h \
     view/mainwindow.h \
     view/configuration.h \
-    model/grid.h
+    view/modelthread.h
 
 FORMS    += view/mainwindow.ui

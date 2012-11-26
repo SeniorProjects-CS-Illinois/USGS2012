@@ -6,8 +6,8 @@
 
 #include "ui_mainwindow.h"
 #include "configuration.h"
-
-#include "../model/rivermodel.h"
+#include "modelthread.h"
+#include "../main.h"
 
 namespace Ui
 {
@@ -286,7 +286,7 @@ public:
     void setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num);
 
 private:
-    RiverModel model;
+
     Ui::MainWindow *ui;
 
     QString wholeTempFile;
@@ -338,10 +338,10 @@ private:
     QString parseHydroMapName(QListWidgetItem* item) const;
 
     /* Get all the input from the GUI and set appropriate globals */
-    void getAllInput();
+    void getAllInput() const;
 
     /* Get all the stock input from the GUI and set globals */
-    void getAllStockInput();
+    void getAllStockInput() const;
 
     /* Turns hydro map info int properly formatted string expected by given code */
     QString formatHydroMaps() const;
@@ -365,7 +365,7 @@ private:
     const char* qstringToCStr(const QString & input) const;
 
     /* Used to make file selection faster */
-    QString defaultFileLocation() const;
+    char* defaultFileLocation() const;
 };
 
 #endif // MAINWINDOW_H
