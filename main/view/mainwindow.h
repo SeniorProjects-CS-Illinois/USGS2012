@@ -7,7 +7,7 @@
 #include "ui_mainwindow.h"
 #include "configuration.h"
 
-#include "../main.h"
+#include "../model/rivermodel.h"
 
 namespace Ui
 {
@@ -63,16 +63,6 @@ public:
     void setToolTips();
 
     /* GETTERS */
-    bool getConsum() const;
-    bool getDetritus() const;
-    bool getDOC() const;
-    bool getHerbivore() const;
-    bool getMacro() const;
-    bool getPOC() const;
-    bool getPhyto() const;
-    bool getSedconsumer() const;
-    bool getSeddecomp() const;
-    bool getWaterdecomp() const;
     bool getAdjacent() const;
 
     uint8_t getOutputFreq() const;
@@ -84,6 +74,19 @@ public:
     float getKMacro() const;
 
     // Stock parameters
+    QString getWhichStock() const;
+
+    float getMacroBase() const;
+    float getPhytoBase() const;
+    float getConsumerBase() const;
+    float getDecompBase() const; // Waterdecomp?
+    float getSedconsumerBase() const;
+    float getSeddecompBase() const;
+    float getHerbivoreBase() const;
+    float getDetritusBase() const;
+    float getPocBase() const;
+    float getDocBase() const;
+
     float getPhytoSenescence() const;
     float getPhytoRespiration() const;
     float getPhytoExcretion() const;
@@ -166,7 +169,6 @@ public:
     float getSedconsumerMax() const;
 
     // Files
-    QString getWhichStock() const;
     QString getTempFile() const;
     QString getPARFile() const;
 
@@ -174,16 +176,6 @@ public:
     QList<QString> getHydroMaps() const;
 
     /* SETTERS */
-    void setConsum(bool val);
-    void setDetritus(bool val);
-    void setDOC(bool val);
-    void setHerbivore(bool val);
-    void setMacro(bool val);
-    void setPOC(bool val);
-    void setPhyto(bool val);
-    void setSedconsumer(bool val);
-    void setSeddecomp(bool val);
-    void setWaterdecomp(bool val);
     void setAdjacent(bool val);
 
     void setOutputFreq(uint8_t val);
@@ -195,6 +187,17 @@ public:
 
     // Stock parameters
     void setWhichStock(char* stock);
+
+    void setMacroBase(float val);
+    void setPhytoBase(float val);
+    void setConsumerBase(float val);
+    void setDecompBase(float val); // Waterdecomp?
+    void setSedconsumerBase(float val);
+    void setSeddecompBase(float val);
+    void setHerbivoreBase(float val);
+    void setDetritusBase(float val);
+    void setPocBase(float val);
+    void setDocBase(float val);
 
     void setPhytoSenescence(float val);
     void setPhytoRespiration(float val);
@@ -283,7 +286,7 @@ public:
     void setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num);
 
 private:
-
+    RiverModel model;
     Ui::MainWindow *ui;
 
     QString wholeTempFile;
@@ -335,10 +338,10 @@ private:
     QString parseHydroMapName(QListWidgetItem* item) const;
 
     /* Get all the input from the GUI and set appropriate globals */
-    void getAllInput() const;
+    void getAllInput();
 
     /* Get all the stock input from the GUI and set globals */
-    void getAllStockInput() const;
+    void getAllStockInput();
 
     /* Turns hydro map info int properly formatted string expected by given code */
     QString formatHydroMaps() const;
