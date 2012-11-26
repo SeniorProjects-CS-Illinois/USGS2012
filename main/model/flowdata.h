@@ -1,4 +1,4 @@
-struct FlowData
+typedef struct FlowData
 {
     double depth;
     double velocity;
@@ -8,4 +8,4 @@ struct FlowData
     double POC;
     double phyto;
     double waterdecomp;
-}
+} FlowData;
