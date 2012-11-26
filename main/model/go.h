@@ -57,6 +57,12 @@ int is_nan(int x, int y, double move_factor);
 void flow_carbon(void);
 
 /**
+ * Takes two sets of flow data and writes the changes to the destination set.
+ * This way carbon can not flow more than once per iteration.
+ */
+void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest);
+
+/**
  * Flows carbon from the current patch at (x,y) to your neighbor patches
  * @param x: the x-coordinate of the patch
  * @param y: the y-coordinate of the patch
@@ -87,11 +93,11 @@ void update_max(int x, int y);
  * Copies the flow data from patches into a grid object.
  * @param flowData: The grid object to copy the patches data into.
  */
-void copyFlowData(Grid<FlowData> & flowData)
+void copyFlowData(Grid<FlowData> & flowData);
 
 /**
  * Writes the flow data back into patches array.
  * @param flowData: The grid object to copy the data from.
  */
-void storeFlowData(Grid<FlowData> & flowData)
+void storeFlowData(Grid<FlowData> & flowData);
 #endif
