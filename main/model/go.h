@@ -52,22 +52,10 @@ double get_timestep();
 int is_nan(int x, int y, double move_factor);
 
 /**
- * Flows DOC, POC, Phyto, and waterDecomp stocks for one time step.
- */
-void flow_carbon(void);
-
-/**
  * Takes two sets of flow data and writes the changes to the destination set.
  * This way carbon can not flow more than once per iteration.
  */
 void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest);
-
-/**
- * Flows carbon from the current patch at (x,y) to your neighbor patches
- * @param x: the x-coordinate of the patch
- * @param y: the y-coordinate of the patch
- */
-void flow_carbon(int x, int y);
 
 /**
  * Checks if the x, y values for the patch is within boundaries of the map

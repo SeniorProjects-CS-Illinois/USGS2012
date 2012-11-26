@@ -1,4 +1,5 @@
 #include "go.h"
+#include <algorithm>
 
 /**
  * This function runs the model
@@ -45,7 +46,8 @@ void go()
     g.nan_trigger = 0;      // set nan to false
     for (int t = 0; t < max_time; t++)
     {
-        flow_carbon(*dest, *dest);
+        std::swap(source, dest);
+        flow_carbon(*source, *dest);
         if (g.nan_trigger) {
             break;
         }
@@ -271,23 +273,8 @@ int is_nan(int x, int y, double move_factor, Grid<FlowData> & dst)
 }
 
 /**
- * Flows carbon stocks DOC, POC, Phyto, and waterDecomp for one timestep
+ * Flow each cell's flowable stocks to neighbor cells based on flow vectors
  */
-void flow_carbon(void)
-{
-
-    for(int x = 0; x < g.MAP_WIDTH; x++)
-    {
-        for(int y = 0; y < g.MAP_HEIGHT; y++)
-        {
-            if( (patches[x][y].depth > 0.0) && (patches[x][y].velocity > 0.0) )
-            {
-                flow_carbon(x,y);
-            }
-        }
-    }
-}
-
 void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest)
 {
     for(int x = 0; x < g.MAP_WIDTH; x++)
@@ -372,97 +359,9 @@ void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest)
                 dest(x,y).POC = source(x,y).POC - source(x,y).POC*patch_loss;
                 dest(x,y).phyto = source(x,y).phyto - source(x,y).phyto*patch_loss;
                 dest(x,y).waterdecomp = source(x,y).waterdecomp - source(x,y).waterdecomp*patch_loss;
-                
             }
         }
     }
-}
-
-
-/**
- * Flows carbon from the current patch at (x,y) to your neighbor patches
- * @param x: the x-coordinate of the patch
- * @param y: the y-coordinate of the patch
- */
-void flow_carbon(int x, int y)
-{
-
-    double corner_patch = fabs( patches[x][y].py_vector * patches[x][y].px_vector )/g.max_area;
-    double tb_patch = fabs( patches[x][y].py_vector*( g.patch_length - fabs(patches[x][y].px_vector) ) )/g.max_area;
-    double rl_patch = fabs( patches[x][y].px_vector*( g.patch_length - fabs(patches[x][y].py_vector) ) )/g.max_area;
-
-    // if a neighbor patch is dry, the carbon does not move in that direction
-    double max_timestep = get_timestep();
-    int tb_moved = 0, corner_moved = 0, rl_moved = 0;
-
-    int px = (int)(max_timestep * patches[x][y].px_vector);
-    int py = (int)(max_timestep * patches[x][y].py_vector);
-
-    if (g.gui_flow_corners_only)
-    {
-        if (px >= 1) px = 1;
-        else if (px <= -1) px = -1;
-        else px = 0;
-
-        if (py >= 1) py = 1;
-        else if (py <= -1) py = -1;
-        else py = 0;
-    }
-    
-    // flow carbon to the top/bottom patches
-    if ( is_valid_patch(x, y+py) && (py!=0) )
-    {
-        if (is_nan(x,y+py,tb_patch)) {
-            g.nan_trigger = 1;  
-        }
-        else
-        {
-            patches[x][y+py].DOC += patches[x][y].DOC*tb_patch;
-            patches[x][y+py].POC += patches[x][y].POC*tb_patch;
-            patches[x][y+py].phyto += patches[x][y].phyto*tb_patch;
-            patches[x][y+py].waterdecomp += patches[x][y].waterdecomp*tb_patch;
-            tb_moved = 1;
-        }
-    }
-
-    // flow carbon to the corner patch
-    if ( is_valid_patch(x+px, y+py) && (px!=0) && (py!=0))
-    {
-        if (is_nan(x+px,y+py,corner_patch)) {
-            g.nan_trigger = 1;
-        }
-        else
-        {
-            patches[x+px][y+py].DOC += patches[x][y].DOC*corner_patch;
-            patches[x+px][y+py].POC += patches[x][y].POC*corner_patch;
-            patches[x+px][y+py].phyto += patches[x][y].phyto*corner_patch;
-            patches[x+px][y+py].waterdecomp += patches[x][y].waterdecomp*corner_patch;
-            corner_moved = 1;
-        }
-    }
-
-    // flow carbon to the left/right patches
-    if ( is_valid_patch(x+px, y) && (px!=0) ) 
-    {
-        if ( is_nan(x+px,y,rl_patch) ) {
-            g.nan_trigger = 1;
-        }
-        else
-        {
-            patches[x+px][y].DOC += patches[x][y].DOC*rl_patch;
-            patches[x+px][y].POC += patches[x][y].POC*rl_patch;
-            patches[x+px][y].phyto += patches[x][y].phyto*rl_patch;
-            patches[x+px][y].waterdecomp += patches[x][y].waterdecomp*rl_patch;
-            rl_moved = 1;
-        }
-    }
-
-    // how much components did we loose
-    double patch_loss = tb_patch*tb_moved + corner_patch*corner_moved + rl_patch*rl_moved;
-    patches[x][y].DOC = patches[x][y].DOC - patches[x][y].DOC*patch_loss;
-    patches[x][y].POC = patches[x][y].POC - patches[x][y].POC*patch_loss;
-    patches[x][y].phyto = patches[x][y].phyto - patches[x][y].phyto*patch_loss;
-    patches[x][y].waterdecomp = patches[x][y].waterdecomp - patches[x][y].waterdecomp*patch_loss;
 }
 
 
