@@ -1,4 +1,6 @@
 #include "color.h"
+#include <iostream>
+using namespace std;
 
 /**
  * Defining non-extern versions of variables in h file
@@ -13,8 +15,9 @@ float * hues;
  * @param minVal the min value for the image
  * @param x The x coord of the patch
  * @param y The y coord of the patch
-*/
+ */
 void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex) {
+    int returnVal = 0xffffff;
     float returnValue;
     if(maxVal == minVal) {
         returnValue = 0.0;
@@ -23,22 +26,33 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
     }
 
     if(value <= minVal || /*isnan(value)*/ (value != value)) {
+        returnVal = 0;
         returnValue = 0.0;
     }
     else if(value >= maxVal) {
+        returnVal = 255;
         returnValue = 1.0;
     }
     else {
         float rangeValues = (float)fabs(maxVal - minVal);
+        returnVal = (int)(value * 255 / rangeValues);
         returnValue = (float)(value / rangeValues);
     }
+    if( minVal > maxVal) {
+        returnVal = 255 - returnVal;
+    }
     colorValues[stockIndex][getIndex(x, y)] = returnValue;
+    int red =  returnVal & (255 << 16);
+    int green = returnVal& (255 << 8);
+    int blue = returnVal & 255;
+    g.value = qRgb(red, green, blue);
+    g.images[stockIndex]->setPixel(x, y, value);
 }
 
 
 /**
  * Updates the color of the patch
-*/
+ */
 void update_color() {
     int x = 0;
     int y = 0;
@@ -120,6 +134,9 @@ void update_color() {
                 scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
                 scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
                 scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
+            }
+            if(x == 17 && y == 310){
+                cout << colorValues[0][getIndex(x,y)];
             }
         }
     }

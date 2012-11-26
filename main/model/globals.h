@@ -2,7 +2,15 @@
 #define _GLOBALS
 
 #include "patch.h"
+#include <QString>
+#include <QImage>
+#include <QImageWriter>
 
+/**
+ *  Improve parameters
+ *      - better/uniform naming
+ *      - floats?
+ */
 typedef struct {
     // Model variables
     int MAP_WIDTH;  ///< the map's width
@@ -82,17 +90,21 @@ typedef struct {
     double max_sedconsumer;
     double sedconsumer_egestion_seddecomp;
     double max_consum;
+    double e_macro;
+    double e_phyto;
     double e_waterdecomp;
     double e_seddecomp;
     double e_herbivore;
     double e_sedconsumer;
     double sedconsumer_egestion_detritus;
     double e_consum;
+    double r_phyto;
     double r_waterdecomp;
     double r_seddecomp;
     double r_herbivore;
     double r_sedconsumer;
     double r_consum;
+    double s_phyto;
     double s_waterdecomp;
     double s_seddecomp;
     double s_herbivore;
@@ -188,8 +200,13 @@ typedef struct {
     int POC_INDEX;
     int DETRITUS_INDEX;
 
-    char** stock_names;
+    char* stock_names[10];
 
+    QImage* images[10];
+
+    QImageWriter * writer;
+
+    QRgb value;
     // number of different stocks
     int NUM_STOCKS;
 } Globals;

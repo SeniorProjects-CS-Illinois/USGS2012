@@ -9,3 +9,4 @@ main/RiverModel
 *.so
 *.user
 *Qt_SDK__Debug
+*~

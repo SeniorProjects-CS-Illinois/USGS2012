@@ -51,7 +51,6 @@ void initialize_globals(void){
     g.MAX_POC = 0.0;
     g.MAX_DETRITUS = 0.0;
 
-
     g.max_waterdecomp = 6.26/24.0;
     g.max_seddecomp = 6.26/24.0;
     g.max_herbivore = 1.0/24.0;
@@ -59,17 +58,21 @@ void initialize_globals(void){
     g.max_sedconsumer = 0.55/24.0;
     g.sedconsumer_egestion_seddecomp = 0.35;
     g.max_consum = 0.125/24;
+    g.e_macro = .04/24;
+    g.e_phyto = 0.05/24.0;
     g.e_waterdecomp = 0.173/24;
     g.e_seddecomp = 0.173/24;
     g.e_herbivore = 0.4/24;
     g.e_sedconsumer = 0.01/24;
     g.sedconsumer_egestion_detritus = 0.9;
     g.e_consum = 0.0032/24;
+    g.r_phyto = 0.1/24.0;
     g.r_waterdecomp = 0.6/24;
     g.r_seddecomp = 0.6/24;
     g.r_herbivore = 0.08/24;
     g.r_sedconsumer = 0.04/24;
     g.r_consum = 0.0125/24;
+    g.s_phyto = 0.02/24.0;
     g.s_waterdecomp = 0.05/24;
     g.s_seddecomp = 0.05/24;
     g.s_herbivore = 0.01/24;
@@ -161,16 +164,16 @@ void initialize_globals(void){
     g.POC_INDEX = 8;
     g.DETRITUS_INDEX = 9;
 
-    g.stock_name[0] = "macro";
-    g.stock_name[1] = "phyto";
-    g.stock_name[2] = "herbivore";
-    g.stock_name[3] = "waterdecomp";
-    g.stock_name[4] = "seddecomp";
-    g.stock_name[5] = "sedconsumer";
-    g.stock_name[6] = "consum";
-    g.stock_name[7] = "doc";
-    g.stock_name[8] = "poc";
-    g.stock_name[9] = "detritus";
+    g.stock_names[0] = "macro";
+    g.stock_names[1] = "phyto";
+    g.stock_names[2] = "herbivore";
+    g.stock_names[3] = "waterdecomp";
+    g.stock_names[4] = "seddecomp";
+    g.stock_names[5] = "sedconsumer";
+    g.stock_names[6] = "consum";
+    g.stock_names[7] = "doc";
+    g.stock_names[8] = "poc";
+    g.stock_names[9] = "detritus";
 
     // number of different stocks
     g.NUM_STOCKS = 10;

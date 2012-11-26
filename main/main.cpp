@@ -1,145 +1,78 @@
 #include "main.h"
-#include <QString>
-#include <QImage>
-#include <QImageWriter>
-//#include <direct.h>
-//#include <unistd.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
-#ifdef NO_GUI
-int main(int argc, char *argv[]) {
-    initialize_globals();
-
-    //These values are what was used in the original Python GUI by default.  Hard coding for now.
-    set_hydro_filenames("1?model/data/HydroSets/100k-new.txt?2?");
-    set_par_file("model/data/Environmentals/par.txt");
-    set_timestep(1);
-    set_temperature_file("model/data/Environmentals/water-temp.txt");
-    set_whichstock("phyto");
-    set_TSS(10.0);
-    set_macro_base_temp(19.7);
-    set_gross_macro_coef(0.08);
-    set_resp_macro_coef(0.04);
-    set_sen_macro_coef(0.08);
-    set_macro_mass_max(1000.0);
-    set_macro_vel_max(1.0);
-    set_k_phyto(0.01);
-    set_k_macro(0.01);
-    set_output_frequency(1);
-    set_flow_corners(0);
-
-    create_output_dirs();
-
-    go_command();
-    return 0;
-}
+#ifdef _WIN32
+    #include <direct.h>
 #else
-//TODO: Program entry point for QT GUI goes here.
-int main(int argc, char *argv[])
-{
-    initialize_globals();
-
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.setToolTips();
-    w.show();
-
-    return a.exec();
-}
-
+    #include <unistd.h>
 #endif
 
+#include "model/rivermodel.h"
+#include "model/globals.h"
 
-void count_unique_files(int index)
-{
-    int i;
-    for(i = 0; i < index; i++)
-    {
-        if(strcmp(g.gui_filenames_array[i], g.gui_filenames_array[index]) == 0)
-        return;
-    }
-    g.num_unique_files++;
-}
-
-
-//TODO: Re-write this function to use C++ strings
-//TODO: Replace strtok with an equivilent C++ function of our design
-void set_hydro_filenames(const char * filenames)
-{
-    size_t filenames_len = strlen(filenames) + 1;
-    char * filenames_writable_copy = (char *)malloc(filenames_len * sizeof(char));
-    strncpy(filenames_writable_copy, filenames, filenames_len);
-    char* filename;
-    int index = 0;
-    g.num_unique_files = 0;
-
-    // First value howmany files the use selected in the GUI
-    filename = strtok(filenames_writable_copy, "?");
-    int fileSize = atoi(filename);
-    g.gui_filenames_filesize = fileSize;
-    g.num_hydro_files = fileSize;
-    g.gui_filenames_array = (char**)malloc(fileSize*sizeof(char*));
-    g.gui_days_array = (int*)malloc(fileSize*sizeof(int));
-    g.hydromap_index_array = (int*)malloc(fileSize*sizeof(int));
-
-    // Parse the file name if one exists
-    while((filename = strtok(NULL, "?")) != NULL)
-    {
-        size_t len = (strlen(filename)+1);
-        g.gui_filenames_array[index] = (char*)malloc(len*sizeof(char));
-        strncpy(g.gui_filenames_array[index], filename, len);
-        count_unique_files(index);
-        filename = strtok(NULL, "?");
-        g.gui_days_array[index] = atoi(filename); //Parse howmany days to run current file
-        index++;
-    }
-    g.check_filenames_array = (char**)malloc(g.num_unique_files*sizeof(char*));
-    free(filenames_writable_copy);
-}
-
-
-void set_par_file(const char * filename)
-{
-    size_t len = strlen(filename) + 1;
-    strncpy(g.gui_photo_radiation_file, filename, len);
-}
-
-void set_timestep(int timestep)
-{
-    g.gui_timestep_factor = timestep;
-}
-
-void set_temperature_file(const char * filename)
-{
-    size_t len = strlen(filename) + 1;
-    strncpy(g.gui_temperature_file, filename, len);
-}
-
+#ifndef NO_GUI
+    #include <QtGui/QApplication>
+    #include "view/mainwindow.h"
+#endif
 
 //TODO: Unstub this with C/C++ code for image output.
 void output_image(void) {
 
     QString fileName("output.png");
-    QImageWriter * writer = new QImageWriter ( & fileName);
-    QImage * image = new QIamage(MAP_WIDTH, MAP_HEIGHT, QImage::Format_RGB32);
+    QImageWriter writer;
+    writer.setFormat("png");
 
     for(int i=0; i < g.NUM_STOCKS; i++){
-        QString fileName(g.STOCK_NAMES[i] + ".png");
-        writer.setFileName(fileName);
-        for(int x=0; x < g.MAP_WIDTH; x++){
+       /* for(int x=0; x < g.MAP_WIDTH; x++){
             for(int y=0; y < g.MAP_HEIGHT; y++){
                 float color = colorValues[i][getIndex(x, y)];
                 int red = color && (255 << 16);
                 int green = color && (255 << 8);
                 int blue = color && 255;
-                QRgb value = qRgb(red, green, blue);
+                g.value = qRgb(red, green, blue);
                 pixel_map[x][y] = pixel;
                 image.setPixel(x, y, value);
             }
-        }
-        writer.write(image);
+        }*/
+        char* file_name = make_file_name(i);
+        QString fileName(file_name);
+        writer.setFileName(fileName);
+        writer.write(*g.images[i]);
     }
     return;
 }
+
+char* make_file_name(int index) {
+    char* path = "./results/images/";
+    char* img_template = g.stock_names[index];
+    char* format = ".png";
+
+    time_t rawtime;
+    struct tm * timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+	char buffer[80];
+	strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
+	
+    char file_name[300]; file_name[0] = '\0';
+    size_t len = strlen(path);
+    strncat(file_name, path, len);
+    len = strlen(img_template);
+    strncat(file_name, img_template, len);
+    len = strlen(buffer);
+    strncat(file_name, buffer, len);
+    len = strlen(format);
+    strncat(file_name, format, len);
+	
+	file_name[strlen(file_name)] = '\0';
+    return file_name;
+}
+//TODO: move this function to somewhere more appropriate.
+//Adds a location for the images and csv files.
+void create_output_dirs();
 
 /**
  * Creates ./results/data and ./results/images if they don't exist.
@@ -170,92 +103,48 @@ void create_output_dirs(void) {
     }
 }
 
-//XXX: Not sure what the now removed build_data function
-//     was doing aside from creating output dirs.
-void go_command(void) {
-    int day;
-    int index;
-    setup();
 
-    g.gui_days_to_run = 0;
-    for(index = 0; index < g.gui_filenames_filesize; index++)
-    {
-        printf("RUNNING FILE: %s FOR %d DAYS\n", g.gui_filenames_array[index], g.gui_days_array[index]);
-        g.gui_days_to_run += g.gui_days_array[index];  //Set howmany days to run the new hydromap
-        g.hydro_group = (g.hydromap_index_array[index] + 1); //Set the new hydromap that will run
-        g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
+#ifdef NO_GUI
+int main(int argc, char *argv[]) {
+    initialize_globals();
+    create_output_dirs();
 
-        while( (day = (g.hours / 24)) < g.gui_days_to_run)
-        {
-            printf("Day: %d - Hour: %ld\n", (day+1), (g.hours)%24);
-            go();
-        }
-    }
+    RiverModel model;
 
-    cleanup();
+    //These values are what was used in the original Python GUI by default.  Hard coding for now.
+    //TODO: There should be a configuration method that take a Configuration object.
+    model.set_hydro_filenames("1?model/data/HydroSets/100k-new.txt?2?");
+    model.set_par_file("model/data/Environmentals/par.txt");
+    model.set_timestep(1);
+    model.set_temperature_file("model/data/Environmentals/water-temp.txt");
+    model.set_whichstock("phyto");
+    model.set_TSS(10.0);
+    model.set_macro_base_temp(19.7);
+    model.set_gross_macro_coef(0.08);
+    model.set_resp_macro_coef(0.04);
+    model.set_sen_macro_coef(0.08);
+    model.set_macro_mass_max(1000.0);
+    model.set_macro_vel_max(1.0);
+    model.set_k_phyto(0.01);
+    model.set_k_macro(0.01);
+    model.set_output_frequency(1);
+    model.set_flow_corners(0);
 
-    printf("\nPROCESSING COMPLETE\n");
+    model.run();
+    return 0;
 }
-
-void set_whichstock(const char * stock_name)
+#else
+int main(int argc, char *argv[])
 {
-    size_t len = strlen(stock_name);
-    strncpy(g.which_stock, stock_name, len);
+    initialize_globals();
+    create_output_dirs();
+
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.setToolTips();
+    w.show();
+
+    return a.exec();
 }
 
-void set_TSS(double tss)
-{
-    g.gui_tss = tss;
-}
-
-void set_macro_base_temp(double macro_base_temp)
-{
-    g.gui_macro_base_temp = macro_base_temp;
-}
-
-
-
-void set_gross_macro_coef(double gross_macro_coef)
-{
-    g.gui_gross_macro_coef = gross_macro_coef;
-}
-
-void set_resp_macro_coef(double resp_macro_coef)
-{
-    g.gui_resp_macro_coef = resp_macro_coef;
-}
-
-void set_sen_macro_coef(double sen_macro_coef)
-{
-    g.gui_sen_macro_coef = sen_macro_coef;
-}
-
-void set_macro_mass_max(double macro_mass_max)
-{
-    g.gui_macro_mass_max = macro_mass_max;
-}
-
-void set_macro_vel_max(double macro_vel_max)
-{
-    g.gui_macro_vel_max = macro_vel_max;
-}
-
-void set_k_phyto(double k_phyto)
-{
-    g.gui_k_phyto = k_phyto;
-}
-void set_k_macro(double k_macro)
-{
-    g.gui_k_macro = k_macro;
-}
-
-
-void set_output_frequency(int new_output_frequency)
-{
-    g.output_frequency = new_output_frequency;
-}
-
-void set_flow_corners(int flow_corners_only)
-{
-    g.gui_flow_corners_only = flow_corners_only;
-}
+#endif

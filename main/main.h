@@ -27,7 +27,7 @@
 
 /* Outputs an image */
 void output_image();
-void pixels_to_png(pixel_t** pixel_map, int index);
+char* make_file_name(int index);
 void count_unique_files(int index);
 
 //Functions for configuring the model
