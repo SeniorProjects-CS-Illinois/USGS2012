@@ -46,7 +46,9 @@ void go()
     for (int t = 0; t < max_time; t++)
     {
         flow_carbon(*dest, *dest);
-        if (g.nan_trigger) break;
+        if (g.nan_trigger) {
+            break;
+        }
     }
 
     storeFlowData(*dest);

@@ -9,12 +9,12 @@ Grid<T>::Grid(std::size_t xDim, std::size_t yDim) {
 
 template <typename T>
 T & Grid<T>::operator()(std::size_t x, std::size_t y){
-    return array[x*numCol + y];
+    return array[y*numCol + x];
 }
 
 template <typename T>
 T const & Grid<T>::operator()(std::size_t x, std::size_t y) const {
-    return array[x*numCol + y];
+    return array[y*numCol + x];
 }
 
 template <typename T>
