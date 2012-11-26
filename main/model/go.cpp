@@ -239,6 +239,35 @@ int is_nan(int x, int y, double move_factor)
     return 0;
 }
 
+int is_nan(int x, int y, double move_factor, Grid<FlowData> & dst)
+{
+    if ( /*isnan( dst(x,y).DOC + dst(x,y).DOC*move_factor )*/ 
+        dst(x,y).DOC + dst(x,y).DOC*move_factor 
+            != dst(x,y).DOC + dst(x,y).DOC*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( dst(x,y).POC + dst(x,y).POC*move_factor )*/ 
+            dst(x,y).POC + dst(x,y).POC*move_factor 
+                != dst(x,y).POC + dst(x,y).POC*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( dst(x,y).phyto + dst(x,y).phyto*move_factor )*/ 
+            dst(x,y).phyto + dst(x,y).phyto*move_factor 
+                != dst(x,y).phyto + dst(x,y).phyto*move_factor)
+    {
+        return 1;
+    }
+    if ( /*isnan( dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor )*/ 
+            dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor 
+                != dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 /**
  * Flows carbon stocks DOC, POC, Phyto, and waterDecomp for one timestep
  */
@@ -290,7 +319,7 @@ void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest)
                 // flow carbon to the top/bottom patches
                 if ( is_valid_patch(x, y+py) && (py!=0) )
                 {
-                    if (is_nan(x,y+py,tb_patch)) {
+                    if (is_nan(x,y+py,tb_patch, dest)) {
                         g.nan_trigger = 1;  
                     }
                     else
