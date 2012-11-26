@@ -289,6 +289,7 @@ private:
 
     Ui::MainWindow *ui;
     RiverModel model;
+    ModelThread myThread;
 
     QString wholeTempFile;
     QString wholePARFile;

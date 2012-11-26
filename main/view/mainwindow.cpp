@@ -7,12 +7,10 @@ using std::cout;
 using std::endl;
 
 /** TODO
-  *     - whole bunch of stock input
-  *         - tool tips
+  *     - status updates
   *     - error checking for run
   *     - fail gracefully
   *     - break this hideously long file into several
-  *     - threading
   */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -166,9 +164,8 @@ void MainWindow::runClicked()
 {
     clearErrors();
     getAllInput();
-    ModelThread myThread;
-    //myThread.run(); //start();
-    cout << defaultFileLocation().toStdString() << endl;
+    myThread.setRiverModel(&model);
+    myThread.start();
 }
 
 void MainWindow::timestepUpdate(int newVal)

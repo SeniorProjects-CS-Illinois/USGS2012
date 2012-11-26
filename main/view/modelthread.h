@@ -8,8 +8,10 @@ class ModelThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ModelThread(QObject *parent = 0, RiverModel* r = 0);
+    explicit ModelThread(QObject *parent = 0, RiverModel* rModel = 0);
     void run();
+
+    void setRiverModel(RiverModel* rModel);
 
 signals:
     // No signals
@@ -18,7 +20,7 @@ public slots:
     // No slots
 
 private:
-    RiverModel model;
+    RiverModel* model;
 };
 
 #endif // MODELTHREAD_H
