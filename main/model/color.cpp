@@ -5,8 +5,6 @@ using namespace std;
 /**
  * Defining non-extern versions of variables in h file
  */
-float ** colorValues;
-float * hues;
 
 /**
  * Scales the color of the patch
@@ -20,29 +18,31 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
     int returnValue = 0xffffff;
     if(maxVal == minVal) {
         returnValue = 0;
-        colorValues[stockIndex][getIndex(x, y)] = returnValue;
         return;
     }
 
     if(value <= minVal || /*isnan(value)*/ (value != value)) {
-        returnValue = 0;
+        g.value = qRgb(55, 204, 51);
+        g.images[stockIndex]->setPixel(x, y, g.value);
     }
     else if(value >= maxVal) {
-        returnValue = 255;
+        g.value = qRgb(0, 0, 0);
+        g.images[stockIndex]->setPixel(x, y, g.value);
     }
     else {
         int rangeValues = (int)fabs(maxVal - minVal);
         returnValue = (int)(value * 255 / rangeValues);
+
+        if( minVal > maxVal) {
+            returnValue = 255 - returnValue;
+        }
+
+        int red =  returnValue & (255 << 16);
+        int green = returnValue & (255 << 8);
+        int blue = returnValue & 255;
+        g.value = qRgb(red, green, blue);
+        g.images[stockIndex]->setPixel(x, y, g.value);
     }
-    if( minVal > maxVal) {
-        returnValue = 255 - returnValue;
-    }
-    colorValues[stockIndex][getIndex(x, y)] = returnValue;
-    int red =  returnValue & (255 << 16);
-    int green = returnValue & (255 << 8);
-    int blue = returnValue & 255;
-    g.value = qRgb(red, green, blue);
-    g.images[stockIndex]->setPixel(x, y, g.value);
 }
 
 
@@ -52,18 +52,6 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
 void update_color() {
     int x = 0;
     int y = 0;
-
-    // set hue values for each stock (magic numbers?)
-    hues[g.MACRO_INDEX] = (float)(120.0 / 360.0);
-    hues[g.PHYTO_INDEX] = (float)(120.0 / 360.0);
-    hues[g.WATERDECOMP_INDEX] = (float)(120.0 / 360.0);
-    hues[g.POC_INDEX] = (float)(240.0 / 360.0);
-    hues[g.DETRITUS_INDEX] = (float)(19.6 / 360.0);
-    hues[g.SEDCONSUMER_INDEX] = (float)(60.0 / 360.0);
-    hues[g.SEDDECOMP_INDEX] = (float)(240.0 / 360.0);
-    hues[g.HERBIVORE_INDEX] = (float)(300.0 / 360.0);
-    hues[g.CONSUM_INDEX] = (float)(300.0 / 360.0);
-    hues[g.DOC_INDEX] = (float)(60.0 / 360.0);
 
     // calculate all relevant averages
     // TODO: is it safe to only do this calculation once?
@@ -107,16 +95,10 @@ void update_color() {
         {
             if (patches[x][y].depth == 0.0)
             {
-                colorValues[g.MACRO_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.PHYTO_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.WATERDECOMP_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.POC_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.DETRITUS_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.SEDCONSUMER_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.SEDDECOMP_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.HERBIVORE_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.CONSUM_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.DOC_INDEX][getIndex(x, y)] = -1;
+                for(int i = 0; i < g.NUM_STOCKS; i++) {
+                    g.value = qRgb(235, 235, 235);
+                    g.images[i]->setPixel(x, y, g.value);
+                }
             }
             else
             {
@@ -130,9 +112,6 @@ void update_color() {
                 scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
                 scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
                 scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
-            }
-            if(x == 17 && y == 310){
-                cout << colorValues[0][getIndex(x,y)];
             }
         }
     }

@@ -33,9 +33,5 @@
       */
     int getIndex(int x, int y);
 
-    extern float** colorValues;
-
-    extern float* hues;
-
 
 #endif

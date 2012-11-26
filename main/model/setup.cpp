@@ -400,18 +400,14 @@ void init_color_values() {
     int i = 0;
 
     //initialize colors corresponding to each patch
-    colorValues = (float **)malloc(g.NUM_STOCKS*sizeof(float*));
     for (i = 0; i < g.NUM_STOCKS; i++) {
-	colorValues[i] = (float *)malloc(g.MAP_WIDTH*g.MAP_HEIGHT*sizeof(float));
         for( col = 0; col < g.MAP_WIDTH; col++) {
             for(row = 0; row < g.MAP_HEIGHT; row++) {
-		g.value = qRgb(255, 255, 255);
+		g.value = qRgb(235, 235, 235);
 		g.images[i]->setPixel(col, row, g.value);
-                colorValues[i][getIndex(col, row)] = 0xEBEBEB; //grey background
             }
         }
     }
-    hues = (float *)malloc(g.NUM_STOCKS*sizeof(float));
 }
 
 

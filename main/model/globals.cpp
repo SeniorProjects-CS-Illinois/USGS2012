@@ -152,7 +152,7 @@ void initialize_globals(void){
     g.macro_mas_max = 1000.0;
     g.macro_vel_max = 1.0;
 
-    // indices for the colorValues array for each stock
+    // indices for the array for each stock
     g.MACRO_INDEX = 0;
     g.PHYTO_INDEX = 1;
     g.HERBIVORE_INDEX = 2;

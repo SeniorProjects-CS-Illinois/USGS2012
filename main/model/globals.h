@@ -188,7 +188,7 @@ typedef struct {
     double macro_mas_max;
     double macro_vel_max;
 
-    // indices for the colorValues array for each stock
+    // indices for the array for each stock
     int MACRO_INDEX;
     int PHYTO_INDEX;
     int HERBIVORE_INDEX;
