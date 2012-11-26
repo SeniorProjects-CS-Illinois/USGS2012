@@ -20,7 +20,7 @@ SOURCES += main.cpp \
     model/go.cpp \
     model/patch.cpp \
     model/pred.cpp \
-    model/setup.cpp 
+    model/setup.cpp \
 
 HEADERS  += model/rivermodel.h \
     model/status.h \
@@ -31,4 +31,5 @@ HEADERS  += model/rivermodel.h \
     model/go.h \
     model/patch.h \
     model/pred.h \
-    model/setup.h 
+    model/setup.h \
+    model/grid.h
