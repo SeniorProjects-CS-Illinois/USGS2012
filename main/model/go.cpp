@@ -40,6 +40,7 @@ void go()
     Grid<FlowData> * source = new Grid<FlowData>(g.MAP_WIDTH, g.MAP_HEIGHT);
     Grid<FlowData> * dest = new Grid<FlowData>(g.MAP_WIDTH, g.MAP_HEIGHT);
     copyFlowData(*dest);
+    *source = *dest;
 
     // flow carbon
     int max_time = 60/g.gui_timestep_factor;
