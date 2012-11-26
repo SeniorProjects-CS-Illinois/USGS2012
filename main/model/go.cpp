@@ -39,6 +39,7 @@ void go()
 
     Grid<FlowData> * source = new Grid<FlowData>(g.MAP_WIDTH, g.MAP_HEIGHT);
     Grid<FlowData> * dest = new Grid<FlowData>(g.MAP_WIDTH, g.MAP_HEIGHT);
+    copyFlowData(*source);
     copyFlowData(*dest);
 
     // flow carbon
