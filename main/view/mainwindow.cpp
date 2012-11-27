@@ -6,6 +6,8 @@ using std::string;
 using std::cout;
 using std::endl;
 
+#define OUTPUT_TAB 2
+
 /** TODO
   *     - status updates
   *     - error checking for run
@@ -15,9 +17,16 @@ using std::endl;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    modelThread(this, &model),
+    progressThread(this, &model)
 {
     ui->setupUi(this);
+
+    // connect signals from progress thread
+    connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
+    connect(&progressThread, SIGNAL(progressTimeUpdate(int,int)), this, SLOT(progressTimeUpdate(int,int)));
+    connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
 }
 
 MainWindow::~MainWindow()
@@ -164,8 +173,25 @@ void MainWindow::runClicked()
 {
     clearErrors();
     getAllInput();
-    myThread.setRiverModel(&model);
-    myThread.start();
+
+    modelThread.start();
+    progressThread.start();
+
+    // open output tab
+    ui->tabWidget->setCurrentIndex(OUTPUT_TAB);
+
+    // disable run button for now
+    disableRun();
+}
+
+void MainWindow::enableRun()
+{
+    ui->pushButtonRun->setEnabled(true);
+}
+
+void MainWindow::disableRun()
+{
+    ui->pushButtonRun->setEnabled(false);
 }
 
 void MainWindow::timestepUpdate(int newVal)
@@ -174,6 +200,17 @@ void MainWindow::timestepUpdate(int newVal)
     ui->horizontalSliderTimestep->setToolTip(QString::number(newVal));
     ui->labelTimestepVal->setText(QString::number(newVal));
     ui->labelTimestepVal->move(320 + (140*newVal)/60, ui->labelTimestepVal->y());
+}
+
+void MainWindow::progressPercentUpdate(int percent)
+{
+    ui->progressBar->setValue(percent);
+}
+
+void MainWindow::progressTimeUpdate(int elapsed, int remaining)
+{
+    ui->labelTimeElapsedValue->setText(QString::number(elapsed));
+    ui->labelTimeRemainingValue->setText(QString::number(remaining));
 }
 
 /* END public slots */
