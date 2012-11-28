@@ -19,7 +19,6 @@ int to_rgb(int hue, float saturation, float value){
     float chroma = value * saturation;
     float tempVal = chroma*(1-fabs((int)huePrime%2-1));
 
-    cout << "hi\n";
 
     switch((int)floor(huePrime)) {
         case 0: red = chroma, green = tempVal, blue = 0; break;
@@ -45,7 +44,6 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
         returnValue = 0.0;
         rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
         g.images[stockIndex]->setPixel(x, y, rgb);
-        cout << "hi-equal\n";
         return;
     }
 
@@ -60,7 +58,6 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
         returnValue = (float)(value / rangeValues);
     }
 
-    cout << "hii-scale\n";
     rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
     g.images[stockIndex]->setPixel(x, y, rgb);
 
@@ -123,7 +120,6 @@ void update_color() {
             }
             else
             {
-                cout << "here i am\n";
                 scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX);
                 scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX);
                 scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);

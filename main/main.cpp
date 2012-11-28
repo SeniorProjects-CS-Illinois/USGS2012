@@ -1,4 +1,3 @@
-#include "main.h"
 #include <sys/types.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -61,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     //These values are what was used in the original Python GUI by default.  Hard coding for now.
     //TODO: There should be a configuration method that take a Configuration object.
-    model.set_hydro_filenames("1?model/data/HydroSets/100k-new.txt?2?");
+    model.set_hydro_filenames("1?model/data/HydroSets/100k-new.txt?14?");
     model.set_par_file("model/data/Environmentals/par.txt");
     model.set_timestep(1);
     model.set_temperature_file("model/data/Environmentals/water-temp.txt");
