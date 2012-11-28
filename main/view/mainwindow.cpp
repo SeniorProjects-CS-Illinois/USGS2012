@@ -6,20 +6,27 @@ using std::string;
 using std::cout;
 using std::endl;
 
+#define OUTPUT_TAB 2
+
 /** TODO
-  *     - whole bunch of stock input
-  *         - tool tips
+  *     - status updates
   *     - error checking for run
   *     - fail gracefully
   *     - break this hideously long file into several
-  *     - threading
   */
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    modelThread(this, &model),
+    progressThread(this, &model)
 {
     ui->setupUi(this);
+
+    // connect signals from progress thread
+    connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
+    connect(&progressThread, SIGNAL(progressTimeUpdate(int,int)), this, SLOT(progressTimeUpdate(int,int)));
+    connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
 }
 
 MainWindow::~MainWindow()
@@ -166,7 +173,25 @@ void MainWindow::runClicked()
 {
     clearErrors();
     getAllInput();
-    model.run();
+
+    modelThread.start();
+    progressThread.start();
+
+    // open output tab
+    ui->tabWidget->setCurrentIndex(OUTPUT_TAB);
+
+    // disable run button for now
+    disableRun();
+}
+
+void MainWindow::enableRun()
+{
+    ui->pushButtonRun->setEnabled(true);
+}
+
+void MainWindow::disableRun()
+{
+    ui->pushButtonRun->setEnabled(false);
 }
 
 void MainWindow::timestepUpdate(int newVal)
@@ -175,6 +200,17 @@ void MainWindow::timestepUpdate(int newVal)
     ui->horizontalSliderTimestep->setToolTip(QString::number(newVal));
     ui->labelTimestepVal->setText(QString::number(newVal));
     ui->labelTimestepVal->move(320 + (140*newVal)/60, ui->labelTimestepVal->y());
+}
+
+void MainWindow::progressPercentUpdate(int percent)
+{
+    ui->progressBar->setValue(percent);
+}
+
+void MainWindow::progressTimeUpdate(int elapsed, int remaining)
+{
+    ui->labelTimeElapsedValue->setText(QString::number(elapsed));
+    ui->labelTimeRemainingValue->setText(QString::number(remaining));
 }
 
 /* END public slots */
@@ -441,62 +477,17 @@ void MainWindow::loadConfiguration(QString file)
 
 void MainWindow::setToolTips()
 {
-    // Buttons
-    ui->pushButtonAddHydroMap->setToolTip(tr("Push to add the current hydro file"));
-    ui->pushButtonRemoveHydroMap->setToolTip(tr("Push to remove currently selected hydro map"));
-    ui->pushButtonRun->setToolTip(tr("Push to run model"));
-    ui->pushButtonSelectHydroMap->setToolTip(tr("Push to select hydro map data file"));
-    ui->pushButtonSelectPARFile->setToolTip(tr("Push to select PAR data file"));
-    ui->pushButtonSelectTempFile->setToolTip(tr("Push to add temperature data file"));
-    ui->pushButtonSelectDischargeFile->setToolTip(tr("Push to add hydro files based on a discharge file"));
-
-    // Check Boxes
-    ui->checkBoxAdjacentCells->setToolTip(tr("Check this box if you want carbon flows to be limited to only adjacent cells"));
-
-    // Labels
-    ui->labelDaysToRun->setToolTip(tr("The number of days to simulate for this model"));
-    ui->labelErrors->setToolTip(tr("This is the header for the error display"));
-    ui->labelMacroGrossCoef->setToolTip(tr("I have no idea what this is..."));
-    ui->labelHydroMap->setToolTip(tr("No file selected yet"));
-    ui->labelKMacro->setToolTip(tr("I have no idea what this is..."));
-    ui->labelKPhyto->setToolTip(tr("I have no idea what this is..."));
-    ui->labelTSS->setToolTip(tr("I have no idea what this is..."));
-
-        // stock parameters
-    ui->labelMacroMassMax->setToolTip(tr("I have no idea what this is..."));
-    ui->labelMacroTemp->setToolTip(tr("I have no idea what this is..."));
-    ui->labelMacroVelocityMax->setToolTip(tr("I have no idea what this is..."));
-    ui->labelOutputFreq->setToolTip(tr("The rate at which images should be output in # of days"));
-    ui->labelPARFile->setToolTip(tr("No file selected yet"));
-    ui->labelMacroRespiration->setToolTip(tr("I have no idea what this is..."));
-    ui->labelMacroSenescence->setToolTip(tr("I have no idea what this is..."));
-    ui->labelTempFile->setToolTip(tr("No file selected yet"));
-    ui->labelTimestep->setToolTip(tr("Granularity of calculation"));
-
-    // Sliders
-    ui->horizontalSliderTimestep->setToolTip(QString::number(getTimestep()));
-
-    // Combo Boxes
-    ui->comboBoxWhichStock->setToolTip("Which stock");
-
-    // Text Input Boxes
-    ui->lineEditDaysToRun->setToolTip(tr("Enter a positive integer"));
+/*
     ui->lineEditMacroGrossCoef->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKMacro->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKPhyto->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditTSS->setToolTip(tr("Enter a number between 0.0 and 20.0"));
-
-        // stock parameters
     ui->lineEditMacroMassMax->setToolTip(tr("Enter a value between 500.0 and 1500.0"));
     ui->lineEditMacroTemp->setToolTip(tr("Enter a number between 11.7 and 27.7"));
     ui->lineEditMacroVelocityMax->setToolTip(tr("Enter a value between 0.2 and 1.6"));
-    ui->lineEditOutputFreq->setToolTip(tr("Enter a positive integer"));
     ui->lineEditMacroRespiration->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditMacroSenescence->setToolTip(tr("Enter a value between 0.0 and 1.0"));
-
-    // Text Output Boxes
-    ui->listWidgetHydroMap->setToolTip(tr("The currently selected hydro map data files"));
-    ui->textBrowserErrors->setToolTip(tr("Shows erros with current configuration"));
+*/
 }
 
 /* GETTERS */
@@ -834,8 +825,6 @@ void MainWindow::getAllInput()
 
 void MainWindow::getAllStockInput()
 {
-    //TODO: Configuration of the model should be done by passing the model a Configuration object.
-    //TODO: Calling set_stocks directly (part of setup.h) partially breaks the model/view separation.
     set_stocks(getMacroBase(),
                getPhytoBase(),
                getDecompBase(),
