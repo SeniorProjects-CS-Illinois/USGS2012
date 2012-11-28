@@ -152,7 +152,7 @@ void initialize_globals(void){
     g.macro_mas_max = 1000.0;
     g.macro_vel_max = 1.0;
 
-    // indices for the colorValues array for each stock
+    // indices for the array for each stock
     g.MACRO_INDEX = 0;
     g.PHYTO_INDEX = 1;
     g.HERBIVORE_INDEX = 2;
@@ -164,7 +164,29 @@ void initialize_globals(void){
     g.POC_INDEX = 8;
     g.DETRITUS_INDEX = 9;
 
+    g.stock_names[0] = "macro";
+    g.stock_names[1] = "phyto";
+    g.stock_names[2] = "herbivore";
+    g.stock_names[3] = "waterdecomp";
+    g.stock_names[4] = "seddecomp";
+    g.stock_names[5] = "sedconsumer";
+    g.stock_names[6] = "consum";
+    g.stock_names[7] = "doc";
+    g.stock_names[8] = "poc";
+    g.stock_names[9] = "detritus";
+
     // number of different stocks
     g.NUM_STOCKS = 10;
+
+    g.hues[0] = 120;
+    g.hues[1] = 120;
+    g.hues[2] = 300;
+    g.hues[3] = 120;
+    g.hues[4] = 240;
+    g.hues[5] = 60;
+    g.hues[6] = 300;
+    g.hues[7] = 60;
+    g.hues[8] = 240;
+    g.hues[9] = 20;
 
 }
