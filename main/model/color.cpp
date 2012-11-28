@@ -1,6 +1,4 @@
 #include "color.h"
-#include <iostream>
-using namespace std;
 
 /**
  * Defining non-extern versions of variables in h file
@@ -14,36 +12,58 @@ using namespace std;
  * @param x The x coord of the patch
  * @param y The y coord of the patch
  */
-void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex) {
-    int returnValue = 0xffff00;
+int to_rgb(int hue, float saturation, float value){
+
+    int red, green, blue;
+    float huePrime = hue/60.0;
+    float chroma = value * saturation;
+    float tempVal = chroma*(1-fabs((int)huePrime%2-1));
+
+    cout << "hi\n";
+
+    switch((int)floor(huePrime)) {
+        case 0: red = chroma, green = tempVal, blue = 0; break;
+        case 1: red = tempVal, green = chroma, blue = 0; break;
+        case 2: red = 0, green = chroma, blue = tempVal; break;
+        case 3: red = 0, green = tempVal, blue = chroma; break;
+        case 4: red = tempVal, green = 0, blue = chroma; break;
+        case 5: red = chroma, green = 0, blue = tempVal; break;
+        default: red = 0, green = 0, blue = 0;
+    }
+
+    int returnValue = (red + (value-chroma));
+    returnValue = (returnValue << 8) + (green + (value-chroma));
+    returnValue = (returnValue << 8) + (blue + (value-chroma));
+
+    return returnValue;
+}
+
+void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex) {
+    int rgb;
+    float returnValue;
     if(maxVal == minVal) {
-        returnValue = 0;
+        returnValue = 0.0;
+        rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
+        g.images[stockIndex]->setPixel(x, y, rgb);
+        cout << "hi-equal\n";
         return;
     }
 
     if(value <= minVal || /*isnan(value)*/ (value != value)) {
-        g.value = qRgb(55, 204, 51);
-        g.images[stockIndex]->setPixel(x, y, g.value);
+        returnValue = 0.0;
     }
     else if(value >= maxVal) {
-        g.value = qRgb(0, 206, 0);
-        g.images[stockIndex]->setPixel(x, y, g.value);
+        returnValue = 1.0;
     }
     else {
-        int rangeValues = (int)fabs(maxVal - minVal);
-        returnValue = (int)(value * 255 / rangeValues);
-        returnValue = returnValue << 8*colorIndex;
-
-        if( minVal > maxVal) {
-            returnValue = 255 - returnValue;
-        }
-
-        int red =  returnValue & (255 << 16);
-        int green = returnValue & (255 << 8);
-        int blue = returnValue & 255;
-        g.value = qRgb(red, green, blue);
-        g.images[stockIndex]->setPixel(x, y, g.value);
+        float rangeValues = (float)fabs(maxVal - minVal);
+        returnValue = (float)(value / rangeValues);
     }
+
+    cout << "hii-scale\n";
+    rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
+    g.images[stockIndex]->setPixel(x, y, rgb);
+
 }
 
 
@@ -103,16 +123,17 @@ void update_color() {
             }
             else
             {
-                scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX, 1);
-                scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX, 1);
-                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX, 1);
-                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX, 1);
-                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX, 1);
-                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX, 1);
-                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX, 1);
-                scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX, 1);
-                scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX, 1);
-                scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX, 1);
+                cout << "here i am\n";
+                scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX);
+                scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX);
+                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);
+                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX);
+                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX);
+                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX);
+                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX);
+                scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
+                scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
+                scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
             }
         }
     }

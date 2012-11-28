@@ -3,8 +3,11 @@
 
 #include <math.h>
 #include <string.h>
+#include <iostream>
+using namespace std;
 
 #include "globals.h"
+
 
     /**
       * Function description copy-pasted from Netlogo documentation:
@@ -21,7 +24,10 @@
       * If number is greater than range2, then the lightest shade of color
       * is chosen.
       */
+    int to_rgb(int hue, float saturation, float value);
+    
     void scale_color( double value, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex);
+
 
 	/**
       * Updates the color of the patch

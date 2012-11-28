@@ -178,4 +178,15 @@ void initialize_globals(void){
     // number of different stocks
     g.NUM_STOCKS = 10;
 
+    g.hues[0] = 120;
+    g.hues[1] = 120;
+    g.hues[2] = 300;
+    g.hues[3] = 120;
+    g.hues[4] = 240;
+    g.hues[5] = 60;
+    g.hues[6] = 300;
+    g.hues[7] = 60;
+    g.hues[8] = 240;
+    g.hues[9] = 20;
+
 }

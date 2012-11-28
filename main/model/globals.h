@@ -209,6 +209,8 @@ typedef struct {
     QRgb value;
     // number of different stocks
     int NUM_STOCKS;
+
+    int hues[10];
 } Globals;
 
 extern Globals g;
