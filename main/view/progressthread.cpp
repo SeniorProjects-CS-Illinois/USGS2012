@@ -8,6 +8,7 @@ ProgressThread::ProgressThread(QObject* parent, RiverModel *rModel) :
 void ProgressThread::run()
 {
     unsigned long sleepTimeSeconds = 1; // TODO: should this be configurable?
+    int timeElapsed, timeRemaining;
     int percentageDone = timeElapsed = timeRemaining = 0;
 
     // main progress loop: update GUI, then sleep for a bit
