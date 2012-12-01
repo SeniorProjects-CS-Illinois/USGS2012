@@ -1,7 +1,11 @@
 #include "rivermodel.h"
 
 Status RiverModel::getStatus(void){
-    return modelStatus;
+    Status modelStatusGUI = modelStatus;
+
+    //After we get a copy for the GUI, reset the new image flag.
+    modelStatus.hasNewImage(false);
+    return modelStatusGUI;
 }
 
 void RiverModel::count_unique_files(int index)
@@ -108,6 +112,7 @@ void RiverModel::run(void) {
                 << " | Progress: " << (int)(modelStatus.getProgress()*100) << "% - Time Elapsed (seconds): " \
                 << modelStatus.getTimeElapsed() << " - Time Remaining: " << modelStatus.getTimeRemaining() << endl;
             go();
+            modelStatus.hasNewImage(true);
             modelStatus.updateProgress();
         }
     }
