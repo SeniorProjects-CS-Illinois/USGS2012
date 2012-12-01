@@ -6,7 +6,8 @@
 
 #include "ui_mainwindow.h"
 #include "configuration.h"
-
+#include "modelthread.h"
+#include "progressthread.h"
 #include "../model/rivermodel.h"
 
 namespace Ui
@@ -46,8 +47,20 @@ public slots:
     /* Run the model */
     void runClicked();
 
+    /* Allow the user to click run button */
+    void enableRun();
+
+    /* Disallow the user to click the run button */
+    void disableRun();
+
     /* Update timestep slider information */
     void timestepUpdate(int newVal);
+
+    /* Update progress bar information */
+    void progressPercentUpdate(int percent);
+
+    /* Update progress time information */
+    void progressTimeUpdate(int elapsed, int remaining);
     
 private slots:
 
@@ -286,8 +299,11 @@ public:
     void setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num);
 
 private:
+
+    Ui::MainWindow* ui;
     RiverModel model;
-    Ui::MainWindow *ui;
+    ModelThread modelThread;
+    ProgressThread progressThread;
 
     QString wholeTempFile;
     QString wholePARFile;

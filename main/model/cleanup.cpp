@@ -32,14 +32,10 @@ void clean_patches()
 
         free( patches[x] );
     }
-    for (stock = 0; stock < g.NUM_STOCKS; stock++) {
-        free(colorValues[stock]);
-    }
 
 	free( g.covered_area );
 	free( g.uncovered_area );
     free( patches );
-    free( colorValues );
 }
 
 
