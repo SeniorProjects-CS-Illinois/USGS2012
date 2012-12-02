@@ -6,6 +6,7 @@
  */
 void setup() {
 	reset_globals();
+    get_unique_hydrofiles();
 	find_map_sizes();
     init_patches();
     init_color_values();
@@ -132,6 +133,13 @@ void reset_globals() {
 	g.macro_vel_max = 1.0;
 }
 
+void get_unique_hydrofiles(){
+    //Get unique hydrofiles
+    g.uniqueHydroFilenames = g.gui_filenames_list;
+    g.uniqueHydroFilenames.removeDuplicates();
+    g.num_unique_files = g.uniqueHydroFilenames.size();
+}
+
 /**
  * Opens the first hydro-map i.e 10k-map and finds the maximum pxcor and
  * the maximum pycor, we assign these values to MAP_WIDTH and MAP_HEIGHT
@@ -142,7 +150,7 @@ void find_map_sizes() {
 
     int index;
     for(index = 0; index < g.num_hydro_files; index++) {
-	FILE* file = fopen(g.gui_filenames_array[index], "r");
+	FILE* file = fopen(g.gui_filenames_list[index].toStdString().c_str(), "r");
 	if (file == NULL) {
 		fputs("error opening the hydro map", stderr);
 		exit(-1);
@@ -162,6 +170,7 @@ void find_map_sizes() {
     g.MAP_WIDTH = max_map_width;
     g.MAP_HEIGHT = max_map_height;
 
+    //TODO: Figure out why this is in this function.
     for(int i=0; i < g.NUM_STOCKS; i++) {
 	g.images[i] = new QImage(g.MAP_WIDTH, g.MAP_HEIGHT, QImage::Format_RGB444);
     }
@@ -412,30 +421,15 @@ void init_color_values() {
 
 
 /**
- * Check for duplicate files
- * @param index the index in the filenames array
-*/
-int check_duplicate_files(int index) {
-    if(index == 0) {
-        size_t len = strlen(g.gui_filenames_array[index]) + 1;
-        g.check_filenames_array[index] = (char*)malloc((len)*sizeof(char));
-        strncpy(g.check_filenames_array[index], g.gui_filenames_array[index], len);
-        g.hydromap_index_array[index] = index;
-        return 0;
+ * TODO:  Replace this function and respective variables with a hash table...
+ */
+std::vector<int> map_hydro_files(QStringList & allHydroFiles, QStringList & uniqueHydroFiles){
+    std::vector<int> mappingToUniqueFiles;
+    mappingToUniqueFiles.resize( allHydroFiles.size() );
+    for(int i = 0; i < allHydroFiles.size(); i++){
+        mappingToUniqueFiles[i] = uniqueHydroFiles.indexOf( allHydroFiles[i] );
     }
-    for(int i = 0; i < g.current_file_index; i++) {
-        // We found a duplicate file
-        if(strcmp(g.check_filenames_array[i], g.gui_filenames_array[index]) == 0) {
-            g.hydromap_index_array[index] = i;
-            return 1;
-        }
-    }
-    // Not a duplicate fil,e so add to the unique file array
-    size_t len = strlen(g.gui_filenames_array[index]) + 1;
-    g.check_filenames_array[g.current_file_index] = (char*)malloc((len)*sizeof(char));
-    strncpy(g.check_filenames_array[g.current_file_index], g.gui_filenames_array[index], len);
-    g.hydromap_index_array[index] = g.current_file_index;
-    return 0;
+    return mappingToUniqueFiles;
 }
 
 /**
@@ -444,60 +438,45 @@ int check_duplicate_files(int index) {
  * and this word formation must be the first line in the file.
 */
 void import_hydro() {
-    int i, j, temp_x, temp_y;
-    FILE* pFile;
-    char str[256];
-    float value;
-    double temp_depth, temp_px_vector, temp_py_vector, temp_velocity;
+    g.hydromap_index_vector = map_hydro_files(g.gui_filenames_list, g.uniqueHydroFilenames);
 
-    for(i = 0;i < g.num_hydro_files; i++) {
-        // Do not import a file we have already processed
-        if(check_duplicate_files(i) == 1)
-          continue;
-        
-        pFile = fopen(g.gui_filenames_array[i], "r");
-        if(pFile == NULL) {
+    for(int i = 0;i < g.uniqueHydroFilenames.size(); i++) {
+        QFile hydroFile( g.uniqueHydroFilenames[i] );
+        if( !hydroFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
             printf("Failed to open the hydromap");
             exit(1);
         }
 
-        // Skip the file layout
-        for(j = 0; j < 6; j++) {
-            fscanf(pFile, "%s", str);
-            // TODO: error handling?
-        }
-		int covered_cells = 0;
-		int uncovered_cells = 0;
+        int covered_cells = 0;
+        int uncovered_cells = 0;
 
-        // Scan through the files and assign the values
-        while(fscanf(pFile, "%s", str) != EOF) {
-            temp_x = atoi(str);
-            fscanf(pFile, "%s", str);
-            temp_y = atoi(str);
-            fscanf(pFile, "%f", &value);
-            temp_depth = value;
-            fscanf(pFile, "%f", &value);
-            temp_px_vector = value;
-            fscanf(pFile, "%f", &value);
-            temp_py_vector = value;
-            fscanf(pFile, "%f", &value);
-            temp_velocity = value;
-            
-            patches[temp_x][temp_y].available[g.current_file_index] = 1;
-            patches[temp_x][temp_y].pxcor = temp_x;
-            patches[temp_x][temp_y].pycor = temp_y;
-            patches[temp_x][temp_y].pxv_list[g.current_file_index] = temp_px_vector;
-            patches[temp_x][temp_y].pyv_list[g.current_file_index] = temp_py_vector;
-            patches[temp_x][temp_y].v_list[g.current_file_index] = temp_velocity;
-            patches[temp_x][temp_y].aqa_point = -999;
-	    patches[temp_x][temp_y].depth_list[g.current_file_index] = temp_depth;
-	    covered_cells++;
+        QString hydroFileText = hydroFile.readAll();
+        QStringList hydroFileData = hydroFileText.split(" ");
+        for(int index = 6; index < hydroFileData.size(); index += 6){
+
+            int patch_x             = hydroFileData[index].toInt();
+            int patch_y             = hydroFileData[index + 1].toInt();
+            double patch_depth      = hydroFileData[index + 2].toDouble();
+            double patch_px_vector  = hydroFileData[index + 3].toDouble();
+            double patch_py_vector  = hydroFileData[index + 4].toDouble();
+            double patch_velocity   = hydroFileData[index + 5].toDouble();
+
+            patches[patch_x][patch_y].available[g.current_file_index] = 1;
+            patches[patch_x][patch_y].pxcor = patch_x;
+            patches[patch_x][patch_y].pycor = patch_y;
+            patches[patch_x][patch_y].pxv_list[g.current_file_index] = patch_px_vector;
+            patches[patch_x][patch_y].pyv_list[g.current_file_index] = patch_py_vector;
+            patches[patch_x][patch_y].v_list[g.current_file_index] = patch_velocity;
+            patches[patch_x][patch_y].aqa_point = -999;
+            patches[patch_x][patch_y].depth_list[g.current_file_index] = patch_depth;
+            covered_cells++;
         }
-	uncovered_cells = g.MAP_WIDTH*g.MAP_HEIGHT - covered_cells;
-	g.covered_area[g.current_file_index] = g.max_area*covered_cells;
-	g.uncovered_area[g.current_file_index] = g.max_area*uncovered_cells;
+
+        uncovered_cells = g.MAP_WIDTH*g.MAP_HEIGHT - covered_cells;
+        g.covered_area[g.current_file_index] = g.max_area*covered_cells;
+        g.uncovered_area[g.current_file_index] = g.max_area*uncovered_cells;
         g.current_file_index++;
-        fclose(pFile);
+        hydroFile.close();
     }
 }
 

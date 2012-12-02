@@ -859,7 +859,7 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
 void MainWindow::getAllInput()
 {
     // TODO: is this confusing with the different naming conventions?
-    model.set_hydro_filenames(formatHydroMaps().toStdString().c_str());
+    model.set_hydro_filenames(formatHydroMaps());
     model.set_par_file(getPARFile().toStdString().c_str());
     model.set_temperature_file(getTempFile().toStdString().c_str());
     model.set_timestep(getTimestep());

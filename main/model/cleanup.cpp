@@ -8,9 +8,6 @@ void cleanup()
     clean_patches();
     clean_photo_radiation_data();
     clean_temperature_data();
-    clean_gui_filenames_and_days();
-    clean_hydromap_index_array();
-    clean_check_filenames_array();
 }
 
 /**
@@ -37,43 +34,6 @@ void clean_patches()
 	free( g.uncovered_area );
     free( patches );
 }
-
-
-/**
- * Frees the filenames and days to run array
-*/
-void clean_gui_filenames_and_days() 
-{
-    int index;
-    for(index = 0; index < g.gui_filenames_filesize; index++)
-	{
-        free(g.gui_filenames_array[index]);
-    }
-    free(g.gui_filenames_array);
-    free(g.gui_days_array);
-}
-
-
-/**
- * Frees the hydromap index array
-*/
-void clean_hydromap_index_array() 
-{
-	free(g.hydromap_index_array);
-}
-
-
-/** 
- * Frees the check filenames array
-*/
-void clean_check_filenames_array() {
-  int index;
-  for(index = 0; index < g.num_unique_files; index++){
-    free(g.check_filenames_array[index]);
-  }
-  free(g.check_filenames_array);
-}
-
 
 /**
  * Frees the photo_radiation_data array
