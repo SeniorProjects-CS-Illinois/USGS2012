@@ -5,9 +5,9 @@
  * Calls the helper functions import_hydro and setup_environmentals
  */
 void setup() {
-	reset_globals();
+    reset_globals();
     get_unique_hydrofiles();
-	find_map_sizes();
+    find_map_sizes();
     init_patches();
     init_color_values();
     import_hydro();
@@ -19,118 +19,118 @@ void setup() {
  * Resets all the values in globals.h
  */
 void reset_globals() {
-	g.MAP_WIDTH = 0;
-	g.MAP_HEIGHT = 0;
-	g.hours = 0;
-	g.COMPARE_MAX = 0.0;
+    g.MAP_WIDTH = 0;
+    g.MAP_HEIGHT = 0;
+    g.hours = 0;
+    g.COMPARE_MAX = 0.0;
 
-	g.current_file_index = 0;
+    g.current_file_index = 0;
 
-	g.temp_dif = 0.0;
-	g.par_dif = 0.0;
+    g.temp_dif = 0.0;
+    g.par_dif = 0.0;
 
-	g.nan_trigger = 0;
+    g.nan_trigger = 0;
 
-	g.MAX_MACRO = 0.0;
-	g.MAX_PHYTO = 0.0;
-	g.MAX_HERBIVORE = 0.0;
-	g.MAX_WATERDECOMP = 0.0;
-	g.MAX_SEDDECOMP = 0.0;
-	g.MAX_SEDCONSUMER = 0.0;
-	g.MAX_CONSUM = 0.0;
-	g.MAX_DOC = 0.0;
-	g.MAX_POC = 0.0;
-	g.MAX_DETRITUS = 0.0;
+    g.MAX_MACRO = 0.0;
+    g.MAX_PHYTO = 0.0;
+    g.MAX_HERBIVORE = 0.0;
+    g.MAX_WATERDECOMP = 0.0;
+    g.MAX_SEDDECOMP = 0.0;
+    g.MAX_SEDCONSUMER = 0.0;
+    g.MAX_CONSUM = 0.0;
+    g.MAX_DOC = 0.0;
+    g.MAX_POC = 0.0;
+    g.MAX_DETRITUS = 0.0;
 
-	g.max_waterdecomp = 6.26/24.0;
-	g.max_seddecomp = 6.26/24.0;
-	g.max_herbivore = 1.0/24.0;
-	g.herbivore_egestion = 0.2;
-	g.max_sedconsumer = 0.55/24.0;
-	g.sedconsumer_egestion_seddecomp = 0.35;
-	g.max_consum = 0.125/24.0;
-	g.e_waterdecomp = 0.173/24.0;
-	g.e_seddecomp = 0.173/24.0;
-	g.e_herbivore = 0.4/24.0;
-	g.e_sedconsumer = 0.01/24.0;
-	g.sedconsumer_egestion_detritus = 0.9;
-	g.e_consum = 0.0032/24.0;
-	g.r_waterdecomp = 0.6/24.0;
-	g.r_seddecomp = 0.6/24.0;
-	g.r_herbivore = 0.08/24.0;
-	g.r_sedconsumer = 0.04/24.0;
-	g.r_consum = 0.0125/24.0;
-	g.s_waterdecomp = 0.05/24.0;
-	g.s_seddecomp = 0.05/24.0;
-	g.s_herbivore = 0.01/24.0;
-	g.s_sedconsumer = 0.01/24.0;
-	g.s_consum = 0.002/24.0;
-	g.consum_egestion = 0.2;
+    g.max_waterdecomp = 6.26/24.0;
+    g.max_seddecomp = 6.26/24.0;
+    g.max_herbivore = 1.0/24.0;
+    g.herbivore_egestion = 0.2;
+    g.max_sedconsumer = 0.55/24.0;
+    g.sedconsumer_egestion_seddecomp = 0.35;
+    g.max_consum = 0.125/24.0;
+    g.e_waterdecomp = 0.173/24.0;
+    g.e_seddecomp = 0.173/24.0;
+    g.e_herbivore = 0.4/24.0;
+    g.e_sedconsumer = 0.01/24.0;
+    g.sedconsumer_egestion_detritus = 0.9;
+    g.e_consum = 0.0032/24.0;
+    g.r_waterdecomp = 0.6/24.0;
+    g.r_seddecomp = 0.6/24.0;
+    g.r_herbivore = 0.08/24.0;
+    g.r_sedconsumer = 0.04/24.0;
+    g.r_consum = 0.0125/24.0;
+    g.s_waterdecomp = 0.05/24.0;
+    g.s_seddecomp = 0.05/24.0;
+    g.s_herbivore = 0.01/24.0;
+    g.s_sedconsumer = 0.01/24.0;
+    g.s_consum = 0.002/24.0;
+    g.consum_egestion = 0.2;
 
-	g.Ai_waterdecomp_DOC = 30.0;
-	g.Ai_waterdecomp_POC = 30.0;
-	g.Ai_Peri_DOC = 30.0;
-	g.Ai_Peri_POC = 30.0;
-	g.Ai_seddecomp_detritus = 0.6;
-	g.Ai_herbivore_phyto = 20;
-	g.Ai_herbivore_waterdecomp = 3.0;
-	g.Ai_herbivore_peri = 3.0;
-	g.Ai_sedconsumer_seddecomp = 3.0;
-	g.Ai_sedconsumer_peri = 2.0;
-	g.Ai_sedconsumer_detritus = 3.5;
-	g.Ai_consum_herbivore = 3.5;
-	g.Ai_consum_sedconsumer = 4.0;
-	g.Gi_waterdecomp_DOC = 0.05;
-	g.Gi_waterdecomp_POC = 0.05;
-	g.Gi_Peri_DOC = 0.05;
-	g.Gi_Peri_POC = 0.05;
-	g.Gi_seddecomp_detritus = 0.005;
-	g.Gi_herbivore_phyto = 0.01;
-	g.Gi_herbivore_waterdecomp = 0.01;
-	g.Gi_herbivore_peri = 0.01;
-	g.Gi_sedconsumer_seddecomp = 0.02;
-	g.Gi_sedconsumer_peri = 0.02;
-	g.Gi_sedconsumer_detritus = 0.02;
-	g.Gi_consum_herbivore = 0.025;
-	g.Gi_consum_sedconsumer = 0.04;
-	g.pref_waterdecomp_DOC = 0.5;
-	g.pref_waterdecomp_POC = 0.5;
-	g.pref_Peri_DOC = 0.5;
-	g.pref_Peri_POC = 0.5;
-	g.pref_seddecomp_detritus = 1.0;
-	g.pref_herbivore_phyto = 0.7;
-	g.pref_herbivore_waterdecomp = 0.15;
-	g.pref_herbivore_peri = 0.15;
-	g.pref_sedconsumer_seddecomp = 0.5;
-	g.pref_sedconsumer_peri = 0.4;
-	g.pref_sedconsumer_detritus = 0.1;
-	g.pref_consum_herbivore = 0.7;
-	g.pref_consum_sedconsumer = 0.3;
+    g.Ai_waterdecomp_DOC = 30.0;
+    g.Ai_waterdecomp_POC = 30.0;
+    g.Ai_Peri_DOC = 30.0;
+    g.Ai_Peri_POC = 30.0;
+    g.Ai_seddecomp_detritus = 0.6;
+    g.Ai_herbivore_phyto = 20;
+    g.Ai_herbivore_waterdecomp = 3.0;
+    g.Ai_herbivore_peri = 3.0;
+    g.Ai_sedconsumer_seddecomp = 3.0;
+    g.Ai_sedconsumer_peri = 2.0;
+    g.Ai_sedconsumer_detritus = 3.5;
+    g.Ai_consum_herbivore = 3.5;
+    g.Ai_consum_sedconsumer = 4.0;
+    g.Gi_waterdecomp_DOC = 0.05;
+    g.Gi_waterdecomp_POC = 0.05;
+    g.Gi_Peri_DOC = 0.05;
+    g.Gi_Peri_POC = 0.05;
+    g.Gi_seddecomp_detritus = 0.005;
+    g.Gi_herbivore_phyto = 0.01;
+    g.Gi_herbivore_waterdecomp = 0.01;
+    g.Gi_herbivore_peri = 0.01;
+    g.Gi_sedconsumer_seddecomp = 0.02;
+    g.Gi_sedconsumer_peri = 0.02;
+    g.Gi_sedconsumer_detritus = 0.02;
+    g.Gi_consum_herbivore = 0.025;
+    g.Gi_consum_sedconsumer = 0.04;
+    g.pref_waterdecomp_DOC = 0.5;
+    g.pref_waterdecomp_POC = 0.5;
+    g.pref_Peri_DOC = 0.5;
+    g.pref_Peri_POC = 0.5;
+    g.pref_seddecomp_detritus = 1.0;
+    g.pref_herbivore_phyto = 0.7;
+    g.pref_herbivore_waterdecomp = 0.15;
+    g.pref_herbivore_peri = 0.15;
+    g.pref_sedconsumer_seddecomp = 0.5;
+    g.pref_sedconsumer_peri = 0.4;
+    g.pref_sedconsumer_detritus = 0.1;
+    g.pref_consum_herbivore = 0.7;
+    g.pref_consum_sedconsumer = 0.3;
 
-	g.Aj_phyto = 10.0;
-	g.Aj_waterdecomp = 1.2;
-	g.Aj_seddecomp = 0.2;
-	g.Aj_herbivore = 2.4;
-	g.Aj_sedconsumer = 2.0;
-	g.Aj_consum = 0.65;
-	g.Gj_phyto = 100.0;
-	g.Gj_waterdecomp = 20.0;
-	g.Gj_seddecomp = 120.0;
-	g.Gj_herbivore = 108.0;
-	g.Gj_sedconsumer = 20.0;
-	g.Gj_consum = 6.5;
+    g.Aj_phyto = 10.0;
+    g.Aj_waterdecomp = 1.2;
+    g.Aj_seddecomp = 0.2;
+    g.Aj_herbivore = 2.4;
+    g.Aj_sedconsumer = 2.0;
+    g.Aj_consum = 0.65;
+    g.Gj_phyto = 100.0;
+    g.Gj_waterdecomp = 20.0;
+    g.Gj_seddecomp = 120.0;
+    g.Gj_herbivore = 108.0;
+    g.Gj_sedconsumer = 20.0;
+    g.Gj_consum = 6.5;
 
-	g.k_herbivore = 0.2;
-	g.k_POC = 0.2;
+    g.k_herbivore = 0.2;
+    g.k_POC = 0.2;
 
-	g.theta = 1.072;
+    g.theta = 1.072;
 
-	g.macro_base_temp = 19.7;
-	g.gross_macro_coef = 0.08;
-	g.resp_macro_coef = 0.04;
-	g.sen_macro_coef = 0.08;
-	g.macro_mas_max = 1000.0;
-	g.macro_vel_max = 1.0;
+    g.macro_base_temp = 19.7;
+    g.gross_macro_coef = 0.08;
+    g.resp_macro_coef = 0.04;
+    g.sen_macro_coef = 0.08;
+    g.macro_mas_max = 1000.0;
+    g.macro_vel_max = 1.0;
 }
 
 void get_unique_hydrofiles(){
@@ -150,21 +150,21 @@ void find_map_sizes() {
 
     int index;
     for(index = 0; index < g.uniqueHydroFilenames.size(); index++) {
-	FILE* file = fopen(g.uniqueHydroFilenames[index].toStdString().c_str(), "r");
-	if (file == NULL) {
-		fputs("error opening the hydro map", stderr);
-		exit(-1);
-	}
+        FILE* file = fopen(g.uniqueHydroFilenames[index].toStdString().c_str(), "r");
+        if (file == NULL) {
+            fputs("error opening the hydro map", stderr);
+            exit(-1);
+        }
 
-	find_map_width_height(file); // find the width and height of the maps
-	if(g.MAP_WIDTH > max_map_width) {
-		max_map_width = g.MAP_WIDTH;
-	}
-	if(g.MAP_HEIGHT > max_map_height) {
-		max_map_height = g.MAP_HEIGHT;
-	}
-	
-	fclose(file);
+        find_map_width_height(file); // find the width and height of the maps
+        if(g.MAP_WIDTH > max_map_width) {
+            max_map_width = g.MAP_WIDTH;
+        }
+        if(g.MAP_HEIGHT > max_map_height) {
+            max_map_height = g.MAP_HEIGHT;
+        }
+
+        fclose(file);
     }
 
     g.MAP_WIDTH = max_map_width;
@@ -172,7 +172,7 @@ void find_map_sizes() {
 
     //TODO: Figure out why this is in this function.
     for(int i=0; i < g.NUM_STOCKS; i++) {
-	g.images[i] = new QImage(g.MAP_WIDTH, g.MAP_HEIGHT, QImage::Format_RGB444);
+        g.images[i] = new QImage(g.MAP_WIDTH, g.MAP_HEIGHT, QImage::Format_RGB444);
     }
 }
 
@@ -180,7 +180,7 @@ void find_map_sizes() {
 /**
  * Reads a hydro_file finds the biggest pycor and pxcor and assigns them to MAP_WIDTH and MAP_HEIGHT
  * @param hydro_file the hydrolic file with data regarding patches
-*/
+ */
 void find_map_width_height(FILE* hydro_file) {
     int patch_info_size = 6;    // first line in the file, pxcor/pycor/depth/px-vector/py-vector/velocity
     const int word_size = 100;
@@ -196,7 +196,7 @@ void find_map_width_height(FILE* hydro_file) {
         if(counter%patch_info_size == 0) {
             int value = atoi(word);
             if(value > max_x) {
-                    max_x = value;
+                max_x = value;
             }
         }        
         // pycor
@@ -239,7 +239,7 @@ void init_patch_values(int col, int row) {
     patches[col][row].sedconsumer_detritus_prey_limitation = 0.0;
     patches[col][row].consum_herbivore_prey_limitation = 0.0;
     patches[col][row].consum_sedconsumer_prey_limitation = 0.0;
-    
+
     patches[col][row].peri_space_limitation = 0.0;
     patches[col][row].waterdecomp_space_limitation = 0.0;
     patches[col][row].seddecomp_space_limitation = 0.0;
@@ -369,11 +369,11 @@ void init_patch_values(int col, int row) {
     patches[col][row].v_list = (double *)malloc(g.num_unique_files*sizeof(double));
     int index;
     for(index = 0; index < g.num_unique_files; index++) {
-	patches[col][row].pxv_list[index] = 0.0;
-	patches[col][row].available[index] = 0;
-	patches[col][row].pyv_list[index] = 0.0;
-	patches[col][row].depth_list[index] = 0.0;
-	patches[col][row].v_list[index] = 0.0;
+        patches[col][row].pxv_list[index] = 0.0;
+        patches[col][row].available[index] = 0;
+        patches[col][row].pyv_list[index] = 0.0;
+        patches[col][row].depth_list[index] = 0.0;
+        patches[col][row].v_list[index] = 0.0;
     }
 }
 
@@ -395,7 +395,7 @@ void init_patches() {
     // initialize the arrays for each patch
     for(col = 0; col < g.MAP_WIDTH; col++) {
         for(row = 0; row < g.MAP_HEIGHT; row++) {
-	    init_patch_values(col, row);
+            init_patch_values(col, row);
         }
     }
 }
@@ -412,8 +412,8 @@ void init_color_values() {
     for (i = 0; i < g.NUM_STOCKS; i++) {
         for( col = 0; col < g.MAP_WIDTH; col++) {
             for(row = 0; row < g.MAP_HEIGHT; row++) {
-		g.value = qRgb(235, 235, 235);
-		g.images[i]->setPixel(col, row, g.value);
+                g.value = qRgb(235, 235, 235);
+                g.images[i]->setPixel(col, row, g.value);
             }
         }
     }
@@ -436,7 +436,7 @@ std::vector<int> map_hydro_files(QStringList & allHydroFiles, QStringList & uniq
  * Reads the Hydro map files and sets up the proper (x,y) patches
  * Input is in the form of "pxcor pycor depth px-vector py-vector velocity"
  * and this word formation must be the first line in the file.
-*/
+ */
 void import_hydro() {
     g.hydromap_index_vector = map_hydro_files(g.gui_filenames_list, g.uniqueHydroFilenames);
 
@@ -499,27 +499,27 @@ void set_photo_radiation() {
 
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
-	perror ("Error opening photo_radiation file");
+        perror ("Error opening photo_radiation file");
     }
 
     char line[256];
     int count = 0;
 
     while (fgets(line, 256, file) != NULL) {// Get number of elements in file
-	count++;
+        count++;
     }
 
     g.photo_radiation_data = (int*)malloc(count * sizeof(int));
 
     rewind(file);
     count = 0;
-    
+
     while (fgets(line, 256, file) != NULL) {// Populate discharge array
-	int value = atoi(line);
-	g.photo_radiation_data[count] = value;
-	count++;
+        int value = atoi(line);
+        g.photo_radiation_data[count] = value;
+        count++;
     }
-    
+
     g.photo_radiation_index = 0;	// Initialize photo_radiation index to represent current index
     g.photo_radiation = g.photo_radiation_data[g.photo_radiation_index];	// Assign first value of photo_radiation
 
@@ -531,36 +531,36 @@ void set_photo_radiation() {
  * Reads the "water-temp.txt" file and initializes the temperature array variable
  */
 void set_temperature() {
-	char* filename = g.gui_temperature_file;
+    char* filename = g.gui_temperature_file;
 
-	FILE* file = fopen(filename, "r");
-	if (file == NULL) {
-		perror ("Error opening water-temperature file");
-	}
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        perror ("Error opening water-temperature file");
+    }
 
-	char line[256];
-	int count = 0;
+    char line[256];
+    int count = 0;
 
-	while (fgets(line, 256, file) != NULL) {// Get number of elements in file
-	    count++;
-	}
+    while (fgets(line, 256, file) != NULL) {// Get number of elements in file
+        count++;
+    }
 
-	g.temperature_data = (double*)malloc(count * sizeof(double));
+    g.temperature_data = (double*)malloc(count * sizeof(double));
 
-	rewind(file);
+    rewind(file);
 
-	count = 0;
+    count = 0;
 
-	while (fgets(line, 256, file) != NULL) {// Populate temperature array
-	    double value = atof(line);
-	    g.temperature_data[count] = value;
-	    count++;
-	}
+    while (fgets(line, 256, file) != NULL) {// Populate temperature array
+        double value = atof(line);
+        g.temperature_data[count] = value;
+        count++;
+    }
 
-	g.temperature_index = 0;	// Initialize temperature index to represent current index
-	g.temperature = g.temperature_data[g.temperature_index];	// Assign first value of temperature
+    g.temperature_index = 0;	// Initialize temperature index to represent current index
+    g.temperature = g.temperature_data[g.temperature_index];	// Assign first value of temperature
 
-	fclose(file);
+    fclose(file);
 }
 
 
@@ -575,8 +575,8 @@ void setup_stocks() {
  * Sets up the 10 stocks to input values
  */
 void set_stocks(float macro, float phyto, float waterdecomp, float seddecomp,
-                float herbivore, float sedconsumer, float doc, float poc,
-                float detritus, float consum) {
+        float herbivore, float sedconsumer, float doc, float poc,
+        float detritus, float consum) {
     int x, y;
     for(x = 0; x < g.MAP_WIDTH; x++) {
         for(y = 0; y < g.MAP_HEIGHT; y++) {
