@@ -34,13 +34,14 @@ bool Status::hasNewImage(void){
 }
 
 void Status::hasNewImage(bool newImageStatus){
-    newImageStatus = newImageExists;
+    newImageExists = newImageStatus;
 }
 
 Status::Status(void){
     currentState = UNCONFIGURED;
     timeElapsedBeforePauseState = 0;
     workUnitsProcessed = 0;
+    workUnits = 0;
 }
 
 void Status::setWorkUnitsToProcess(unsigned long workUnitsToProcess){
