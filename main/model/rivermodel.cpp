@@ -31,7 +31,6 @@ void RiverModel::set_hydro_filenames(QString filenames)
             daysToRun.push_back( days );
 
             //Add 1 unit of work per simulated hour.
-            std::cout << days << std::endl;
             modelStatus.addWorkUnitsToProcess(days * 24);
         }
     }
