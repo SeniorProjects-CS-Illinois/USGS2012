@@ -9,6 +9,13 @@
 #include "go.h"
 #include "color.h"
 
+#include <QString>
+#include <QStringList>
+#include <QDir>
+#include <QFile>
+
+#include <iostream>
+
 /**
  * Calls the helper functions import_hydro and setup_environmentals
  */
@@ -18,6 +25,11 @@ void setup();
  * Resets all the values in globals.h
  */
 void reset_globals();
+
+/**
+ * Determines the unique hydrofiles.
+ */
+void get_unique_hydrofiles();
 
 /**
  * Opens the first hydro-map i.e 10k-map and finds the maximum pxcor and
@@ -47,6 +59,11 @@ void init_patches();
  * Creates the 2D array of colors
  */
 void init_color_values();
+
+/**
+ * Map's each hydrofile to the index of its unique hydrofile.
+ */
+std::vector<int> map_hydro_files(QStringList & allHydroFiles, QStringList & uniqueHydroFiles);
 
 /**
  * Reads the Hydo map files and sets up the proper (x,y) patches

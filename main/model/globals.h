@@ -3,6 +3,8 @@
 
 #include "patch.h"
 #include <QString>
+#include <QStringList>
+#include <vector>
 #include <QImage>
 #include <QImageWriter>
 
@@ -22,7 +24,6 @@ typedef struct {
     int output_frequency;
     int current_day; ///< Keeps track of how often output should be generated
     const char* file_extension;
-    int num_hydro_files;
     char gui_photo_radiation_file[1024];
     char gui_temperature_file[1024];
     int gui_flow_corners_only;
@@ -40,13 +41,16 @@ typedef struct {
     char which_stock[100]; ///< which-stock?
 
     // GUI input hydro maps and days for each map
-    char** gui_filenames_array;
-    int* gui_days_array;
-    int* hydromap_index_array;
+    QStringList gui_filenames_list;
+    QStringList uniqueHydroFilenames;
+    std::vector<int> gui_days_vector;
     int num_unique_files;
-    int current_file_index;
-    char** check_filenames_array;
     int gui_filenames_filesize;
+    int num_hydro_files;
+
+    std::vector<int> hydromap_index_vector;
+
+    int current_file_index;
 
     // Environmental globals
     double* temperature_data;  ///< temp array which holds data that temp indexes

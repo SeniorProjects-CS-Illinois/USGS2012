@@ -16,15 +16,19 @@
 #include "dump.h"
 #include "cleanup.h"
 
+#include <QString>
+#include <QStringList>
+#include <vector>
+
 using std::cout;
 using std::endl;
 
 class RiverModel {
     public:
-        void count_unique_files(int index);
+        //void count_unique_files(int index);
 
         //Functions for configuring the model
-        void set_hydro_filenames(const char * filenames);
+        void set_hydro_filenames(QString filenames);
         void set_par_file(const char * filename);
         void set_timestep(int timestep);
         void set_temperature_file(const char * filename);
