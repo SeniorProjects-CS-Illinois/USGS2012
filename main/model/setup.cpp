@@ -149,8 +149,8 @@ void find_map_sizes() {
     int max_map_height = 0;
 
     int index;
-    for(index = 0; index < g.num_hydro_files; index++) {
-	FILE* file = fopen(g.gui_filenames_list[index].toStdString().c_str(), "r");
+    for(index = 0; index < g.uniqueHydroFilenames.size(); index++) {
+	FILE* file = fopen(g.uniqueHydroFilenames[index].toStdString().c_str(), "r");
 	if (file == NULL) {
 		fputs("error opening the hydro map", stderr);
 		exit(-1);
