@@ -29,18 +29,18 @@ typedef struct {
     QString gui_temperature_file;
 
     int gui_flow_corners_only;
-    int gui_timestep_factor;    ///< By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
-    int gui_days_to_run;  ///< number of days to run the code
-    double gui_tss;  ///< TSS
-    double gui_k_phyto;  ///< k-phyto
-    double gui_k_macro; ///< k-macro
-    double gui_sen_macro_coef; ///< sen-macro-coef
-    double gui_resp_macro_coef; ///< resp-macro-coef
-    double gui_macro_base_temp; ///< macro-base-temp
-    double gui_macro_mass_max; ///< macro-mass-max
-    double gui_macro_vel_max; ///< macro-vel-max
+    int gui_timestep_factor;    // By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
+    int gui_days_to_run;  // number of days to run the code
+    double gui_tss;  // TSS
+    double gui_k_phyto;  // k-phyto
+    double gui_k_macro; // k-macro
+    double gui_sen_macro_coef; // sen-macro-coef
+    double gui_resp_macro_coef; // resp-macro-coef
+    double gui_macro_base_temp; // macro-base-temp
+    double gui_macro_mass_max; // macro-mass-max
+    double gui_macro_vel_max; // macro-vel-max
     double gui_gross_macro_coef; // gross-macro-coef
-    char which_stock[100]; ///< which-stock?
+    QString which_stock; // which-stock?
 
     // GUI input hydro maps and days for each map
     QStringList gui_filenames_list;
