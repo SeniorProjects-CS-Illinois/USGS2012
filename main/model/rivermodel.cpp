@@ -48,15 +48,11 @@ void RiverModel::set_timestep(int timestep)
     g.gui_timestep_factor = timestep;
 }
 
-void RiverModel::set_temperature_file(const char * filename)
+void RiverModel::set_temperature_file(QString filename)
 {
-    size_t len = strlen(filename) + 1;
-    strncpy(g.gui_temperature_file, filename, len);
+    g.gui_temperature_file = filename;
 }
 
-
-
-//XXX: Not sure what the now removed build_data function
 //     was doing aside from creating output dirs.
 void RiverModel::run(void) {
     setup();
