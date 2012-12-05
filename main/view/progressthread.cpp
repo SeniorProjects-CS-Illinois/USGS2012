@@ -35,8 +35,11 @@ void ProgressThread::run()
     }
 
     // fix the values for the progress
-    emit progressPercentUpdate(100);
-    emit progressTimeUpdate(timeElapsed, 0);
+    if (model->getStatus().getState() == Status::COMPLETE)
+    {
+        emit progressPercentUpdate(100);
+        emit progressTimeUpdate(timeElapsed, 0);
+    }
 
     // tell GUI that it is finished
     emit finished();
