@@ -9,9 +9,6 @@ Status RiverModel::getStatus(void){
 }
 
 
-//TODO: Re-write this function to use C++ strings
-//TODO: Replace strtok with an equivilent C++ function of our design
-//      or just pass in files and days to run separately so no parsing necessary
 void RiverModel::set_hydro_filenames(QString filenames)
 {
     QStringList hydroList = filenames.split("?");
@@ -20,19 +17,17 @@ void RiverModel::set_hydro_filenames(QString filenames)
 
     int hydroFileCount = hydroList[0].toInt();
 
-    //Remaining odd elements are filenames, even are days to run.
     QStringList hydroFilenames;
     std::vector<int> daysToRun;
-    for(int i = 1; i < hydroList.size(); i ++){
-        if(i % 2 != 0){
-            hydroFilenames.append( hydroList[i] );
-        } else {
-            int days = hydroList[i].toInt();
-            daysToRun.push_back( days );
+    for(int i = 1; i < hydroList.size(); i += 2){
+        // i = hydromap
+        hydroFilenames.append( hydroList[i] );
+        // i+1 = days to run hydromap
+        int days = hydroList[i+1].toInt();
 
-            //Add 1 unit of work per simulated hour.
-            modelStatus.addWorkUnitsToProcess(days * 24);
-        }
+        //Add 1 unit of work per simulated hour.
+        modelStatus.addWorkUnitsToProcess(days * 24);
+        daysToRun.push_back( days );
     }
     g.gui_filenames_list = hydroFilenames;
     g.gui_days_vector = daysToRun;
@@ -43,10 +38,9 @@ void RiverModel::set_hydro_filenames(QString filenames)
 }
 
 
-void RiverModel::set_par_file(const char * filename)
+void RiverModel::set_par_file(QString filename)
 {
-    size_t len = strlen(filename) + 1;
-    strncpy(g.gui_photo_radiation_file, filename, len);
+    g.gui_photo_radiation_file = filename;
 }
 
 void RiverModel::set_timestep(int timestep)

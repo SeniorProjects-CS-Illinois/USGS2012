@@ -20,12 +20,6 @@ void cleanup();
 void clean_patches();
 
 
- /**
- * Frees the photo_radiation_data array
- */
-void clean_photo_radiation_data();
-
-
 /**
  * Frees the temperature_data array
  */

@@ -495,35 +495,24 @@ void setup_environmentals() {
  * Reads the "par.txt" file and initializes the photo_radiation array variables
  */
 void set_photo_radiation() {
-    char* filename = g.gui_photo_radiation_file;
+    QString filename = g.gui_photo_radiation_file;
 
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
-        perror ("Error opening photo_radiation file");
+    QFile parFile( filename );
+    if( !parFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+        printf("Failed to open the photo radiation file");
+        exit(1);
     }
 
-    char line[256];
-    int count = 0;
-
-    while (fgets(line, 256, file) != NULL) {// Get number of elements in file
-        count++;
+    QTextStream parInput( &parFile );
+    while( !parInput.atEnd() ){
+        QString line = parInput.readLine();
+        g.photo_radiation_data.push_back( line.toInt() );
     }
+    parFile.close();
 
-    g.photo_radiation_data = (int*)malloc(count * sizeof(int));
-
-    rewind(file);
-    count = 0;
-
-    while (fgets(line, 256, file) != NULL) {// Populate discharge array
-        int value = atoi(line);
-        g.photo_radiation_data[count] = value;
-        count++;
-    }
-
+    //TODO: Don't think this should happen here.
     g.photo_radiation_index = 0;	// Initialize photo_radiation index to represent current index
     g.photo_radiation = g.photo_radiation_data[g.photo_radiation_index];	// Assign first value of photo_radiation
-
-    fclose(file);
 }
 
 

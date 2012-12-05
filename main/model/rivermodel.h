@@ -29,7 +29,7 @@ class RiverModel {
 
         //Functions for configuring the model
         void set_hydro_filenames(QString filenames);
-        void set_par_file(const char * filename);
+        void set_par_file(QString filename);
         void set_timestep(int timestep);
         void set_temperature_file(const char * filename);
         void set_whichstock(const char * stock_name);

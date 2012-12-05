@@ -13,6 +13,7 @@
 #include <QStringList>
 #include <QDir>
 #include <QFile>
+#include <QTextStream>
 
 #include <iostream>
 
