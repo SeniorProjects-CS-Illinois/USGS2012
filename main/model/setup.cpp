@@ -520,36 +520,25 @@ void set_photo_radiation() {
  * Reads the "water-temp.txt" file and initializes the temperature array variable
  */
 void set_temperature() {
-    char* filename = g.gui_temperature_file;
+    QString filename = g.gui_temperature_file;
 
-    FILE* file = fopen(filename, "r");
-    if (file == NULL) {
-        perror ("Error opening water-temperature file");
+
+    QFile temperatureFile( filename );
+    if( !temperatureFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+        printf("Failed to open the water temperature file");
+        exit(1);
     }
 
-    char line[256];
-    int count = 0;
-
-    while (fgets(line, 256, file) != NULL) {// Get number of elements in file
-        count++;
+    QTextStream temperatureInput( &temperatureFile );
+    while( !temperatureInput.atEnd() ){
+        QString line = temperatureInput.readLine();
+        g.temperature_data.push_back( line.toDouble() );
     }
+    temperatureFile.close();
 
-    g.temperature_data = (double*)malloc(count * sizeof(double));
-
-    rewind(file);
-
-    count = 0;
-
-    while (fgets(line, 256, file) != NULL) {// Populate temperature array
-        double value = atof(line);
-        g.temperature_data[count] = value;
-        count++;
-    }
-
-    g.temperature_index = 0;	// Initialize temperature index to represent current index
-    g.temperature = g.temperature_data[g.temperature_index];	// Assign first value of temperature
-
-    fclose(file);
+    //TODO: Don't think this should happen here.
+    g.temperature_index = 0; // Initialize temperature index to represent current index
+    g.temperature = g.temperature_data[g.temperature_index]; // Assign first value of temperature
 }
 
 
