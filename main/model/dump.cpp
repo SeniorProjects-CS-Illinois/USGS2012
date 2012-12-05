@@ -23,10 +23,10 @@ int write_data() {
     struct tm * timeinfo;
     time(&rawtime);
     timeinfo = localtime(&rawtime);
-	char buffer[80];
-	//strftime(buffer, 80, "%b_%a_%d_%I:%M:%S%p", timeinfo);
-	strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
-	
+    char buffer[80];
+    //strftime(buffer, 80, "%b_%a_%d_%I:%M:%S%p", timeinfo);
+    strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
+
     char file_name[300]; file_name[0] = '\0';
     size_t len = strlen(data_path);
     strncat(file_name, data_path, len);
@@ -38,8 +38,8 @@ int write_data() {
     strncat(file_name, buffer, len);
     len = strlen(format);
     strncat(file_name, format, len);
-	
-	file_name[strlen(file_name)] = '\0';
+
+    file_name[strlen(file_name)] = '\0';
     FILE* f = fopen(file_name, "w");
     if (f == NULL) { 
         printf("file name: %s could not be opened\n", file_name);
@@ -104,9 +104,45 @@ int dump_data() {
 }
 
 
-//TODO: Unstub this with C/C++ code for image output.
-void output_image(void)
-{
+void output_image(void) {
+
+    QString fileName("output.png");
+    QImageWriter writer;
+    writer.setFormat("png");
+
+    for(int i=0; i < g.NUM_STOCKS; i++){
+        char* file_name = make_file_name(i);
+        QString fileName(file_name);
+        writer.setFileName(fileName);
+        *g.images[i] = g.images[i]->mirrored(false, true);
+        writer.write(*g.images[i]);
+    }
     return;
+}
+
+char* make_file_name(int index) {
+    char* path = "./results/images/";
+    char* img_template = g.stock_names[index];
+    char* format = ".png";
+
+    time_t rawtime;
+    struct tm * timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    char buffer[100];
+    strftime(buffer, 100, "%b_%a_%d_%I_%M_%S", timeinfo);
+
+    char file_name[320]; file_name[0] = '\0';
+    size_t len = strlen(path);
+    strncat(file_name, path, len);
+    len = strlen(img_template);
+    strncat(file_name, img_template, len);
+    len = strlen(buffer);
+    strncat(file_name, buffer, len);
+    len = strlen(format);
+    strncat(file_name, format, len);
+
+    file_name[strlen(file_name)] = '\0';
+    return file_name;
 }
 

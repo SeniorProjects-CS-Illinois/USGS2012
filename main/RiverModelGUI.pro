@@ -27,8 +27,7 @@ SOURCES += main.cpp \
     view/modelthread.cpp \
     view/progressthread.cpp
 
-HEADERS  += main.h \
-    model/cleanup.h \
+HEADERS  += model/cleanup.h \
     model/color.h \
     model/dump.h \
     model/globals.h \

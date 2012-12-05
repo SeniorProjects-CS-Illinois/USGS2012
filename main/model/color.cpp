@@ -3,8 +3,6 @@
 /**
  * Defining non-extern versions of variables in h file
  */
-float ** colorValues;
-float * hues;
 
 /**
  * Scales the color of the patch
@@ -13,12 +11,39 @@ float * hues;
  * @param minVal the min value for the image
  * @param x The x coord of the patch
  * @param y The y coord of the patch
-*/
+ */
+int to_rgb(int hue, float saturation, float value){
+
+    int red, green, blue;
+    float huePrime = hue/60.0;
+    float chroma = value * saturation;
+    float tempVal = chroma*(1-fabs((int)huePrime%2-1));
+
+
+    switch((int)floor(huePrime)) {
+        case 0: red = chroma, green = tempVal, blue = 0; break;
+        case 1: red = tempVal, green = chroma, blue = 0; break;
+        case 2: red = 0, green = chroma, blue = tempVal; break;
+        case 3: red = 0, green = tempVal, blue = chroma; break;
+        case 4: red = tempVal, green = 0, blue = chroma; break;
+        case 5: red = chroma, green = 0, blue = tempVal; break;
+        default: red = 0, green = 0, blue = 0;
+    }
+
+    int returnValue = (red + (value-chroma));
+    returnValue = (returnValue << 8) + (green + (value-chroma));
+    returnValue = (returnValue << 8) + (blue + (value-chroma));
+
+    return returnValue;
+}
+
 void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex) {
+    int rgb;
     float returnValue;
     if(maxVal == minVal) {
         returnValue = 0.0;
-        colorValues[stockIndex][getIndex(x, y)] = returnValue;
+        rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
+        g.images[stockIndex]->setPixel(x, y, rgb);
         return;
     }
 
@@ -32,28 +57,19 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
         float rangeValues = (float)fabs(maxVal - minVal);
         returnValue = (float)(value / rangeValues);
     }
-    colorValues[stockIndex][getIndex(x, y)] = returnValue;
+
+    rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
+    g.images[stockIndex]->setPixel(x, y, rgb);
+
 }
 
 
 /**
  * Updates the color of the patch
-*/
+ */
 void update_color() {
     int x = 0;
     int y = 0;
-
-    // set hue values for each stock (magic numbers?)
-    hues[g.MACRO_INDEX] = (float)(120.0 / 360.0);
-    hues[g.PHYTO_INDEX] = (float)(120.0 / 360.0);
-    hues[g.WATERDECOMP_INDEX] = (float)(120.0 / 360.0);
-    hues[g.POC_INDEX] = (float)(240.0 / 360.0);
-    hues[g.DETRITUS_INDEX] = (float)(19.6 / 360.0);
-    hues[g.SEDCONSUMER_INDEX] = (float)(60.0 / 360.0);
-    hues[g.SEDDECOMP_INDEX] = (float)(240.0 / 360.0);
-    hues[g.HERBIVORE_INDEX] = (float)(300.0 / 360.0);
-    hues[g.CONSUM_INDEX] = (float)(300.0 / 360.0);
-    hues[g.DOC_INDEX] = (float)(60.0 / 360.0);
 
     // calculate all relevant averages
     // TODO: is it safe to only do this calculation once?
@@ -97,16 +113,10 @@ void update_color() {
         {
             if (patches[x][y].depth == 0.0)
             {
-                colorValues[g.MACRO_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.PHYTO_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.WATERDECOMP_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.POC_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.DETRITUS_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.SEDCONSUMER_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.SEDDECOMP_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.HERBIVORE_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.CONSUM_INDEX][getIndex(x, y)] = -1;
-                colorValues[g.DOC_INDEX][getIndex(x, y)] = -1;
+                for(int i = 0; i < g.NUM_STOCKS; i++) {
+                    g.value = qRgb(235, 235, 235);
+                    g.images[i]->setPixel(x, y, g.value);
+                }
             }
             else
             {

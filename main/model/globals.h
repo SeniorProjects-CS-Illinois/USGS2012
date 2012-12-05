@@ -2,6 +2,9 @@
 #define _GLOBALS
 
 #include "patch.h"
+#include <QString>
+#include <QImage>
+#include <QImageWriter>
 
 /**
  *  Improve parameters
@@ -185,7 +188,7 @@ typedef struct {
     double macro_mas_max;
     double macro_vel_max;
 
-    // indices for the colorValues array for each stock
+    // indices for the array for each stock
     int MACRO_INDEX;
     int PHYTO_INDEX;
     int HERBIVORE_INDEX;
@@ -197,8 +200,17 @@ typedef struct {
     int POC_INDEX;
     int DETRITUS_INDEX;
 
+    char* stock_names[10];
+
+    QImage* images[10];
+
+    QImageWriter * writer;
+
+    QRgb value;
     // number of different stocks
     int NUM_STOCKS;
+
+    int hues[10];
 } Globals;
 
 extern Globals g;
