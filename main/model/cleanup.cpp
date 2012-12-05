@@ -6,7 +6,6 @@
 void cleanup() 
 {
     clean_patches();
-    clean_photo_radiation_data();
     clean_temperature_data();
 }
 
@@ -33,13 +32,6 @@ void clean_patches()
 	free( g.covered_area );
 	free( g.uncovered_area );
     free( patches );
-}
-
-/**
- * Frees the photo_radiation_data array
-*/
-void clean_photo_radiation_data() {
-    free( g.photo_radiation_data );
 }
 
 /**

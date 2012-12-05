@@ -24,7 +24,9 @@ typedef struct {
     int output_frequency;
     int current_day; ///< Keeps track of how often output should be generated
     const char* file_extension;
-    char gui_photo_radiation_file[1024];
+
+    QString gui_photo_radiation_file;
+
     char gui_temperature_file[1024];
     int gui_flow_corners_only;
     int gui_timestep_factor;    ///< By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
@@ -48,13 +50,15 @@ typedef struct {
     int gui_filenames_filesize;
     int num_hydro_files;
 
+    //Maps each hydromapfile to the unique index of a hydromapfile
+    //i.e. current_map = uniqueHydroFilenames[ hydromap_index_vector[current_day] ]
     std::vector<int> hydromap_index_vector;
 
     int current_file_index;
 
     // Environmental globals
     double* temperature_data;  ///< temp array which holds data that temp indexes
-    int* photo_radiation_data; ///< par array which holds data that photo_radiation indexes
+    std::vector<int> photo_radiation_data; // vector which holds data that photo_radiation indexes
     int* covered_area;      ///< Area of land covered by water
     int* uncovered_area;    ///< Area of land not covered by water
 
