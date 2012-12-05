@@ -92,10 +92,9 @@ void RiverModel::run(void) {
     modelStatus.setState(Status::COMPLETE);
 }
 
-void RiverModel::set_whichstock(const char * stock_name)
+void RiverModel::set_whichstock(QString stock_name)
 {
-    size_t len = strlen(stock_name);
-    strncpy(g.which_stock, stock_name, len);
+    g.which_stock = stock_name;
 }
 
 void RiverModel::set_macro_base_temp(double macro_base_temp) { g.gui_macro_base_temp = macro_base_temp; }

@@ -32,7 +32,7 @@ class RiverModel {
         void set_par_file(QString filename);
         void set_timestep(int timestep);
         void set_temperature_file(QString filename);
-        void set_whichstock(const char * stock_name);
+        void set_whichstock(QString stock_name);
         void set_TSS(double tss);
         void set_macro_base_temp(double macro_base_temp);
         void set_gross_macro_coef(double gross_macro_coef);
