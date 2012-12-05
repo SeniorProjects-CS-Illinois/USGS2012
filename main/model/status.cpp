@@ -29,15 +29,29 @@ int Status::getTimeRemaining(void){
     return (int)(( (workUnits - workUnitsProcessed) * getTimeElapsed() )/ (float)workUnitsProcessed);
 }
 
+bool Status::hasNewImage(void){
+    return newImageExists;
+}
+
+void Status::hasNewImage(bool newImageStatus){
+    newImageExists = newImageStatus;
+}
+
 Status::Status(void){
     currentState = UNCONFIGURED;
     timeElapsedBeforePauseState = 0;
     workUnitsProcessed = 0;
+    workUnits = 0;
 }
 
 void Status::setWorkUnitsToProcess(unsigned long workUnitsToProcess){
+    workUnits = 0;
+    addWorkUnitsToProcess(workUnitsToProcess);
+}
+
+void Status::addWorkUnitsToProcess(unsigned long workUnitsToProcess){
     if(workUnitsToProcess > 0){
-        workUnits = workUnitsToProcess;
+        workUnits += workUnitsToProcess;
     }
 }
 

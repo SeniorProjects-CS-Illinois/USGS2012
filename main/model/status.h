@@ -37,6 +37,16 @@ class Status {
          */
         int getTimeRemaining(void);
 
+        /**
+         * Returns true if a new image exists.
+         */
+        bool hasNewImage(void);
+
+        /**
+         * Sets image availability to boolean parameter
+         */
+        void hasNewImage(bool newImageStatus);
+
 
 
         //-------------------------------
@@ -52,6 +62,11 @@ class Status {
          * Sets the ammount of work we have.
          */
         void setWorkUnitsToProcess(unsigned long workUnitsToProcess);
+
+        /**
+         * Adds additional work units to process
+         */
+        void addWorkUnitsToProcess(unsigned long workUnistsToProcess);
 
         /**
          * Allows the model to update its state.
@@ -78,6 +93,7 @@ class Status {
         ModelState currentState;
         unsigned long workUnits;
         unsigned long workUnitsProcessed;
+        bool newImageExists;
         QTime timer;
         QString errorMessage;
         int timeElapsedBeforePauseState;
