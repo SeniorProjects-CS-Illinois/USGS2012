@@ -197,6 +197,7 @@ void MainWindow::disableRun()
 void MainWindow::timestepUpdate(int newVal)
 {
     clearErrors();
+    ui->horizontalSliderTimestep->setValue(newVal);
     ui->horizontalSliderTimestep->setToolTip(QString::number(newVal));
     ui->labelTimestepVal->setText(QString::number(newVal));
     ui->labelTimestepVal->move(320 + (140*newVal)/60, ui->labelTimestepVal->y());
@@ -606,7 +607,7 @@ QList<QString> MainWindow::getHydroMaps() const { return wholeHydroMapFiles; }
 void MainWindow::setAdjacent(bool val) { ui->checkBoxAdjacentCells->setChecked(val); }
 
 void MainWindow::setOutputFreq(uint8_t val) { ui->lineEditOutputFreq->setText(QString::number(val)); }
-void MainWindow::setTimestep(uint8_t val) { ui->horizontalSliderTimestep->setValue(val); }
+void MainWindow::setTimestep(uint8_t val) { timestepUpdate(val);}
 
 void MainWindow::setKPhyto(float val) { ui->lineEditKPhyto->setText(QString::number(val)); }
 void MainWindow::setKMacro(float val) { ui->lineEditKMacro->setText(QString::number(val)); }
