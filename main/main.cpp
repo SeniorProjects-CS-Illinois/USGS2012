@@ -3,11 +3,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef _WIN32
-    #include <direct.h>
-#else
-    #include <unistd.h>
-#endif
+#include <QDir>
 
 #include "model/rivermodel.h"
 #include "model/globals.h"
@@ -25,29 +21,9 @@ void create_output_dirs();
  * Creates ./results/data and ./results/images if they don't exist.
  */
 void create_output_dirs(void) {
-    struct stat st = {0};
-
-    if (stat("./results", &st) == -1) {
-        #ifdef _WIN32
-        _mkdir("./results");
-        #else
-        mkdir("./results", 0775);
-        #endif
-    }
-    if (stat("./results/data", &st) == -1) {
-        #ifdef _WIN32
-        _mkdir("./results/data");
-        #else
-        mkdir("./results/data", 0775);
-        #endif
-    }
-    if (stat("./results/images", &st) == -1) {
-        #ifdef _WIN32
-        _mkdir("./results/images");
-        #else
-        mkdir("./results/images", 0775);
-        #endif
-    }
+    QDir path;
+    path.mkpath("./results/data");
+    path.mkpath("./results/images");
 }
 
 
