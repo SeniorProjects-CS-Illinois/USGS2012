@@ -157,7 +157,7 @@ public:
     float kMacro;
 
     // stock values
-    char* whichStock;
+    QString whichStock;
 
     float macro;
     float phyto;
