@@ -8,6 +8,7 @@
 #include "configuration.h"
 #include "modelthread.h"
 #include "progressthread.h"
+#include "imagethread.h"
 #include "../model/rivermodel.h"
 
 namespace Ui
@@ -305,8 +306,10 @@ private:
 
     Ui::MainWindow* ui;
     RiverModel model;
+
     ModelThread modelThread;
     ProgressThread progressThread;
+    ImageThread imageThread;
 
     QString wholeTempFile;
     QString wholePARFile;

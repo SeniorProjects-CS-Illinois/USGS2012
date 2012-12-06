@@ -19,17 +19,18 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     modelThread(this, &model),
-    progressThread(this, &model)
+    progressThread(this, &model),
+    imageThread(this, &model)
 {
     ui->setupUi(this);
 
     // connect signals from progress thread
     connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
-    connect(&progressThread, SIGNAL(progressTimeUpdate(int,int)), this, SLOT(progressTimeUpdate(int,int)));
+    connect(&progressThread, SIGNAL(progressTimeUpdate(int, int)), this, SLOT(progressTimeUpdate(int, int)));
     connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
 
     // signals for image thread
-    //connect(&imageThread, SIGNAL( SIGNAL NAME HERE ), this, SLOT(imageUpdate(QString)));
+    connect(&imageThread, SIGNAL(imageUpdate(QString)), this, SLOT(imageUpdate(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -182,6 +183,7 @@ void MainWindow::runClicked()
 
     modelThread.start();
     progressThread.start();
+    imageThread.start();
 
     // open output tab
     ui->tabWidget->setCurrentIndex(OUTPUT_TAB);
