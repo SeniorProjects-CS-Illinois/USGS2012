@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
     connect(&progressThread, SIGNAL(progressTimeUpdate(int,int)), this, SLOT(progressTimeUpdate(int,int)));
     connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
+
+    // signals for image thread
+    //connect(&imageThread, SIGNAL( SIGNAL NAME HERE ), this, SLOT(imageUpdate(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -172,6 +175,9 @@ void MainWindow::selectPARFileClicked()
 void MainWindow::runClicked()
 {
     clearErrors();
+
+    // check all input for errors
+    // and set model values appropriately
     getAllInput();
 
     modelThread.start();
@@ -212,6 +218,53 @@ void MainWindow::progressTimeUpdate(int elapsed, int remaining)
 {
     ui->labelTimeElapsedValue->setText(QString::number(elapsed));
     ui->labelTimeRemainingValue->setText(QString::number(remaining));
+}
+
+void MainWindow::imageUpdate(QString filename)
+{
+    // max size of the image
+    int maxWidth = 400;
+    int maxHeight = 300;
+
+    // desired center point of the image
+    int centerX = 400;
+    int centerY = 200;
+
+    // load the image and get its stats
+    QImage img(filename);
+    int width = img.width();
+    int height = img.height();
+
+    // calculate best width, height, keeping aspect ratio
+    // not using the maxWidth and maxHeight functions because
+    // I need width and Height to center the image
+    float widthPerc = ((float)maxWidth)/width;
+    float heightPerc = ((float)maxHeight)/height;
+    if (widthPerc < 1 || heightPerc < 1) // need to modify
+    {
+        if (widthPerc < heightPerc) // width dominates
+        {
+            width  *= widthPerc;
+            height *= widthPerc;
+        }
+        else    // height dominates
+        {
+            width  *= heightPerc;
+            height *= heightPerc;
+        }
+    }
+
+    // claculate best position
+    int x = centerX - (width/2);
+    int y = centerY - (height/2);
+
+    // set image to label
+    ui->labelImageOutput->setGeometry(x, y, width, height);
+    ui->labelImageOutput->setPixmap(QPixmap::fromImage(img));
+    ui->labelImageOutput->setScaledContents(true);
+
+    // show image
+    ui->labelImageOutput->show();
 }
 
 /* END public slots */

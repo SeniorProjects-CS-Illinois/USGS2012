@@ -61,6 +61,9 @@ public slots:
 
     /* Update progress time information */
     void progressTimeUpdate(int elapsed, int remaining);
+
+    /* Update the output image */
+    void imageUpdate(QString filename);
     
 private slots:
 
