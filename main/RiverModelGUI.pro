@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     view/mainwindow.cpp \
     view/configuration.cpp \
     view/modelthread.cpp \
-    view/progressthread.cpp
+    view/progressthread.cpp \
+    view/imagethread.cpp
 
 HEADERS  += model/cleanup.h \
     model/color.h \
@@ -42,6 +43,7 @@ HEADERS  += model/cleanup.h \
     view/mainwindow.h \
     view/configuration.h \
     view/modelthread.h \
-    view/progressthread.h
+    view/progressthread.h \
+    view/imagethread.h
 
 FORMS    += view/mainwindow.ui

@@ -8,6 +8,7 @@
 #include "configuration.h"
 #include "modelthread.h"
 #include "progressthread.h"
+#include "imagethread.h"
 #include "../model/rivermodel.h"
 
 namespace Ui
@@ -61,6 +62,9 @@ public slots:
 
     /* Update progress time information */
     void progressTimeUpdate(int elapsed, int remaining);
+
+    /* Update the output image */
+    void imageUpdate(QString filename);
     
 private slots:
 
@@ -302,8 +306,10 @@ private:
 
     Ui::MainWindow* ui;
     RiverModel model;
+
     ModelThread modelThread;
     ProgressThread progressThread;
+    ImageThread imageThread;
 
     QString wholeTempFile;
     QString wholePARFile;
