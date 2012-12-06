@@ -3,6 +3,8 @@
 
 #include "patch.h"
 #include <QString>
+#include <QStringList>
+#include <vector>
 #include <QImage>
 #include <QImageWriter>
 
@@ -22,35 +24,41 @@ typedef struct {
     int output_frequency;
     int current_day; ///< Keeps track of how often output should be generated
     const char* file_extension;
-    int num_hydro_files;
-    char gui_photo_radiation_file[1024];
-    char gui_temperature_file[1024];
+
+    QString gui_photo_radiation_file;
+    QString gui_temperature_file;
+
     int gui_flow_corners_only;
-    int gui_timestep_factor;    ///< By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
-    int gui_days_to_run;  ///< number of days to run the code
-    double gui_tss;  ///< TSS
-    double gui_k_phyto;  ///< k-phyto
-    double gui_k_macro; ///< k-macro
-    double gui_sen_macro_coef; ///< sen-macro-coef
-    double gui_resp_macro_coef; ///< resp-macro-coef
-    double gui_macro_base_temp; ///< macro-base-temp
-    double gui_macro_mass_max; ///< macro-mass-max
-    double gui_macro_vel_max; ///< macro-vel-max
+    int gui_timestep_factor;    // By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
+    int gui_days_to_run;  // number of days to run the code
+    double gui_tss;  // TSS
+    double gui_k_phyto;  // k-phyto
+    double gui_k_macro; // k-macro
+    double gui_sen_macro_coef; // sen-macro-coef
+    double gui_resp_macro_coef; // resp-macro-coef
+    double gui_macro_base_temp; // macro-base-temp
+    double gui_macro_mass_max; // macro-mass-max
+    double gui_macro_vel_max; // macro-vel-max
     double gui_gross_macro_coef; // gross-macro-coef
-    char which_stock[100]; ///< which-stock?
+    QString which_stock; // which-stock?
 
     // GUI input hydro maps and days for each map
-    char** gui_filenames_array;
-    int* gui_days_array;
-    int* hydromap_index_array;
+    QStringList gui_filenames_list;
+    QStringList uniqueHydroFilenames;
+    std::vector<int> gui_days_vector;
     int num_unique_files;
-    int current_file_index;
-    char** check_filenames_array;
     int gui_filenames_filesize;
+    int num_hydro_files;
+
+    //Maps each hydromapfile to a the unique index of a hydromapfile
+    //i.e. current_map = uniqueHydroFilenames[ hydromap_index_vector[current_day] ]
+    std::vector<int> hydromap_index_vector;
+
+    int current_file_index;
 
     // Environmental globals
-    double* temperature_data;  ///< temp array which holds data that temp indexes
-    int* photo_radiation_data; ///< par array which holds data that photo_radiation indexes
+    std::vector<double> temperature_data;  ///< temp array which holds data that temp indexes
+    std::vector<int> photo_radiation_data; // vector which holds data that photo_radiation indexes
     int* covered_area;      ///< Area of land covered by water
     int* uncovered_area;    ///< Area of land not covered by water
 

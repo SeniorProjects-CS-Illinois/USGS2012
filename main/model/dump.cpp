@@ -49,7 +49,7 @@ int write_data() {
     // GUI variables used    
     fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
     
-    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n", g.gui_timestep_factor, g.gui_days_to_run, g.gui_tss, g.gui_k_phyto, g.gui_k_macro, g.gui_sen_macro_coef, g.gui_resp_macro_coef, g.gui_macro_base_temp, g.gui_macro_mass_max, g.gui_macro_vel_max, g.gui_gross_macro_coef, g.which_stock);
+    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n", g.gui_timestep_factor, g.gui_days_to_run, g.gui_tss, g.gui_k_phyto, g.gui_k_macro, g.gui_sen_macro_coef, g.gui_resp_macro_coef, g.gui_macro_base_temp, g.gui_macro_mass_max, g.gui_macro_vel_max, g.gui_gross_macro_coef, g.which_stock.toStdString().c_str());
     
     fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");
 
@@ -121,9 +121,9 @@ void output_image(void) {
 }
 
 char* make_file_name(int index) {
-    char* path = "./results/images/";
+    const char* path = "./results/images/";
     char* img_template = g.stock_names[index];
-    char* format = ".png";
+    const char* format = ".png";
 
     time_t rawtime;
     struct tm * timeinfo;
