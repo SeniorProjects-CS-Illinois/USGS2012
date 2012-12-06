@@ -8,67 +8,39 @@ Status RiverModel::getStatus(void){
     return modelStatusGUI;
 }
 
-void RiverModel::count_unique_files(int index)
+
+void RiverModel::set_hydro_filenames(QString filenames)
 {
-    int i;
-    for(i = 0; i < index; i++)
-    {
-        if(strcmp(g.gui_filenames_array[i], g.gui_filenames_array[index]) == 0)
-        return;
+    QStringList hydroList = filenames.split("?");
+    //This is done since there will be a ? in last character position...
+    hydroList.removeLast();
+
+    int hydroFileCount = hydroList[0].toInt();
+
+    QStringList hydroFilenames;
+    std::vector<int> daysToRun;
+    for(int i = 1; i < hydroList.size(); i += 2){
+        // i = hydromap
+        hydroFilenames.append( hydroList[i] );
+        // i+1 = days to run hydromap
+        int days = hydroList[i+1].toInt();
+
+        //Add 1 unit of work per simulated hour.
+        modelStatus.addWorkUnitsToProcess(days * 24);
+        daysToRun.push_back( days );
     }
-    g.num_unique_files++;
+    g.gui_filenames_list = hydroFilenames;
+    g.gui_days_vector = daysToRun;
+
+    g.gui_filenames_filesize = hydroFileCount;
+    g.num_hydro_files = hydroFileCount;
+
 }
 
 
-//TODO: Re-write this function to use C++ strings
-//TODO: Replace strtok with an equivilent C++ function of our design
-//      or just pass in files and days to run separately so no parsing necessary
-void RiverModel::set_hydro_filenames(const char * filenames)
+void RiverModel::set_par_file(QString filename)
 {
-    size_t filenames_len = strlen(filenames) + 1;
-    char * filenames_writable_copy = (char *)malloc(filenames_len * sizeof(char));
-    strncpy(filenames_writable_copy, filenames, filenames_len);
-    char* filename;
-    int index = 0;
-    g.num_unique_files = 0;
-
-    // First value howmany files the use selected in the GUI
-    filename = strtok(filenames_writable_copy, "?");
-    int fileSize = atoi(filename);
-    g.gui_filenames_filesize = fileSize;
-    g.num_hydro_files = fileSize;
-    g.gui_filenames_array = (char**)malloc(fileSize*sizeof(char*));
-    g.gui_days_array = (int*)malloc(fileSize*sizeof(int));
-    g.hydromap_index_array = (int*)malloc(fileSize*sizeof(int));
-
-    // Parse the file name if one exists
-    while((filename = strtok(NULL, "?")) != NULL)
-    {
-        size_t len = (strlen(filename)+1);
-        g.gui_filenames_array[index] = (char*)malloc(len*sizeof(char));
-        strncpy(g.gui_filenames_array[index], filename, len);
-        count_unique_files(index);
-        filename = strtok(NULL, "?");
-        g.gui_days_array[index] = atoi(filename); //Parse howmany days to run current file
-        index++;
-    }
-    g.check_filenames_array = (char**)malloc(g.num_unique_files*sizeof(char*));
-    free(filenames_writable_copy);
-
-    //TODO: When refactoring, handle the following calculation elsewhere
-    int days = 0;
-    for(int i = 0; i < g.num_hydro_files; i++){
-        days += g.gui_days_array[i];
-    }
-    unsigned long workUnits = (days * 24);
-    modelStatus.setWorkUnitsToProcess(workUnits);
-}
-
-
-void RiverModel::set_par_file(const char * filename)
-{
-    size_t len = strlen(filename) + 1;
-    strncpy(g.gui_photo_radiation_file, filename, len);
+    g.gui_photo_radiation_file = filename;
 }
 
 void RiverModel::set_timestep(int timestep)
@@ -76,19 +48,13 @@ void RiverModel::set_timestep(int timestep)
     g.gui_timestep_factor = timestep;
 }
 
-void RiverModel::set_temperature_file(const char * filename)
+void RiverModel::set_temperature_file(QString filename)
 {
-    size_t len = strlen(filename) + 1;
-    strncpy(g.gui_temperature_file, filename, len);
+    g.gui_temperature_file = filename;
 }
 
-
-
-//XXX: Not sure what the now removed build_data function
 //     was doing aside from creating output dirs.
 void RiverModel::run(void) {
-    int day;
-    int index;
     setup();
 
     //TODO: Once we configure using a Configuration object, move the following line to the proper place.
@@ -98,19 +64,22 @@ void RiverModel::run(void) {
 
 
     g.gui_days_to_run = 0;
-    for(index = 0; index < g.gui_filenames_filesize; index++)
+    for(int index = 0; index < g.gui_filenames_list.size(); index++)
     {
-        cout << "RUNNING FILE: " << g.gui_filenames_array[index];
-        cout << " FOR " << g.gui_days_array[index] << " DAYS" << endl;
-        g.gui_days_to_run += g.gui_days_array[index];  //Set howmany days to run the new hydromap
-        g.hydro_group = (g.hydromap_index_array[index] + 1); //Set the new hydromap that will run
+        cout << "RUNNING FILE: " << g.gui_filenames_list[index].toStdString();
+        cout << " FOR " << g.gui_days_vector[index] << " DAYS" << endl;
+
+        g.gui_days_to_run += g.gui_days_vector[index];  //Set howmany days to run the new hydromap
+        g.hydro_group = (g.hydromap_index_vector[index] + 1); //Set the new hydromap that will run
         g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
 
+        int day;
         while( (day = (g.hours / 24)) < g.gui_days_to_run)
         {
             cout << "Day: " << (day+1) << " - Hour: " << ((g.hours)%24) \
-                << " | Progress: " << (int)(modelStatus.getProgress()*100) << "% - Time Elapsed (seconds): " \
-                << modelStatus.getTimeElapsed() << " - Time Remaining: " << modelStatus.getTimeRemaining() << endl;
+                << " | Progress: " << (int)(modelStatus.getProgress()*100) \
+                << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
+                << " / " << modelStatus.getTimeRemaining() << endl;
             go();
             modelStatus.hasNewImage(true);
             modelStatus.updateProgress();
@@ -123,10 +92,9 @@ void RiverModel::run(void) {
     modelStatus.setState(Status::COMPLETE);
 }
 
-void RiverModel::set_whichstock(const char * stock_name)
+void RiverModel::set_whichstock(QString stock_name)
 {
-    size_t len = strlen(stock_name);
-    strncpy(g.which_stock, stock_name, len);
+    g.which_stock = stock_name;
 }
 
 void RiverModel::set_macro_base_temp(double macro_base_temp) { g.gui_macro_base_temp = macro_base_temp; }
