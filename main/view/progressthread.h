@@ -2,9 +2,10 @@
 #define PROGRESSTHREAD_H
 
 #include <QThread>
+#include <stdint.h>
+
 #include "../model/status.h"
 #include "../model/rivermodel.h"
-#include <stdint.h>
 
 class ProgressThread : public QThread
 {
