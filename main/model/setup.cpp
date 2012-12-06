@@ -148,15 +148,16 @@ void find_map_sizes() {
     int max_map_width = 0;
     int max_map_height = 0;
 
-    int index;
-    for(index = 0; index < g.uniqueHydroFilenames.size(); index++) {
-        FILE* file = fopen(g.uniqueHydroFilenames[index].toStdString().c_str(), "r");
-        if (file == NULL) {
-            fputs("error opening the hydro map", stderr);
-            exit(-1);
+    for(int index = 0; index < g.uniqueHydroFilenames.size(); index++) {
+
+        QFile hydroFile( g.uniqueHydroFilenames[index] );
+        if( !hydroFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+            printf("Failed to open the hydromap");
+            exit(1);
         }
 
-        find_map_width_height(file); // find the width and height of the maps
+        find_map_width_height( &hydroFile ); // find the width and height of the maps
+
         if(g.MAP_WIDTH > max_map_width) {
             max_map_width = g.MAP_WIDTH;
         }
@@ -164,7 +165,7 @@ void find_map_sizes() {
             max_map_height = g.MAP_HEIGHT;
         }
 
-        fclose(file);
+        hydroFile.close();
     }
 
     g.MAP_WIDTH = max_map_width;
@@ -181,32 +182,23 @@ void find_map_sizes() {
  * Reads a hydro_file finds the biggest pycor and pxcor and assigns them to MAP_WIDTH and MAP_HEIGHT
  * @param hydro_file the hydrolic file with data regarding patches
  */
-void find_map_width_height(FILE* hydro_file) {
-    int patch_info_size = 6;    // first line in the file, pxcor/pycor/depth/px-vector/py-vector/velocity
-    const int word_size = 100;
-
-    char word[word_size];
-    word[0] = '\0';
-
+void find_map_width_height(QFile * hydroFile) {
     int max_x = 0;
     int max_y = 0;
-    int counter = 0;
-    while(fscanf(hydro_file, "%s", word) != EOF) {
-        // pxcor
-        if(counter%patch_info_size == 0) {
-            int value = atoi(word);
-            if(value > max_x) {
-                max_x = value;
-            }
-        }        
-        // pycor
-        else if(counter%patch_info_size == 1) {
-            int value = atoi(word);
-            if(value > max_y) {
-                max_y = value;
-            }
+
+    QString hydroFileText = hydroFile->readAll();
+    QStringList hydroFileData = hydroFileText.split(" ");
+    for(int index = 6; index < hydroFileData.size(); index += 6){
+
+        int patch_x = hydroFileData[index].toInt();
+        int patch_y = hydroFileData[index + 1].toInt();
+
+        if(patch_x > max_x) {
+            max_x = patch_x;
         }
-        counter++;
+        if(patch_y > max_y) {
+            max_y = patch_y;
+        }
     }
 
     g.MAP_WIDTH = max_x+1;

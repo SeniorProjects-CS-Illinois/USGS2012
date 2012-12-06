@@ -42,7 +42,7 @@ void find_map_sizes();
  * Reads a hydro_file finds the biggest pycor and pxcor and assigns them to MAP_WIDTH and MAP_HEIGHT
  * @param hydro_file
  */
-void find_map_width_height(FILE* hydro_file);
+void find_map_width_height(QFile * hydro_file);
 
 /**
  * Initializes every value in the specified patch

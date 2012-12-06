@@ -121,9 +121,9 @@ void output_image(void) {
 }
 
 char* make_file_name(int index) {
-    char* path = "./results/images/";
+    const char* path = "./results/images/";
     char* img_template = g.stock_names[index];
-    char* format = ".png";
+    const char* format = ".png";
 
     time_t rawtime;
     struct tm * timeinfo;
