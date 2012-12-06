@@ -64,7 +64,7 @@ public slots:
     void progressTimeUpdate(int elapsed, int remaining);
 
     /* Update the output image */
-    void imageUpdate(QString filename);
+    void imageUpdate(QImage stockImage);
     
 private slots:
 

@@ -14,8 +14,9 @@ void ImageThread::run()
     {
         cout << "Hello, World!" << endl;
         // TODO: need a way to get most recent image
-        QString lastImage("test.jpg");
-        emit imageUpdate(lastImage);
+        QString test("test.jpg");
+        QImage stockImage(test);
+        emit imageUpdate(stockImage);
 
         // sleep for now so it doesn't spend too much time in this thread
         sleep(sleepTimeSeconds);
