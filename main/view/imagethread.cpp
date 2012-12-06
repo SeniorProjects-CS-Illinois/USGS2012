@@ -12,7 +12,6 @@ void ImageThread::run()
     // main loop: update GUI, then sleep for a bit
     while (model->getStatus().getState() != Status::COMPLETE)
     {
-        cout << "Hello, World!" << endl;
         // TODO: need a way to get most recent image
         QString lastImage("test.jpg");
         emit imageUpdate(lastImage);
