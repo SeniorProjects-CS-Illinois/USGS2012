@@ -14,7 +14,10 @@ void ProgressThread::run()
     // main progress loop: update GUI, then sleep for a bit
     while (true)
     {
+        // get the current status
         Status currentStatus = model->getStatus();
+
+        // check if the model is still running
         if (currentStatus.getState() == Status::RUNNING)
         {
             percentageDone = (int)(100*currentStatus.getProgress());
@@ -25,9 +28,20 @@ void ProgressThread::run()
             emit progressPercentUpdate(percentageDone);
             emit progressTimeUpdate(timeElapsed, timeRemaining);
         }
+
+        // check if model is finished
         else if (currentStatus.getState() == Status::COMPLETE)
         {
             break;
+        }
+
+        // see if there is a new image to be displayed
+        if (currentStatus.hasNewImage())
+        {
+            // TODO: need a way to get most recent image
+            QString test("test.jpg");
+            QImage stockImage(test);
+            emit imageUpdate(stockImage);
         }
 
         // sleep for now so it doesn't spend too much time in this thread
