@@ -8,7 +8,6 @@
 #include "configuration.h"
 #include "modelthread.h"
 #include "progressthread.h"
-#include "imagethread.h"
 #include "../model/rivermodel.h"
 
 namespace Ui
