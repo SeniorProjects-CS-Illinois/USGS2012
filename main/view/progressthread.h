@@ -19,6 +19,7 @@ public:
 signals:
     void progressPercentUpdate(int level);
     void progressTimeUpdate(int elapsed, int remaining);
+    void imageUpdate(QImage stockImage);
 
     void finished();
 

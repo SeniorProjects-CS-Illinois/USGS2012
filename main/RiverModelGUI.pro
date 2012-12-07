@@ -10,14 +10,12 @@ TARGET = RiverModelGUI
 SOURCES += view/mainwindow.cpp \
     view/configuration.cpp \
     view/modelthread.cpp \
-    view/progressthread.cpp \
-    view/imagethread.cpp
+    view/progressthread.cpp
 
 HEADERS  += view/mainwindow.h \
     view/configuration.h \
     view/modelthread.h \
-    view/progressthread.h \
-    view/imagethread.h
+    view/progressthread.h
 
 FORMS    += view/mainwindow.ui
 
