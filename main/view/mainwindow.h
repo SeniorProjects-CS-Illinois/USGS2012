@@ -309,7 +309,6 @@ private:
 
     ModelThread modelThread;
     ProgressThread progressThread;
-    ImageThread imageThread;
 
     QString wholeTempFile;
     QString wholePARFile;
