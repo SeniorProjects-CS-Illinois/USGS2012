@@ -18,7 +18,7 @@ public:
     
 signals:
     // TODO: make this QImage instead of QString?
-    void imageUpdate(QString filename);
+    void imageUpdate(QImage stockImage);
     
 public slots:
     // No slots

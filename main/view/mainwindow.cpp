@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
 
     // signals for image thread
-    connect(&imageThread, SIGNAL(imageUpdate(QString)), this, SLOT(imageUpdate(QString)));
+    connect(&imageThread, SIGNAL(imageUpdate(QImage)), this, SLOT(imageUpdate(QImage)));
 }
 
 MainWindow::~MainWindow()
@@ -222,7 +222,7 @@ void MainWindow::progressTimeUpdate(int elapsed, int remaining)
     ui->labelTimeRemainingValue->setText(QString::number(remaining));
 }
 
-void MainWindow::imageUpdate(QString filename)
+void MainWindow::imageUpdate(QImage stockImage)
 {
     // max size of the image
     int maxWidth = 400;
@@ -233,9 +233,8 @@ void MainWindow::imageUpdate(QString filename)
     int centerY = 200;
 
     // load the image and get its stats
-    QImage img(filename);
-    int width = img.width();
-    int height = img.height();
+    int width = stockImage.width();
+    int height = stockImage.height();
 
     // calculate best width, height, keeping aspect ratio
     // not using the maxWidth and maxHeight functions because
@@ -262,7 +261,7 @@ void MainWindow::imageUpdate(QString filename)
 
     // set image to label
     ui->labelImageOutput->setGeometry(x, y, width, height);
-    ui->labelImageOutput->setPixmap(QPixmap::fromImage(img));
+    ui->labelImageOutput->setPixmap(QPixmap::fromImage(stockImage));
     ui->labelImageOutput->setScaledContents(true);
 
     // show image
