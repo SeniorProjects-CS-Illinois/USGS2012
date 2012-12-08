@@ -87,7 +87,7 @@ void RiverModel::run(void) {
                 << " / " << modelStatus.getTimeRemaining() << endl;
             go();
             modelStatus.updateProgress();
-            if (g.current_day % g.output_frequency == 0)
+            if (day > 0 && g.current_day % g.output_frequency == 0)
             {
                 modelStatus.hasNewImage(true);
             }
