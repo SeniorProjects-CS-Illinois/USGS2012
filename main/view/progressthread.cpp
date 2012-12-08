@@ -17,6 +17,14 @@ void ProgressThread::run()
         // get the current status
         Status currentStatus = model->getStatus();
 
+        // see if there is a new image to be displayed
+        if (currentStatus.hasNewImage())
+        {
+            emit imageUpdate(model->getImage());
+            // TODO: if they are not looking at the most recent image,
+            //       maybe don't update the current image...
+        }
+
         // check if the model is still running
         if (currentStatus.getState() == Status::RUNNING)
         {
@@ -33,15 +41,6 @@ void ProgressThread::run()
         else if (currentStatus.getState() == Status::COMPLETE)
         {
             break;
-        }
-
-        // see if there is a new image to be displayed
-        if (currentStatus.hasNewImage())
-        {
-            // TODO: need a way to get most recent image
-            QString test("test.jpg");
-            QImage stockImage(test);
-            emit imageUpdate(stockImage);
         }
 
         // sleep for now so it doesn't spend too much time in this thread
