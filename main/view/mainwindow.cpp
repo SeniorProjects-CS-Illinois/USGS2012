@@ -856,7 +856,11 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
 void MainWindow::getAllInput()
 {
     // TODO: is this confusing with the different naming conventions?
-    model.set_hydro_filenames(formatHydroMaps());
+    QList<QString> maps = getHydroMaps();
+    QList<uint16_t> days = getDaysToRun();
+    for(int i = 0; i < maps.size(); i++){
+        model.set_hydro_filenames(maps[i], days[i]);
+    }
     model.set_par_file(getPARFile().toStdString().c_str());
     model.set_temperature_file(getTempFile().toStdString().c_str());
     model.set_timestep(getTimestep());
@@ -970,22 +974,6 @@ void MainWindow::getAllStockInput()
     model.set_excretion_sedconsumer(getSedconsumerExcretion()/24);
     model.set_senescence_sedconsumer(getSedconsumerSenescence()/24);
     model.set_max_sedconsumer(getSedconsumerMax()/24);
-}
-
-QString MainWindow::formatHydroMaps() const
-{
-    QList<QString> maps = getHydroMaps();
-    QList<uint16_t> days = getDaysToRun();
-    size_t numMaps = maps.size();
-    QString builder;
-    builder.append(QString::number(numMaps) + "?");
-    for (size_t i = 0; i < numMaps; i++)
-    {
-        builder.append(maps.at(i) + "?");
-        builder.append(QString::number(days.at(i)) + "?");
-    }
-
-    return builder;
 }
 
 void MainWindow::dischargeToHydro(QString file)
