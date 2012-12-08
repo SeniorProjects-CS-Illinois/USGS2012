@@ -28,7 +28,7 @@ class RiverModel {
         //void count_unique_files(int index);
 
         //Functions for configuring the model
-        void set_hydro_filenames(QString filenames);
+        void set_hydro_filenames(QString hydromap, int days);
         void set_par_file(QString filename);
         void set_timestep(int timestep);
         void set_temperature_file(QString filename);

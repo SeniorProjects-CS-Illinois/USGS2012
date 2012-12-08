@@ -9,32 +9,11 @@ Status RiverModel::getStatus(void){
 }
 
 
-void RiverModel::set_hydro_filenames(QString filenames)
+void RiverModel::set_hydro_filenames(QString hydromap, int days)
 {
-    QStringList hydroList = filenames.split("?");
-    //This is done since there will be a ? in last character position...
-    hydroList.removeLast();
-
-    int hydroFileCount = hydroList[0].toInt();
-
-    QStringList hydroFilenames;
-    std::vector<int> daysToRun;
-    for(int i = 1; i < hydroList.size(); i += 2){
-        // i = hydromap
-        hydroFilenames.append( hydroList[i] );
-        // i+1 = days to run hydromap
-        int days = hydroList[i+1].toInt();
-
-        //Add 1 unit of work per simulated hour.
-        modelStatus.addWorkUnitsToProcess(days * 24);
-        daysToRun.push_back( days );
-    }
-    g.gui_filenames_list = hydroFilenames;
-    g.gui_days_vector = daysToRun;
-
-    g.gui_filenames_filesize = hydroFileCount;
-    g.num_hydro_files = hydroFileCount;
-
+    g.gui_filenames_list.append( hydromap);
+    g.gui_days_vector.push_back(days);
+    modelStatus.addWorkUnitsToProcess(days * 24);
 }
 
 
