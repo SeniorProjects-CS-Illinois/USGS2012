@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#include <QMutex>
+
 #include "globals.h"
 #include "patch.h"
 
