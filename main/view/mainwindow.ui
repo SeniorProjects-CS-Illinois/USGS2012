@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
+    <width>800</width>
     <height>600</height>
    </rect>
   </property>
@@ -3583,67 +3583,67 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
      </widget>
+     <widget class="QComboBox" name="comboBoxWhichStock">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>30</y>
+        <width>100</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Consum</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Detritus</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>DOC</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Herbivore</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Macro</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>POC</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Phyto</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Sedconsumer</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Seddecomp</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Waterdecomp</string>
+       </property>
+      </item>
+     </widget>
     </widget>
-   </widget>
-   <widget class="QComboBox" name="comboBoxWhichStock">
-    <property name="geometry">
-     <rect>
-      <x>15</x>
-      <y>50</y>
-      <width>100</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <item>
-     <property name="text">
-      <string>Consum</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Detritus</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>DOC</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Herbivore</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Macro</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>POC</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Phyto</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Sedconsumer</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Seddecomp</string>
-     </property>
-    </item>
-    <item>
-     <property name="text">
-      <string>Waterdecomp</string>
-     </property>
-    </item>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -3651,7 +3651,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>800</width>
      <height>21</height>
     </rect>
    </property>
@@ -3860,22 +3860,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>424</x>
      <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>comboBoxWhichStock</sender>
-   <signal>activated(QString)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>whichstockChanged(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>686</x>
-     <y>601</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>634</x>
-     <y>593</y>
     </hint>
    </hints>
   </connection>
