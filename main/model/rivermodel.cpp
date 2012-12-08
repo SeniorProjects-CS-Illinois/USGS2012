@@ -8,6 +8,32 @@ Status RiverModel::getStatus(void){
     return modelStatusGUI;
 }
 
+/**
+ * Returns an image of the currently selected stock.
+ */
+QImage RiverModel::getImage(void){
+    return getImage(g.which_stock);
+}
+
+/**
+ * Returns the stock requested.
+ */
+QImage RiverModel::getImage(QString stockName){
+    stockName = stockName.toLower();
+    QImage stockImage;
+
+    g.imageMutex.lock();
+    for(int i = 0; i < g.NUM_STOCKS; i++){
+        QString possibleStock(g.stock_names[i]);
+        if(possibleStock == stockName){
+            stockImage = *(g.images[i]);
+            break;
+        }
+    }
+    g.imageMutex.unlock();
+
+    return stockImage;
+}
 
 void RiverModel::set_hydro_filenames(QString hydromap, int days)
 {
