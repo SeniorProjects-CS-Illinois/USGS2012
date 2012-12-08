@@ -186,6 +186,12 @@ void MainWindow::runClicked()
     disableRun();
 }
 
+void MainWindow::whichstockChanged(QString newStock)
+{
+    model.set_whichstock(newStock);
+    // TODO: new image display
+}
+
 void MainWindow::enableRun()
 {
     ui->pushButtonRun->setEnabled(true);
