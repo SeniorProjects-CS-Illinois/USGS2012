@@ -47,6 +47,9 @@ public slots:
     /* Run the model */
     void runClicked();
 
+    /* Update which stock */
+    void whichstockChanged(QString newStock);
+
     /* Allow the user to click run button */
     void enableRun();
 
