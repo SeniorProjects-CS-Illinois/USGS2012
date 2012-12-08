@@ -86,8 +86,11 @@ void RiverModel::run(void) {
                 << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
                 << " / " << modelStatus.getTimeRemaining() << endl;
             go();
-            modelStatus.hasNewImage(true);
             modelStatus.updateProgress();
+            if (g.current_day % g.output_frequency == 0)
+            {
+                modelStatus.hasNewImage(true);
+            }
         }
     }
 

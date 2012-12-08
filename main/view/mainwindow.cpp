@@ -189,7 +189,7 @@ void MainWindow::runClicked()
 void MainWindow::whichstockChanged(QString newStock)
 {
     model.set_whichstock(newStock);
-    // TODO: new image display
+    imageUpdate(model.getImage(newStock));
 }
 
 void MainWindow::enableRun()
