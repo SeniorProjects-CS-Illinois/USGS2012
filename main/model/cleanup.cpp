@@ -31,3 +31,15 @@ void clean_patches()
     free( g.uncovered_area );
     free( patches );
 }
+
+/**
+ * Empties structures filled during setup.
+ */
+void empty_structures(void){
+    g.gui_filenames_list.clear();
+    g.uniqueHydroFilenames.clear();
+    g.gui_days_vector.clear();
+    g.hydromap_index_vector.clear();
+    g.temperature_data.clear();
+    g.photo_radiation_data.clear();
+}
