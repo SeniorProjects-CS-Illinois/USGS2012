@@ -7,6 +7,7 @@
 #include <vector>
 #include <QImage>
 #include <QImageWriter>
+#include <QMutex>
 
 /**
  *  Improve parameters
@@ -209,7 +210,7 @@ typedef struct {
     int DETRITUS_INDEX;
 
     char* stock_names[10];
-
+    QMutex imageMutex;
     QImage* images[10];
 
     QImageWriter * writer;

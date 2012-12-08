@@ -110,6 +110,7 @@ void output_image(void) {
     QImageWriter writer;
     writer.setFormat("png");
 
+    g.imageMutex.lock();
     for(int i=0; i < g.NUM_STOCKS; i++){
         char* file_name = make_file_name(i);
         QString fileName(file_name);
@@ -117,6 +118,7 @@ void output_image(void) {
         *g.images[i] = g.images[i]->mirrored(false, true);
         writer.write(*g.images[i]);
     }
+    g.imageMutex.unlock();
     return;
 }
 
