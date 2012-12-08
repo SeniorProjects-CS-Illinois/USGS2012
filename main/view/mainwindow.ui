@@ -103,7 +103,7 @@
      <widget class="QLabel" name="labelDaysToRun">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>380</x>
         <y>80</y>
         <width>60</width>
         <height>15</height>
@@ -136,8 +136,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="pushButtonSelectDischargeFile">
       <property name="geometry">
        <rect>
-        <x>195</x>
-        <y>10</y>
+        <x>250</x>
+        <y>50</y>
         <width>110</width>
         <height>20</height>
        </rect>
@@ -201,7 +201,7 @@ p, li { white-space: pre-wrap; }
       <property name="geometry">
        <rect>
         <x>310</x>
-        <y>350</y>
+        <y>340</y>
         <width>120</width>
         <height>15</height>
        </rect>
@@ -216,7 +216,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="labelHydroMap">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>380</x>
         <y>60</y>
         <width>100</width>
         <height>15</height>
@@ -270,7 +270,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QPushButton" name="pushButtonSelectHydroMap">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>380</x>
         <y>10</y>
         <width>100</width>
         <height>20</height>
@@ -302,7 +302,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="labelSelectedMap">
       <property name="geometry">
        <rect>
-        <x>320</x>
+        <x>380</x>
         <y>40</y>
         <width>100</width>
         <height>15</height>
@@ -490,7 +490,7 @@ p, li { white-space: pre-wrap; }
      <widget class="QLineEdit" name="lineEditDaysToRun">
       <property name="geometry">
        <rect>
-        <x>380</x>
+        <x>440</x>
         <y>80</y>
         <width>40</width>
         <height>20</height>
@@ -517,82 +517,6 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="text">
        <string>Remove Selected Hydro Map</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBoxWhichStock">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>280</y>
-        <width>70</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <item>
-       <property name="text">
-        <string>Consum</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Detritus</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>DOC</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Herbivore</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Macro</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>POC</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Phyto</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Sedconsumer</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Seddecomp</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Waterdecomp</string>
-       </property>
-      </item>
-     </widget>
-     <widget class="QLabel" name="labelWhichStock">
-      <property name="geometry">
-       <rect>
-        <x>80</x>
-        <y>260</y>
-        <width>70</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Which Stock</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
       </property>
      </widget>
      <widget class="QLabel" name="labelTimestepMin">
@@ -969,7 +893,6 @@ p, li { white-space: pre-wrap; }
      <zorder>lineEditKMacro</zorder>
      <zorder>lineEditKPhyto</zorder>
      <zorder>labelKMacro</zorder>
-     <zorder>comboBoxWhichStock</zorder>
      <zorder>labelOutputFreq</zorder>
      <zorder>labelErrors</zorder>
      <zorder>pushButtonSelectPARFile</zorder>
@@ -993,7 +916,6 @@ p, li { white-space: pre-wrap; }
      <zorder>labelSelectedTemp</zorder>
      <zorder>lineEditDaysToRun</zorder>
      <zorder>pushButtonRemoveHydroMap</zorder>
-     <zorder>labelWhichStock</zorder>
      <zorder>labelTimestepMin</zorder>
      <zorder>labelTimestepMax</zorder>
      <zorder>labelTimestepVal</zorder>
@@ -3526,8 +3448,8 @@ p, li { white-space: pre-wrap; }
      <widget class="QLabel" name="labelImageOutput">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>50</y>
+        <x>15</x>
+        <y>60</y>
         <width>400</width>
         <height>300</height>
        </rect>
@@ -3537,6 +3459,188 @@ p, li { white-space: pre-wrap; }
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonFirstImage">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>375</y>
+        <width>30</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Display first image</string>
+      </property>
+      <property name="text">
+       <string>&lt;&lt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonPreviousImage">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>375</y>
+        <width>30</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Display previous image</string>
+      </property>
+      <property name="text">
+       <string>&lt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonLastImage">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>375</y>
+        <width>30</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Display last image</string>
+      </property>
+      <property name="text">
+       <string>&gt;&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonNextImage">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>375</y>
+        <width>30</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Display next image</string>
+      </property>
+      <property name="text">
+       <string>&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonStop">
+      <property name="geometry">
+       <rect>
+        <x>155</x>
+        <y>375</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Stop the model</string>
+      </property>
+      <property name="text">
+       <string>Stop</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButtonPause">
+      <property name="geometry">
+       <rect>
+        <x>225</x>
+        <y>375</y>
+        <width>50</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Pause the model</string>
+      </property>
+      <property name="text">
+       <string>Pause</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelWhichStock">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>10</y>
+        <width>70</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Which Stock</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboBoxWhichStock">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>30</y>
+        <width>70</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Consum</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Detritus</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>DOC</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Herbivore</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Macro</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>POC</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Phyto</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Sedconsumer</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Seddecomp</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Waterdecomp</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QTextBrowser" name="textBrowserSelectedOutput">
+      <property name="geometry">
+       <rect>
+        <x>510</x>
+        <y>70</y>
+        <width>241</width>
+        <height>241</height>
+       </rect>
       </property>
      </widget>
     </widget>

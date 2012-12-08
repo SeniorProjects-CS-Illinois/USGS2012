@@ -6,8 +6,6 @@ using std::string;
 using std::cout;
 using std::endl;
 
-#define OUTPUT_TAB 2
-
 /** TODO
   *     - status updates
   *     - error checking for run
@@ -182,7 +180,7 @@ void MainWindow::runClicked()
     progressThread.start();
 
     // open output tab
-    ui->tabWidget->setCurrentIndex(OUTPUT_TAB);
+    setTab(OUTPUT);
 
     // disable run button for now
     disableRun();
@@ -224,39 +222,19 @@ void MainWindow::imageUpdate(QImage stockImage)
     int maxWidth = 400;
     int maxHeight = 300;
 
-    // desired center point of the image
-    int centerX = 400;
-    int centerY = 200;
+    // default upper left corner of display field
+    int x = 15;
+    int y = 60;
 
-    // load the image and get its stats
-    int width = stockImage.width();
-    int height = stockImage.height();
+    // setup the size for the display field
+    QSize scaledSize = stockImage.size();
+    scaledSize.scale(maxWidth, maxHeight, Qt::KeepAspectRatio);
 
-    // calculate best width, height, keeping aspect ratio
-    // not using the maxWidth and maxHeight functions because
-    // I need width and Height to center the image
-    float widthPerc = ((float)maxWidth)/width;
-    float heightPerc = ((float)maxHeight)/height;
-    if (widthPerc < 1 || heightPerc < 1) // need to modify
-    {
-        if (widthPerc < heightPerc) // width dominates
-        {
-            width  *= widthPerc;
-            height *= widthPerc;
-        }
-        else    // height dominates
-        {
-            width  *= heightPerc;
-            height *= heightPerc;
-        }
-    }
-
-    // claculate best position
-    int x = centerX - (width/2);
-    int y = centerY - (height/2);
+    int xOffset = (maxWidth - scaledSize.width()) / 2;
+    int yOffset = (maxHeight - scaledSize.height()) / 2;
 
     // set image to label
-    ui->labelImageOutput->setGeometry(x, y, width, height);
+    ui->labelImageOutput->setGeometry(QRect(QPoint(x + xOffset, y + yOffset), scaledSize));
     ui->labelImageOutput->setPixmap(QPixmap::fromImage(stockImage));
     ui->labelImageOutput->setScaledContents(true);
 
@@ -784,7 +762,7 @@ void MainWindow::setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num)
 
 void MainWindow::clearErrors() const
 {
-    displayErrors("None");
+    displayErrors("None", false);
 }
 
 bool MainWindow::isBoxFilled(QLineEdit * const input) const
@@ -809,8 +787,12 @@ int MainWindow::stockIndex(char* stock) const
     return (index < 0) ? 0 : index;
 }
 
-void MainWindow::displayErrors(const char *message) const
+void MainWindow::displayErrors(const char *message, bool showConfig) const
 {
+    if (showConfig)
+    {
+        setTab(CONFIGURATION);
+    }
     ui->textBrowserErrors->setText(tr(message));
 }
 
@@ -1084,6 +1066,11 @@ QString MainWindow::defaultFileLocation() const
 {
     // change output to wherever data dir is
     return  QDir::currentPath().append("/data");
+}
+
+void MainWindow::setTab(MainWindow::Tab tab) const
+{
+    ui->tabWidget->setCurrentIndex(tab);
 }
 
 /* END private functions */
