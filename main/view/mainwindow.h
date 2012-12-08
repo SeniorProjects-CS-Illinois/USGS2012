@@ -303,6 +303,8 @@ public:
 
 private:
 
+    enum Tab { CONFIGURATION, STOCK, OUTPUT };
+
     Ui::MainWindow* ui;
     RiverModel model;
 
@@ -331,7 +333,7 @@ private:
     int stockIndex(char* stock) const;
 
     /* Set an error message */
-    void displayErrors(const char * message) const;
+    void displayErrors(const char * message, bool showConfig = true) const;
 
     /* Add hydro map information to list */
     void addHydroMap(QString file, QString days, bool addInfo, bool display = true);
@@ -386,6 +388,9 @@ private:
 
     /* Used to make file selection faster */
     QString defaultFileLocation() const;
+
+    /* Set the displayed tab to the given tab */
+    void setTab(Tab tab) const;
 };
 
 #endif // MAINWINDOW_H
