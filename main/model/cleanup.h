@@ -15,4 +15,9 @@ void cleanup();
  */
 void clean_patches();
 
+/**
+ * Empties the structures that we filled during model setup.
+ */
+void empty_structures(void);
+
 #endif

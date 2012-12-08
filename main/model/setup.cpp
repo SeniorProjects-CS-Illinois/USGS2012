@@ -6,6 +6,7 @@
  */
 void setup() {
     reset_globals();
+    set_num_hydrofiles();
     get_unique_hydrofiles();
     find_map_sizes();
     init_patches();
@@ -131,6 +132,11 @@ void reset_globals() {
     g.sen_macro_coef = 0.08;
     g.macro_mas_max = 1000.0;
     g.macro_vel_max = 1.0;
+}
+
+void set_num_hydrofiles(void){
+    g.gui_filenames_filesize = g.gui_filenames_list.size();
+    g.num_hydro_files = g.gui_filenames_list.size();
 }
 
 void get_unique_hydrofiles(){

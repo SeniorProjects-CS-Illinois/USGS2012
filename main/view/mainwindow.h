@@ -365,9 +365,6 @@ private:
     /* Get all the stock input from the GUI and set globals */
     void getAllStockInput();
 
-    /* Turns hydro map info int properly formatted string expected by given code */
-    QString formatHydroMaps() const;
-
     /* Takes a discharge file and populates hydro map information */
     void dischargeToHydro(QString file);
 

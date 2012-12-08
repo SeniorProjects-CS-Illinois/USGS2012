@@ -23,6 +23,13 @@
 void setup();
 
 /**
+ * TODO This is a temp function until references the globals begin set can be eliminated.
+ *
+ * Sets the number of hydrofiles.
+ */
+void set_num_hydrofiles(void);
+
+/**
  * Resets all the values in globals.h
  */
 void reset_globals();
