@@ -124,6 +124,8 @@ struct Configuration
   */
 
 public:
+
+    /* Default constructor, does nothing special */
     Configuration();
 
     /* Write all data to a file */
