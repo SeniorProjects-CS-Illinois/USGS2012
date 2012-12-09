@@ -1,48 +1,22 @@
 #include "dump.h"
 
 /**
- * Defining non extern versions from header file...
- */
-/* Folder under which we place the data files */
-const char* data_path = "./results/data/";
-/* Each simulation data file has the name 'map_data_timestamp' */
-const char* data_template = "map_data_";
-/* file format is .csv */
-const char* format = ".csv";
-
-
-
-/**
  * The file format is as follows:
  * First line: GUI_VARIABLES separated by a comma
  * Each line represents one coordinate (x,y) in the River and holds the values of the DOCs in a patch.
  * @return 1 on successful completion, 0 indicates failure file could not be created.
  */
 int write_data() {
-    time_t rawtime;
-    struct tm * timeinfo;
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    char buffer[80];
-    //strftime(buffer, 80, "%b_%a_%d_%I:%M:%S%p", timeinfo);
-    strftime(buffer, 80, "%b_%a_%d_%I_%M_%S", timeinfo);
+    QString file_name = "./results/data/map_data_";
+    QDateTime date_time = QDateTime::currentDateTime();
+    QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
+    file_name.append(date_time_str);
+    file_name.append(".csv");
 
-    char file_name[300]; file_name[0] = '\0';
-    size_t len = strlen(data_path);
-    strncat(file_name, data_path, len);
-    len = strlen(data_template);
-    strncat(file_name, data_template, len);
-    //len = strlen(asctime(timeinfo));
-    //strcat(file_name, asctime(timeinfo), len );
-    len = strlen(buffer);
-    strncat(file_name, buffer, len);
-    len = strlen(format);
-    strncat(file_name, format, len);
-
-    file_name[strlen(file_name)] = '\0';
-    FILE* f = fopen(file_name, "w");
+    const char* cfile_name = file_name.toStdString().c_str();
+    FILE* f = fopen(cfile_name, "w");
     if (f == NULL) { 
-        printf("file name: %s could not be opened\n", file_name);
+        printf("file name: %s could not be opened\n", cfile_name);
         return 0;
     }
 
@@ -112,7 +86,7 @@ void output_image(void) {
 
     g.imageMutex.lock();
     for(int i=0; i < g.NUM_STOCKS; i++){
-        char* file_name = make_file_name(i);
+        const char* file_name = make_file_name(i);
         QString fileName(file_name);
         writer.setFileName(fileName);
         *g.images[i] = g.images[i]->mirrored(false, true);
@@ -122,29 +96,15 @@ void output_image(void) {
     return;
 }
 
-char* make_file_name(int index) {
-    const char* path = "./results/images/";
-    char* img_template = g.stock_names[index];
-    const char* format = ".png";
+const char* make_file_name(int index) {
+    QString file_name = "./results/images/";
+    file_name.append(g.stock_names[index]);
+    QDateTime date_time = QDateTime::currentDateTime();
+    QString date_time_str = date_time.toString("_MMM_d_H_mm_ss");
+    file_name.append(date_time_str);
+    file_name.append(".png");
 
-    time_t rawtime;
-    struct tm * timeinfo;
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    char buffer[100];
-    strftime(buffer, 100, "%b_%a_%d_%I_%M_%S", timeinfo);
-
-    char file_name[320]; file_name[0] = '\0';
-    size_t len = strlen(path);
-    strncat(file_name, path, len);
-    len = strlen(img_template);
-    strncat(file_name, img_template, len);
-    len = strlen(buffer);
-    strncat(file_name, buffer, len);
-    len = strlen(format);
-    strncat(file_name, format, len);
-
-    file_name[strlen(file_name)] = '\0';
-    return file_name;
+    const char* cfile_name = file_name.toStdString().c_str();
+    return cfile_name;
 }
 

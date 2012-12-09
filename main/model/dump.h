@@ -7,16 +7,12 @@
 #include <time.h>
 
 #include <QMutex>
+#include <QString>
+#include <QDateTime>
 
 #include "globals.h"
 #include "patch.h"
 
-/* Folder under which we place the data files */
-extern const char* data_path;
-/* Each simulation data file has the name 'map_data_timestamp' */
-extern const char* data_template;
-/* file format is .csv */
-extern const char* format;
 
 /**
  * The file format is as follows:
@@ -34,6 +30,6 @@ int dump_data();
 
 /* Outputs an image */
 void output_image();
-char* make_file_name(int index);
+const char* make_file_name(int index);
 
 #endif
