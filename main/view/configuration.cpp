@@ -3,19 +3,16 @@
 using std::ofstream;
 using std::ifstream;
 using std::string;
+// TODO: remove this when finished
 using std::cout;
 using std::endl;
 
 Configuration::Configuration() :
     adjacent(false),
-    tempFile(NULL),
-    parFile(NULL),
-    hydroMaps(NULL),
     numStocks(10),
     numHydroMaps(-1),
     outputFreq(-1),
     timestep(-1),
-    daysToRun(NULL),
     tss(-1.0),
     kPhyto(-1.0),
     kMacro(-1.0),
@@ -108,43 +105,23 @@ Configuration::Configuration() :
 
 }
 
-Configuration::Configuration(Configuration const & other)
-{
-    copy(other);
-}
-
-Configuration::~Configuration()
-{
-    clear();
-}
-
-Configuration const & Configuration::operator=(Configuration const & other)
-{
-    if (this != &other)
-    {
-        clear();
-        copy(other);
-    }
-    return *this;
-}
-
-void Configuration::write(const char* filename) const
+void Configuration::write(QString const & filename) const
 {
     ofstream file;
-    file.open(filename);
+    file.open(filename.toStdString().c_str());
 
     // write booleans
     file << adjacent << endl;
 
     // write file names
-    file << tempFile << endl;
-    file << parFile << endl;
+    file << tempFile.toStdString().c_str() << endl;
+    file << parFile.toStdString().c_str() << endl;
 
     // for hydro maps, need number of maps first
     file << (int)numHydroMaps << endl;
     for (int hydro = 0; hydro < numHydroMaps; hydro++)
     {
-        file << hydroMaps[hydro] << endl;
+        file << hydroMaps[hydro].toStdString().c_str() << endl;
     }
 
     // write integer values
@@ -256,28 +233,27 @@ void Configuration::write(const char* filename) const
     file.close();
 }
 
-void Configuration::read(const char* filename)
+void Configuration::read(QString const & filename)
 {
     ifstream file;
-    file.open(filename);
+    file.open(filename.toStdString().c_str());
     string str;
 
     adjacent = nextBool(file, str);
 
-    setFileName(QString::fromStdString(nextLine(file, str)), tempFile);
-    setFileName(QString::fromStdString(nextLine(file, str)), parFile);
+    tempFile = QString::fromStdString(nextLine(file, str));
+    parFile = QString::fromStdString(nextLine(file, str));
 
     numHydroMaps = nextInt(file, str);
-    hydroMaps = new char*[numHydroMaps];
+
     for (size_t i = 0; i < numHydroMaps; i++)
     {
-        setFileName(QString::fromStdString(nextLine(file, str)), hydroMaps[i]);
+        hydroMaps.append(QString::fromStdString(nextLine(file, str)));
     }
 
-    daysToRun = new uint16_t[numHydroMaps];
     for (size_t i = 0; i < numHydroMaps; i++)
     {        
-        daysToRun[i] = nextInt(file, str);
+        daysToRun.append(nextInt(file, str));
     }
 
     outputFreq = nextInt(file, str);
@@ -382,12 +358,6 @@ void Configuration::read(const char* filename)
     file.close();
 }
 
-void Configuration::setFileName(QString source, char* & dest)
-{
-    dest = new char[source.length() + 1];
-    strcpy(dest, source.toStdString().c_str());
-}
-
 bool Configuration::nextBool(ifstream & file, string & str)
 {
     return nextLine(file, str)[0] == '1';
@@ -407,133 +377,4 @@ string & Configuration::nextLine(ifstream & file, string & str) const
 {
     std::getline(file, str);
     return str;
-}
-
-void Configuration::clear()
-{
-    // assumes numHydroMaps is correct value
-    for (size_t i = 0; i < numHydroMaps; i++)
-    {
-        delete hydroMaps[i];
-    }
-
-    delete hydroMaps;
-    delete parFile;
-    delete tempFile;
-}
-
-void Configuration::copy(const Configuration &other)
-{
-    // basic copy for bools and ints
-    adjacent                = other.adjacent;
-    numStocks               = other.numStocks;
-    numHydroMaps            = other.numHydroMaps;
-    outputFreq              = other.outputFreq;
-    timestep                = other.timestep;
-    daysToRun               = other.daysToRun;
-    tss                     = other.tss;
-    kPhyto                  = other.kPhyto;
-    kMacro                  = other.kMacro;
-
-    // stock parameters
-    macro                   = other.macro;
-    phyto                   = other.phyto;
-    consumer                = other.consumer;
-    decomp                  = other.decomp;
-    sedconsumer             = other.sedconsumer;
-    seddecomp               = other.seddecomp;
-    herbivore               = other.herbivore;
-    detritus                = other.detritus;
-    poc                     = other.poc;
-    doc                     = other.doc;
-
-    phytoSenescence         = other.phytoSenescence;
-    phytoRespiration        = other.phytoRespiration;
-    phytoExcretion          = other.phytoExcretion;
-    phytoAj                 = other.phytoAj;
-    phytoGj                 = other.phytoGj;
-
-    herbivoreAiPhyto        = other.herbivoreAiPhyto;
-    herbivoreGiPhyto        = other.herbivoreGiPhyto;
-    herbivorePrefPhyto      = other.herbivorePrefPhyto;
-    herbivoreAiPeri         = other.herbivoreAiPeri;
-    herbivoreGiPeri         = other.herbivoreGiPeri;
-    herbivorePrefPeri       = other.herbivorePrefPeri;
-    herbivoreAiWaterdecomp  = other.herbivoreAiWaterdecomp;
-    herbivoreGiWaterdecomp  = other.herbivoreGiWaterdecomp;
-    herbivorePrefWaterdecomp= other.herbivorePrefWaterdecomp;
-    herbivoreAj             = other.herbivoreAj;
-    herbivoreGj             = other.herbivoreGj;
-    herbivoreRespiration    = other.herbivoreRespiration;
-    herbivoreExcretion      = other.herbivoreExcretion;
-    herbivoreEgestion       = other.herbivoreEgestion;
-    herbivoreSenescence     = other.herbivoreSenescence;
-    herbivoreMax            = other.herbivoreMax;
-
-    waterdecompAiDoc        = other.waterdecompAiDoc;
-    waterdecompGiDoc        = other.waterdecompGiDoc;
-    waterdecompPrefDoc      = other.waterdecompPrefDoc;
-    waterdecompAiPoc        = other.waterdecompAiPoc;
-    waterdecompGiPoc        = other.waterdecompGiPoc;
-    waterdecompPrefPoc      = other.waterdecompPrefPoc;
-    waterdecompAj           = other.waterdecompAj;
-    waterdecompGj           = other.waterdecompGj;
-    waterdecompRespiration  = other.waterdecompRespiration;
-    waterdecompExcretion    = other.waterdecompExcretion;
-    waterdecompSenescence   = other.waterdecompSenescence;
-    waterdecompMax          = other.waterdecompMax;
-
-    seddecompAiDetritus     = other.seddecompAiDetritus;
-    seddecompGiDetritus     = other.seddecompGiDetritus;
-    seddecompPrefDetritus   = other.seddecompPrefDetritus;
-    seddecompAj             = other.seddecompAj;
-    seddecompGj             = other.seddecompGj;
-    seddecompRespiration    = other.seddecompRespiration;
-    seddecompExcretion      = other.seddecompExcretion;
-    seddecompSenescence     = other.seddecompSenescence;
-    seddecompMax            = other.seddecompMax;
-
-    consumerAiHerbivore     = other.consumerAiHerbivore;
-    consumerGiHerbivore     = other.consumerGiHerbivore;
-    consumerPrefHerbivore   = other.consumerPrefHerbivore;
-    consumerAiSedconsumer   = other.consumerAiSedconsumer;
-    consumerGiSedconsumer   = other.consumerGiSedconsumer;
-    consumerPrefSedconsumer = other.consumerPrefSedconsumer;
-    consumerAj              = other.consumerAj;
-    consumerGj              = other.consumerGj;
-    consumerRespiration     = other.consumerRespiration;
-    consumerExcretion       = other.consumerExcretion;
-    consumerSenescence      = other.consumerSenescence;
-    consumerEgestion        = other.consumerEgestion;
-    consumerMax             = other.consumerMax;
-
-    macroSenescence         = other.macroSenescence;
-    macroRespiration        = other.macroRespiration;
-    macroExcretion          = other.macroExcretion;
-    macroTemp               = other.macroTemp;
-    macroGross              = other.macroGross;
-    macroMassMax            = other.macroMassMax;
-    macroVelocityMax        = other.macroVelocityMax;
-
-    sedconsumerAiDetritus   = other.sedconsumerAiDetritus;
-    sedconsumerGiDetritus   = other.sedconsumerGiDetritus;
-    sedconsumerPrefDetritus = other.sedconsumerPrefDetritus;
-    sedconsumerAiSeddecomp  = other.sedconsumerAiSeddecomp;
-    sedconsumerGiSeddecomp  = other.sedconsumerGiSeddecomp;
-    sedconsumerPrefSeddecomp= other.sedconsumerPrefSeddecomp;
-    sedconsumerAj           = other.sedconsumerAj;
-    sedconsumerGj           = other.sedconsumerGj;
-    sedconsumerRespiration  = other.sedconsumerRespiration;
-    sedconsumerExcretion    = other.sedconsumerExcretion;
-    sedconsumerSenescence   = other.sedconsumerSenescence;
-    sedconsumerMax          = other.sedconsumerMax;
-
-    // need more care for char*
-    hydroMaps = new char*[numHydroMaps];
-    for (size_t i = 0; i < numHydroMaps; i++)
-    {
-        setFileName(other.hydroMaps[i], hydroMaps[i]);
-    }
-    setFileName(other.tempFile, tempFile);
-    setFileName(other.parFile, parFile);
 }
