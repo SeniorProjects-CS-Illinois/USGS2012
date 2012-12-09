@@ -42,6 +42,7 @@ Status::Status(void){
     timeElapsedBeforePauseState = 0;
     workUnitsProcessed = 0;
     workUnits = 0;
+    newImageExists = false;
 }
 
 void Status::setWorkUnitsToProcess(unsigned long workUnitsToProcess){

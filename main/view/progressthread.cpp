@@ -14,7 +14,18 @@ void ProgressThread::run()
     // main progress loop: update GUI, then sleep for a bit
     while (true)
     {
+        // get the current status
         Status currentStatus = model->getStatus();
+
+        // see if there is a new image to be displayed
+        if (currentStatus.hasNewImage())
+        {
+            emit imageUpdate(model->getImage());
+            // TODO: if they are not looking at the most recent image,
+            //       maybe don't update the current image...
+        }
+
+        // check if the model is still running
         if (currentStatus.getState() == Status::RUNNING)
         {
             percentageDone = (int)(100*currentStatus.getProgress());
@@ -25,6 +36,8 @@ void ProgressThread::run()
             emit progressPercentUpdate(percentageDone);
             emit progressTimeUpdate(timeElapsed, timeRemaining);
         }
+
+        // check if model is finished
         else if (currentStatus.getState() == Status::COMPLETE)
         {
             break;

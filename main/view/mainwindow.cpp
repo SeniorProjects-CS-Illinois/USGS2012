@@ -6,8 +6,6 @@ using std::string;
 using std::cout;
 using std::endl;
 
-#define OUTPUT_TAB 2
-
 /** TODO
   *     - status updates
   *     - error checking for run
@@ -25,8 +23,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // connect signals from progress thread
     connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
-    connect(&progressThread, SIGNAL(progressTimeUpdate(int,int)), this, SLOT(progressTimeUpdate(int,int)));
+    connect(&progressThread, SIGNAL(progressTimeUpdate(int, int)), this, SLOT(progressTimeUpdate(int, int)));
     connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
+    connect(&progressThread, SIGNAL(imageUpdate(QImage)), this, SLOT(imageUpdate(QImage)));
 }
 
 MainWindow::~MainWindow()
@@ -172,16 +171,32 @@ void MainWindow::selectPARFileClicked()
 void MainWindow::runClicked()
 {
     clearErrors();
+
+    // check all input for errors
+    // and set model values appropriately
     getAllInput();
 
     modelThread.start();
     progressThread.start();
 
     // open output tab
-    ui->tabWidget->setCurrentIndex(OUTPUT_TAB);
+    setTab(OUTPUT);
 
     // disable run button for now
     disableRun();
+}
+
+void MainWindow::whichstockChanged(QString newStock)
+{
+    model.set_whichstock(newStock);
+    Status status = model.getStatus();
+    // TODO: if no images available, don't do this
+    if (       status.getState() == Status::COMPLETE
+            || status.getState() == Status::RUNNING
+            || status.getState() == Status::PAUSED)
+    {
+        imageUpdate(model.getImage(newStock));
+    }
 }
 
 void MainWindow::enableRun()
@@ -212,6 +227,32 @@ void MainWindow::progressTimeUpdate(int elapsed, int remaining)
 {
     ui->labelTimeElapsedValue->setText(QString::number(elapsed));
     ui->labelTimeRemainingValue->setText(QString::number(remaining));
+}
+
+void MainWindow::imageUpdate(QImage stockImage)
+{
+    // max size of the image
+    int maxWidth = 400;
+    int maxHeight = 300;
+
+    // default upper left corner of display field
+    int x = 15;
+    int y = 60;
+
+    // setup the size for the display field
+    QSize scaledSize = stockImage.size();
+    scaledSize.scale(maxWidth, maxHeight, Qt::KeepAspectRatio);
+
+    int xOffset = (maxWidth - scaledSize.width()) / 2;
+    int yOffset = (maxHeight - scaledSize.height()) / 2;
+
+    // set image to label
+    ui->labelImageOutput->setGeometry(QRect(QPoint(x + xOffset, y + yOffset), scaledSize));
+    ui->labelImageOutput->setPixmap(QPixmap::fromImage(stockImage));
+    ui->labelImageOutput->setScaledContents(true);
+
+    // show image
+    ui->labelImageOutput->show();
 }
 
 /* END public slots */
@@ -734,7 +775,7 @@ void MainWindow::setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num)
 
 void MainWindow::clearErrors() const
 {
-    displayErrors("None");
+    displayErrors("None", false);
 }
 
 bool MainWindow::isBoxFilled(QLineEdit * const input) const
@@ -759,8 +800,12 @@ int MainWindow::stockIndex(char* stock) const
     return (index < 0) ? 0 : index;
 }
 
-void MainWindow::displayErrors(const char *message) const
+void MainWindow::displayErrors(const char *message, bool showConfig) const
 {
+    if (showConfig)
+    {
+        setTab(CONFIGURATION);
+    }
     ui->textBrowserErrors->setText(tr(message));
 }
 
@@ -806,7 +851,11 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
 void MainWindow::getAllInput()
 {
     // TODO: is this confusing with the different naming conventions?
-    model.set_hydro_filenames(formatHydroMaps().toStdString().c_str());
+    QList<QString> maps = getHydroMaps();
+    QList<uint16_t> days = getDaysToRun();
+    for(int i = 0; i < maps.size(); i++){
+        model.set_hydro_filenames(maps[i], days[i]);
+    }
     model.set_par_file(getPARFile().toStdString().c_str());
     model.set_temperature_file(getTempFile().toStdString().c_str());
     model.set_timestep(getTimestep());
@@ -922,22 +971,6 @@ void MainWindow::getAllStockInput()
     model.set_max_sedconsumer(getSedconsumerMax()/24);
 }
 
-QString MainWindow::formatHydroMaps() const
-{
-    QList<QString> maps = getHydroMaps();
-    QList<uint16_t> days = getDaysToRun();
-    size_t numMaps = maps.size();
-    QString builder;
-    builder.append(QString::number(numMaps) + "?");
-    for (size_t i = 0; i < numMaps; i++)
-    {
-        builder.append(maps.at(i) + "?");
-        builder.append(QString::number(days.at(i)) + "?");
-    }
-
-    return builder;
-}
-
 void MainWindow::dischargeToHydro(QString file)
 {
     ifstream fStream;
@@ -1034,6 +1067,11 @@ QString MainWindow::defaultFileLocation() const
 {
     // change output to wherever data dir is
     return  QDir::currentPath().append("/data");
+}
+
+void MainWindow::setTab(MainWindow::Tab tab) const
+{
+    ui->tabWidget->setCurrentIndex(tab);
 }
 
 /* END private functions */

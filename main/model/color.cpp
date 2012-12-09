@@ -17,7 +17,7 @@ int to_rgb(int hue, float saturation, float value){
     int red, green, blue;
     float huePrime = hue/60.0;
     float chroma = value * saturation;
-    float tempVal = chroma*(1-fabs((int)huePrime%2-1));
+    float tempVal = chroma*(1-fabs((float)((int)huePrime%2-1)));
 
 
     switch((int)floor(huePrime)) {
