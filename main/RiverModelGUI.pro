@@ -5,43 +5,18 @@
 #-------------------------------------------------
 
 QT       += core gui
-
 TARGET = RiverModelGUI
-TEMPLATE = app
 
-
-SOURCES += main.cpp \
-    model/globals.cpp \
-    model/cleanup.cpp \
-    model/color.cpp \
-    model/dump.cpp \
-    model/go.cpp \
-    model/patch.cpp \
-    model/pred.cpp \
-    model/setup.cpp \
-    model/grid.cpp \
-    model/rivermodel.cpp \
-    model/status.cpp \
-    view/mainwindow.cpp \
+SOURCES += view/mainwindow.cpp \
     view/configuration.cpp \
     view/modelthread.cpp \
     view/progressthread.cpp
 
-HEADERS  += model/cleanup.h \
-    model/color.h \
-    model/dump.h \
-    model/globals.h \
-    model/go.h \
-    model/patch.h \
-    model/pred.h \
-    model/setup.h \
-    model/flowdata.h \
-    model/grid.h \
-    model/rivermodel.h \
-    model/status.h \
-    view/mainwindow.h \
+HEADERS  += view/mainwindow.h \
     view/configuration.h \
     view/modelthread.h \
     view/progressthread.h
 
 FORMS    += view/mainwindow.ui
+
+include(./QmakeIncludes/RiverModelCommon.pri)

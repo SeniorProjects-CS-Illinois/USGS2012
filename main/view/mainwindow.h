@@ -47,6 +47,9 @@ public slots:
     /* Run the model */
     void runClicked();
 
+    /* Update which stock */
+    void whichstockChanged(QString newStock);
+
     /* Allow the user to click run button */
     void enableRun();
 
@@ -61,6 +64,9 @@ public slots:
 
     /* Update progress time information */
     void progressTimeUpdate(int elapsed, int remaining);
+
+    /* Update the output image */
+    void imageUpdate(QImage stockImage);
     
 private slots:
 
@@ -300,8 +306,11 @@ public:
 
 private:
 
+    enum Tab { CONFIGURATION, STOCK, OUTPUT };
+
     Ui::MainWindow* ui;
     RiverModel model;
+
     ModelThread modelThread;
     ProgressThread progressThread;
 
@@ -327,7 +336,7 @@ private:
     int stockIndex(char* stock) const;
 
     /* Set an error message */
-    void displayErrors(const char * message) const;
+    void displayErrors(const char * message, bool showConfig = true) const;
 
     /* Add hydro map information to list */
     void addHydroMap(QString file, QString days, bool addInfo, bool display = true);
@@ -359,9 +368,6 @@ private:
     /* Get all the stock input from the GUI and set globals */
     void getAllStockInput();
 
-    /* Turns hydro map info int properly formatted string expected by given code */
-    QString formatHydroMaps() const;
-
     /* Takes a discharge file and populates hydro map information */
     void dischargeToHydro(QString file);
 
@@ -382,6 +388,9 @@ private:
 
     /* Used to make file selection faster */
     QString defaultFileLocation() const;
+
+    /* Set the displayed tab to the given tab */
+    void setTab(Tab tab) const;
 };
 
 #endif // MAINWINDOW_H

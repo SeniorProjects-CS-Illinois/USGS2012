@@ -2,9 +2,10 @@
 #define PROGRESSTHREAD_H
 
 #include <QThread>
+#include <stdint.h>
+
 #include "../model/status.h"
 #include "../model/rivermodel.h"
-#include <stdint.h>
 
 class ProgressThread : public QThread
 {
@@ -18,6 +19,7 @@ public:
 signals:
     void progressPercentUpdate(int level);
     void progressTimeUpdate(int elapsed, int remaining);
+    void imageUpdate(QImage stockImage);
 
     void finished();
 
