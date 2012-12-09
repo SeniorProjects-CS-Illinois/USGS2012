@@ -78,9 +78,6 @@ private slots:
 
 public:
 
-    /* Set the tool tip information for the GUI */
-    void setToolTips();
-
     /* GETTERS */
     bool getAdjacent() const;
 
@@ -98,7 +95,7 @@ public:
     float getMacroBase() const;
     float getPhytoBase() const;
     float getConsumerBase() const;
-    float getDecompBase() const; // Waterdecomp?
+    float getDecompBase() const;
     float getSedconsumerBase() const;
     float getSeddecompBase() const;
     float getHerbivoreBase() const;
@@ -205,12 +202,12 @@ public:
     void setKMacro(float val);
 
     // Stock parameters
-    void setWhichStock(char* stock);
+    void setWhichStock(QString stock);
 
     void setMacroBase(float val);
     void setPhytoBase(float val);
     void setConsumerBase(float val);
-    void setDecompBase(float val); // Waterdecomp?
+    void setDecompBase(float val);
     void setSedconsumerBase(float val);
     void setSeddecompBase(float val);
     void setHerbivoreBase(float val);
@@ -314,11 +311,7 @@ private:
     ModelThread modelThread;
     ProgressThread progressThread;
 
-    QString wholeTempFile;
-    QString wholePARFile;
-
-    QVector<QString> wholeHydroMapFiles;
-    QVector<uint16_t> daysToRun;
+    Configuration uiConfig;
 
     /* Reset error message output box - all slots should call this in the beginning */
     void clearErrors() const;
@@ -333,7 +326,7 @@ private:
     bool isStockSelected(QCheckBox * const input) const;
 
     /* Get the index of the given string in the stock combo box */
-    int stockIndex(char* stock) const;
+    int stockIndex(QString stock) const;
 
     /* Set an error message */
     void displayErrors(const char * message, bool showConfig = true) const;
