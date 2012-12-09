@@ -797,7 +797,7 @@ bool MainWindow::isStockSelected(QCheckBox * const input) const
     return input->isChecked();
 }
 
-int MainWindow::stockIndex(char* stock) const
+int MainWindow::stockIndex(QString stock) const
 {
     // if not found, just default to 0
     int index = ui->comboBoxWhichStock->findText(stock);

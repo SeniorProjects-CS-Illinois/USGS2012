@@ -326,7 +326,7 @@ private:
     bool isStockSelected(QCheckBox * const input) const;
 
     /* Get the index of the given string in the stock combo box */
-    int stockIndex(char* stock) const;
+    int stockIndex(QString stock) const;
 
     /* Set an error message */
     void displayErrors(const char * message, bool showConfig = true) const;
