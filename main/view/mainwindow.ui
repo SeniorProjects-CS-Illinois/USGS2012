@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>850</width>
     <height>600</height>
    </rect>
   </property>
@@ -3455,7 +3455,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="text">
-       <string>Image Here</string>
+       <string>No Image Ready Yet</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -3471,7 +3471,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="toolTip">
-       <string>Display first image</string>
+       <string>Display first image (not working yet)</string>
       </property>
       <property name="text">
        <string>&lt;&lt;</string>
@@ -3487,7 +3487,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="toolTip">
-       <string>Display previous image</string>
+       <string>Display previous image (not working yet)</string>
       </property>
       <property name="text">
        <string>&lt;</string>
@@ -3503,7 +3503,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="toolTip">
-       <string>Display last image</string>
+       <string>Display last image (not working yet)</string>
       </property>
       <property name="text">
        <string>&gt;&gt;</string>
@@ -3519,7 +3519,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="toolTip">
-       <string>Display next image</string>
+       <string>Display next image (not working yet)</string>
       </property>
       <property name="text">
        <string>&gt;</string>
@@ -3535,7 +3535,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="toolTip">
-       <string>Stop the model</string>
+       <string>Stop the model (not working yet)</string>
       </property>
       <property name="text">
        <string>Stop</string>
@@ -3551,7 +3551,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <property name="toolTip">
-       <string>Pause the model</string>
+       <string>Pause the model (not working yet)</string>
       </property>
       <property name="text">
        <string>Pause</string>
@@ -3581,6 +3581,9 @@ p, li { white-space: pre-wrap; }
         <width>241</width>
         <height>241</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Selected region of image (not working yet)</string>
       </property>
      </widget>
      <widget class="QComboBox" name="comboBoxWhichStock">
@@ -3651,7 +3654,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>850</width>
      <height>21</height>
     </rect>
    </property>
