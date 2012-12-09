@@ -3,15 +3,17 @@
 
 using std::ifstream;
 using std::string;
+// TODO: remove this when finished
 using std::cout;
 using std::endl;
 
 /** TODO
-  *     - status updates
-  *     - error checking for run
-  *     - fail gracefully
-  *     - break this hideously long file into several
-  */
+ *      - error checking for run
+ *      - fail gracefully
+ *      - break this hideously long file into several
+ *      - units in tool tips for configuration input
+ *      - const correctness
+ */
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -42,7 +44,7 @@ void MainWindow::selectHydroMapClicked()
     // if the currently selected hydro map was not added, remove it
     if (wholeHydroMapFiles.size() != daysToRun.size())
     {
-        wholeHydroMapFiles.removeLast();
+        wholeHydroMapFiles.pop_back();
     }
 
     // open prompt to select file
@@ -74,8 +76,8 @@ void MainWindow::addHydroMapClicked()
     }
 
     // filename already added to list, but days to run not added
-    QString days = ui->lineEditDaysToRun->text();
-    daysToRun.append(days.toInt());
+    uint16_t days = ui->lineEditDaysToRun->text().toInt();
+    daysToRun.append(days);
 
     addHydroMap(ui->labelHydroMap->text(), days, false);
 }
@@ -85,8 +87,8 @@ void MainWindow::removeHydroMapClicked()
     clearErrors();
 
     QListWidget* list = ui->listWidgetHydroMap;
-    QMutableListIterator<QString> itHydro(wholeHydroMapFiles);
-    QMutableListIterator<uint16_t> itDays(daysToRun);
+    QMutableVectorIterator<QString> itHydro(wholeHydroMapFiles);
+    QMutableVectorIterator<uint16_t> itDays(daysToRun);
     bool anyRemoved = false;
     size_t size = list->count();
 
@@ -375,20 +377,13 @@ void MainWindow::saveConfiguration(QString file) const
     conf.sedconsumerSenescence      = getSedconsumerSenescence();
     conf.sedconsumerMax             = getSedconsumerMax();
 
-    // file names need special attention
-    QList<QString> hydromaps = getHydroMaps();
-    conf.hydroMaps = new char*[conf.numHydroMaps];
-    QList<uint16_t> days = getDaysToRun();
-    conf.daysToRun = new uint16_t[conf.numHydroMaps];
-    for (size_t i = 0; i < conf.numHydroMaps; i++)
-    {
-        conf.setFileName(hydromaps.at(i), conf.hydroMaps[i]);
-        conf.daysToRun[i] = days.at(i);
-    }
-    conf.setFileName(getPARFile(), conf.parFile);
-    conf.setFileName(getTempFile(), conf.tempFile);
+    conf.hydroMaps = getHydroMaps();
+    conf.daysToRun = getDaysToRun();
 
-    conf.write(file.toStdString().c_str());
+    conf.parFile = getPARFile();
+    conf.tempFile = getTempFile();
+
+    conf.write(file);
 }
 
 void MainWindow::loadConfiguration()
@@ -397,6 +392,7 @@ void MainWindow::loadConfiguration()
                                                 defaultFileLocation(), tr("Config Files (*.conf)"));
     if (!name.isEmpty())
     {
+        //clearHydroFiles();
         loadConfiguration(name);
     }
 }
@@ -404,7 +400,7 @@ void MainWindow::loadConfiguration()
 void MainWindow::loadConfiguration(QString file)
 {
     Configuration conf;
-    conf.read(file.toStdString().c_str());
+    conf.read(file);
 
     // basic values
     setAdjacent(conf.adjacent);
@@ -520,6 +516,8 @@ void MainWindow::loadConfiguration(QString file)
 void MainWindow::setToolTips()
 {
 /*
+  This is still here in case it is wanted on the tool tips along with units
+
     ui->lineEditMacroGrossCoef->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKMacro->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKPhyto->setToolTip(tr("Enter a number between 0.0 and 1.0"));
@@ -640,8 +638,8 @@ QString MainWindow::getWhichStock() const { return ui->comboBoxWhichStock->curre
 QString MainWindow::getTempFile() const { return wholeTempFile; }
 QString MainWindow::getPARFile() const { return wholePARFile; }
 
-QList<uint16_t> MainWindow::getDaysToRun() const { return daysToRun; }
-QList<QString> MainWindow::getHydroMaps() const { return wholeHydroMapFiles; }
+QVector<uint16_t> MainWindow::getDaysToRun() const { return daysToRun; }
+QVector<QString> MainWindow::getHydroMaps() const { return wholeHydroMapFiles; }
 
 
 /* SETTERS */
@@ -749,23 +747,23 @@ void MainWindow::setSedconsumerExcretion(float val) { ui->lineEditSedconsumerExc
 void MainWindow::setSedconsumerSenescence(float val) { ui->lineEditSedconsumerSenescence->setText(QString::number(val)); }
 void MainWindow::setSedconsumerMax(float val) { ui->lineEditSedconsumerMax->setText(QString::number(val)); }
 
-void MainWindow::setTempFile(char* filename)
+void MainWindow::setTempFile(QString filename)
 {
-    wholeTempFile = QString(filename);
-    ui->labelTempFile->setText(stripFile(tr(filename)));
+    wholeTempFile = filename;
+    ui->labelTempFile->setText(stripFile(filename));
 }
 
-void MainWindow::setPARFile(char* filename)
+void MainWindow::setPARFile(QString filename)
 {
-    wholePARFile = QString(filename);
-    ui->labelPARFile->setText(stripFile(tr(filename)));
+    wholePARFile = filename;
+    ui->labelPARFile->setText(stripFile(filename));
 }
 
-void MainWindow::setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num)
+void MainWindow::setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num)
 {
     for (size_t index = 0; index < num; index++)
     {
-        addHydroMap(filenames[index], QString::number(daysToRun[index]), true);
+        addHydroMap(filenames[index], days[index], true);
     }
 }
 
@@ -809,17 +807,17 @@ void MainWindow::displayErrors(const char *message, bool showConfig) const
     ui->textBrowserErrors->setText(tr(message));
 }
 
-void MainWindow::addHydroMap(QString file, QString days, bool addInfo, bool display)
+void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool display)
 {
     if (addInfo)
     {
         wholeHydroMapFiles.append(file);
-        daysToRun.append(days.toInt());
+        daysToRun.append(days);
         file = stripFile(file);
     }
     if (display)
     {
-        QString output = file + ": " + days + " Day" + (days != "1" ? "s" : "");
+        QString output = file + ": " + QString::number(days) + " Day" + (days != 1 ? "s" : "");
         ui->listWidgetHydroMap->addItem(new QListWidgetItem(output, ui->listWidgetHydroMap));
     }
 }
@@ -851,21 +849,20 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
 void MainWindow::getAllInput()
 {
     // TODO: is this confusing with the different naming conventions?
-    QList<QString> maps = getHydroMaps();
-    QList<uint16_t> days = getDaysToRun();
-    for(int i = 0; i < maps.size(); i++){
+    QVector<QString> maps = getHydroMaps();
+    QVector<uint16_t> days = getDaysToRun();
+    for(int i = 0; i < maps.size(); i++)
+    {
         model.set_hydro_filenames(maps[i], days[i]);
     }
     model.set_par_file(getPARFile().toStdString().c_str());
     model.set_temperature_file(getTempFile().toStdString().c_str());
     model.set_timestep(getTimestep());
-    // TODO: need separate dropdown for this, re-configure GUI a bit
     model.set_whichstock(getWhichStock().toStdString().c_str());
     model.set_TSS(getTSS());
     model.set_k_phyto(getKPhyto());
     model.set_k_macro(getKMacro());
     model.set_output_frequency(getOutputFreq());
-    // TODO: is this the "adjacent cells only" boolean?
     model.set_flow_corners(getAdjacent());
 
     getAllStockInput(); // There are so many, it would be best to separate this
@@ -886,8 +883,8 @@ void MainWindow::getAllStockInput()
                getDetritusBase(),
                getConsumerBase());
 
-    // All values with /24 at the end are per hour
-    //   values passed in as per day values
+    // all values with /24 at the end are per hour
+    // values passed in as per day values
     model.set_senescence_phyto(getPhytoSenescence()/24);
     model.set_respiration_phyto(getPhytoRespiration()/24);
     model.set_excretion_phyto(getPhytoExcretion()/24);
@@ -989,7 +986,7 @@ void MainWindow::dischargeToHydro(QString file)
         int hydro = atoi(str.c_str());
         QString hydroFile = intToHydroFile(hydro, hydroMapBase);
         // TODO: do a smart update of count
-        addHydroMap(hydroFile, QString::number(count), true, false);
+        addHydroMap(hydroFile, count, true, false);
         std::getline(fStream, str);
     }
     fStream.close();
@@ -1015,24 +1012,24 @@ void MainWindow::compressHydroFiles()
         return;
     }
 
-    QList<QString> newFiles;
-    QList<uint16_t> newDays;
+    QVector<QString> newFiles;
+    QVector<uint16_t> newDays;
     size_t size = wholeHydroMapFiles.size();
 
-    QString currFile = wholeHydroMapFiles.at(0);
-    size_t count = daysToRun.at(0);
+    QString currFile = wholeHydroMapFiles.front();
+    size_t count = daysToRun.front();
     for (size_t i = 1; i < size; i++)
     {
-        if (currFile.compare(wholeHydroMapFiles.at(i)) == 0) // they are the same
+        if (currFile.compare(wholeHydroMapFiles[i]) == 0) // they are the same
         {
-            count += daysToRun.at(i);
+            count += daysToRun[i];
         }
         else // they are different, add currFile to list
         {
             newFiles.append(currFile);
             newDays.append(count);
-            currFile = wholeHydroMapFiles.at(i);
-            count = daysToRun.at(i);
+            currFile = wholeHydroMapFiles[i];
+            count = daysToRun[i];
         }
     }
     newFiles.append(currFile);
@@ -1045,16 +1042,23 @@ void MainWindow::compressHydroFiles()
 
 void MainWindow::displayHydroFiles()
 {
-    clearHydroFiles();
+    clearHydroFilesDisplay();
     for (size_t i = 0; i < getNumHydroMaps(); i++)
     {
-        addHydroMap(stripFile(wholeHydroMapFiles.at(i)), QString::number(daysToRun.at(i)), false);
+        addHydroMap(stripFile(wholeHydroMapFiles[i]), daysToRun[i], false);
     }
+}
+
+void MainWindow::clearHydroFilesDisplay()
+{
+    ui->listWidgetHydroMap->clear();
 }
 
 void MainWindow::clearHydroFiles()
 {
-    ui->listWidgetHydroMap->clear();
+    clearHydroFilesDisplay();
+    wholeHydroMapFiles.clear();
+    daysToRun.clear();
 }
 
 const char* MainWindow::qstringToCStr(const QString & input) const
