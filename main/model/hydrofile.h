@@ -2,7 +2,7 @@
 #define HYDROFILE_H
 
 #include <QString>
-#include "grid.h"
+#include <QHash>
 
 //TODO Replace this type when we start to implement CarbonflowMap related stuff.
 typedef int CarbonFlowMap;
@@ -52,7 +52,8 @@ class HydroFile {
         int width;
         int height;
 
-        QHash<int, HydroData> hydroDataSet;
+        std::vector<HydroData> hydroDataSet;
+        QHash<int, int> hydroDataSetIndices;
         int getHashKey(int x, int y) const;
 
         void copy(HydroFile const & other);
