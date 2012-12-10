@@ -3,6 +3,8 @@
 
 #include <QString>
 #include <QHash>
+#include <QVector2D>
+#include <QVector>
 
 //TODO Replace this type when we start to implement CarbonflowMap related stuff.
 typedef int CarbonFlowMap;
@@ -24,10 +26,8 @@ class HydroFile {
         CarbonFlowMap * getCarbonFlowMap(int iterations);
 
         bool patchExists(int x, int y) const;
-        double getXVector(int x, int y) const;
-        double getYVector(int x, int y) const;
-        double getVelocity(int x, int y) const;
         double getDepth(int x, int y) const;
+        double getVector(int x, int y) const;
 
         int getMapWidth(void) const;
         int getMapHeight(void) const;
@@ -36,13 +36,7 @@ class HydroFile {
 
     private:
         struct HydroData {
-            bool available;
-            //TODO: Don't think these two ints are needed...
-            int xCor;
-            int yCor;
-            double xVector;
-            double yVector;
-            double velocity;
+            QVector2D flowVector;
             double depth;
         };
 
@@ -51,10 +45,14 @@ class HydroFile {
         QString hydromapFileName;
         int width;
         int height;
+        void setMapSize(QStringList hydroFileData);
+        static void zeroHydroData(HydroData[][] hydroData);
 
-        std::vector<HydroData> hydroDataSet;
+        QVector<HydroData> hydroDataSet;
         QHash<int, int> hydroDataSetIndices;
         int getHashKey(int x, int y) const;
+
+        HydroData & getData(int x, int y);
 
         void copy(HydroFile const & other);
         void clear();
