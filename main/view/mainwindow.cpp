@@ -3,15 +3,17 @@
 
 using std::ifstream;
 using std::string;
+// TODO: remove this when finished
 using std::cout;
 using std::endl;
 
 /** TODO
-  *     - status updates
-  *     - error checking for run
-  *     - fail gracefully
-  *     - break this hideously long file into several
-  */
+ *      - error checking for run
+ *      - fail gracefully
+ *      - break this hideously long file into several
+ *      - units in tool tips for configuration input
+ *      - const correctness
+ */
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,9 +42,9 @@ void MainWindow::selectHydroMapClicked()
     clearErrors();
 
     // if the currently selected hydro map was not added, remove it
-    if (wholeHydroMapFiles.size() != daysToRun.size())
+    if (uiConfig.hydroMaps.size() != uiConfig.daysToRun.size())
     {
-        wholeHydroMapFiles.removeLast();
+        uiConfig.hydroMaps.pop_back();
     }
 
     // open prompt to select file
@@ -52,7 +54,7 @@ void MainWindow::selectHydroMapClicked()
     // make sure a hydro map file was selected
     if (!selected.isEmpty())
     {
-        wholeHydroMapFiles.append(selected);
+        uiConfig.hydroMaps.append(selected);
         QString filename = stripFile(selected);
         ui->labelHydroMap->setText(filename);
         ui->labelHydroMap->setToolTip(filename);
@@ -74,8 +76,8 @@ void MainWindow::addHydroMapClicked()
     }
 
     // filename already added to list, but days to run not added
-    QString days = ui->lineEditDaysToRun->text();
-    daysToRun.append(days.toInt());
+    uint16_t days = ui->lineEditDaysToRun->text().toInt();
+    uiConfig.daysToRun.append(days);
 
     addHydroMap(ui->labelHydroMap->text(), days, false);
 }
@@ -85,8 +87,8 @@ void MainWindow::removeHydroMapClicked()
     clearErrors();
 
     QListWidget* list = ui->listWidgetHydroMap;
-    QMutableListIterator<QString> itHydro(wholeHydroMapFiles);
-    QMutableListIterator<uint16_t> itDays(daysToRun);
+    QMutableVectorIterator<QString> itHydro(uiConfig.hydroMaps);
+    QMutableVectorIterator<uint16_t> itDays(uiConfig.daysToRun);
     bool anyRemoved = false;
     size_t size = list->count();
 
@@ -143,8 +145,8 @@ void MainWindow::selectTemperatureFileClicked()
     // make sure a temperature file was selected
     if (!selected.isEmpty())
     {
-        wholeTempFile = selected;
-        QString filename = stripFile(wholeTempFile);
+        uiConfig.tempFile = selected;
+        QString filename = stripFile(selected);
         ui->labelTempFile->setText(filename);
         ui->labelTempFile->setToolTip(filename);
     }
@@ -161,8 +163,8 @@ void MainWindow::selectPARFileClicked()
     // make sure a par file was selected
     if (!selected.isEmpty())
     {
-        wholePARFile = selected;
-        QString filename = stripFile(wholePARFile);
+        uiConfig.parFile = selected;
+        QString filename = stripFile(selected);
         ui->labelPARFile->setText(filename);
         ui->labelPARFile->setToolTip(filename);
     }
@@ -375,20 +377,13 @@ void MainWindow::saveConfiguration(QString file) const
     conf.sedconsumerSenescence      = getSedconsumerSenescence();
     conf.sedconsumerMax             = getSedconsumerMax();
 
-    // file names need special attention
-    QList<QString> hydromaps = getHydroMaps();
-    conf.hydroMaps = new char*[conf.numHydroMaps];
-    QList<uint16_t> days = getDaysToRun();
-    conf.daysToRun = new uint16_t[conf.numHydroMaps];
-    for (size_t i = 0; i < conf.numHydroMaps; i++)
-    {
-        conf.setFileName(hydromaps.at(i), conf.hydroMaps[i]);
-        conf.daysToRun[i] = days.at(i);
-    }
-    conf.setFileName(getPARFile(), conf.parFile);
-    conf.setFileName(getTempFile(), conf.tempFile);
+    conf.hydroMaps = getHydroMaps();
+    conf.daysToRun = getDaysToRun();
 
-    conf.write(file.toStdString().c_str());
+    conf.parFile = getPARFile();
+    conf.tempFile = getTempFile();
+
+    conf.write(file);
 }
 
 void MainWindow::loadConfiguration()
@@ -404,7 +399,7 @@ void MainWindow::loadConfiguration()
 void MainWindow::loadConfiguration(QString file)
 {
     Configuration conf;
-    conf.read(file.toStdString().c_str());
+    conf.read(file);
 
     // basic values
     setAdjacent(conf.adjacent);
@@ -415,6 +410,8 @@ void MainWindow::loadConfiguration(QString file)
     setKMacro(conf.kMacro);
 
     // stock parameters
+    setWhichStock(conf.whichStock);
+
     setMacroBase(conf.macro);
     setPhytoBase(conf.phyto);
     setConsumerBase(conf.consumer);
@@ -517,9 +514,11 @@ void MainWindow::loadConfiguration(QString file)
 
 /* BEGIN public functions */
 
-void MainWindow::setToolTips()
+/*void MainWindow::setToolTips()
 {
-/*
+
+  This is still here in case it is wanted on the tool tips along with units
+
     ui->lineEditMacroGrossCoef->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKMacro->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditKPhyto->setToolTip(tr("Enter a number between 0.0 and 1.0"));
@@ -529,15 +528,15 @@ void MainWindow::setToolTips()
     ui->lineEditMacroVelocityMax->setToolTip(tr("Enter a value between 0.2 and 1.6"));
     ui->lineEditMacroRespiration->setToolTip(tr("Enter a number between 0.0 and 1.0"));
     ui->lineEditMacroSenescence->setToolTip(tr("Enter a value between 0.0 and 1.0"));
-*/
-}
+
+}*/
 
 /* GETTERS */
 bool MainWindow::getAdjacent() const { return ui->checkBoxAdjacentCells->isChecked(); }
 
 uint8_t MainWindow::getOutputFreq() const { return ui->lineEditOutputFreq->text().toInt(); }
 uint8_t MainWindow::getTimestep() const { return ui->horizontalSliderTimestep->value(); }
-uint16_t MainWindow::getNumHydroMaps() const { return wholeHydroMapFiles.size(); }
+uint16_t MainWindow::getNumHydroMaps() const { return uiConfig.hydroMaps.size(); }
 
 float MainWindow::getTSS() const { return ui->lineEditTSS->text().toFloat(); }
 float MainWindow::getKPhyto() const { return ui->lineEditKPhyto->text().toFloat(); }
@@ -637,135 +636,140 @@ float MainWindow::getSedconsumerSenescence() const { return ui->lineEditSedconsu
 float MainWindow::getSedconsumerMax() const { return ui->lineEditSedconsumerMax->text().toFloat(); }
 
 QString MainWindow::getWhichStock() const { return ui->comboBoxWhichStock->currentText(); }
-QString MainWindow::getTempFile() const { return wholeTempFile; }
-QString MainWindow::getPARFile() const { return wholePARFile; }
+QString MainWindow::getTempFile() const { return uiConfig.tempFile; }
+QString MainWindow::getPARFile() const { return uiConfig.parFile; }
 
-QList<uint16_t> MainWindow::getDaysToRun() const { return daysToRun; }
-QList<QString> MainWindow::getHydroMaps() const { return wholeHydroMapFiles; }
+QVector<uint16_t> MainWindow::getDaysToRun() const { return uiConfig.daysToRun; }
+QVector<QString> MainWindow::getHydroMaps() const { return uiConfig.hydroMaps; }
 
 
 /* SETTERS */
-void MainWindow::setAdjacent(bool val) { ui->checkBoxAdjacentCells->setChecked(val); }
+void MainWindow::setAdjacent(bool val) { ui->checkBoxAdjacentCells->setChecked(val); uiConfig.adjacent = val; }
 
-void MainWindow::setOutputFreq(uint8_t val) { ui->lineEditOutputFreq->setText(QString::number(val)); }
-void MainWindow::setTimestep(uint8_t val) { timestepUpdate(val);}
+void MainWindow::setOutputFreq(uint8_t val) { ui->lineEditOutputFreq->setText(QString::number(val)); uiConfig.outputFreq = val; }
+void MainWindow::setTimestep(uint8_t val) { timestepUpdate(val); uiConfig.timestep = val; }
 
-void MainWindow::setKPhyto(float val) { ui->lineEditKPhyto->setText(QString::number(val)); }
-void MainWindow::setKMacro(float val) { ui->lineEditKMacro->setText(QString::number(val)); }
-void MainWindow::setTSS(float val) { ui->lineEditTSS->setText(QString::number(val)); }
+void MainWindow::setKPhyto(float val) { ui->lineEditKPhyto->setText(QString::number(val)); uiConfig.kPhyto = val; }
+void MainWindow::setKMacro(float val) { ui->lineEditKMacro->setText(QString::number(val)); uiConfig.kMacro = val; }
+void MainWindow::setTSS(float val) { ui->lineEditTSS->setText(QString::number(val)); uiConfig.tss = val; }
 
 // stock parameters
-void MainWindow::setWhichStock(char *stock) { ui->comboBoxWhichStock->setCurrentIndex(stockIndex(stock)); }
+void MainWindow::setWhichStock(QString stock) { ui->comboBoxWhichStock->setCurrentIndex(stockIndex(stock)); uiConfig.whichStock = stock; }
 
-void MainWindow::setMacroBase(float val) { ui->lineEditMacro->setText(QString::number(val)); }
-void MainWindow::setPhytoBase(float val) { ui->lineEditPhyto->setText(QString::number(val)); }
-void MainWindow::setConsumerBase(float val) { ui->lineEditConsumer->setText(QString::number(val)); }
-void MainWindow::setDecompBase(float val) { ui->lineEditDecomp->setText(QString::number(val)); }
-void MainWindow::setSedconsumerBase(float val) { ui->lineEditSedconsumer->setText(QString::number(val)); }
-void MainWindow::setSeddecompBase(float val) { ui->lineEditSeddecomp->setText(QString::number(val)); }
-void MainWindow::setHerbivoreBase(float val) { ui->lineEditHerbivore->setText(QString::number(val)); }
-void MainWindow::setDetritusBase(float val) { ui->lineEditDetritus->setText(QString::number(val)); }
-void MainWindow::setPocBase(float val) { ui->lineEditPoc->setText(QString::number(val)); }
-void MainWindow::setDocBase(float val) { ui->lineEditDoc->setText(QString::number(val)); }
+void MainWindow::setMacroBase(float val) { ui->lineEditMacro->setText(QString::number(val)); uiConfig.macro = val; }
+void MainWindow::setPhytoBase(float val) { ui->lineEditPhyto->setText(QString::number(val)); uiConfig.phyto = val; }
+void MainWindow::setConsumerBase(float val) { ui->lineEditConsumer->setText(QString::number(val)); uiConfig.consumer = val; }
+void MainWindow::setDecompBase(float val) { ui->lineEditDecomp->setText(QString::number(val)); uiConfig.decomp = val; }
+void MainWindow::setSedconsumerBase(float val) { ui->lineEditSedconsumer->setText(QString::number(val)); uiConfig.sedconsumer = val; }
+void MainWindow::setSeddecompBase(float val) { ui->lineEditSeddecomp->setText(QString::number(val)); uiConfig.seddecomp = val; }
+void MainWindow::setHerbivoreBase(float val) { ui->lineEditHerbivore->setText(QString::number(val)); uiConfig.herbivore = val; }
+void MainWindow::setDetritusBase(float val) { ui->lineEditDetritus->setText(QString::number(val)); uiConfig.detritus = val; }
+void MainWindow::setPocBase(float val) { ui->lineEditPoc->setText(QString::number(val)); uiConfig.poc = val; }
+void MainWindow::setDocBase(float val) { ui->lineEditDoc->setText(QString::number(val)); uiConfig.doc = val; }
 
-void MainWindow::setPhytoSenescence(float val) { ui->lineEditPhytoSenescence->setText(QString::number(val)); }
-void MainWindow::setPhytoRespiration(float val) { ui->lineEditPhytoRespiration->setText(QString::number(val)); }
-void MainWindow::setPhytoExretion(float val) { ui->lineEditPhytoExcretion->setText(QString::number(val)); }
-void MainWindow::setPhytoAj(float val) { ui->lineEditPhytoAj->setText(QString::number(val)); }
-void MainWindow::setPhytoGj(float val) { ui->lineEditPhytoGj->setText(QString::number(val)); }
+void MainWindow::setPhytoSenescence(float val) { ui->lineEditPhytoSenescence->setText(QString::number(val)); uiConfig.phytoSenescence = val; }
+void MainWindow::setPhytoRespiration(float val) { ui->lineEditPhytoRespiration->setText(QString::number(val)); uiConfig.phytoRespiration = val; }
+void MainWindow::setPhytoExretion(float val) { ui->lineEditPhytoExcretion->setText(QString::number(val)); uiConfig.phytoExcretion = val; }
+void MainWindow::setPhytoAj(float val) { ui->lineEditPhytoAj->setText(QString::number(val)); uiConfig.phytoAj = val; }
+void MainWindow::setPhytoGj(float val) { ui->lineEditPhytoGj->setText(QString::number(val)); uiConfig.phytoGj = val; }
 
-void MainWindow::setHerbivoreAiPhyto(float val) { ui->lineEditHerbivoreAiPhyto->setText(QString::number(val)); }
-void MainWindow::setHerbivoreGiPhyto(float val) { ui->lineEditHerbivoreGiPhyto->setText(QString::number(val)); }
-void MainWindow::setHerbivorePrefPhyto(float val) { ui->lineEditHerbivorePrefPhyto->setText(QString::number(val)); }
-void MainWindow::setHerbivoreAiPeri(float val) { ui->lineEditHerbivoreAiPeri->setText(QString::number(val)); }
-void MainWindow::setHerbivoreGiPeri(float val) { ui->lineEditHerbivoreGiPeri->setText(QString::number(val)); }
-void MainWindow::setHerbivorePrefPeri(float val) { ui->lineEditHerbivorePrefPeri->setText(QString::number(val)); }
-void MainWindow::setHerbivoreAiWaterdecomp(float val) { ui->lineEditHerbivoreAiWaterdecomp->setText(QString::number(val)); }
-void MainWindow::setHerbivoreGiWaterdecomp(float val) { ui->lineEditHerbivoreGiWaterdecomp->setText(QString::number(val)); }
-void MainWindow::setHerbivorePrefWaterdecomp(float val) { ui->lineEditHerbivorePrefWaterdecomp->setText(QString::number(val)); }
-void MainWindow::setHerbivoreAj(float val) { ui->lineEditHerbivoreAj->setText(QString::number(val)); }
-void MainWindow::setHerbivoreGj(float val) { ui->lineEditHerbivoreGj->setText(QString::number(val)); }
-void MainWindow::setHerbivoreRespiration(float val) { ui->lineEditHerbivoreRespiration->setText(QString::number(val)); }
-void MainWindow::setHerbivoreExcretion(float val) { ui->lineEditHerbivoreExcretion->setText(QString::number(val)); }
-void MainWindow::setHerbivoreEgestion(float val) { ui->lineEditHerbivoreEgestion->setText(QString::number(val)); }
-void MainWindow::setHerbivoreSenescence(float val) { ui->lineEditHerbivoreSenescence->setText(QString::number(val)); }
-void MainWindow::setHerbivoreMax(float val) { ui->lineEditHerbivoreMax->setText(QString::number(val)); }
+void MainWindow::setHerbivoreAiPhyto(float val) { ui->lineEditHerbivoreAiPhyto->setText(QString::number(val)); uiConfig.herbivoreAiPhyto = val; }
+void MainWindow::setHerbivoreGiPhyto(float val) { ui->lineEditHerbivoreGiPhyto->setText(QString::number(val)); uiConfig.herbivoreGiPhyto = val; }
+void MainWindow::setHerbivorePrefPhyto(float val) { ui->lineEditHerbivorePrefPhyto->setText(QString::number(val)); uiConfig.herbivorePrefPhyto = val; }
+void MainWindow::setHerbivoreAiPeri(float val) { ui->lineEditHerbivoreAiPeri->setText(QString::number(val)); uiConfig.herbivoreAiPeri = val; }
+void MainWindow::setHerbivoreGiPeri(float val) { ui->lineEditHerbivoreGiPeri->setText(QString::number(val)); uiConfig.herbivoreGiPeri = val; }
+void MainWindow::setHerbivorePrefPeri(float val) { ui->lineEditHerbivorePrefPeri->setText(QString::number(val)); uiConfig.herbivorePrefPeri = val; }
+void MainWindow::setHerbivoreAiWaterdecomp(float val) { ui->lineEditHerbivoreAiWaterdecomp->setText(QString::number(val)); uiConfig.herbivoreAiWaterdecomp = val; }
+void MainWindow::setHerbivoreGiWaterdecomp(float val) { ui->lineEditHerbivoreGiWaterdecomp->setText(QString::number(val)); uiConfig.herbivoreGiWaterdecomp = val; }
+void MainWindow::setHerbivorePrefWaterdecomp(float val) { ui->lineEditHerbivorePrefWaterdecomp->setText(QString::number(val)); uiConfig.herbivorePrefWaterdecomp = val; }
+void MainWindow::setHerbivoreAj(float val) { ui->lineEditHerbivoreAj->setText(QString::number(val)); uiConfig.herbivoreAj = val; }
+void MainWindow::setHerbivoreGj(float val) { ui->lineEditHerbivoreGj->setText(QString::number(val)); uiConfig.herbivoreGj = val; }
+void MainWindow::setHerbivoreRespiration(float val) { ui->lineEditHerbivoreRespiration->setText(QString::number(val)); uiConfig.herbivoreRespiration = val; }
+void MainWindow::setHerbivoreExcretion(float val) { ui->lineEditHerbivoreExcretion->setText(QString::number(val)); uiConfig.herbivoreExcretion = val; }
+void MainWindow::setHerbivoreEgestion(float val) { ui->lineEditHerbivoreEgestion->setText(QString::number(val)); uiConfig.herbivoreEgestion = val; }
+void MainWindow::setHerbivoreSenescence(float val) { ui->lineEditHerbivoreSenescence->setText(QString::number(val)); uiConfig.herbivoreSenescence = val; }
+void MainWindow::setHerbivoreMax(float val) { ui->lineEditHerbivoreMax->setText(QString::number(val)); uiConfig.herbivoreMax = val; }
 
-void MainWindow::setWaterdecompAiDoc(float val) { ui->lineEditWaterdecompAiDoc->setText(QString::number(val)); }
-void MainWindow::setWaterdecompGiDoc(float val) { ui->lineEditWaterdecompGiDoc->setText(QString::number(val)); }
-void MainWindow::setWaterdecompPrefDoc(float val) { ui->lineEditWaterdecompPrefDoc->setText(QString::number(val)); }
-void MainWindow::setWaterdecompAiPoc(float val) { ui->lineEditWaterdecompAiPoc->setText(QString::number(val)); }
-void MainWindow::setWaterdecompGiPoc(float val) { ui->lineEditWaterdecompGiPoc->setText(QString::number(val)); }
-void MainWindow::setWaterdecompPrefPoc(float val) { ui->lineEditWaterdecompPrefPoc->setText(QString::number(val)); }
-void MainWindow::setWaterdecompAj(float val) { ui->lineEditWaterdecompAj->setText(QString::number(val)); }
-void MainWindow::setWaterdecompGj(float val) { ui->lineEditWaterdecompGj->setText(QString::number(val)); }
-void MainWindow::setWaterdecompRespiration(float val) { ui->lineEditWaterdecompRespiration->setText(QString::number(val)); }
-void MainWindow::setWaterdecompExcretion(float val) { ui->lineEditWaterdecompExcretion->setText(QString::number(val)); }
-void MainWindow::setWaterdecompSenescence(float val) { ui->lineEditWaterdecompSenescence->setText(QString::number(val)); }
-void MainWindow::setWaterdecompMax(float val) { ui->lineEditWaterdecompMax->setText(QString::number(val)); }
+void MainWindow::setWaterdecompAiDoc(float val) { ui->lineEditWaterdecompAiDoc->setText(QString::number(val)); uiConfig.waterdecompAiDoc = val; }
+void MainWindow::setWaterdecompGiDoc(float val) { ui->lineEditWaterdecompGiDoc->setText(QString::number(val)); uiConfig.waterdecompGiDoc = val; }
+void MainWindow::setWaterdecompPrefDoc(float val) { ui->lineEditWaterdecompPrefDoc->setText(QString::number(val)); uiConfig.waterdecompPrefDoc = val; }
+void MainWindow::setWaterdecompAiPoc(float val) { ui->lineEditWaterdecompAiPoc->setText(QString::number(val)); uiConfig.waterdecompAiPoc = val; }
+void MainWindow::setWaterdecompGiPoc(float val) { ui->lineEditWaterdecompGiPoc->setText(QString::number(val)); uiConfig.waterdecompGiPoc = val; }
+void MainWindow::setWaterdecompPrefPoc(float val) { ui->lineEditWaterdecompPrefPoc->setText(QString::number(val)); uiConfig.waterdecompPrefPoc = val; }
+void MainWindow::setWaterdecompAj(float val) { ui->lineEditWaterdecompAj->setText(QString::number(val)); uiConfig.waterdecompAj = val; }
+void MainWindow::setWaterdecompGj(float val) { ui->lineEditWaterdecompGj->setText(QString::number(val)); uiConfig.waterdecompGj = val; }
+void MainWindow::setWaterdecompRespiration(float val) { ui->lineEditWaterdecompRespiration->setText(QString::number(val)); uiConfig.waterdecompExcretion = val; }
+void MainWindow::setWaterdecompExcretion(float val) { ui->lineEditWaterdecompExcretion->setText(QString::number(val)); uiConfig.waterdecompExcretion = val; }
+void MainWindow::setWaterdecompSenescence(float val) { ui->lineEditWaterdecompSenescence->setText(QString::number(val)); uiConfig.waterdecompSenescence = val; }
+void MainWindow::setWaterdecompMax(float val) { ui->lineEditWaterdecompMax->setText(QString::number(val)); uiConfig.waterdecompMax = val; }
 
-void MainWindow::setSeddecompAiDetritus(float val) { ui->lineEditSeddecompAiDetritus->setText(QString::number(val)); }
-void MainWindow::setSeddecompGiDetritus(float val) { ui->lineEditSeddecompGiDetritus->setText(QString::number(val)); }
-void MainWindow::setSeddecompPrefDetritus(float val) { ui->lineEditSeddecompPrefDetritus->setText(QString::number(val)); }
-void MainWindow::setSeddecompAj(float val) { ui->lineEditSeddecompAj->setText(QString::number(val)); }
-void MainWindow::setSeddecompGj(float val) { ui->lineEditSeddecompGj->setText(QString::number(val)); }
-void MainWindow::setSeddecompRespiration(float val) { ui->lineEditSeddecompRespiration->setText(QString::number(val)); }
-void MainWindow::setSeddecompExcretion(float val) { ui->lineEditSeddecompExcretion->setText(QString::number(val)); }
-void MainWindow::setSeddecompSenescence(float val) { ui->lineEditSeddecompSenescence->setText(QString::number(val)); }
-void MainWindow::setSeddecompMax(float val) { ui->lineEditSeddecompMax->setText(QString::number(val)); }
+void MainWindow::setSeddecompAiDetritus(float val) { ui->lineEditSeddecompAiDetritus->setText(QString::number(val)); uiConfig.seddecompAiDetritus = val; }
+void MainWindow::setSeddecompGiDetritus(float val) { ui->lineEditSeddecompGiDetritus->setText(QString::number(val)); uiConfig.seddecompGiDetritus = val; }
+void MainWindow::setSeddecompPrefDetritus(float val) { ui->lineEditSeddecompPrefDetritus->setText(QString::number(val)); uiConfig.seddecompPrefDetritus = val; }
+void MainWindow::setSeddecompAj(float val) { ui->lineEditSeddecompAj->setText(QString::number(val)); uiConfig.seddecompAj = val; }
+void MainWindow::setSeddecompGj(float val) { ui->lineEditSeddecompGj->setText(QString::number(val)); uiConfig.seddecompGj = val; }
+void MainWindow::setSeddecompRespiration(float val) { ui->lineEditSeddecompRespiration->setText(QString::number(val)); uiConfig.seddecompRespiration = val; }
+void MainWindow::setSeddecompExcretion(float val) { ui->lineEditSeddecompExcretion->setText(QString::number(val)); uiConfig.seddecompExcretion = val; }
+void MainWindow::setSeddecompSenescence(float val) { ui->lineEditSeddecompSenescence->setText(QString::number(val)); uiConfig.seddecompSenescence = val; }
+void MainWindow::setSeddecompMax(float val) { ui->lineEditSeddecompMax->setText(QString::number(val)); uiConfig.seddecompMax = val; }
 
-void MainWindow::setConsumerAiHerbivore(float val) { ui->lineEditConsumerAiHerbivore->setText(QString::number(val)); }
-void MainWindow::setConsumerGiHerbivore(float val) { ui->lineEditConsumerGiHerbivore->setText(QString::number(val)); }
-void MainWindow::setConsumerPrefHerbivore(float val) { ui->lineEditConsumerPrefHerbivore->setText(QString::number(val)); }
-void MainWindow::setConsumerAiSedconsumer(float val) { ui->lineEditConsumerAiSedconsumer->setText(QString::number(val)); }
-void MainWindow::setConsumerGiSedconsumer(float val) { ui->lineEditConsumerGiSedconsumer->setText(QString::number(val)); }
-void MainWindow::setConsumerPrefSedconsumer(float val) { ui->lineEditConsumerPrefSedconsumer->setText(QString::number(val)); }
-void MainWindow::setConsumerAj(float val) { ui->lineEditConsumerAj->setText(QString::number(val)); }
-void MainWindow::setConsumerGj(float val) { ui->lineEditConsumerGj->setText(QString::number(val)); }
-void MainWindow::setConsumerRespiration(float val) { ui->lineEditConsumerRespiration->setText(QString::number(val)); }
-void MainWindow::setConsumerExcretion(float val) { ui->lineEditConsumerExcretion->setText(QString::number(val)); }
-void MainWindow::setConsumerSenescence(float val) { ui->lineEditConsumerSenescence->setText(QString::number(val)); }
-void MainWindow::setConsumerEgestion(float val) { ui->lineEditConsumerEgestion->setText(QString::number(val)); }
-void MainWindow::setConsumerMax(float val) { ui->lineEditConsumerMax->setText(QString::number(val)); }
+void MainWindow::setConsumerAiHerbivore(float val) { ui->lineEditConsumerAiHerbivore->setText(QString::number(val)); uiConfig.consumerAiHerbivore = val; }
+void MainWindow::setConsumerGiHerbivore(float val) { ui->lineEditConsumerGiHerbivore->setText(QString::number(val)); uiConfig.consumerGiHerbivore = val; }
+void MainWindow::setConsumerPrefHerbivore(float val) { ui->lineEditConsumerPrefHerbivore->setText(QString::number(val)); uiConfig.consumerPrefHerbivore = val; }
+void MainWindow::setConsumerAiSedconsumer(float val) { ui->lineEditConsumerAiSedconsumer->setText(QString::number(val)); uiConfig.consumerAiSedconsumer = val; }
+void MainWindow::setConsumerGiSedconsumer(float val) { ui->lineEditConsumerGiSedconsumer->setText(QString::number(val)); uiConfig.consumerGiSedconsumer = val; }
+void MainWindow::setConsumerPrefSedconsumer(float val) { ui->lineEditConsumerPrefSedconsumer->setText(QString::number(val)); uiConfig.consumerPrefSedconsumer = val; }
+void MainWindow::setConsumerAj(float val) { ui->lineEditConsumerAj->setText(QString::number(val)); uiConfig.consumerAj = val; }
+void MainWindow::setConsumerGj(float val) { ui->lineEditConsumerGj->setText(QString::number(val)); uiConfig.consumerGj = val; }
+void MainWindow::setConsumerRespiration(float val) { ui->lineEditConsumerRespiration->setText(QString::number(val)); uiConfig.consumerRespiration = val; }
+void MainWindow::setConsumerExcretion(float val) { ui->lineEditConsumerExcretion->setText(QString::number(val)); uiConfig.consumerExcretion = val; }
+void MainWindow::setConsumerSenescence(float val) { ui->lineEditConsumerSenescence->setText(QString::number(val)); uiConfig.consumerSenescence = val; }
+void MainWindow::setConsumerEgestion(float val) { ui->lineEditConsumerEgestion->setText(QString::number(val)); uiConfig.consumerEgestion = val; }
+void MainWindow::setConsumerMax(float val) { ui->lineEditConsumerMax->setText(QString::number(val)); uiConfig.consumerMax = val; }
 
-void MainWindow::setMacroSenescence(float val) { ui->lineEditMacroSenescence->setText(QString::number(val)); }
-void MainWindow::setMacroRespiration(float val) { ui->lineEditMacroRespiration->setText(QString::number(val)); }
-void MainWindow::setMacroExcretion(float val) { ui->lineEditMacroExcretion->setText(QString::number(val)); }
-void MainWindow::setMacroTemp(float val) { ui->lineEditMacroTemp->setText(QString::number(val)); }
-void MainWindow::setMacroGross(float val) { ui->lineEditMacroGrossCoef->setText(QString::number(val)); }
-void MainWindow::setMacroMassMax(float val) { ui->lineEditMacroMassMax->setText(QString::number(val)); }
-void MainWindow::setMacroVelocityMax(float val) { ui->lineEditMacroVelocityMax->setText(QString::number(val)); }
+void MainWindow::setMacroSenescence(float val) { ui->lineEditMacroSenescence->setText(QString::number(val)); uiConfig.macroSenescence = val; }
+void MainWindow::setMacroRespiration(float val) { ui->lineEditMacroRespiration->setText(QString::number(val)); uiConfig.macroRespiration = val; }
+void MainWindow::setMacroExcretion(float val) { ui->lineEditMacroExcretion->setText(QString::number(val)); uiConfig.macroExcretion = val; }
+void MainWindow::setMacroTemp(float val) { ui->lineEditMacroTemp->setText(QString::number(val)); uiConfig.macroTemp = val; }
+void MainWindow::setMacroGross(float val) { ui->lineEditMacroGrossCoef->setText(QString::number(val)); uiConfig.macroGross = val; }
+void MainWindow::setMacroMassMax(float val) { ui->lineEditMacroMassMax->setText(QString::number(val)); uiConfig.macroMassMax = val; }
+void MainWindow::setMacroVelocityMax(float val) { ui->lineEditMacroVelocityMax->setText(QString::number(val)); uiConfig.macroVelocityMax = val; }
 
-void MainWindow::setSedconsumerAiDetritus(float val) { ui->lineEditSedconsumerAiDetritus->setText(QString::number(val)); }
-void MainWindow::setSedconsumerGiDetritus(float val) { ui->lineEditSedconsumerGiDetritus->setText(QString::number(val)); }
-void MainWindow::setSedconsumerPrefDetritus(float val) { ui->lineEditSedconsumerPrefDetritus->setText(QString::number(val)); }
-void MainWindow::setSedconsumerAiSeddecomp(float val) { ui->lineEditSedconsumerAiSeddecomp->setText(QString::number(val)); }
-void MainWindow::setSedconsumerGiSeddecomp(float val) { ui->lineEditSedconsumerGiSeddecomp->setText(QString::number(val)); }
-void MainWindow::setSedconsumerPrefSeddecomp(float val) { ui->lineEditSedconsumerPrefSeddecomp->setText(QString::number(val)); }
-void MainWindow::setSedconsumerAj(float val) { ui->lineEditSedconsumerAj->setText(QString::number(val)); }
-void MainWindow::setSedconsumerGj(float val) { ui->lineEditSedconsumerGj->setText(QString::number(val)); }
-void MainWindow::setSedconsumerRespiration(float val) { ui->lineEditSedconsumerRespiration->setText(QString::number(val)); }
-void MainWindow::setSedconsumerExcretion(float val) { ui->lineEditSedconsumerExcretion->setText(QString::number(val)); }
-void MainWindow::setSedconsumerSenescence(float val) { ui->lineEditSedconsumerSenescence->setText(QString::number(val)); }
-void MainWindow::setSedconsumerMax(float val) { ui->lineEditSedconsumerMax->setText(QString::number(val)); }
+void MainWindow::setSedconsumerAiDetritus(float val) { ui->lineEditSedconsumerAiDetritus->setText(QString::number(val)); uiConfig.sedconsumerAiDetritus = val; }
+void MainWindow::setSedconsumerGiDetritus(float val) { ui->lineEditSedconsumerGiDetritus->setText(QString::number(val)); uiConfig.sedconsumerGiDetritus = val; }
+void MainWindow::setSedconsumerPrefDetritus(float val) { ui->lineEditSedconsumerPrefDetritus->setText(QString::number(val)); uiConfig.sedconsumerPrefDetritus = val; }
+void MainWindow::setSedconsumerAiSeddecomp(float val) { ui->lineEditSedconsumerAiSeddecomp->setText(QString::number(val)); uiConfig.sedconsumerAiSeddecomp = val; }
+void MainWindow::setSedconsumerGiSeddecomp(float val) { ui->lineEditSedconsumerGiSeddecomp->setText(QString::number(val)); uiConfig.sedconsumerGiSeddecomp = val; }
+void MainWindow::setSedconsumerPrefSeddecomp(float val) { ui->lineEditSedconsumerPrefSeddecomp->setText(QString::number(val)); uiConfig.sedconsumerPrefSeddecomp = val; }
+void MainWindow::setSedconsumerAj(float val) { ui->lineEditSedconsumerAj->setText(QString::number(val)); uiConfig.sedconsumerAj = val; }
+void MainWindow::setSedconsumerGj(float val) { ui->lineEditSedconsumerGj->setText(QString::number(val)); uiConfig.sedconsumerGj = val; }
+void MainWindow::setSedconsumerRespiration(float val) { ui->lineEditSedconsumerRespiration->setText(QString::number(val)); uiConfig.sedconsumerRespiration = val; }
+void MainWindow::setSedconsumerExcretion(float val) { ui->lineEditSedconsumerExcretion->setText(QString::number(val)); uiConfig.sedconsumerExcretion = val; }
+void MainWindow::setSedconsumerSenescence(float val) { ui->lineEditSedconsumerSenescence->setText(QString::number(val)); uiConfig.sedconsumerSenescence = val; }
+void MainWindow::setSedconsumerMax(float val) { ui->lineEditSedconsumerMax->setText(QString::number(val)); uiConfig.sedconsumerMax = val; }
 
-void MainWindow::setTempFile(char* filename)
+void MainWindow::setTempFile(QString filename)
 {
-    wholeTempFile = QString(filename);
-    ui->labelTempFile->setText(stripFile(tr(filename)));
+    uiConfig.tempFile = filename;
+    ui->labelTempFile->setText(stripFile(filename));
 }
 
-void MainWindow::setPARFile(char* filename)
+void MainWindow::setPARFile(QString filename)
 {
-    wholePARFile = QString(filename);
-    ui->labelPARFile->setText(stripFile(tr(filename)));
+    uiConfig.parFile = filename;
+    ui->labelPARFile->setText(stripFile(filename));
 }
 
-void MainWindow::setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num)
+void MainWindow::setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num)
 {
+    // first, clear out existing files
+    clearHydroFiles();
+
+    // add new files
+    uiConfig.numHydroMaps = num;
     for (size_t index = 0; index < num; index++)
     {
-        addHydroMap(filenames[index], QString::number(daysToRun[index]), true);
+        addHydroMap(filenames[index], days[index], true);
     }
 }
 
@@ -793,7 +797,7 @@ bool MainWindow::isStockSelected(QCheckBox * const input) const
     return input->isChecked();
 }
 
-int MainWindow::stockIndex(char* stock) const
+int MainWindow::stockIndex(QString stock) const
 {
     // if not found, just default to 0
     int index = ui->comboBoxWhichStock->findText(stock);
@@ -809,17 +813,17 @@ void MainWindow::displayErrors(const char *message, bool showConfig) const
     ui->textBrowserErrors->setText(tr(message));
 }
 
-void MainWindow::addHydroMap(QString file, QString days, bool addInfo, bool display)
+void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool display)
 {
     if (addInfo)
     {
-        wholeHydroMapFiles.append(file);
-        daysToRun.append(days.toInt());
+        uiConfig.hydroMaps.append(file);
+        uiConfig.daysToRun.append(days);
         file = stripFile(file);
     }
     if (display)
     {
-        QString output = file + ": " + days + " Day" + (days != "1" ? "s" : "");
+        QString output = file + ": " + QString::number(days) + " Day" + (days != 1 ? "s" : "");
         ui->listWidgetHydroMap->addItem(new QListWidgetItem(output, ui->listWidgetHydroMap));
     }
 }
@@ -851,26 +855,23 @@ QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
 void MainWindow::getAllInput()
 {
     // TODO: is this confusing with the different naming conventions?
-    QList<QString> maps = getHydroMaps();
-    QList<uint16_t> days = getDaysToRun();
-    for(int i = 0; i < maps.size(); i++){
+    QVector<QString> maps = getHydroMaps();
+    QVector<uint16_t> days = getDaysToRun();
+    for(int i = 0; i < maps.size(); i++)
+    {
         model.set_hydro_filenames(maps[i], days[i]);
     }
     model.set_par_file(getPARFile().toStdString().c_str());
     model.set_temperature_file(getTempFile().toStdString().c_str());
     model.set_timestep(getTimestep());
-    // TODO: need separate dropdown for this, re-configure GUI a bit
     model.set_whichstock(getWhichStock().toStdString().c_str());
     model.set_TSS(getTSS());
     model.set_k_phyto(getKPhyto());
     model.set_k_macro(getKMacro());
     model.set_output_frequency(getOutputFreq());
-    // TODO: is this the "adjacent cells only" boolean?
     model.set_flow_corners(getAdjacent());
 
     getAllStockInput(); // There are so many, it would be best to separate this
-
-    //saveConfiguration(QString(defaultFileLocation())); // save configuration for next time
 }
 
 void MainWindow::getAllStockInput()
@@ -886,8 +887,8 @@ void MainWindow::getAllStockInput()
                getDetritusBase(),
                getConsumerBase());
 
-    // All values with /24 at the end are per hour
-    //   values passed in as per day values
+    // all values with /24 at the end are per hour
+    // values passed in as per day values
     model.set_senescence_phyto(getPhytoSenescence()/24);
     model.set_respiration_phyto(getPhytoRespiration()/24);
     model.set_excretion_phyto(getPhytoExcretion()/24);
@@ -989,7 +990,7 @@ void MainWindow::dischargeToHydro(QString file)
         int hydro = atoi(str.c_str());
         QString hydroFile = intToHydroFile(hydro, hydroMapBase);
         // TODO: do a smart update of count
-        addHydroMap(hydroFile, QString::number(count), true, false);
+        addHydroMap(hydroFile, count, true, false);
         std::getline(fStream, str);
     }
     fStream.close();
@@ -1010,51 +1011,58 @@ QString MainWindow::intToHydroFile(int hydro, QString base) const
 
 void MainWindow::compressHydroFiles()
 {
-    if (wholeHydroMapFiles.isEmpty())
+    if (uiConfig.hydroMaps.isEmpty())
     {
         return;
     }
 
-    QList<QString> newFiles;
-    QList<uint16_t> newDays;
-    size_t size = wholeHydroMapFiles.size();
+    QVector<QString> newFiles;
+    QVector<uint16_t> newDays;
+    size_t size = uiConfig.hydroMaps.size();
 
-    QString currFile = wholeHydroMapFiles.at(0);
-    size_t count = daysToRun.at(0);
+    QString currFile = uiConfig.hydroMaps.front();
+    size_t count = uiConfig.daysToRun.front();
     for (size_t i = 1; i < size; i++)
     {
-        if (currFile.compare(wholeHydroMapFiles.at(i)) == 0) // they are the same
+        if (currFile.compare(uiConfig.hydroMaps[i]) == 0) // they are the same
         {
-            count += daysToRun.at(i);
+            count += uiConfig.daysToRun[i];
         }
         else // they are different, add currFile to list
         {
             newFiles.append(currFile);
             newDays.append(count);
-            currFile = wholeHydroMapFiles.at(i);
-            count = daysToRun.at(i);
+            currFile = uiConfig.hydroMaps[i];
+            count = uiConfig.daysToRun[i];
         }
     }
     newFiles.append(currFile);
     newDays.append(count);
 
-    wholeHydroMapFiles = newFiles;
-    daysToRun = newDays;
+    uiConfig.hydroMaps = newFiles;
+    uiConfig.daysToRun = newDays;
     displayHydroFiles();
 }
 
 void MainWindow::displayHydroFiles()
 {
-    clearHydroFiles();
+    clearHydroFilesDisplay();
     for (size_t i = 0; i < getNumHydroMaps(); i++)
     {
-        addHydroMap(stripFile(wholeHydroMapFiles.at(i)), QString::number(daysToRun.at(i)), false);
+        addHydroMap(stripFile(uiConfig.hydroMaps[i]), uiConfig.daysToRun[i], false);
     }
+}
+
+void MainWindow::clearHydroFilesDisplay()
+{
+    ui->listWidgetHydroMap->clear();
 }
 
 void MainWindow::clearHydroFiles()
 {
-    ui->listWidgetHydroMap->clear();
+    clearHydroFilesDisplay();
+    uiConfig.hydroMaps.clear();
+    uiConfig.daysToRun.clear();
 }
 
 const char* MainWindow::qstringToCStr(const QString & input) const

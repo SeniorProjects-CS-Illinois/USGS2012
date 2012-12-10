@@ -78,9 +78,6 @@ private slots:
 
 public:
 
-    /* Set the tool tip information for the GUI */
-    void setToolTips();
-
     /* GETTERS */
     bool getAdjacent() const;
 
@@ -98,7 +95,7 @@ public:
     float getMacroBase() const;
     float getPhytoBase() const;
     float getConsumerBase() const;
-    float getDecompBase() const; // Waterdecomp?
+    float getDecompBase() const;
     float getSedconsumerBase() const;
     float getSeddecompBase() const;
     float getHerbivoreBase() const;
@@ -191,8 +188,8 @@ public:
     QString getTempFile() const;
     QString getPARFile() const;
 
-    QList<uint16_t> getDaysToRun() const;
-    QList<QString> getHydroMaps() const;
+    QVector<uint16_t> getDaysToRun() const;
+    QVector<QString> getHydroMaps() const;
 
     /* SETTERS */
     void setAdjacent(bool val);
@@ -205,12 +202,12 @@ public:
     void setKMacro(float val);
 
     // Stock parameters
-    void setWhichStock(char* stock);
+    void setWhichStock(QString stock);
 
     void setMacroBase(float val);
     void setPhytoBase(float val);
     void setConsumerBase(float val);
-    void setDecompBase(float val); // Waterdecomp?
+    void setDecompBase(float val);
     void setSedconsumerBase(float val);
     void setSeddecompBase(float val);
     void setHerbivoreBase(float val);
@@ -300,9 +297,9 @@ public:
     void setSedconsumerMax(float val);
 
     // Files
-    void setTempFile(char* filename);
-    void setPARFile(char* filename);
-    void setHydroMaps(char** filenames, uint16_t* daysToRun, size_t num);
+    void setTempFile(QString filename);
+    void setPARFile(QString filename);
+    void setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num);
 
 private:
 
@@ -314,11 +311,7 @@ private:
     ModelThread modelThread;
     ProgressThread progressThread;
 
-    QString wholeTempFile;
-    QString wholePARFile;
-
-    QList<QString> wholeHydroMapFiles;
-    QList<uint16_t> daysToRun;
+    Configuration uiConfig;
 
     /* Reset error message output box - all slots should call this in the beginning */
     void clearErrors() const;
@@ -333,13 +326,13 @@ private:
     bool isStockSelected(QCheckBox * const input) const;
 
     /* Get the index of the given string in the stock combo box */
-    int stockIndex(char* stock) const;
+    int stockIndex(QString stock) const;
 
     /* Set an error message */
     void displayErrors(const char * message, bool showConfig = true) const;
 
     /* Add hydro map information to list */
-    void addHydroMap(QString file, QString days, bool addInfo, bool display = true);
+    void addHydroMap(QString file, uint16_t days, bool addInfo, bool display = true);
 
     /* Save the configuration to the given file */
     void saveConfiguration(QString file) const;
@@ -381,6 +374,9 @@ private:
     void displayHydroFiles();
 
     /* Clear the display of all hydro map data on the screen */
+    void clearHydroFilesDisplay();
+
+    /* Clear the display and the stored information of the hydro files */
     void clearHydroFiles();
 
     /* Convert QString to const char* */

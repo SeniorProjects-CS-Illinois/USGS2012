@@ -2,6 +2,7 @@
 #define CONFIGURATION_H
 
 #include <QString>
+#include <QVector>
 #include <stdint.h>
 #include <iostream>
 #include <fstream>
@@ -123,34 +124,28 @@ struct Configuration
   */
 
 public:
+
+    /* Default constructor, does nothing special */
     Configuration();
-    Configuration(Configuration const & other);
-
-    ~Configuration();
-
-    Configuration const & operator=(Configuration const & other);
 
     /* Write all data to a file */
-    void write(const char *filename) const;
+    void write(QString const & filename) const;
 
     /* Read in a file */
-    void read(const char *filename);
-
-    /* Sets a filename properly */
-    void setFileName(QString source, char* & dest);
+    void read(QString const & filename);
 
     bool adjacent;
 
-    char* tempFile;
-    char* parFile;
-    char** hydroMaps;
+    QString tempFile;
+    QString parFile;
+    QVector<QString> hydroMaps;
 
     uint8_t numStocks;
     uint16_t numHydroMaps;
 
     uint8_t outputFreq;
     uint8_t timestep;
-    uint16_t* daysToRun;
+    QVector<uint16_t> daysToRun;
 
     float tss;
     float kPhyto;
@@ -253,9 +248,6 @@ public:
 
 
 private:
-    void clear();
-    void copy(Configuration const & other);
-
     bool nextBool(std::ifstream & file, std::string & str);
     uint16_t nextInt(std::ifstream & file, std::string & str);
     float nextFloat(std::ifstream & file, std::string & str);
