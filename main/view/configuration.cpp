@@ -10,9 +10,9 @@ using std::endl;
 Configuration::Configuration() :
     adjacent(false),
     numStocks(10),
-    numHydroMaps(-1),
-    outputFreq(-1),
-    timestep(-1),
+    numHydroMaps(0),
+    outputFreq(0),
+    timestep(0),
     tss(-1.0),
     kPhyto(-1.0),
     kMacro(-1.0),
