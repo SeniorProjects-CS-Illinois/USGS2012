@@ -209,7 +209,7 @@ typedef struct {
     int POC_INDEX;
     int DETRITUS_INDEX;
 
-    char* stock_names[10];
+    QString stock_names[10];
     QMutex imageMutex;
     QImage* images[10];
 

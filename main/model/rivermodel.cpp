@@ -24,8 +24,7 @@ QImage RiverModel::getImage(QString stockName){
 
     g.imageMutex.lock();
     for(int i = 0; i < g.NUM_STOCKS; i++){
-        QString possibleStock(g.stock_names[i]);
-        if(possibleStock == stockName){
+        if(g.stock_names[i] == stockName){
             stockImage = *(g.images[i]);
             break;
         }
