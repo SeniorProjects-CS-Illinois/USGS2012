@@ -30,6 +30,6 @@ int dump_data();
 
 /* Outputs an image */
 void output_image();
-const char* make_file_name(int index);
+QString make_file_name(int index);
 
 #endif

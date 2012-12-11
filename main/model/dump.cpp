@@ -80,14 +80,12 @@ int dump_data() {
 
 void output_image(void) {
 
-    QString fileName("output.png");
     QImageWriter writer;
     writer.setFormat("png");
 
     g.imageMutex.lock();
     for(int i=0; i < g.NUM_STOCKS; i++){
-        const char* file_name = make_file_name(i);
-        QString fileName(file_name);
+        QString fileName = make_file_name(i);
         writer.setFileName(fileName);
         *g.images[i] = g.images[i]->mirrored(false, true);
         writer.write(*g.images[i]);
@@ -96,15 +94,14 @@ void output_image(void) {
     return;
 }
 
-const char* make_file_name(int index) {
-    QString file_name = "./results/images/";
-    file_name.append(g.stock_names[index]);
+QString make_file_name(int index) {
+    QString fileName = "./results/images/";
+    fileName.append(g.stock_names[index]);
     QDateTime date_time = QDateTime::currentDateTime();
     QString date_time_str = date_time.toString("_MMM_d_H_mm_ss");
-    file_name.append(date_time_str);
-    file_name.append(".png");
+    fileName.append(date_time_str);
+    fileName.append(".png");
 
-    const char* cfile_name = file_name.toStdString().c_str();
-    return cfile_name;
+    return fileName;
 }
 
