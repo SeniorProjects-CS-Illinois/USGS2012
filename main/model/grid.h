@@ -36,14 +36,14 @@ class Grid {
         /**
          * Returns the dimensions provided in the constructor.  Useful for loops.
          */
-        std::size_t getXDim(void);
-        std::size_t getYDim(void);
+        std::size_t getWidth(void);
+        std::size_t getHeight(void);
 
 
     private:
         std::vector<T> array;
-        size_t numCol;
-        size_t numRow;
+        size_t width;
+        size_t height;
 };
 
 #include "grid.cpp"

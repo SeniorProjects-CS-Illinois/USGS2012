@@ -1,4 +1,7 @@
 #include "hydrofile.h"
+#include <iostream>
+using std::cout;
+using std::endl;
 
 HydroFile::HydroFile(QString filename) {
 
@@ -10,8 +13,9 @@ HydroFile::HydroFile(QString filename) {
         exit(1);
     }
 
-    int covered_cells = 0;
-    int uncovered_cells = 0;
+    waterCellCount = 0;
+    maxDepth = 0.0;
+    maxFlow = 0.0;
 
     QString hydroFileText = hydroFile.readAll();
     QStringList hydroFileData = hydroFileText.split(" ");
@@ -22,21 +26,31 @@ HydroFile::HydroFile(QString filename) {
 
 
     for(int index = 6; index < hydroFileData.size(); index += 6) {
+        HydroData data;
 
         int patch_x = hydroFileData[index].toInt();
         int patch_y = hydroFileData[index + 1].toInt();
-        int hashKey = getHashKey(patch_x, patch_y);
 
-        HydroData data;
         data.depth          = hydroFileData[index + 2].toDouble();
-        data.flowVector.x   = hydroFileData[index + 3].toDouble();
-        data.flowVector.y   = hydroFileData[index + 4].toDouble();
+        data.flowVector.setX( hydroFileData[index + 3].toDouble() );
+        data.flowVector.setY( hydroFileData[index + 4].toDouble() );
 
         hydroData(patch_x, patch_y) = data;
+
+        if(data.depth > 0){
+            waterCellCount++;
+            if(data.depth > maxDepth) {
+                maxDepth = data.depth;
+            }
+            if(data.flowVector.length() > maxFlow) {
+                maxFlow = data.flowVector.length();
+            }
+        }
+        
     }
-    
-    for(int x = 0; x < hydroData.getXDim(); x++) {
-        for(int y = 0; y < hydroData.getYDim(); y++) {
+
+    for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
+        for(unsigned int y = 0; y < hydroData.getHeight(); y++) {
             if(hydroData(x,y).depth != 0) {
                 hydroDataSet.append(hydroData(x,y));
                 int index = getHashKey(x,y);
@@ -64,14 +78,14 @@ CarbonFlowMap * HydroFile::getCarbonFlowMap(int iterations)
 
 bool HydroFile::patchExists(int x, int y) const {
     int hashKey = getHashKey(x,y);
-    return hydroDataSetIndicies.contains(hashKey);
+    return hydroDataSetIndices.contains(hashKey);
 }
 
-double HydroFile::getVector(int x, int y) const {
+QVector2D HydroFile::getVector(int x, int y) {
     return getData(x,y).flowVector;
 }
 
-double HydroFile::getDepth(int x, int y) const {
+double HydroFile::getDepth(int x, int y) {
     return getData(x,y).depth;
 }
 
@@ -97,13 +111,13 @@ void HydroFile::setMapSize(QStringList hydroFileData) {
     height++;
 }
 
-int HydroFile::getHashKey(int x, int y) {
+int HydroFile::getHashKey(int x, int y) const {
     return (y * width + x);
 }
 
-HydroData & getData(int x, int y) {
+typename HydroFile::HydroData & HydroFile::getData(int x, int y) {
     int hashKey = getHashKey(x,y);
-    int index = hydroDataSetIndicies[hashKey];
+    int index = hydroDataSetIndices[hashKey];
     return hydroDataSet[index];
 }
 
@@ -114,10 +128,101 @@ void HydroFile::clear() {
     //TODO
 }
 
-void zeroHydroData(Grid<HydroData> hydroData) {
-    for(int x = 0; x < width; x++) {
-        for(int y = 0; y < height; y++) {
+void HydroFile::zeroHydroData(Grid<HydroData> hydroData) {
+
+    for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
+        for(unsigned int y = 0; y < hydroData.getHeight(); y++) {
             hydroData(x,y).depth = 0;
         }
     }
+}
+
+QImage HydroFile::generateVisualization(int imageCellSize){
+    int offset = 50;
+    int imageHeight = height*imageCellSize + offset * 2;
+    int imageWidth = width*imageCellSize + offset * 2;
+
+    QImage image( imageWidth, imageHeight, QImage::Format_ARGB32 );
+    image.fill(qRgb(32,32,32));
+
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
+            if(patchExists(x,y) && getDepth(x,y) > 0) {
+                double cellDepth = getDepth(x,y);
+                double relativeDepth = cellDepth / maxDepth;
+                QColor depthColor = QColor::fromHsv( 120 - (int)(120*relativeDepth)+1 ,255,255);
+
+                for(int i = x * imageCellSize; i < (x + 1)*imageCellSize; i++) {
+                    for(int j = y * imageCellSize; j < (y +1)*imageCellSize; j++) {
+                        if(i < imageWidth && j < imageHeight) {
+                            image.setPixel(i+offset, j+offset, depthColor.rgb());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
+            if(patchExists(x,y) && getDepth(x,y) > 0) {
+                double cellI = x*imageCellSize;
+                double cellJ = y*imageCellSize;
+
+                double startLineI = (cellI);
+                double startLineJ = (cellJ);
+                double endLineI   = (startLineI + imageCellSize);
+                double endLineJ   = (startLineJ + imageCellSize);
+
+                for(double t = 0.0; t < 1.0; t += 1.0/30.0) {
+                    int i = (1.0 - t)*startLineI + t*endLineI;
+                    int j = (1.0 - t)*startLineJ + t*endLineJ;
+
+                    if(i >= 0 && y >= 0 && i < imageWidth && j < imageHeight && cellJ + imageCellSize < imageHeight && cellI + imageCellSize < imageWidth) {
+                        image.setPixel(i + offset, (int)(cellJ) + offset, qRgb(0,0,0));
+                        image.setPixel(i + offset, (int)(cellJ + imageCellSize) + offset, qRgb(0,0,0));
+                        image.setPixel((int)(cellI) + offset, j + offset, qRgb(0,0,0));
+                        image.setPixel((int)(cellI + imageCellSize) + offset, j + offset, qRgb(0,0,0));
+
+                    }
+                }
+            }
+        }
+    }
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
+            if(patchExists(x,y) && getDepth(x,y) > 0) {
+                QVector2D cellFlowVector = getVector(x,y);
+                double dx = cellFlowVector.x()* (imageCellSize / 30.0)*60;
+                double dy = cellFlowVector.y()* (imageCellSize / 30.0)*60;
+                double cellI = x*imageCellSize;
+                double cellJ = y*imageCellSize;
+
+                double startLineI = (cellI + imageCellSize/2.0);
+                double startLineJ = (cellJ + imageCellSize/2.0);
+                double endLineI   = (startLineI + dx);
+                double endLineJ   = (startLineJ + dy);
+
+                for(double t = 0.0; t < 1.0; t += 1.0/100.0) {
+                    int i = (1.0 - t)*startLineI + t*endLineI;
+                    int j = (1.0 - t)*startLineJ + t*endLineJ;
+
+                    int cellHorizontal = (1.0 - t)*(cellI + dx) + t*(cellI+imageCellSize + dx);
+                    int cellVertical = (1.0 - t)*(cellJ + dy) + t*(cellJ + imageCellSize + dy);
+
+                    if( i >= 0 && y >= 0 && i < imageWidth && j < imageHeight) {
+                        image.setPixel(i + offset, j + offset, qRgb(0,0,255));
+                        image.setPixel(cellHorizontal + offset, (int)(cellJ + dy) + offset, qRgba(255,0,255,50));
+                        image.setPixel(cellHorizontal + offset, (int)(cellJ + imageCellSize + dy) + offset, qRgba(255,0,255,50));
+                        image.setPixel((int)(cellI + dx) + offset, cellVertical + offset, qRgba(255,0,255,50));
+                        image.setPixel((int)(cellI + imageCellSize + dx) + offset, cellVertical + offset, qRgba(255,0,255,50));
+                    }
+                }
+                if(endLineI+offset >= 0 && endLineJ+offset >= 0 && endLineI+offset < imageWidth && endLineJ+offset < imageHeight){
+                    image.setPixel(endLineI + offset, endLineJ + offset, qRgb(255,0,0));
+                }
+            }
+        }
+    }
+
+    return image.mirrored(false,true);
 }
