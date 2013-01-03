@@ -3,8 +3,6 @@
 using std::ofstream;
 using std::ifstream;
 using std::string;
-// TODO: remove this when finished
-using std::cout;
 using std::endl;
 
 Configuration::Configuration() :
