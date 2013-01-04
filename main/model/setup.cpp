@@ -544,7 +544,7 @@ void set_temperature() {
  * Sets up the 10 stocks, currently has default values
  */
 void setup_stocks() {
-    set_stocks(1.0, 10.0, 10.0, 1.0, 1.0, 1.0, 10.0, 10.0, 1.0, 0.1);
+    set_stocks(1.0f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f, 10.0f, 10.0f, 1.0f, 0.1f);
 }
 
 /**

@@ -57,7 +57,7 @@ void MainWindow::selectHydroMapClicked()
 void MainWindow::addHydroMapClicked()
 {
     clearErrors();
-    if (!UI::isBoxFilled(ui->lineEditDaysToRun))
+    if (!UI::isBoxNumerical(ui->lineEditDaysToRun))
     {
         displayErrors("Need to insert # days to run");
         return;
@@ -933,19 +933,19 @@ bool MainWindow::verifyAllInput() const
         return false;
     }
 
-    if (!UI::isBoxFilled(ui->lineEditKMacro))
+    if (!UI::isBoxNumerical(ui->lineEditKMacro))
     {
-        displayErrors("K-Macro value not filled out");
+        displayErrors("K-Macro value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditKPhyto))
+    if (!UI::isBoxNumerical(ui->lineEditKPhyto))
     {
-        displayErrors("K-Phyto value not filled out");
+        displayErrors("K-Phyto value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditTSS))
+    if (!UI::isBoxNumerical(ui->lineEditTSS))
     {
-        displayErrors("TSS value not filled out");
+        displayErrors("TSS value not filled out or invalid");
         return false;
     }
 
@@ -972,442 +972,442 @@ bool MainWindow::verifyAllInput() const
 bool MainWindow::verifyAllStockInput() const
 {
     /* Consumer */
-    if (!UI::isBoxFilled(ui->lineEditConsumer))
+    if (!UI::isBoxNumerical(ui->lineEditConsumer))
     {
-        displayErrors("Consumer value not filled out");
+        displayErrors("Consumer value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerAiHerbivore))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerAiHerbivore))
     {
-        displayErrors("Consumer Ai Herbivore value not filled out");
+        displayErrors("Consumer Ai Herbivore value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerAiSedconsumer))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerAiSedconsumer))
     {
-        displayErrors("Consumer Ai Sedconsumer value not filled out");
+        displayErrors("Consumer Ai Sedconsumer value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerAj))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerAj))
     {
-        displayErrors("Consumer Aj value not filled out");
+        displayErrors("Consumer Aj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerEgestion))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerEgestion))
     {
-        displayErrors("Consumer Egestion value not filled out");
+        displayErrors("Consumer Egestion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerExcretion))
     {
-        displayErrors("Consumer Excretion value not filled out");
+        displayErrors("Consumer Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerGiHerbivore))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerGiHerbivore))
     {
-        displayErrors("Consumer Gi Herbivore value not filled out");
+        displayErrors("Consumer Gi Herbivore value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerGiSedconsumer))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerGiSedconsumer))
     {
-        displayErrors("Consumer Gi Sedconsumer value not filled out");
+        displayErrors("Consumer Gi Sedconsumer value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerGj))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerGj))
     {
-        displayErrors("Consumer Gj value not filled out");
+        displayErrors("Consumer Gj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerMax))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerMax))
     {
-        displayErrors("Consumer Max value not filled out");
+        displayErrors("Consumer Max value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerPrefHerbivore))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerPrefHerbivore))
     {
-        displayErrors("Consumer Pref Herbivore value not filled out");
+        displayErrors("Consumer Pref Herbivore value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerPrefSedconsumer))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerPrefSedconsumer))
     {
-        displayErrors("Consumer Pref Sedconsumer value not filled out");
+        displayErrors("Consumer Pref Sedconsumer value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerRespiration))
     {
-        displayErrors("Consumer Respiration value not filled out");
+        displayErrors("Consumer Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditConsumerSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditConsumerSenescence))
     {
-        displayErrors("Consumer Senescence value not filled out");
+        displayErrors("Consumer Senescence value not filled out or invalid");
         return false;
     }
 
     /* WaterDecomp */
-    if (!UI::isBoxFilled(ui->lineEditDecomp))
+    if (!UI::isBoxNumerical(ui->lineEditDecomp))
     {
-        displayErrors("Decomp value not filled out");
+        displayErrors("Decomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompAiDoc))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAiDoc))
     {
-        displayErrors("Waterdecomp Ai DOC value not filled out");
+        displayErrors("Waterdecomp Ai DOC value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompAiPoc))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAiPoc))
     {
-        displayErrors("Waterdecomp Ai POC value not filled out");
+        displayErrors("Waterdecomp Ai POC value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompAj))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAj))
     {
-        displayErrors("Waterdecomp Aj value not filled out");
+        displayErrors("Waterdecomp Aj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompExcretion))
     {
-        displayErrors("Waterdecomp Excretion value not filled out");
+        displayErrors("Waterdecomp Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompGiDoc))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGiDoc))
     {
-        displayErrors("Waterdecomp Gi DOC value not filled out");
+        displayErrors("Waterdecomp Gi DOC value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompGiPoc))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGiPoc))
     {
-        displayErrors("Waterdecomp Gi POC value not filled out");
+        displayErrors("Waterdecomp Gi POC value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompGj))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGj))
     {
-        displayErrors("Waterdecomp Gj value not filled out");
+        displayErrors("Waterdecomp Gj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompMax))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompMax))
     {
-        displayErrors("Waterdecomp Max value not filled out");
+        displayErrors("Waterdecomp Max value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompPrefDoc))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompPrefDoc))
     {
-        displayErrors("Waterdecomp Pref DOC value not filled out");
+        displayErrors("Waterdecomp Pref DOC value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompPrefPoc))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompPrefPoc))
     {
-        displayErrors("Waterdecomp Pref POC value not filled out");
+        displayErrors("Waterdecomp Pref POC value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompRespiration))
     {
-        displayErrors("Waterdecomp Respiration value not filled out");
+        displayErrors("Waterdecomp Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditWaterdecompSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompSenescence))
     {
-        displayErrors("Waterdecomp Senescence value not filled out");
+        displayErrors("Waterdecomp Senescence value not filled out or invalid");
         return false;
     }
 
     /* Detritus */
-    if (!UI::isBoxFilled(ui->lineEditDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditDetritus))
     {
-        displayErrors("Detritus value not filled out");
+        displayErrors("Detritus value not filled out or invalid");
         return false;
     }
 
     /* DOC */
-    if (!UI::isBoxFilled(ui->lineEditDoc))
+    if (!UI::isBoxNumerical(ui->lineEditDoc))
     {
-        displayErrors("DOC value not filled out");
+        displayErrors("DOC value not filled out or invalid");
         return false;
     }
 
     /* Herbivore */
-    if (!UI::isBoxFilled(ui->lineEditHerbivore))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivore))
     {
-        displayErrors("Herbivore value not filled out");
+        displayErrors("Herbivore value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreAiPeri))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiPeri))
     {
-        displayErrors("Herbivore Ai Peri value not filled out");
+        displayErrors("Herbivore Ai Peri value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreAiPhyto))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiPhyto))
     {
-        displayErrors("Herbivore Ai Phyto value not filled out");
+        displayErrors("Herbivore Ai Phyto value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreAiWaterdecomp))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiWaterdecomp))
     {
-        displayErrors("Herbivore Ai Waterdecomp value not filled out");
+        displayErrors("Herbivore Ai Waterdecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreAj))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAj))
     {
-        displayErrors("Herbivore Aj value not filled out");
+        displayErrors("Herbivore Aj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreEgestion))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreEgestion))
     {
-        displayErrors("Herbivore Egestion value not filled out");
+        displayErrors("Herbivore Egestion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreExcretion))
     {
-        displayErrors("Herbivore Excretion value not filled out");
+        displayErrors("Herbivore Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreGiPeri))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiPeri))
     {
-        displayErrors("Herbivore Gi Peri value not filled out");
+        displayErrors("Herbivore Gi Peri value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreGiPhyto))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiPhyto))
     {
-        displayErrors("Herbivore Gi Phyto value not filled out");
+        displayErrors("Herbivore Gi Phyto value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreGiWaterdecomp))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiWaterdecomp))
     {
-        displayErrors("Herbivore Gi Waterdecomp value not filled out");
+        displayErrors("Herbivore Gi Waterdecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreGj))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGj))
     {
-        displayErrors("Herbivore Gj value not filled out");
+        displayErrors("Herbivore Gj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreMax))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreMax))
     {
-        displayErrors("Herbivore Max value not filled out");
+        displayErrors("Herbivore Max value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivorePrefPeri))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefPeri))
     {
-        displayErrors("Herbivore Pref Peri value not filled out");
+        displayErrors("Herbivore Pref Peri value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivorePrefPhyto))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefPhyto))
     {
-        displayErrors("Herbivore Pref Phyto value not filled out");
+        displayErrors("Herbivore Pref Phyto value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivorePrefWaterdecomp))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefWaterdecomp))
     {
-        displayErrors("Herbivore Pref Waterdecomp value not filled out");
+        displayErrors("Herbivore Pref Waterdecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreRespiration))
     {
-        displayErrors("Herbivore Respiration value not filled out");
+        displayErrors("Herbivore Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditHerbivoreSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreSenescence))
     {
-        displayErrors("Herbivore Senescence value not filled out");
+        displayErrors("Herbivore Senescence value not filled out or invalid");
         return false;
     }
 
     /* Macro */
-    if (!UI::isBoxFilled(ui->lineEditMacro))
+    if (!UI::isBoxNumerical(ui->lineEditMacro))
     {
-        displayErrors("Macro value not filled out");
+        displayErrors("Macro value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditMacroExcretion))
     {
-        displayErrors("Macro Excretion value not filled out");
+        displayErrors("Macro Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroGrossCoef))
+    if (!UI::isBoxNumerical(ui->lineEditMacroGrossCoef))
     {
-        displayErrors("Macro Gross Coefficient value not filled out");
+        displayErrors("Macro Gross Coefficient value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroMassMax))
+    if (!UI::isBoxNumerical(ui->lineEditMacroMassMax))
     {
-        displayErrors("Macro Mass Max value not filled out");
+        displayErrors("Macro Mass Max value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditMacroRespiration))
     {
-        displayErrors("Macro Respiration value not filled out");
+        displayErrors("Macro Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditMacroSenescence))
     {
-        displayErrors("Macro Senescence value not filled out");
+        displayErrors("Macro Senescence value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroTemp))
+    if (!UI::isBoxNumerical(ui->lineEditMacroTemp))
     {
-        displayErrors("Macro Temp value not filled out");
+        displayErrors("Macro Temp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditMacroVelocityMax))
+    if (!UI::isBoxNumerical(ui->lineEditMacroVelocityMax))
     {
-        displayErrors("Macro Velocity Max value not filled out");
+        displayErrors("Macro Velocity Max value not filled out or invalid");
         return false;
     }
 
     /* Phyto */
-    if (!UI::isBoxFilled(ui->lineEditPhyto))
+    if (!UI::isBoxNumerical(ui->lineEditPhyto))
     {
-        displayErrors("Phyto value not filled out");
+        displayErrors("Phyto value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditPhytoAj))
+    if (!UI::isBoxNumerical(ui->lineEditPhytoAj))
     {
-        displayErrors("Phyto Aj value not filled out");
+        displayErrors("Phyto Aj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditPhytoExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditPhytoExcretion))
     {
-        displayErrors("Phyto Excretion value not filled out");
+        displayErrors("Phyto Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditPhytoGj))
+    if (!UI::isBoxNumerical(ui->lineEditPhytoGj))
     {
-        displayErrors("Phyto Gj value not filled out");
+        displayErrors("Phyto Gj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditPhytoRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditPhytoRespiration))
     {
-        displayErrors("Phyto Respiration value not filled out");
+        displayErrors("Phyto Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditPhytoSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditPhytoSenescence))
     {
-        displayErrors("Phyto Senescence value not filled out");
+        displayErrors("Phyto Senescence value not filled out or invalid");
         return false;
     }
 
     /* POC */
-    if (!UI::isBoxFilled(ui->lineEditPoc))
+    if (!UI::isBoxNumerical(ui->lineEditPoc))
     {
-        displayErrors("POC value not filled out");
+        displayErrors("POC value not filled out or invalid");
         return false;
     }
 
     /* Sedconsumer */
-    if (!UI::isBoxFilled(ui->lineEditSedconsumer))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumer))
     {
-        displayErrors("Sedconsumer value not filled out");
+        displayErrors("Sedconsumer value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerAiDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAiDetritus))
     {
-        displayErrors("Sedconsumer Ai Detritus value not filled out");
+        displayErrors("Sedconsumer Ai Detritus value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerAiSeddecomp))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAiSeddecomp))
     {
-        displayErrors("Sedconsumer Ai Seddecomp value not filled out");
+        displayErrors("Sedconsumer Ai Seddecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerAj))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAj))
     {
-        displayErrors("Sedconsumer Aj value not filled out");
+        displayErrors("Sedconsumer Aj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerExcretion))
     {
-        displayErrors("Sedconsumer Excretion value not filled out");
+        displayErrors("Sedconsumer Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerGiDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGiDetritus))
     {
-        displayErrors("Sedconsumer Gi Detritus value not filled out");
+        displayErrors("Sedconsumer Gi Detritus value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerGiSeddecomp))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGiSeddecomp))
     {
-        displayErrors("Sedconsumer Gi Seddecomp value not filled out");
+        displayErrors("Sedconsumer Gi Seddecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerGj))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGj))
     {
-        displayErrors("Sedconsumer Gj value not filled out");
+        displayErrors("Sedconsumer Gj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerMax))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerMax))
     {
-        displayErrors("Sedconsumer Max value not filled out");
+        displayErrors("Sedconsumer Max value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerPrefDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerPrefDetritus))
     {
-        displayErrors("Sedconsumer Pref Detritus value not filled out");
+        displayErrors("Sedconsumer Pref Detritus value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerPrefSeddecomp))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerPrefSeddecomp))
     {
-        displayErrors("Sedconsumer Pref Seddecomp value not filled out");
+        displayErrors("Sedconsumer Pref Seddecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerRespiration))
     {
-        displayErrors("Sedconsumer Respiration value not filled out");
+        displayErrors("Sedconsumer Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSedconsumerSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerSenescence))
     {
-        displayErrors("Sedconsumer Senescence value not filled out");
+        displayErrors("Sedconsumer Senescence value not filled out or invalid");
         return false;
     }
 
     /* Seddecomp */
-    if (!UI::isBoxFilled(ui->lineEditSeddecomp))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecomp))
     {
-        displayErrors("Seddecomp value not filled out");
+        displayErrors("Seddecomp value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompAiDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompAiDetritus))
     {
-        displayErrors("Seddecomp Ai Detritus value not filled out");
+        displayErrors("Seddecomp Ai Detritus value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompAj))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompAj))
     {
-        displayErrors("Seddecomp Aj value not filled out");
+        displayErrors("Seddecomp Aj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompExcretion))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompExcretion))
     {
-        displayErrors("Seddecomp Excretion value not filled out");
+        displayErrors("Seddecomp Excretion value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompGiDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompGiDetritus))
     {
-        displayErrors("Seddecomp Gi Detritus value not filled out");
+        displayErrors("Seddecomp Gi Detritus value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompGj))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompGj))
     {
-        displayErrors("Seddecomp Gj value not filled out");
+        displayErrors("Seddecomp Gj value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompMax))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompMax))
     {
-        displayErrors("Seddecomp Max value not filled out");
+        displayErrors("Seddecomp Max value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompPrefDetritus))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompPrefDetritus))
     {
-        displayErrors("Seddecomp Pref Detritus value not filled out");
+        displayErrors("Seddecomp Pref Detritus value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompRespiration))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompRespiration))
     {
-        displayErrors("Seddecomp Respiration value not filled out");
+        displayErrors("Seddecomp Respiration value not filled out or invalid");
         return false;
     }
-    if (!UI::isBoxFilled(ui->lineEditSeddecompSenescence))
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompSenescence))
     {
-        displayErrors("Seddecomp Senescence value not filled out");
+        displayErrors("Seddecomp Senescence value not filled out or invalid or invalid");
         return false;
     }
 

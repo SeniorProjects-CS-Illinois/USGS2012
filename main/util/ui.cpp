@@ -5,6 +5,16 @@ bool UI::isBoxFilled(QLineEdit * const input)
     return !input->text().isEmpty();
 }
 
+bool UI::isBoxNumerical(QLineEdit * const input)
+{
+    bool ok = isBoxFilled(input);
+    if (ok)
+    {
+        input->text().toFloat(&ok); // set to false if not a float
+    }
+    return ok;
+}
+
 bool UI::isFileSelected(QLabel * const input)
 {
     return !(input->text().isEmpty() || input->text() == QString("None"));

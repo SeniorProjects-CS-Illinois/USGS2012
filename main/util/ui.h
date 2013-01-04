@@ -14,7 +14,16 @@ namespace UI
     bool isBoxFilled(QLineEdit * const input);
 
     /**
-     * Check if file has been selected.
+     * Check if given input box has numerical data.
+     */
+    bool isBoxNumerical(QLineEdit * const input);
+
+    /**
+     * Check if file has been selected. The check
+     * is based on the label passed in, which is
+     * the one that represents the file selected.
+     * Therefore, this is true if and only if the
+     * label text is nonempty and not 'None'.
      */
     bool isFileSelected(QLabel * const input);
 
