@@ -9,6 +9,9 @@
 #include "modelthread.h"
 #include "progressthread.h"
 #include "../model/rivermodel.h"
+#include "../util/files.h"
+#include "../util/ui.h"
+#include "../util/hydromaps.h"
 
 namespace Ui
 {
@@ -20,65 +23,104 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-
+    /**
+     * Default constructor, basic initialization of
+     * member variables. Also, makes connections of
+     * thread siganls to GUI slots.
+     */
     explicit MainWindow(QWidget *parent = 0);
+
+    /**
+     * Destructor for deleting dynamic member variables.
+     */
     ~MainWindow();
 
 public slots:
 
-    /* Open dialog for selecting hydro map file */
+    /**
+     * Open dialog for selecting hydromap file.
+     */
     void selectHydroMapClicked();
 
-    /* Adds the selected hydro map to the model */
+    /**
+     * Adds the selected hydromap to the model.
+     */
     void addHydroMapClicked();
 
-    /* Removes the selected hydro map from the model */
+    /**
+     * Removes the selected hydromap(s) from the model.
+     */
     void removeHydroMapClicked();
 
-    /* Open dialog for selecting a discharge file */
+    /**
+     * Open dialog for selecting a discharge file.
+     */
     void selectDischargeFileClicked();
 
-    /* Open dialog for selecting temperature file */
+    /**
+     * Open dialog for selecting temperature file.
+     */
     void selectTemperatureFileClicked();
 
-    /* Open dialog for selecting PAR file */
+    /**
+     * Open dialog for selecting PAR file.
+     */
     void selectPARFileClicked();
 
-    /* Run the model */
+    /**
+     * Run the model with current configuration.
+     */
     void runClicked();
 
-    /* Update which stock */
+    /**
+     * Update which stock image to show.
+     */
     void whichstockChanged(QString newStock);
 
-    /* Allow the user to click run button */
-    void enableRun();
+    /**
+     * Allow the user to click the run button.
+     */
+    void enableRun() const;
 
-    /* Disallow the user to click the run button */
-    void disableRun();
+    /**
+     * Disallow the user to click the run button.
+     */
+    void disableRun() const;
 
-    /* Update timestep slider information */
-    void timestepUpdate(int newVal);
+    /**
+     * Update timestep slider information.
+     */
+    void timestepUpdate(int newVal) const;
 
-    /* Update progress bar information */
-    void progressPercentUpdate(int percent);
+    /**
+     * Update progress bar information.
+     */
+    void progressPercentUpdate(int percent) const;
 
-    /* Update progress time information */
-    void progressTimeUpdate(int elapsed, int remaining);
+    /**
+     * Update progress time information.
+     */
+    void progressTimeUpdate(int elapsed, int remaining) const;
 
-    /* Update the output image */
-    void imageUpdate(QImage stockImage);
-    
-private slots:
+    /**
+     * Update the displayed stock image.
+     */
+    void imageUpdate(QImage stockImage) const;
 
-    /* Save the current configuration to a file */
+    /**
+     * Save the current configuration to a file.
+     */
     void saveConfiguration();
 
-    /* Load a configuration file */
+    /**
+     * Load a configuration file.
+     */
     void loadConfiguration();
 
 public:
 
     /* GETTERS */
+
     bool getAdjacent() const;
 
     uint8_t getOutputFreq() const;
@@ -89,7 +131,6 @@ public:
     float getKPhyto() const;
     float getKMacro() const;
 
-    // Stock parameters
     QString getWhichStock() const;
 
     float getMacroBase() const;
@@ -184,7 +225,6 @@ public:
     float getSedconsumerSenescence() const;
     float getSedconsumerMax() const;
 
-    // Files
     QString getTempFile() const;
     QString getPARFile() const;
 
@@ -192,6 +232,7 @@ public:
     QVector<QString> getHydroMaps() const;
 
     /* SETTERS */
+
     void setAdjacent(bool val);
 
     void setOutputFreq(uint8_t val);
@@ -201,7 +242,6 @@ public:
     void setKPhyto(float val);
     void setKMacro(float val);
 
-    // Stock parameters
     void setWhichStock(QString stock);
 
     void setMacroBase(float val);
@@ -296,13 +336,15 @@ public:
     void setSedconsumerSenescence(float val);
     void setSedconsumerMax(float val);
 
-    // Files
     void setTempFile(QString filename);
     void setPARFile(QString filename);
     void setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num);
 
 private:
 
+    /**
+     * Enum for the tab index.
+     */
     enum Tab { CONFIGURATION, STOCK, OUTPUT };
 
     Ui::MainWindow* ui;
@@ -313,79 +355,80 @@ private:
 
     Configuration uiConfig;
 
-    /* Reset error message output box - all slots should call this in the beginning */
+    /**
+     * Reset error message output box. All slots should
+     * call this in the beginning.
+     */
     void clearErrors() const;
 
-    /* Check if given input box has data */
-    bool isBoxFilled(QLineEdit * const input) const;
-
-    /* Check if file has been selected */
-    bool isFileSelected(QLabel * const input) const;
-
-    /* Check if given stock value has been checked */
-    bool isStockSelected(QCheckBox * const input) const;
-
-    /* Get the index of the given string in the stock combo box */
-    int stockIndex(QString stock) const;
-
-    /* Set an error message */
+    /**
+     * Display an error message.
+     */
     void displayErrors(const char * message, bool showConfig = true) const;
 
-    /* Add hydro map information to list */
+    /**
+     * Add hydromap information to list.
+     */
     void addHydroMap(QString file, uint16_t days, bool addInfo, bool display = true);
 
-    /* Save the configuration to the given file */
+    /**
+     * Save the configuration to the given file.
+     */
     void saveConfiguration(QString file) const;
 
-    /* Load the configuration from the given file */
+    /**
+     * Load the configuration from the given file.
+     */
     void loadConfiguration(QString file);
 
-    /* Strips off all path info except file name*/
-    QString stripFile(QString path) const;
-
-    /** Format for a QListWidgetItem:
-      *     <Filename>: <Days To Run> Days
-      *         <Filename> = char*
-      *         <Days To Run> = int
-      */
-
-    /* Get the days to run value from the given item */
-    uint16_t parseDaysToRun(QListWidgetItem* item) const;
-
-    /* Get the hydro map file name from the given item */
-    QString parseHydroMapName(QListWidgetItem* item) const;
-
-    /* Get all the input from the GUI and set appropriate globals */
+    /**
+     * Get all the input from the GUI and set appropriate globals.
+     */
     void getAllInput();
 
-    /* Get all the stock input from the GUI and set globals */
+    /**
+     * Get all the stock input from the GUI and set globals.
+     */
     void getAllStockInput();
 
-    /* Takes a discharge file and populates hydro map information */
+    /**
+     * Get all the input from the GUI and set appropriate globals.
+     */
+    bool verifyAllInput() const;
+
+    /**
+     * Get all the stock input from the GUI and set globals.
+     */
+    bool verifyAllStockInput() const;
+
+    /**
+     * Takes a discharge file and populates hydro map information.
+     */
     void dischargeToHydro(QString file);
 
-    /* Finds the appropriate hydro file based on the given integer */
-    QString intToHydroFile(int hydro, QString base) const;
-
-    /* Combines all adjacent same-name files and sums their DTR */
+    /**
+     * Combines all adjacent same-name files and sums their DTR.
+     */
     void compressHydroFiles();
 
-    /* Write all hydro map data to screen */
+    /**
+     * Write all hydro map data to screen.
+     */
     void displayHydroFiles();
 
-    /* Clear the display of all hydro map data on the screen */
-    void clearHydroFilesDisplay();
+    /**
+     * Clear the display of all hydro map data on the screen.
+     */
+    void clearHydroFilesDisplay() const;
 
-    /* Clear the display and the stored information of the hydro files */
+    /**
+     * Clear the display and the stored information of the hydro files.
+     */
     void clearHydroFiles();
 
-    /* Convert QString to const char* */
-    const char* qstringToCStr(const QString & input) const;
-
-    /* Used to make file selection faster */
-    QString defaultFileLocation() const;
-
-    /* Set the displayed tab to the given tab */
+    /**
+     * Set the displayed tab to the given tab.
+     */
     void setTab(Tab tab) const;
 };
 

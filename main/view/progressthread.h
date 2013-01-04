@@ -11,16 +11,38 @@ class ProgressThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ProgressThread(QObject* parent = 0, RiverModel* rModel = 0);
+    /**
+     * Constructor for this thread object. Takes in parent
+     * for QT compliance and RiverModel to be run.
+     */
+    explicit ProgressThread(QObject* parent = 0, RiverModel* rModel = 0, unsigned long interval = 1L);
+
+    /**
+     * Overidden run method that is called when the thread
+     * is executed. Checks for status updates periodically.
+     */
     void run();
 
-    void setRiverModel(RiverModel* rModel);
-
 signals:
+    /**
+     * Tells the GUI of current percentage completed.
+     */
     void progressPercentUpdate(int level);
+
+    /**
+     * Tells the GUI of current time elapsed/remaining.
+     */
     void progressTimeUpdate(int elapsed, int remaining);
+
+    /**
+     * Tells the GUI of most recent image computed.
+     */
     void imageUpdate(QImage stockImage);
 
+    /**
+     * Tells the GUI that the model is done. Cuurently
+     * this just re-enables the run button.
+     */
     void finished();
 
 public slots:
@@ -28,6 +50,13 @@ public slots:
 
 private:
     RiverModel* model;
+
+    unsigned long sleepTimeSeconds;
+
+    /**
+     * Emit the signals involved in progress updates.
+     */
+    void emitProgress(int percentageDone, int timeElapsed, int timeRemaining);
     
 };
 

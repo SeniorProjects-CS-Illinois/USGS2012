@@ -3,16 +3,9 @@
 
 using std::ifstream;
 using std::string;
-// TODO: remove this when finished
-using std::cout;
-using std::endl;
 
 /** TODO
- *      - error checking for run
- *      - fail gracefully
- *      - break this hideously long file into several
  *      - units in tool tips for configuration input
- *      - const correctness
  */
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -49,13 +42,13 @@ void MainWindow::selectHydroMapClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Hydro Map File"),
-                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
+                                                    Files::defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a hydro map file was selected
     if (!selected.isEmpty())
     {
         uiConfig.hydroMaps.append(selected);
-        QString filename = stripFile(selected);
+        QString filename = Files::stripFile(selected);
         ui->labelHydroMap->setText(filename);
         ui->labelHydroMap->setToolTip(filename);
     }
@@ -64,12 +57,12 @@ void MainWindow::selectHydroMapClicked()
 void MainWindow::addHydroMapClicked()
 {
     clearErrors();
-    if (!isBoxFilled(ui->lineEditDaysToRun))
+    if (!UI::isBoxNumerical(ui->lineEditDaysToRun))
     {
         displayErrors("Need to insert # days to run");
         return;
     }
-    if (!isFileSelected(ui->labelHydroMap))
+    if (!UI::isFileSelected(ui->labelHydroMap))
     {
         displayErrors("No hydro map file selected");
         return;
@@ -120,7 +113,7 @@ void MainWindow::selectDischargeFileClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Discharge File"),
-                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
+                                                    Files::defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a discharge file was selected
     if (!selected.isEmpty())
@@ -140,13 +133,13 @@ void MainWindow::selectTemperatureFileClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Temperature Data File"),
-                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
+                                                    Files::defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a temperature file was selected
     if (!selected.isEmpty())
     {
         uiConfig.tempFile = selected;
-        QString filename = stripFile(selected);
+        QString filename = Files::stripFile(selected);
         ui->labelTempFile->setText(filename);
         ui->labelTempFile->setToolTip(filename);
     }
@@ -158,13 +151,13 @@ void MainWindow::selectPARFileClicked()
 
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select PAR Data File"),
-                                                    defaultFileLocation(), tr("Text Files (*.txt)"));
+                                                    Files::defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a par file was selected
     if (!selected.isEmpty())
     {
         uiConfig.parFile = selected;
-        QString filename = stripFile(selected);
+        QString filename = Files::stripFile(selected);
         ui->labelPARFile->setText(filename);
         ui->labelPARFile->setToolTip(filename);
     }
@@ -174,8 +167,14 @@ void MainWindow::runClicked()
 {
     clearErrors();
 
-    // check all input for errors
-    // and set model values appropriately
+    // check if all input is valid
+    if (!verifyAllInput())
+    {
+        // if not, do nothing (errors will be displayed)
+        return;
+    }
+
+    // set model values
     getAllInput();
 
     modelThread.start();
@@ -193,25 +192,25 @@ void MainWindow::whichstockChanged(QString newStock)
     model.set_whichstock(newStock);
     Status status = model.getStatus();
     // TODO: if no images available, don't do this
-    if (       status.getState() == Status::COMPLETE
-            || status.getState() == Status::RUNNING
-            || status.getState() == Status::PAUSED)
+    if (    status.getState() == Status::COMPLETE
+         || status.getState() == Status::RUNNING
+         || status.getState() == Status::PAUSED)
     {
         imageUpdate(model.getImage(newStock));
     }
 }
 
-void MainWindow::enableRun()
+void MainWindow::enableRun() const
 {
-    ui->pushButtonRun->setEnabled(true);
+    UI::enableButton(ui->pushButtonRun);
 }
 
-void MainWindow::disableRun()
+void MainWindow::disableRun() const
 {
-    ui->pushButtonRun->setEnabled(false);
+    UI::disableButton(ui->pushButtonRun);
 }
 
-void MainWindow::timestepUpdate(int newVal)
+void MainWindow::timestepUpdate(int newVal) const
 {
     clearErrors();
     ui->horizontalSliderTimestep->setValue(newVal);
@@ -220,18 +219,18 @@ void MainWindow::timestepUpdate(int newVal)
     ui->labelTimestepVal->move(320 + (140*newVal)/60, ui->labelTimestepVal->y());
 }
 
-void MainWindow::progressPercentUpdate(int percent)
+void MainWindow::progressPercentUpdate(int percent) const
 {
     ui->progressBar->setValue(percent);
 }
 
-void MainWindow::progressTimeUpdate(int elapsed, int remaining)
+void MainWindow::progressTimeUpdate(int elapsed, int remaining) const
 {
     ui->labelTimeElapsedValue->setText(QString::number(elapsed));
     ui->labelTimeRemainingValue->setText(QString::number(remaining));
 }
 
-void MainWindow::imageUpdate(QImage stockImage)
+void MainWindow::imageUpdate(QImage stockImage) const
 {
     // max size of the image
     int maxWidth = 400;
@@ -264,7 +263,7 @@ void MainWindow::imageUpdate(QImage stockImage)
 void MainWindow::saveConfiguration()
 {
     QString name = QFileDialog::getSaveFileName(this, tr("Save Configuration As"),
-                                                defaultFileLocation(), tr("Config Files (*.conf)"));
+                                                Files::defaultFileLocation(), tr("Config Files (*.conf)"));
     if (!name.isEmpty())
     {
         saveConfiguration(name);
@@ -389,7 +388,7 @@ void MainWindow::saveConfiguration(QString file) const
 void MainWindow::loadConfiguration()
 {
     QString name = QFileDialog::getOpenFileName(this, tr("Open Configuration"),
-                                                defaultFileLocation(), tr("Config Files (*.conf)"));
+                                                Files::defaultFileLocation(), tr("Config Files (*.conf)"));
     if (!name.isEmpty())
     {
         loadConfiguration(name);
@@ -654,7 +653,7 @@ void MainWindow::setKMacro(float val) { ui->lineEditKMacro->setText(QString::num
 void MainWindow::setTSS(float val) { ui->lineEditTSS->setText(QString::number(val)); uiConfig.tss = val; }
 
 // stock parameters
-void MainWindow::setWhichStock(QString stock) { ui->comboBoxWhichStock->setCurrentIndex(stockIndex(stock)); uiConfig.whichStock = stock; }
+void MainWindow::setWhichStock(QString stock) { ui->comboBoxWhichStock->setCurrentIndex(UI::comboBoxIndex(ui->comboBoxWhichStock, stock)); uiConfig.whichStock = stock; }
 
 void MainWindow::setMacroBase(float val) { ui->lineEditMacro->setText(QString::number(val)); uiConfig.macro = val; }
 void MainWindow::setPhytoBase(float val) { ui->lineEditPhyto->setText(QString::number(val)); uiConfig.phyto = val; }
@@ -751,13 +750,13 @@ void MainWindow::setSedconsumerMax(float val) { ui->lineEditSedconsumerMax->setT
 void MainWindow::setTempFile(QString filename)
 {
     uiConfig.tempFile = filename;
-    ui->labelTempFile->setText(stripFile(filename));
+    ui->labelTempFile->setText(Files::stripFile(filename));
 }
 
 void MainWindow::setPARFile(QString filename)
 {
     uiConfig.parFile = filename;
-    ui->labelPARFile->setText(stripFile(filename));
+    ui->labelPARFile->setText(Files::stripFile(filename));
 }
 
 void MainWindow::setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num)
@@ -782,28 +781,6 @@ void MainWindow::clearErrors() const
     displayErrors("None", false);
 }
 
-bool MainWindow::isBoxFilled(QLineEdit * const input) const
-{
-    return !input->text().isEmpty();
-}
-
-bool MainWindow::isFileSelected(QLabel * const input) const
-{
-    return !(input->text().isEmpty() || input->text() == QString("None"));
-}
-
-bool MainWindow::isStockSelected(QCheckBox * const input) const
-{
-    return input->isChecked();
-}
-
-int MainWindow::stockIndex(QString stock) const
-{
-    // if not found, just default to 0
-    int index = ui->comboBoxWhichStock->findText(stock);
-    return (index < 0) ? 0 : index;
-}
-
 void MainWindow::displayErrors(const char *message, bool showConfig) const
 {
     if (showConfig)
@@ -819,37 +796,13 @@ void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool dis
     {
         uiConfig.hydroMaps.append(file);
         uiConfig.daysToRun.append(days);
-        file = stripFile(file);
+        file = Files::stripFile(file);
     }
     if (display)
     {
         QString output = file + ": " + QString::number(days) + " Day" + (days != 1 ? "s" : "");
         ui->listWidgetHydroMap->addItem(new QListWidgetItem(output, ui->listWidgetHydroMap));
     }
-}
-
-QString MainWindow::stripFile(QString path) const
-{
-    int lastSlashIndex = path.lastIndexOf("/");
-    return path.mid(lastSlashIndex + 1);
-}
-
-uint16_t MainWindow::parseDaysToRun(QListWidgetItem* item) const
-{
-    QString text = item->text();
-    size_t colonIndex = text.lastIndexOf(':');
-    size_t daysIndex = text.indexOf('D', colonIndex + 2);
-    size_t size = daysIndex - colonIndex - 3;
-
-    return atoi(text.toStdString().substr(colonIndex + 2, size).c_str());
-}
-
-QString MainWindow::parseHydroMapName(QListWidgetItem* item) const
-{
-    QString text = item->text();
-    size_t colonIndex = text.lastIndexOf(':');
-
-    return text.mid(0, colonIndex);
 }
 
 void MainWindow::getAllInput()
@@ -972,6 +925,495 @@ void MainWindow::getAllStockInput()
     model.set_max_sedconsumer(getSedconsumerMax()/24);
 }
 
+bool MainWindow::verifyAllInput() const
+{
+    // first check stocks
+    if (!verifyAllStockInput())
+    {
+        return false;
+    }
+
+    if (!UI::isBoxNumerical(ui->lineEditKMacro))
+    {
+        displayErrors("K-Macro value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditKPhyto))
+    {
+        displayErrors("K-Phyto value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditTSS))
+    {
+        displayErrors("TSS value not filled out or invalid");
+        return false;
+    }
+
+    /* Files */
+    if (!UI::isFileSelected(ui->labelTempFile))
+    {
+        displayErrors("Temperature File not selected");
+        return false;
+    }
+    if (!UI::isFileSelected(ui->labelPARFile))
+    {
+        displayErrors("PAR File not selected");
+        return false;
+    }
+    if (getNumHydroMaps() == 0)
+    {
+        displayErrors("No Hydromap Files selected");
+        return false;
+    }
+
+    return true;
+}
+
+bool MainWindow::verifyAllStockInput() const
+{
+    /* Consumer */
+    if (!UI::isBoxNumerical(ui->lineEditConsumer))
+    {
+        displayErrors("Consumer value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerAiHerbivore))
+    {
+        displayErrors("Consumer Ai Herbivore value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerAiSedconsumer))
+    {
+        displayErrors("Consumer Ai Sedconsumer value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerAj))
+    {
+        displayErrors("Consumer Aj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerEgestion))
+    {
+        displayErrors("Consumer Egestion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerExcretion))
+    {
+        displayErrors("Consumer Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerGiHerbivore))
+    {
+        displayErrors("Consumer Gi Herbivore value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerGiSedconsumer))
+    {
+        displayErrors("Consumer Gi Sedconsumer value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerGj))
+    {
+        displayErrors("Consumer Gj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerMax))
+    {
+        displayErrors("Consumer Max value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerPrefHerbivore))
+    {
+        displayErrors("Consumer Pref Herbivore value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerPrefSedconsumer))
+    {
+        displayErrors("Consumer Pref Sedconsumer value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerRespiration))
+    {
+        displayErrors("Consumer Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditConsumerSenescence))
+    {
+        displayErrors("Consumer Senescence value not filled out or invalid");
+        return false;
+    }
+
+    /* WaterDecomp */
+    if (!UI::isBoxNumerical(ui->lineEditDecomp))
+    {
+        displayErrors("Decomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAiDoc))
+    {
+        displayErrors("Waterdecomp Ai DOC value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAiPoc))
+    {
+        displayErrors("Waterdecomp Ai POC value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAj))
+    {
+        displayErrors("Waterdecomp Aj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompExcretion))
+    {
+        displayErrors("Waterdecomp Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGiDoc))
+    {
+        displayErrors("Waterdecomp Gi DOC value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGiPoc))
+    {
+        displayErrors("Waterdecomp Gi POC value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGj))
+    {
+        displayErrors("Waterdecomp Gj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompMax))
+    {
+        displayErrors("Waterdecomp Max value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompPrefDoc))
+    {
+        displayErrors("Waterdecomp Pref DOC value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompPrefPoc))
+    {
+        displayErrors("Waterdecomp Pref POC value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompRespiration))
+    {
+        displayErrors("Waterdecomp Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditWaterdecompSenescence))
+    {
+        displayErrors("Waterdecomp Senescence value not filled out or invalid");
+        return false;
+    }
+
+    /* Detritus */
+    if (!UI::isBoxNumerical(ui->lineEditDetritus))
+    {
+        displayErrors("Detritus value not filled out or invalid");
+        return false;
+    }
+
+    /* DOC */
+    if (!UI::isBoxNumerical(ui->lineEditDoc))
+    {
+        displayErrors("DOC value not filled out or invalid");
+        return false;
+    }
+
+    /* Herbivore */
+    if (!UI::isBoxNumerical(ui->lineEditHerbivore))
+    {
+        displayErrors("Herbivore value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiPeri))
+    {
+        displayErrors("Herbivore Ai Peri value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiPhyto))
+    {
+        displayErrors("Herbivore Ai Phyto value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiWaterdecomp))
+    {
+        displayErrors("Herbivore Ai Waterdecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAj))
+    {
+        displayErrors("Herbivore Aj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreEgestion))
+    {
+        displayErrors("Herbivore Egestion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreExcretion))
+    {
+        displayErrors("Herbivore Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiPeri))
+    {
+        displayErrors("Herbivore Gi Peri value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiPhyto))
+    {
+        displayErrors("Herbivore Gi Phyto value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiWaterdecomp))
+    {
+        displayErrors("Herbivore Gi Waterdecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGj))
+    {
+        displayErrors("Herbivore Gj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreMax))
+    {
+        displayErrors("Herbivore Max value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefPeri))
+    {
+        displayErrors("Herbivore Pref Peri value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefPhyto))
+    {
+        displayErrors("Herbivore Pref Phyto value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefWaterdecomp))
+    {
+        displayErrors("Herbivore Pref Waterdecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreRespiration))
+    {
+        displayErrors("Herbivore Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditHerbivoreSenescence))
+    {
+        displayErrors("Herbivore Senescence value not filled out or invalid");
+        return false;
+    }
+
+    /* Macro */
+    if (!UI::isBoxNumerical(ui->lineEditMacro))
+    {
+        displayErrors("Macro value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroExcretion))
+    {
+        displayErrors("Macro Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroGrossCoef))
+    {
+        displayErrors("Macro Gross Coefficient value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroMassMax))
+    {
+        displayErrors("Macro Mass Max value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroRespiration))
+    {
+        displayErrors("Macro Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroSenescence))
+    {
+        displayErrors("Macro Senescence value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroTemp))
+    {
+        displayErrors("Macro Temp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditMacroVelocityMax))
+    {
+        displayErrors("Macro Velocity Max value not filled out or invalid");
+        return false;
+    }
+
+    /* Phyto */
+    if (!UI::isBoxNumerical(ui->lineEditPhyto))
+    {
+        displayErrors("Phyto value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditPhytoAj))
+    {
+        displayErrors("Phyto Aj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditPhytoExcretion))
+    {
+        displayErrors("Phyto Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditPhytoGj))
+    {
+        displayErrors("Phyto Gj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditPhytoRespiration))
+    {
+        displayErrors("Phyto Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditPhytoSenescence))
+    {
+        displayErrors("Phyto Senescence value not filled out or invalid");
+        return false;
+    }
+
+    /* POC */
+    if (!UI::isBoxNumerical(ui->lineEditPoc))
+    {
+        displayErrors("POC value not filled out or invalid");
+        return false;
+    }
+
+    /* Sedconsumer */
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumer))
+    {
+        displayErrors("Sedconsumer value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAiDetritus))
+    {
+        displayErrors("Sedconsumer Ai Detritus value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAiSeddecomp))
+    {
+        displayErrors("Sedconsumer Ai Seddecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAj))
+    {
+        displayErrors("Sedconsumer Aj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerExcretion))
+    {
+        displayErrors("Sedconsumer Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGiDetritus))
+    {
+        displayErrors("Sedconsumer Gi Detritus value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGiSeddecomp))
+    {
+        displayErrors("Sedconsumer Gi Seddecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGj))
+    {
+        displayErrors("Sedconsumer Gj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerMax))
+    {
+        displayErrors("Sedconsumer Max value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerPrefDetritus))
+    {
+        displayErrors("Sedconsumer Pref Detritus value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerPrefSeddecomp))
+    {
+        displayErrors("Sedconsumer Pref Seddecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerRespiration))
+    {
+        displayErrors("Sedconsumer Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSedconsumerSenescence))
+    {
+        displayErrors("Sedconsumer Senescence value not filled out or invalid");
+        return false;
+    }
+
+    /* Seddecomp */
+    if (!UI::isBoxNumerical(ui->lineEditSeddecomp))
+    {
+        displayErrors("Seddecomp value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompAiDetritus))
+    {
+        displayErrors("Seddecomp Ai Detritus value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompAj))
+    {
+        displayErrors("Seddecomp Aj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompExcretion))
+    {
+        displayErrors("Seddecomp Excretion value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompGiDetritus))
+    {
+        displayErrors("Seddecomp Gi Detritus value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompGj))
+    {
+        displayErrors("Seddecomp Gj value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompMax))
+    {
+        displayErrors("Seddecomp Max value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompPrefDetritus))
+    {
+        displayErrors("Seddecomp Pref Detritus value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompRespiration))
+    {
+        displayErrors("Seddecomp Respiration value not filled out or invalid");
+        return false;
+    }
+    if (!UI::isBoxNumerical(ui->lineEditSeddecompSenescence))
+    {
+        displayErrors("Seddecomp Senescence value not filled out or invalid or invalid");
+        return false;
+    }
+
+    return true;
+}
+
 void MainWindow::dischargeToHydro(QString file)
 {
     ifstream fStream;
@@ -979,7 +1421,7 @@ void MainWindow::dischargeToHydro(QString file)
     string str;
 
     // TODO: need a better way to do this
-    QString hydroMapBase(defaultFileLocation());
+    QString hydroMapBase(Files::defaultFileLocation());
     hydroMapBase.append("/HydroSets");
 
     std::getline(fStream, str);
@@ -988,25 +1430,11 @@ void MainWindow::dischargeToHydro(QString file)
     while (!str.empty())
     {
         int hydro = atoi(str.c_str());
-        QString hydroFile = intToHydroFile(hydro, hydroMapBase);
-        // TODO: do a smart update of count
+        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBase);
         addHydroMap(hydroFile, count, true, false);
         std::getline(fStream, str);
     }
     fStream.close();
-}
-
-QString MainWindow::intToHydroFile(int hydro, QString base) const
-{
-    // TODO: should this round?
-    QString file("0k-new.txt");
-    if (hydro < 10000)
-    {
-        hydro = 10000;
-    }
-    hydro += 5000; // this is to make rounding accurate
-    file.prepend(QString::number(hydro/10000));
-    return base + "/" + file;
 }
 
 void MainWindow::compressHydroFiles()
@@ -1049,11 +1477,11 @@ void MainWindow::displayHydroFiles()
     clearHydroFilesDisplay();
     for (size_t i = 0; i < getNumHydroMaps(); i++)
     {
-        addHydroMap(stripFile(uiConfig.hydroMaps[i]), uiConfig.daysToRun[i], false);
+        addHydroMap(Files::stripFile(uiConfig.hydroMaps[i]), uiConfig.daysToRun[i], false);
     }
 }
 
-void MainWindow::clearHydroFilesDisplay()
+void MainWindow::clearHydroFilesDisplay() const
 {
     ui->listWidgetHydroMap->clear();
 }
@@ -1063,18 +1491,6 @@ void MainWindow::clearHydroFiles()
     clearHydroFilesDisplay();
     uiConfig.hydroMaps.clear();
     uiConfig.daysToRun.clear();
-}
-
-const char* MainWindow::qstringToCStr(const QString & input) const
-{
-    // TODO: this function has serious scoping problems, the returned char* is immediately invalid
-    return input.toStdString().c_str();
-}
-
-QString MainWindow::defaultFileLocation() const
-{
-    // change output to wherever data dir is
-    return  QDir::currentPath().append("/data");
 }
 
 void MainWindow::setTab(MainWindow::Tab tab) const
