@@ -20,11 +20,17 @@ HydroFile::HydroFile(QString filename) {
     QString hydroFileText = hydroFile.readAll();
     QStringList hydroFileData = hydroFileText.split(" ");
 
+    //Determine dimensions of map and setup a blank grid
     setMapSize(hydroFileData);
     Grid<HydroData> hydroData(width, height);
     zeroHydroData(hydroData);
 
 
+    /* The data in the file is not in order so we first organize it in a grid
+     * before moving it to a vector.  While we are at it we record some
+     * information about the map.  Note that every six elements are related
+     * to a cell.  The first six are skipped since are they names for the columns.
+     */
     for(int index = 6; index < hydroFileData.size(); index += 6) {
         HydroData data;
 
@@ -46,9 +52,11 @@ HydroFile::HydroFile(QString filename) {
                 maxFlow = data.flowVector.length();
             }
         }
-        
     }
 
+    /* Now we move the data from the grid and place it in a vector whose
+     * element indices are hashed using the x,y coordinates of corresponding
+     * cells   */
     for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
         for(unsigned int y = 0; y < hydroData.getHeight(); y++) {
             if(hydroData(x,y).depth != 0) {
@@ -63,16 +71,17 @@ HydroFile::HydroFile(QString filename) {
 }
 
 HydroFile::~HydroFile() {
-    //TODO
+    //TODO Once the carbon flow map is implemented
 }
 
 HydroFile const & HydroFile::operator=( HydroFile const & other ) {
-    //TODO
+    //TODO Once the carbon flow map is implemented
     return other;
 }
 
 CarbonFlowMap * HydroFile::getCarbonFlowMap(int iterations)
 {
+    //TODO Build and memoize the carbonflowmap for the given number of iterations
     return NULL;
 }
 

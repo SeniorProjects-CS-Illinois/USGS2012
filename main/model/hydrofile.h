@@ -26,18 +26,41 @@ class HydroFile {
         HydroFile const & operator=( HydroFile const & other );
 
         /**
-         * Given an int, precomputes flows for the specified number of iterations using the hydrofile's data.
+         * Given an int, precomputes flows for the specified number of
+         * iterations using the hydrofile's data.
          * Memoizes and returns a CarbonFlowMap pointer.
          */
         CarbonFlowMap * getCarbonFlowMap(int iterations);
 
+        /**
+         * Checks if a water cell exists at the given (x,y) coordinate
+         */
         bool patchExists(int x, int y) const;
+
+        /**
+         * Gets the depth of the cell at the given (x,y) coordinate
+         */
         double getDepth(int x, int y);
+
+        /**
+         * Returns the 2D flow vector for the cell at the given (x,y) coordinate
+         */
         QVector2D getVector(int x, int y);
 
+        /**
+         * Returns the map's width
+         */
         int getMapWidth(void) const;
+
+        /**
+         * Returns the map's depth
+         */
         int getMapHeight(void) const;
 
+        /**
+         * Generates a QImage representation of the hydromap.
+         * TODO: Refactor this function. (low priority)
+         */
         QImage generateVisualization(int imageCellSize);
 
     private:
@@ -56,13 +79,24 @@ class HydroFile {
         int waterCellCount;
         int maxFlow;
         int maxDepth;
+
+        /**
+         * Reads the datafile to determine the dimension of the map.
+         */
         void setMapSize(QStringList hydroFileData);
+
+        /**
+         * Initializes the input grid with default (zeroized) data.
+         */
         void zeroHydroData(Grid<HydroData> hydroData);
 
         QVector<HydroData> hydroDataSet;
         QHash<int, int> hydroDataSetIndices;
         int getHashKey(int x, int y) const;
 
+        /**
+         * Returns an entire cell's data at the given (x,y) coordinate.
+         */
         HydroData & getData(int x, int y);
 
         void copy(HydroFile const & other);
