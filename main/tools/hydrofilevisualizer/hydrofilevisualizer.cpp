@@ -1,4 +1,4 @@
-#include "../model/hydrofile.h"
+#include "../../model/hydrofile.h"
 #include <QString>
 #include <QImage>
 
@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
         QString outputName(argv[2]);
 
         HydroFile hydroFile(hydroFileName);
-        QImage visualization = hydroFile.generateVisualization(10);
+        QImage visualization = hydroFile.generateVisualization(20);
         visualization.save(outputName);
 
         return 0;

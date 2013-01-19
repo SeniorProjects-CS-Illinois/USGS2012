@@ -5,9 +5,9 @@ DESTDIR = ./
 CONFIG += console
 TEMPLATE = app
 SOURCES += hydrofilevisualizer.cpp \
-    ../model/hydrofile.cpp \
-    ../model/grid.cpp
+    ../../model/hydrofile.cpp \
+    ../../model/grid.cpp
 
-HEADERS  += ../model/hydrofile.h \
-    ../model/grid.h \
+HEADERS  += ../../model/hydrofile.h \
+    ../../model/grid.h \
 
