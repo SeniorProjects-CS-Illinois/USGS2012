@@ -2,19 +2,19 @@
 
 template <typename T>
 Grid<T>::Grid(std::size_t xDim, std::size_t yDim) {
-    numCol = xDim;
-    numRow = yDim;
-    array.resize(numCol * numRow);
+    width = xDim;
+    height = yDim;
+    array.resize(width * height);
 }
 
 template <typename T>
 T & Grid<T>::operator()(std::size_t x, std::size_t y){
-    return array[x*numRow + y];
+    return array[x*height + y];
 }
 
 template <typename T>
 T const & Grid<T>::operator()(std::size_t x, std::size_t y) const {
-    return array[x*numRow + y];
+    return array[x*height + y];
 }
 
 template <typename T>
@@ -38,11 +38,11 @@ std::size_t Grid<T>::getArraySize(void){
 }
 
 template <typename T>
-std::size_t Grid<T>::getXDim(void) {
-    return numCol;
+std::size_t Grid<T>::getWidth(void) {
+    return width;
 }
 
 template <typename T>
-std::size_t Grid<T>::getYDim(void) {
-    return numRow;
+std::size_t Grid<T>::getHeight(void) {
+    return height;
 }
