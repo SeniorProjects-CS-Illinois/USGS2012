@@ -1,4 +1,5 @@
 #include "hydrofile.h"
+#include "carbonflowmap.h"
 #include <iostream>
 using std::cout;
 using std::endl;

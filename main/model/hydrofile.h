@@ -10,10 +10,8 @@
 #include <QRgb>
 #include <QVector2D>
 #include <QVector>
+#include "carbonflowmap.h"
 #include "grid.h"
-
-//TODO Replace this type when we start to implement CarbonflowMap related stuff.
-typedef int CarbonFlowMap;
 
 
 class HydroFile {

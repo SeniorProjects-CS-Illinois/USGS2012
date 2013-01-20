@@ -14,6 +14,7 @@ SOURCES += main.cpp \
     model/setup.cpp \
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \
+    model/carbonflowmap.cpp \
 
 HEADERS  += model/rivermodel.h \
     model/status.h \
@@ -28,6 +29,7 @@ HEADERS  += model/rivermodel.h \
     model/grid.h \
     model/hydrofile.h \
     model/hydrofiledict.h \
+    model/carbonflowmap.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides
