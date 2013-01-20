@@ -1,46 +1,40 @@
 #include "hydrofiledict.h"
 
-HydroFileDict::HydroFileDict(QStringList filenames)
+HydroFileDict::HydroFileDict(QStringList newFilenames)
 {
-    this.filenames = filenames;
-    dict = new QHash<QString, HydroFile>();
+    filenames = newFilenames;
 
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
         if( !dict.contains(filename) ) {
-            dict.insert(filename, HydroFile(filename));
+            HydroFile * newHydroFile = new HydroFile(filename);
+            dict.insert(filename, newHydroFile);
         }
     }
 }
 
-HydroFileDict::~HydroFileDict()
-{
-    for(int i = 0; i < filenames.size(); i++)
-    {
-        QString filename = filenames[i];
-        dict[filename].~HydroFile();
-    }
-    delete dict;
+HydroFileDict::HydroFileDict(){
+
 }
 
-HydroFile & HydroFileDict::operator[](const Qstring filename)
+HydroFile * & HydroFileDict::operator[](const QString filename)
 {
     return dict[filename];
 }
 
-const HydroFile & HydroFileDict::operator[](const Qstring filename) const
+const HydroFile * HydroFileDict::operator[](const QString filename) const
 {
     return dict[filename];
 }
 
 int HydroFileDict::getMaxWidth()
 {
-    int maxWidth = 0
+    int maxWidth = 0;
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
-        int mapWidth = dict[filename].getMapWidth();
+        int mapWidth = dict[filename]->getMapWidth();
         if(mapWidth > maxWidth)
         {
             maxWidth = mapWidth;
@@ -51,15 +45,21 @@ int HydroFileDict::getMaxWidth()
 
 int HydroFileDict::getMaxHeight()
 {
-    int maxHeight = 0
+    int maxHeight = 0;
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
-        int mapHeight = dict[filename].getMapHeight();
+        int mapHeight = dict[filename]->getMapHeight();
         if(mapHeight > maxHeight)
         {
             maxHeight = mapHeight;
         }
     }
     return maxHeight;
+}
+
+HydroFileDict::~HydroFileDict() {
+    for( QHash<QString, HydroFile *>::iterator i = dict.begin(); i != dict.end(); i++){
+        delete *i;
+    }
 }

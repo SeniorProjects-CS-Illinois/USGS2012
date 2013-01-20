@@ -2,26 +2,29 @@
 #define __HYDROFILEDICT_H__
 
 #include <QHash>
+#include <QString>
+#include <QStringList>
 #include "hydrofile.h"
 
 class HydroFileDict
 {
 
     public:
-    HydroFileDict(QStringList filenames);
-    HydroFileDict();
+        HydroFileDict(QStringList newFilenames);
+        HydroFileDict();
+        ~HydroFileDict();
 
-    HydroFile & HydroFileDict::operator[](const Qstring filename);
-    const HydroFile & HydroFileDict::operator[](const Qstring filename) const;
+        HydroFile * & operator[](const QString filename);
+        const HydroFile * operator[](const QString filename) const;
 
-    int getMaxWidth();
-    int getMaxHeight();
+        int getMaxWidth();
+        int getMaxHeight();
 
     private:
-    QStringList filenames;
-    QHash * map;
+        QStringList filenames;
+        QHash<QString, HydroFile *> dict;
 
-}
+};
 
 
 

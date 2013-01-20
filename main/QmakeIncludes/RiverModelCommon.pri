@@ -12,6 +12,8 @@ SOURCES += main.cpp \
     model/patch.cpp \
     model/pred.cpp \
     model/setup.cpp \
+    model/hydrofile.cpp \
+    model/hydrofiledict.cpp \
 
 HEADERS  += model/rivermodel.h \
     model/status.h \
@@ -23,7 +25,9 @@ HEADERS  += model/rivermodel.h \
     model/patch.h \
     model/pred.h \
     model/setup.h \
-    model/grid.h
+    model/grid.h \
+    model/hydrofile.h \
+    model/hydrofiledict.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides

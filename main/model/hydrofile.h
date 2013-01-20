@@ -22,15 +22,22 @@ class HydroFile {
          * Constructor. We need to know the max size of all the hydromaps...
          */
         HydroFile(QString filename);
-        ~HydroFile();
-        HydroFile const & operator=( HydroFile const & other );
+        HydroFile();
+        //~HydroFile();
+        //HydroFile const & operator=( HydroFile const & other );
+
+        /**
+         * Loads the current hydroFile using a file, only if not previously initialized.
+         * Otherwise, this function does nothing.
+         */
+        void loadFromFile(QString filename);
 
         /**
          * Given an int, precomputes flows for the specified number of
          * iterations using the hydrofile's data.
          * Memoizes and returns a CarbonFlowMap pointer.
          */
-        CarbonFlowMap * getCarbonFlowMap(int iterations);
+        //CarbonFlowMap * getCarbonFlowMap(int iterations);
 
         /**
          * Checks if a water cell exists at the given (x,y) coordinate
@@ -71,6 +78,7 @@ class HydroFile {
             double depth;
         };
 
+        bool hydroFileLoaded;
         CarbonFlowMap * carbonFlowMap;
         int carbonFlowIterations;
         QString hydroMapFileName;
@@ -79,6 +87,8 @@ class HydroFile {
         int waterCellCount;
         int maxFlow;
         int maxDepth;
+
+
 
         /**
          * Reads the datafile to determine the dimension of the map.
@@ -99,8 +109,8 @@ class HydroFile {
          */
         HydroData & getData(int x, int y);
 
-        void copy(HydroFile const & other);
-        void clear();
+        //void copy(HydroFile const & other);
+        //void clear();
 };
 
 #endif

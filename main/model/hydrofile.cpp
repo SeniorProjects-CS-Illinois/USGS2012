@@ -3,7 +3,22 @@
 using std::cout;
 using std::endl;
 
-HydroFile::HydroFile(QString filename) {
+
+HydroFile::HydroFile(QString filename){
+    hydroFileLoaded = false;
+    loadFromFile(filename);
+}
+
+HydroFile::HydroFile() {
+    hydroFileLoaded = false;
+}
+
+
+void HydroFile::loadFromFile(QString filename) {
+
+    /* Once loaded, a hydrofile represents only one hydromap. */
+    if( hydroFileLoaded )
+        return;
 
     hydroMapFileName = filename;
 
@@ -68,8 +83,10 @@ HydroFile::HydroFile(QString filename) {
     }
 
     hydroFile.close();
+    hydroFileLoaded = true;
 }
 
+/*
 HydroFile::~HydroFile() {
     //TODO Once the carbon flow map is implemented
 }
@@ -84,6 +101,7 @@ CarbonFlowMap * HydroFile::getCarbonFlowMap(int iterations)
     //TODO Build and memoize the carbonflowmap for the given number of iterations
     return NULL;
 }
+*/
 
 bool HydroFile::patchExists(int x, int y) const {
     int hashKey = getHashKey(x,y);
@@ -96,6 +114,14 @@ QVector2D HydroFile::getVector(int x, int y) {
 
 double HydroFile::getDepth(int x, int y) {
     return getData(x,y).depth;
+}
+
+int HydroFile::getMapHeight() const {
+    return height;
+}
+
+int HydroFile::getMapWidth() const {
+    return width;
 }
 
 void HydroFile::setMapSize(QStringList hydroFileData) {
@@ -124,18 +150,20 @@ int HydroFile::getHashKey(int x, int y) const {
     return (y * width + x);
 }
 
-typename HydroFile::HydroData & HydroFile::getData(int x, int y) {
+HydroFile::HydroData & HydroFile::getData(int x, int y) {
     int hashKey = getHashKey(x,y);
     int index = hydroDataSetIndices[hashKey];
     return hydroDataSet[index];
 }
 
+/*
 void HydroFile::copy(HydroFile const & other) {
     //TODO
 }
 void HydroFile::clear() {
     //TODO
 }
+*/
 
 void HydroFile::zeroHydroData(Grid<HydroData> hydroData) {
 
