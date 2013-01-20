@@ -16,6 +16,8 @@
 #include <iterator>
 #include <vector>
 
+#include "../model/patch_struct.h"
+
 using std::ifstream;
 using std::cerr;
 using std::cout;
@@ -25,12 +27,27 @@ using std::string;
 class RiverModelCL
 {
     public:
-    static cl_program loadProgram(string filename, cl_context& context);
-    static cl_kernel buildProgram(cl_program program, cl_device_id device);
-    static cl_device_id getDevice();
-    static cl_context createContext(cl_device_id device);
+    RiverModelCL(patch** patches, int size, string filename, string function);
+    ~RiverModelCL();
+    void goGPU(int x);
 
-    static inline bool checkErr(cl_int error, const char* name, bool exitOnError)
+    private:
+    int size;
+    patch** patches;
+    cl_context context;
+    cl_device_id device;
+    cl_program program;
+    cl_kernel kernel;
+    cl_command_queue cmd_queue;
+    cl_mem inPatches;
+    cl_mem outPatches;
+
+    cl_program loadProgram(string filename);
+    cl_kernel buildProgram(string function);
+    cl_device_id getDevice();
+    cl_context createContext();
+
+    inline bool checkErr(cl_int error, const char* name, bool exitOnError)
     {
         if(error != CL_SUCCESS)
         {
