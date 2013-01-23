@@ -1,7 +1,7 @@
 #Compiles a version of Rivermodel without a gui interface
 
 TARGET = RiverModel
-DESTDIR = ./
+DESTDIR = ../
 CONFIG += console
 DEFINES += NO_GUI
 

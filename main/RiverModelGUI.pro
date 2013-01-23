@@ -6,6 +6,7 @@
 
 QT       += core gui
 TARGET = RiverModelGUI
+DESTDIR = ../
 
 SOURCES += view/mainwindow.cpp \
     view/configuration.cpp \
