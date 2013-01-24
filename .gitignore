@@ -1,0 +1,10 @@
+build/*
+main/dist/*
+main/build_log.txt
+*.exe
+*.o
+*.so
+*.msi
+*.user
+*.swp
+.gitignore
