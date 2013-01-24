@@ -8,11 +8,6 @@
 #include "model/rivermodel.h"
 #include "model/globals.h"
 
-#ifndef NO_GUI
-    #include <QtGui/QApplication>
-    #include "view/mainwindow.h"
-#endif
-
 //TODO: move this function to somewhere more appropriate.
 //Adds a location for the images and csv files.
 void create_output_dirs();
@@ -26,8 +21,6 @@ void create_output_dirs(void) {
     path.mkpath("./results/images");
 }
 
-
-#ifdef NO_GUI
 int main(int argc, char *argv[]) {
     initialize_globals();
     create_output_dirs();
@@ -36,12 +29,12 @@ int main(int argc, char *argv[]) {
 
     //These values are what was used in the original Python GUI by default.  Hard coding for now.
     //TODO: There should be a configuration method that take a Configuration object.
-    model.set_hydro_filenames("model/data/HydroSets/100k-new.txt", 1);
-    model.set_hydro_filenames("model/data/HydroSets/50k-new.txt", 1);
-    model.set_hydro_filenames("model/data/HydroSets/70k-new.txt", 1);
-    model.set_par_file("model/data/Environmentals/par.txt");
+    model.set_hydro_filenames("../main/model/data/HydroSets/100k-new.txt", 1);
+    model.set_hydro_filenames("../main/model/data/HydroSets/50k-new.txt", 1);
+    model.set_hydro_filenames("../main/model/data/HydroSets/70k-new.txt", 1);
+    model.set_par_file("../main/model/data/Environmentals/par.txt");
     model.set_timestep(1);
-    model.set_temperature_file("model/data/Environmentals/water-temp.txt");
+    model.set_temperature_file("../main/model/data/Environmentals/water-temp.txt");
     model.set_whichstock("phyto");
     model.set_TSS(10.0);
     model.set_macro_base_temp(19.7);
@@ -58,17 +51,3 @@ int main(int argc, char *argv[]) {
     model.run();
     return 0;
 }
-#else
-int main(int argc, char *argv[])
-{
-    initialize_globals();
-    create_output_dirs();
-
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
-    return a.exec();
-}
-
-#endif
