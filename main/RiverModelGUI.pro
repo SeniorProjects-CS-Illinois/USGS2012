@@ -6,6 +6,7 @@
 
 QT       += core gui
 TARGET = RiverModelGUI
+DESTDIR = ../
 
 SOURCES += view/mainwindow.cpp \
     view/configuration.cpp \
@@ -13,7 +14,8 @@ SOURCES += view/mainwindow.cpp \
     view/progressthread.cpp \
     util/files.cpp \
     util/ui.cpp \
-    util/hydromaps.cpp
+    util/hydromaps.cpp \
+    mainGUI.cpp
 
 HEADERS  += view/mainwindow.h \
     view/configuration.h \

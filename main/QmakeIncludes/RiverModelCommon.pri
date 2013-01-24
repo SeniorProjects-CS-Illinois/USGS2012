@@ -1,8 +1,7 @@
 TEMPLATE = app
 win32:CONFIG += static
 
-SOURCES += main.cpp \
-    model/rivermodel.cpp \
+SOURCES += model/rivermodel.cpp \
     model/status.cpp \
     model/globals.cpp \
     model/cleanup.cpp \
