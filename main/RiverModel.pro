@@ -3,6 +3,7 @@
 TARGET = RiverModel
 DESTDIR = ../
 CONFIG += console
-DEFINES += NO_GUI
+
+SOURCES += main.cpp
 
 include(./QmakeIncludes/RiverModelCommon.pri)
