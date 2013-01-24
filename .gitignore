@@ -1,4 +1,4 @@
-main/build/*
+build/*
 main/dist/*
 main/build_log.txt
 *.exe
@@ -7,3 +7,4 @@ main/build_log.txt
 *.msi
 *.user
 *.swp
+.gitignore
