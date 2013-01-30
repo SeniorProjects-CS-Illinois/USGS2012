@@ -5,9 +5,9 @@
 #include <QFileDialog>
 
 #include "ui_mainwindow.h"
-#include "configuration.h"
 #include "modelthread.h"
 #include "progressthread.h"
+#include "../model/configuration.h"
 #include "../model/rivermodel.h"
 #include "../util/files.h"
 #include "../util/ui.h"
