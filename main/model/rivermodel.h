@@ -15,6 +15,7 @@
 #include "go.h"
 #include "dump.h"
 #include "cleanup.h"
+#include "configuration.h"
 
 #include <QString>
 #include <QStringList>
@@ -154,5 +155,6 @@ class RiverModel {
 
     private:
         Status modelStatus;
+        Configuration config;
 };
 #endif

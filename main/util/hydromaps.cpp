@@ -22,9 +22,13 @@ QString HydroMaps::intToHydroFile(int hydro, QString base)
 {
     // TODO: make more general
     QString file("0k-new.txt");
-    if (hydro < 10000)
+    if (hydro < MIN_HYDRO_DEPTH)
     {
-        hydro = 10000;
+        hydro = MIN_HYDRO_DEPTH;
+    }
+    else if (hydro > MAX_HYDRO_DEPTH)
+    {
+        hydro = MAX_HYDRO_DEPTH;
     }
     hydro += 5000; // this is to make rounding accurate
     file.prepend(QString::number(hydro/10000));

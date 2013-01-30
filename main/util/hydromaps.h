@@ -6,6 +6,9 @@
 
 namespace HydroMaps
 {
+    const int MIN_HYDRO_DEPTH = 10000;
+    const int MAX_HYDRO_DEPTH = 100000;
+
     /**
      * Get the days to run value from the given item.
      */
