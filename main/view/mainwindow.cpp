@@ -1424,15 +1424,12 @@ void MainWindow::dischargeToHydro(QString file)
     QString hydroMapBase(Files::defaultFileLocation());
     hydroMapBase.append("/HydroSets");
 
-    std::getline(fStream, str);
-    size_t count = 1;
-    // TODO: this requires an empty line at the end of the discharge file
-    while (!str.empty())
+    while (!fStream.eof())
     {
+        std::getline(fStream, str);
         int hydro = atoi(str.c_str());
         QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBase);
-        addHydroMap(hydroFile, count, true, false);
-        std::getline(fStream, str);
+        addHydroMap(hydroFile, 1, true, false);
     }
     fStream.close();
 }
