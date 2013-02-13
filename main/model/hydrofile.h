@@ -52,7 +52,7 @@ class HydroFile {
         /**
          * Returns the 2D flow vector for the cell at the given (x,y) coordinate
          */
-        QVector2D getVector(int x, int y);
+        const QVector2D & getVector(int x, int y);
 
         /**
          * Returns the map's width
@@ -93,12 +93,12 @@ class HydroFile {
         /**
          * Reads the datafile to determine the dimension of the map.
          */
-        void setMapSize(QStringList hydroFileData);
+        void setMapSize(QStringList & hydroFileData);
 
         /**
          * Initializes the input grid with default (zeroized) data.
          */
-        void zeroHydroData(Grid<HydroData> hydroData);
+        void zeroHydroData(Grid<HydroData> & hydroData);
 
         QVector<HydroData> hydroDataSet;
         QHash<int, int> hydroDataSetIndices;
