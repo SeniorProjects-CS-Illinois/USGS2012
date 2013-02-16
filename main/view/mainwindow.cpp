@@ -1420,15 +1420,19 @@ void MainWindow::dischargeToHydro(QString file)
     fStream.open(file.toStdString().c_str());
     string str;
 
-    // TODO: need a better way to do this
-    QString hydroMapBase(Files::defaultFileLocation());
-    hydroMapBase.append("/HydroSets");
+    QString hydroMapBasePath(Files::defaultFileLocation());
+    hydroMapBasePath.append("/HydroSets");
+
+    if (!QDir(hydroMapBasePath).exists()) {
+        hydroMapBasePath = QFileDialog::getExistingDirectory(this, tr("Select base directory for hydromaps"),
+                                          Files::defaultFileLocation(), QFileDialog::ShowDirsOnly);
+    }
 
     while (!fStream.eof())
     {
         std::getline(fStream, str);
         int hydro = atoi(str.c_str());
-        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBase);
+        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBasePath);
         addHydroMap(hydroFile, 1, true, false);
     }
     fStream.close();
