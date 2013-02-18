@@ -24,7 +24,7 @@
       */
     int to_rgb(int hue, float saturation, float value);
     
-    void scale_color( double value, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex);
+    void scale_color( double carbonValue, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex);
 
 
 	/**

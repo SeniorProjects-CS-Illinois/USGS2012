@@ -13,7 +13,7 @@
  * @param y The y coord of the patch
  */
 int to_rgb(int hue, float saturation, float value){
-
+    //QColor depthColor = QColor::fromHsv( 120 - (int)(120*relativeDepth)+1 ,255,255);
     int red, green, blue;
     float huePrime = hue/60.0;
     float chroma = value * saturation;
@@ -37,28 +37,18 @@ int to_rgb(int hue, float saturation, float value){
     return returnValue;
 }
 
-void scale_color(double value, double maxVal, double minVal, int x, int y, int stockIndex) {
+void scale_color(double carbonValue, double maxVal, double minVal, int x, int y, int stockIndex) {
     int rgb;
-    float returnValue;
-    if(maxVal == minVal) {
-        returnValue = 0.0;
-        rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
-        g.images[stockIndex]->setPixel(x, y, rgb);
-        return;
-    }
+    float value;
 
-    if(value <= minVal || /*isnan(value)*/ (value != value)) {
-        returnValue = 0.0;
+    if(carbonValue > maxVal) {
+        value = maxVal;
     }
-    else if(value >= maxVal) {
-        returnValue = 1.0;
+    else if(carbonValue < minVal) {
+        value = minVal;
     }
-    else {
-        float rangeValues = (float)fabs(maxVal - minVal);
-        returnValue = (float)(value / rangeValues);
-    }
-
-    rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
+    value = (carbonValue-minVal)/(maxVal-minVal+1);
+    rgb = to_rgb(g.hues[stockIndex], value, 255);
     g.images[stockIndex]->setPixel(x, y, rgb);
 
 }
