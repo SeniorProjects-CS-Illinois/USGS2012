@@ -18,7 +18,7 @@ QString HydroMaps::parseHydroMapName(QListWidgetItem* item)
     return text.mid(0, colonIndex);
 }
 
-QString HydroMaps::intToHydroFile(int hydro, QString base)
+QString HydroMaps::intToHydroFile(int hydro, QString baseDir)
 {
     // TODO: make more general
     QString file("0k-new.txt");
@@ -32,5 +32,5 @@ QString HydroMaps::intToHydroFile(int hydro, QString base)
     }
     hydro += 5000; // this is to make rounding accurate
     file.prepend(QString::number(hydro/10000));
-    return base + "/" + file;
+    return baseDir + QDir::separator() + file;
 }
