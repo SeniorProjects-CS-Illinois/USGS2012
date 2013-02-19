@@ -178,7 +178,7 @@ void initialize_globals(void){
     g.stock_names[10] = "allCarbon";
 
     // number of different stocks
-    g.NUM_STOCKS = 10;
+    g.NUM_STOCKS = 11;
 
     g.hues[0] = 120;
     g.hues[1] = 120;

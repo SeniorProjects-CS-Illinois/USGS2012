@@ -42,15 +42,15 @@ void scale_color(double carbonValue, double maxVal, double minVal, int x, int y,
     float value;
 
     if(carbonValue > maxVal) {
-        value = maxVal;
+        carbonValue = maxVal;
     }
     else if(carbonValue < minVal) {
-        value = minVal;
+        carbonValue = minVal;
     }
 
     value = (carbonValue-minVal)/(maxVal-minVal+1);
     rgb = to_rgb(g.hues[stockIndex], value, 255);
-    g.images[stockIndex]->setPixel(x, (g.MAP_HEIGHT - y - 1), rgb);
+    g.images[stockIndex]->setPixel(x, y, rgb);
 
 }
 
