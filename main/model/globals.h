@@ -208,10 +208,11 @@ typedef struct {
     int DOC_INDEX;
     int POC_INDEX;
     int DETRITUS_INDEX;
+    int CARBON_INDEX;
 
-    QString stock_names[10];
+    QString stock_names[11];
     QMutex imageMutex;
-    QImage* images[10];
+    QImage* images[11];
 
     QImageWriter * writer;
 
@@ -219,7 +220,7 @@ typedef struct {
     // number of different stocks
     int NUM_STOCKS;
 
-    int hues[10];
+    int hues[11];
 } Globals;
 
 extern Globals g;

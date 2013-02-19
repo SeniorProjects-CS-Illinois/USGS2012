@@ -43,7 +43,7 @@ void scale_color(double value, double maxVal, double minVal, int x, int y, int s
     if(maxVal == minVal) {
         returnValue = 0.0;
         rgb = to_rgb(g.hues[stockIndex], returnValue, 255);
-        g.images[stockIndex]->setPixel(x, y, rgb);
+        g.images[stockIndex]->setPixel(x, (g.MAP_HEIGHT - y - 1), rgb);
         return;
     }
 
@@ -120,6 +120,15 @@ void update_color() {
             }
             else
             {
+                double MAX = 0.0;
+                MAX = getMax(MAX, getMax(g.MAX_MACRO, getMax(AVG_phyto, getMax(AVG_waterdecomp, getMax(AVG_POC,
+                                        getMax(AVG_detritus, getMax(g.MAX_SEDCONSUMER, getMax(AVG_seddecomp,
+                                        getMax(g.MAX_HERBIVORE, getMax(g.MAX_CONSUM, AVG_DOC))))))))));
+
+                double carbon = patches[x][y].macro + patches[x][y].phyto + patches[x][y].waterdecomp + patches[x][y].POC
+                    + patches[x][y].detritus + patches[x][y].sedconsumer + patches[x][y].herbivore
+                    + patches[x][y].consum + patches[x][y].DOC + patches[x][y].seddecomp;
+
                 scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX);
                 scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX);
                 scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);
@@ -130,8 +139,18 @@ void update_color() {
                 scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
                 scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
                 scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
+                scale_color(carbon, MAX, 0.0, x, y, g.CARBON_INDEX);
             }
         }
+    }
+}
+
+double getMax(double max, double contender) {
+    if(contender > max){
+        return contender;
+    }
+    else {
+        return max;
     }
 }
 

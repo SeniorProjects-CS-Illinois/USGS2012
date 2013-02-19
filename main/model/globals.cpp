@@ -163,6 +163,7 @@ void initialize_globals(void){
     g.DOC_INDEX = 7;
     g.POC_INDEX = 8;
     g.DETRITUS_INDEX = 9;
+    g.CARBON_INDEX = 10;
 
     g.stock_names[0] = "macro";
     g.stock_names[1] = "phyto";
@@ -174,6 +175,7 @@ void initialize_globals(void){
     g.stock_names[7] = "doc";
     g.stock_names[8] = "poc";
     g.stock_names[9] = "detritus";
+    g.stock_names[10] = "allCarbon";
 
     // number of different stocks
     g.NUM_STOCKS = 10;
@@ -188,5 +190,6 @@ void initialize_globals(void){
     g.hues[7] = 60;
     g.hues[8] = 240;
     g.hues[9] = 20;
+    g.hues[10] = 30;
 
 }

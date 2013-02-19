@@ -33,6 +33,11 @@
     void update_color();
 
     /**
+     * Returns the bigger number
+     */
+    double getMax(double max, double contender);
+
+    /**
       * Turn a 2D index into a 1D index
       */
     int getIndex(int x, int y);
