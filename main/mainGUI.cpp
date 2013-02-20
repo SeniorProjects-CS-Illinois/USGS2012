@@ -8,7 +8,7 @@
 #include "model/rivermodel.h"
 #include "model/globals.h"
 
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
 #include "view/mainwindow.h"
 
 //TODO: move this function to somewhere more appropriate.
