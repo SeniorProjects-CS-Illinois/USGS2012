@@ -2,6 +2,7 @@
 #define HYDROMAPS_H
 
 #include <QListWidgetItem>
+#include <QDir>
 #include <stdint.h>
 
 namespace HydroMaps
@@ -22,7 +23,7 @@ namespace HydroMaps
     /**
      * Finds the appropriate hydro file based on the given integer.
      */
-    QString intToHydroFile(int hydro, QString base);
+    QString intToHydroFile(int hydro, QString baseDir);
 }
 
 #endif // HYDROMAPS_H
