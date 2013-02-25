@@ -163,6 +163,7 @@ void initialize_globals(void){
     g.DOC_INDEX = 7;
     g.POC_INDEX = 8;
     g.DETRITUS_INDEX = 9;
+    g.CARBON_INDEX = 10;
 
     g.stock_names[0] = "macro";
     g.stock_names[1] = "phyto";
@@ -174,9 +175,10 @@ void initialize_globals(void){
     g.stock_names[7] = "doc";
     g.stock_names[8] = "poc";
     g.stock_names[9] = "detritus";
+    g.stock_names[10] = "allCarbon";
 
     // number of different stocks
-    g.NUM_STOCKS = 10;
+    g.NUM_STOCKS = 11;
 
     g.hues[0] = 120;
     g.hues[1] = 120;
@@ -188,5 +190,21 @@ void initialize_globals(void){
     g.hues[7] = 60;
     g.hues[8] = 240;
     g.hues[9] = 20;
+    g.hues[10] = 30;
 
+    g.sum_macro = 0.0;
+    g.sum_phyto = 0.0;
+    g.sum_herbivore = 0.0;
+    g.sum_waterdecomp = 0.0;
+    g.sum_seddecomp = 0.0;
+    g.sum_sedconsum = 0.0;
+    g.sum_consum = 0.0;
+    g.sum_DOC = 0.0;
+    g.sum_POC = 0.0;
+    g.sum_detritus = 0.0;
+    g.sum_carbon = 0.0;
+
+    g.total_carbon_csv = "default";
+
+    g.num_water_squares = 0;
 }

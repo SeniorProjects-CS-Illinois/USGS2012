@@ -31,5 +31,6 @@ int dump_data();
 /* Outputs an image */
 void output_image();
 QString make_file_name(int index);
+void average_carbon(int day);
 
 #endif
