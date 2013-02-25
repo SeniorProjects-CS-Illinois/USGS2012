@@ -221,6 +221,23 @@ typedef struct {
     int NUM_STOCKS;
 
     int hues[11];
+
+    double sum_macro;
+    double sum_phyto;
+    double sum_herbivore;
+    double sum_waterdecomp;
+    double sum_seddecomp;
+    double sum_sedconsum;
+    double sum_consum;
+    double sum_DOC;
+    double sum_POC;
+    double sum_detritus;
+    double sum_carbon;
+
+    int num_water_squares;
+
+    QString total_carbon_csv;
+
 } Globals;
 
 extern Globals g;

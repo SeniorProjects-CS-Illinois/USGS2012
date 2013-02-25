@@ -192,4 +192,19 @@ void initialize_globals(void){
     g.hues[9] = 20;
     g.hues[10] = 30;
 
+    g.sum_macro = 0.0;
+    g.sum_phyto = 0.0;
+    g.sum_herbivore = 0.0;
+    g.sum_waterdecomp = 0.0;
+    g.sum_seddecomp = 0.0;
+    g.sum_sedconsum = 0.0;
+    g.sum_consum = 0.0;
+    g.sum_DOC = 0.0;
+    g.sum_POC = 0.0;
+    g.sum_detritus = 0.0;
+    g.sum_carbon = 0.0;
+
+    g.total_carbon_csv = "default";
+
+    g.num_water_squares = 0;
 }

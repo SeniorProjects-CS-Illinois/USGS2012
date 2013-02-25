@@ -1,4 +1,5 @@
 #include "color.h"
+#include <QColor>
 
 /**
  * Defining non-extern versions of variables in h file
@@ -12,34 +13,9 @@
  * @param x The x coord of the patch
  * @param y The y coord of the patch
  */
-int to_rgb(int hue, float saturation, float value){
-    //QColor depthColor = QColor::fromHsv( 120 - (int)(120*relativeDepth)+1 ,255,255);
-    int red, green, blue;
-    float huePrime = hue/60.0;
-    float chroma = value * saturation;
-    float tempVal = chroma*(1-fabs((float)((int)huePrime%2-1)));
-
-
-    switch((int)floor(huePrime)) {
-        case 0: red = chroma, green = tempVal, blue = 0; break;
-        case 1: red = tempVal, green = chroma, blue = 0; break;
-        case 2: red = 0, green = chroma, blue = tempVal; break;
-        case 3: red = 0, green = tempVal, blue = chroma; break;
-        case 4: red = tempVal, green = 0, blue = chroma; break;
-        case 5: red = chroma, green = 0, blue = tempVal; break;
-        default: red = 0, green = 0, blue = 0;
-    }
-
-    int returnValue = (red + (value-chroma));
-    returnValue = (returnValue << 8) + (green + (value-chroma));
-    returnValue = (returnValue << 8) + (blue + (value-chroma));
-
-    return returnValue;
-}
-
 void scale_color(double carbonValue, double maxVal, double minVal, int x, int y, int stockIndex) {
-    int rgb;
-    float value;
+
+    float saturation;
 
     if(carbonValue > maxVal) {
         carbonValue = maxVal;
@@ -48,10 +24,16 @@ void scale_color(double carbonValue, double maxVal, double minVal, int x, int y,
         carbonValue = minVal;
     }
 
-    value = (carbonValue-minVal)/(maxVal-minVal+1);
-    rgb = to_rgb(g.hues[stockIndex], value, 255);
-    g.images[stockIndex]->setPixel(x, y, rgb);
+    saturation = (carbonValue-minVal)/(maxVal-minVal)*255;
 
+    //Checking for NaN
+    //TODO: what is making NaN values?
+    if(saturation != saturation) {
+        g.images[stockIndex]->setPixel(x, y, QColor::fromHsv(g.hues[stockIndex], 0, 255).rgb());
+    }
+    else {
+        g.images[stockIndex]->setPixel(x, y, QColor::fromHsv(g.hues[stockIndex], saturation, 255).rgb());
+    }
 }
 
 
@@ -121,16 +103,39 @@ void update_color() {
                     + patches[x][y].consum + patches[x][y].DOC + patches[x][y].seddecomp;
 
                 scale_color(patches[x][y].macro, g.MAX_MACRO, 0.0, x, y, g.MACRO_INDEX);
+                g.sum_macro += patches[x][y].macro;
+
                 scale_color(patches[x][y].phyto, AVG_phyto, 0.0, x, y, g.PHYTO_INDEX);
-                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);
-                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX);
-                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX);
-                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX);
-                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX);
+                g.sum_phyto += patches[x][y].phyto;
+
                 scale_color(patches[x][y].herbivore, g.MAX_HERBIVORE, 0.0, x, y, g.HERBIVORE_INDEX);
+                g.sum_herbivore += patches[x][y].herbivore;
+
+                scale_color(patches[x][y].waterdecomp, AVG_waterdecomp, 0.0, x, y, g.WATERDECOMP_INDEX);
+                g.sum_waterdecomp += patches[x][y].waterdecomp;
+
+                scale_color(patches[x][y].seddecomp, AVG_seddecomp, 0.0, x, y, g.SEDDECOMP_INDEX);
+                g.sum_seddecomp += patches[x][y].seddecomp;
+
+                scale_color(patches[x][y].sedconsumer, g.MAX_SEDCONSUMER, 0.0, x, y, g.SEDCONSUMER_INDEX);
+                g.sum_sedconsum += patches[x][y].sedconsumer;
+
                 scale_color(patches[x][y].consum, g.MAX_CONSUM, 0.0, x, y, g.CONSUM_INDEX);
+                g.sum_consum += patches[x][y].consum;
+
                 scale_color(patches[x][y].DOC, AVG_DOC, 0.0, x, y, g.DOC_INDEX);
+                g.sum_DOC += patches[x][y].DOC;
+
+                scale_color(patches[x][y].POC, AVG_POC, 0.0, x, y, g.POC_INDEX);
+                g.sum_POC += patches[x][y].POC;
+
+                scale_color(patches[x][y].detritus, AVG_detritus, 0.0, x, y, g.DETRITUS_INDEX);
+                g.sum_detritus += patches[x][y].detritus;
+
                 scale_color(carbon, MAX, 0.0, x, y, g.CARBON_INDEX);
+                g.sum_carbon += carbon;
+
+                g.num_water_squares += 1;
             }
         }
     }
