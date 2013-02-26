@@ -190,6 +190,7 @@ void MainWindow::runClicked()
 void MainWindow::whichstockChanged(QString newStock)
 {
     model.set_whichstock(newStock);
+
     Status status = model.getStatus();
     // TODO: if no images available, don't do this
     if (    status.getState() == Status::COMPLETE
