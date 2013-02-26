@@ -175,7 +175,7 @@ void initialize_globals(void){
     g.stock_names[7] = "doc";
     g.stock_names[8] = "poc";
     g.stock_names[9] = "detritus";
-    g.stock_names[10] = "allCarbon";
+    g.stock_names[10] = "average";
 
     // number of different stocks
     g.NUM_STOCKS = 11;

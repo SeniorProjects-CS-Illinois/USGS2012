@@ -101,10 +101,6 @@ void RiverModel::run(void) {
 
 void RiverModel::set_whichstock(QString stock_name)
 {
-    if (stock_name == "Average")
-    {
-        stock_name = "allCarbon";
-    }
     g.which_stock = stock_name;
 }
 
