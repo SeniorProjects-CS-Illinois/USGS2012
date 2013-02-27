@@ -109,7 +109,7 @@ bool HydroFile::patchExists(int x, int y) const {
     return hydroDataSetIndices.contains(hashKey);
 }
 
-QVector2D HydroFile::getVector(int x, int y) {
+const QVector2D & HydroFile::getVector(int x, int y) {
     return getData(x,y).flowVector;
 }
 
@@ -125,7 +125,7 @@ int HydroFile::getMapWidth() const {
     return width;
 }
 
-void HydroFile::setMapSize(QStringList hydroFileData) {
+void HydroFile::setMapSize(QStringList & hydroFileData) {
     width = 0;
     height = 0;
 
@@ -166,7 +166,7 @@ void HydroFile::clear() {
 }
 */
 
-void HydroFile::zeroHydroData(Grid<HydroData> hydroData) {
+void HydroFile::zeroHydroData(Grid<HydroData> & hydroData) {
 
     for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
         for(unsigned int y = 0; y < hydroData.getHeight(); y++) {

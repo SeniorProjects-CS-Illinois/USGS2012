@@ -1,8 +1,7 @@
 TEMPLATE = app
 win32:CONFIG += static
 
-SOURCES += main.cpp \
-    model/rivermodel.cpp \
+SOURCES += model/rivermodel.cpp \
     model/status.cpp \
     model/globals.cpp \
     model/cleanup.cpp \
@@ -15,6 +14,7 @@ SOURCES += main.cpp \
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \
     model/carbonflowmap.cpp \
+    model/configuration.cpp \
 
 HEADERS  += model/rivermodel.h \
     model/status.h \
@@ -30,6 +30,7 @@ HEADERS  += model/rivermodel.h \
     model/hydrofile.h \
     model/hydrofiledict.h \
     model/carbonflowmap.h \
+    model/configuration.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides

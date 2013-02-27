@@ -190,6 +190,7 @@ void MainWindow::runClicked()
 void MainWindow::whichstockChanged(QString newStock)
 {
     model.set_whichstock(newStock);
+
     Status status = model.getStatus();
     // TODO: if no images available, don't do this
     if (    status.getState() == Status::COMPLETE
@@ -1420,19 +1421,20 @@ void MainWindow::dischargeToHydro(QString file)
     fStream.open(file.toStdString().c_str());
     string str;
 
-    // TODO: need a better way to do this
-    QString hydroMapBase(Files::defaultFileLocation());
-    hydroMapBase.append("/HydroSets");
+    QString hydroMapBasePath(Files::defaultFileLocation());
+    hydroMapBasePath.append("/HydroSets");
 
-    std::getline(fStream, str);
-    size_t count = 1;
-    // TODO: this requires an empty line at the end of the discharge file
-    while (!str.empty())
+    if (!QDir(hydroMapBasePath).exists()) {
+        hydroMapBasePath = QFileDialog::getExistingDirectory(this, tr("Select base directory for hydromaps"),
+                                          Files::defaultFileLocation(), QFileDialog::ShowDirsOnly);
+    }
+
+    while (!fStream.eof())
     {
-        int hydro = atoi(str.c_str());
-        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBase);
-        addHydroMap(hydroFile, count, true, false);
         std::getline(fStream, str);
+        int hydro = atoi(str.c_str());
+        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBasePath);
+        addHydroMap(hydroFile, 1, true, false);
     }
     fStream.close();
 }

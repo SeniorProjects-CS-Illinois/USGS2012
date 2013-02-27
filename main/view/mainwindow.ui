@@ -3595,6 +3595,14 @@ p, li { white-space: pre-wrap; }
         <height>20</height>
        </rect>
       </property>
+      <property name="currentText">
+       <string>Consum</string>
+      </property>
+      <item>
+       <property name="text">
+        <string>Average</string>
+       </property>
+      </item>
       <item>
        <property name="text">
         <string>Consum</string>
