@@ -1,5 +1,5 @@
-#ifndef __CARBONSOURCES_H__
-#define __CARBONSOURCES_H__
+#ifndef CARBONSOURCES_H
+#define CARBONSOURCES_H
 
 #include <vector>
 
@@ -7,7 +7,7 @@
  * Holds the source information for an individual cell
  */
 
-using std::vector
+using std::vector;
 
 struct CarbonSource {
     CarbonSource(int x, int y, float ammount) : x(x), y(y), ammount(ammount) {}
@@ -18,7 +18,7 @@ struct CarbonSource {
 
 class CarbonSources {
     public:
-        void initalizeThisSource(int newX, int newY, bool isInputCell);
+        void initalizeSource(int newX, int newY, bool isInputCell);
 
         void addSource(int x, int y, float ammount);
         void addSource(CarbonSource source);

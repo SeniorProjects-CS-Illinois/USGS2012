@@ -1,6 +1,6 @@
 #include "carbonsources.h"
 
-void CarbonSources::initializeThisSource(int newX, int newY) {
+void CarbonSources::initializeSource(int newX, int newY) {
     addSource( newX, newY, 1.0);
     x = newX;
     y = newY;
