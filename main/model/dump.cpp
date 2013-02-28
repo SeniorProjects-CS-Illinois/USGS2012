@@ -105,3 +105,50 @@ QString make_file_name(int index) {
     return fileName;
 }
 
+void average_carbon(int day) {
+    QString file_name;
+    FILE* f;
+    if(g.total_carbon_csv == "default"){
+        file_name = "./results/data/carbon_avgs_";
+        QDateTime date_time = QDateTime::currentDateTime();
+        QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
+        file_name.append(date_time_str);
+        file_name.append(".csv");
+
+        g.total_carbon_csv = file_name;
+
+        const char* cfile_name = file_name.toStdString().c_str();
+        f = fopen(cfile_name, "w");
+        if (f == NULL) {
+            printf("file name: %s could not be opened\n", cfile_name);
+        }
+        fprintf(f,"%s\n","Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer,DOC,POC,Herbivore,Detritus,Total");
+        fclose(f);
+    }
+    else {
+        file_name = g.total_carbon_csv;
+
+    }
+
+    const char* cfile_name = file_name.toStdString().c_str();
+    f = fopen(cfile_name, "a");
+    if (f == NULL) {
+        printf("file name: %s could not be opened\n", cfile_name);
+    }
+    fprintf(f,"%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n", day, g.sum_macro/g.num_water_squares, g.sum_phyto/g.num_water_squares, g.sum_waterdecomp/g.num_water_squares, g.sum_seddecomp/g.num_water_squares, g.sum_sedconsum/g.num_water_squares, g.sum_consum/g.num_water_squares, g.sum_DOC/g.num_water_squares, g.sum_POC/g.num_water_squares, g.sum_herbivore/g.num_water_squares, g.sum_detritus/g.num_water_squares, g.sum_carbon/g.num_water_squares);
+    fclose(f);
+
+    g.sum_macro = 0.0;
+    g.sum_phyto = 0.0;
+    g.sum_herbivore = 0.0;
+    g.sum_waterdecomp = 0.0;
+    g.sum_seddecomp = 0.0;
+    g.sum_sedconsum = 0.0;
+    g.sum_consum = 0.0;
+    g.sum_DOC = 0.0;
+    g.sum_POC = 0.0;
+    g.sum_detritus = 0.0;
+    g.sum_carbon = 0.0;
+
+}
+
