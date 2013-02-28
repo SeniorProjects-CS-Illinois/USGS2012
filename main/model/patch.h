@@ -8,8 +8,8 @@
 // comments can be found in patch.c
 
 
-/*
- * Asserts that the value is between low and high
+/**
+ * \brief Asserts that the value is between low and high
  */
 double assertRange(double value, double low, double high);
 
