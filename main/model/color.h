@@ -8,9 +8,7 @@
 
 
     /**
-      * Function description copy-pasted from Netlogo documentation:
-      *
-      * Reports a shade of color proportional to number.
+      * \brief Reports a shade of color proportional to number.
       *
       * If range1 is less than range2, then the larger the number,
       * the lighter the shade of color.
@@ -28,12 +26,14 @@
 
 
 	/**
-      * Updates the color of the patch
+      * \brief Updates the color of the patch
       */
     void update_color();
 
     /**
-      * Turn a 2D index into a 1D index
+      * \brief Turn a 2D index into a 1D index
+      * \param[in] x The x coordinate
+      * \param[in] y The y coordinate
       */
     int getIndex(int x, int y);
 

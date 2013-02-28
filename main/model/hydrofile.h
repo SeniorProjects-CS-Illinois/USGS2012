@@ -19,7 +19,7 @@ typedef int CarbonFlowMap;
 class HydroFile {
     public:
         /**
-         * Constructor. We need to know the max size of all the hydromaps...
+         * \brief Constructor. We need to know the max size of all the hydromaps...
          */
         HydroFile(QString filename);
         HydroFile();
@@ -27,47 +27,54 @@ class HydroFile {
         //HydroFile const & operator=( HydroFile const & other );
 
         /**
-         * Loads the current hydroFile using a file, only if not previously initialized.
+         * \brief Loads the current hydroFile using a file, only if not previously initialized.
          * Otherwise, this function does nothing.
+         * \param[in] filename The name of the file to load
          */
         void loadFromFile(QString filename);
 
         /**
-         * Given an int, precomputes flows for the specified number of
+         * \brief Given an int, precomputes flows for the specified number of
          * iterations using the hydrofile's data.
          * Memoizes and returns a CarbonFlowMap pointer.
          */
         //CarbonFlowMap * getCarbonFlowMap(int iterations);
 
         /**
-         * Checks if a water cell exists at the given (x,y) coordinate
+         * \brief Checks if a water cell exists at the given (x,y) coordinate
+         * \param[in] x The x coordinate
+         * \param[in] y The y coordinate
          */
         bool patchExists(int x, int y) const;
 
         /**
-         * Gets the depth of the cell at the given (x,y) coordinate
+         * \brief Gets the depth of the cell at the given (x,y) coordinate
+         * \param[in] x The x coordinate
+         * \param[in] y The y coordinate
          */
         double getDepth(int x, int y);
 
         /**
-         * Returns the 2D flow vector for the cell at the given (x,y) coordinate
+         * \brief Returns the 2D flow vector for the cell at the given (x,y) coordinate
+         * \param[in] x The x coordinate
+         * \param[in] y The y coordinate
          */
         const QVector2D & getVector(int x, int y);
 
         /**
-         * Returns the map's width
+         * \brief Returns the map's width
          */
         int getMapWidth(void) const;
 
         /**
-         * Returns the map's depth
+         * \brief Returns the map's depth
          */
         int getMapHeight(void) const;
 
         /**
-         * Generates a QImage representation of the hydromap.
-         * TODO: Refactor this function. (low priority)
+         * \brief Generates a QImage representation of the hydromap.
          */
+        // TODO: Refactor this function. (low priority)
         QImage generateVisualization(int imageCellSize);
 
     private:
@@ -91,12 +98,12 @@ class HydroFile {
 
 
         /**
-         * Reads the datafile to determine the dimension of the map.
+         * \brief Reads the datafile to determine the dimension of the map.
          */
         void setMapSize(QStringList & hydroFileData);
 
         /**
-         * Initializes the input grid with default (zeroized) data.
+         * \brief Initializes the input grid with default (zeroized) data.
          */
         void zeroHydroData(Grid<HydroData> & hydroData);
 
@@ -105,7 +112,7 @@ class HydroFile {
         int getHashKey(int x, int y) const;
 
         /**
-         * Returns an entire cell's data at the given (x,y) coordinate.
+         * \brief Returns an entire cell's data at the given (x,y) coordinate.
          */
         HydroData & getData(int x, int y);
 
