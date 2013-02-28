@@ -14,6 +14,7 @@ SOURCES += model/rivermodel.cpp \
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \
     model/configuration.cpp \
+    model/reducedgrid.cpp \
 
 HEADERS  += model/rivermodel.h \
     model/status.h \
@@ -29,6 +30,7 @@ HEADERS  += model/rivermodel.h \
     model/hydrofile.h \
     model/hydrofiledict.h \
     model/configuration.h \
+    model/reducedgrid.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides
