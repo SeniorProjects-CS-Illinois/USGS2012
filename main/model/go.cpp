@@ -77,11 +77,12 @@ void go()
         g.current_day++;
         if(g.current_day == g.output_frequency)
         {
-        output_image();
+            output_image();
             dump_data();
-                        g.current_day = 0;
-                }
+            average_carbon(g.hours/24);
+            g.current_day = 0;
         }
+    }
 }
 
 

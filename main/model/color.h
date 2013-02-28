@@ -24,13 +24,18 @@
       */
     int to_rgb(int hue, float saturation, float value);
     
-    void scale_color( double value, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex);
+    void scale_color( double carbonValue, double maxVal, double minVal, int x, int y, int stockIndex, int colorIndex);
 
 
 	/**
       * Updates the color of the patch
       */
     void update_color();
+
+    /**
+     * Returns the bigger number
+     */
+    double getMax(double max, double contender);
 
     /**
       * Turn a 2D index into a 1D index
