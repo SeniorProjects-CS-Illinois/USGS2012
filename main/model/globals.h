@@ -208,10 +208,11 @@ typedef struct {
     int DOC_INDEX;
     int POC_INDEX;
     int DETRITUS_INDEX;
+    int CARBON_INDEX;
 
-    QString stock_names[10];
+    QString stock_names[11];
     QMutex imageMutex;
-    QImage* images[10];
+    QImage* images[11];
 
     QImageWriter * writer;
 
@@ -219,7 +220,24 @@ typedef struct {
     // number of different stocks
     int NUM_STOCKS;
 
-    int hues[10];
+    int hues[11];
+
+    double sum_macro;
+    double sum_phyto;
+    double sum_herbivore;
+    double sum_waterdecomp;
+    double sum_seddecomp;
+    double sum_sedconsum;
+    double sum_consum;
+    double sum_DOC;
+    double sum_POC;
+    double sum_detritus;
+    double sum_carbon;
+
+    int num_water_squares;
+
+    QString total_carbon_csv;
+
 } Globals;
 
 extern Globals g;

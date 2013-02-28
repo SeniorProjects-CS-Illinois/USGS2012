@@ -29,12 +29,12 @@ int main(int argc, char *argv[]) {
 
     //These values are what was used in the original Python GUI by default.  Hard coding for now.
     //TODO: There should be a configuration method that take a Configuration object.
-    model.set_hydro_filenames("../main/model/data/HydroSets/100k-new.txt", 1);
-    model.set_hydro_filenames("../main/model/data/HydroSets/50k-new.txt", 1);
-    model.set_hydro_filenames("../main/model/data/HydroSets/70k-new.txt", 1);
-    model.set_par_file("../main/model/data/Environmentals/par.txt");
+    model.set_hydro_filenames("./data/HydroSets/100k-new.txt", 1);
+    model.set_hydro_filenames("./data/HydroSets/50k-new.txt", 1);
+    model.set_hydro_filenames("./data/HydroSets/70k-new.txt", 1);
+    model.set_par_file("./data/Environmentals/par.txt");
     model.set_timestep(1);
-    model.set_temperature_file("../main/model/data/Environmentals/water-temp.txt");
+    model.set_temperature_file("./data/Environmentals/water-temp.txt");
     model.set_whichstock("phyto");
     model.set_TSS(10.0);
     model.set_macro_base_temp(19.7);
