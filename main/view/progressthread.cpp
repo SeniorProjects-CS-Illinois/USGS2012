@@ -2,7 +2,7 @@
 
 ProgressThread::ProgressThread(QObject* parent, RiverModel *rModel, unsigned long interval) :
     QThread(parent),
-    model(rModel),
+    model(rModel), // intentional shallow copy
     sleepTimeSeconds(interval)
 {
     // No work needed in constructor
