@@ -6,7 +6,7 @@
  * Each line represents one coordinate (x,y) in the River and holds the values of the DOCs in a patch.
  * @return 1 on successful completion, 0 indicates failure file could not be created.
  */
-int write_data() {
+int write_data(const Configuration & config) {
     QString file_name = "./results/data/map_data_";
     QDateTime date_time = QDateTime::currentDateTime();
     QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
@@ -23,7 +23,11 @@ int write_data() {
     // GUI variables used    
     fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
     
-    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n", g.gui_timestep_factor, g.gui_days_to_run, g.gui_tss, g.gui_k_phyto, g.gui_k_macro, g.gui_sen_macro_coef, g.gui_resp_macro_coef, g.gui_macro_base_temp, g.gui_macro_mass_max, g.gui_macro_vel_max, g.gui_gross_macro_coef, g.which_stock.toStdString().c_str());
+    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
+            config.timestep, g.gui_days_to_run, config.tss,
+            config.kPhyto, config.kMacro, config.macroSenescence,
+            config.macroRespiration, config.macroTemp, config.macroMassMax,
+            config.macroVelocityMax, config.macroGross, config.whichStock.toStdString().c_str());
     
     fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");
 
@@ -73,8 +77,8 @@ int write_data() {
  * Creates a folder <data_path> and places all the results from running the model into this file.
  * @return 1 on successful completion, 0 indicates failure file could not be created.
  */
-int dump_data() {
-    return write_data();
+int dump_data(const Configuration & config) {
+    return write_data(config);
 }
 
 

@@ -4,35 +4,35 @@
 /**
  * This function runs the model
  */
-void go()
+void go(Configuration & config)
 {
-        update_environmentals();
+    update_environmentals();
 
-        // Ask patches
+    // Ask patches
     for(int x = 0; x < g.MAP_WIDTH; x++) {
         for(int y = 0; y < g.MAP_HEIGHT; y++) {
             if(patches[x][y].depth > 0.0){
-                update_patches(x,y);
-                go_macro(x,y);
-                go_phyto(x,y);
-                go_herbivore(x,y);
-                go_waterdecomp(x,y);
-                go_seddecomp(x,y);
-                go_sedconsumer(x,y);
-                go_consum(x,y);
-                go_DOC(x,y);
-                go_POC(x,y);
-                go_detritus(x,y);
+                update_patches(x, y, config);
+                go_macro(x, y, config);
+                go_phyto(x, y, config);
+                go_herbivore(x, y, config);
+                go_waterdecomp(x, y, config);
+                go_seddecomp(x, y, config);
+                go_sedconsumer(x, y, config);
+                go_consum(x, y, config);
+                go_DOC(x, y, config);
+                go_POC(x, y, config);
+                go_detritus(x, y, config);
 
-                pred_phyto(x,y);
-                pred_herbivore(x,y);
-                pred_seddecomp(x,y);
-                pred_waterdecomp(x,y);
-                pred_sedconsumer(x,y);
-                pred_detritus(x,y);
-                pred_DOC(x,y);
-                pred_POC(x,y);
-                pred_consum(x,y);
+                pred_phyto(x, y);
+                pred_herbivore(x, y);
+                pred_seddecomp(x, y);
+                pred_waterdecomp(x, y);
+                pred_sedconsumer(x, y);
+                pred_detritus(x, y);
+                pred_DOC(x, y);
+                pred_POC(x, y);
+                pred_consum(x, y);
             }
         }
     }
@@ -43,12 +43,12 @@ void go()
     *source = *dest;
 
     // flow carbon
-    int max_time = 60/g.gui_timestep_factor;
+    int max_time = 60/config.timestep;
     g.nan_trigger = 0;      // set nan to false
     for (int t = 0; t < max_time; t++)
     {
         std::swap(source, dest);
-        flow_carbon(*source, *dest);
+        flow_carbon(*source, *dest, config);
         if (g.nan_trigger) {
             break;
         }
@@ -75,10 +75,10 @@ void go()
     {
         update_color();
         g.current_day++;
-        if(g.current_day == g.output_frequency)
+        if(g.current_day == config.outputFreq)
         {
             output_image();
-            dump_data();
+            dump_data(config);
             average_carbon(g.hours/24);
             g.current_day = 0;
         }
@@ -277,7 +277,7 @@ int is_nan(int x, int y, double move_factor, Grid<FlowData> & dst)
 /**
  * Flow each cell's flowable stocks to neighbor cells based on flow vectors
  */
-void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest)
+void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest, const Configuration & config)
 {
     for(int x = 0; x < g.MAP_WIDTH; x++)
     {
@@ -296,7 +296,7 @@ void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest)
                 int px = (int)(max_timestep * source(x,y).px_vector);
                 int py = (int)(max_timestep * source(x,y).py_vector);
 
-                if (g.gui_flow_corners_only)
+                if (config.adjacent) // is this the opposite of what is waned?
                 {
                     if (px >= 1) px = 1;
                     else if (px <= -1) px = -1;

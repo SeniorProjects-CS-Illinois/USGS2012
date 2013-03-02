@@ -11,9 +11,10 @@
 #include "color.h"
 #include "flowdata.h"
 #include "grid.h"
+#include "configuration.h"
 
 /* Runs the model */
-void go();
+void go(Configuration & config);
 
 /* Updates the environmental variables (Primary macrophyte routine) */
 void update_environmentals();
@@ -55,7 +56,7 @@ int is_nan(int x, int y, double move_factor);
  * Takes two sets of flow data and writes the changes to the destination set.
  * This way carbon can not flow more than once per iteration.
  */
-void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest);
+void flow_carbon(Grid<FlowData> & source, Grid<FlowData> & dest, const Configuration & config);
 
 /**
  * Checks if the x, y values for the patch is within boundaries of the map
