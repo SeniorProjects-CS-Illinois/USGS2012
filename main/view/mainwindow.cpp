@@ -277,115 +277,7 @@ void MainWindow::saveConfiguration()
 void MainWindow::saveConfiguration(QString file) const
 {
     Configuration conf;
-
-    // set all values for configuration
-    conf.adjacent                   = getAdjacent();
-    conf.outputFreq                 = getOutputFreq();
-    conf.timestep                   = getTimestep();
-    conf.numHydroMaps               = getNumHydroMaps();
-    conf.tss                        = getTSS();
-    conf.kMacro                     = getKMacro();
-    conf.kPhyto                     = getKPhyto();
-
-    // stock parameters
-    conf.macro                      = getMacroBase();
-    conf.phyto                      = getPhytoBase();
-    conf.consumer                   = getConsumerBase();
-    conf.decomp                     = getDecompBase();
-    conf.sedconsumer                = getSedconsumerBase();
-    conf.seddecomp                  = getSeddecompBase();
-    conf.herbivore                  = getHerbivoreBase();
-    conf.detritus                   = getDetritusBase();
-    conf.poc                        = getPocBase();
-    conf.doc                        = getDocBase();
-
-    conf.phytoSenescence            = getPhytoSenescence();
-    conf.phytoRespiration           = getPhytoRespiration();
-    conf.phytoExcretion             = getPhytoExcretion();
-    conf.phytoAj                    = getPhytoAj();
-    conf.phytoGj                    = getPhytoGj();
-
-    conf.herbivoreAiPhyto           = getHerbivoreAiPhyto();
-    conf.herbivoreGiPhyto           = getHerbivoreGiPhyto();
-    conf.herbivorePrefPhyto         = getHerbivorePrefPhyto();
-    conf.herbivoreAiPeri            = getHerbivoreAiPeri();
-    conf.herbivoreGiPeri            = getHerbivoreGiPeri();
-    conf.herbivorePrefPeri          = getHerbivorePrefPeri();
-    conf.herbivoreAiWaterdecomp     = getHerbivoreAiWaterdecomp();
-    conf.herbivoreGiWaterdecomp     = getHerbivoreGiWaterdecomp();
-    conf.herbivorePrefWaterdecomp   = getHerbivorePrefWaterdecomp();
-    conf.herbivoreAj                = getHerbivoreAj();
-    conf.herbivoreGj                = getHerbivoreGj();
-    conf.herbivoreRespiration       = getHerbivoreRespiration();
-    conf.herbivoreExcretion         = getHerbivoreExcretion();
-    conf.herbivoreEgestion          = getHerbivoreEgestion();
-    conf.herbivoreSenescence        = getHerbivoreSenescence();
-    conf.herbivoreMax               = getHerbivoreMax();
-
-    conf.waterdecompAiDoc           = getWaterdecompAiDoc();
-    conf.waterdecompGiDoc           = getWaterdecompGiDoc();
-    conf.waterdecompPrefDoc         = getWaterdecompPrefDoc();
-    conf.waterdecompAiPoc           = getWaterdecompAiPoc();
-    conf.waterdecompGiPoc           = getWaterdecompGiPoc();
-    conf.waterdecompPrefPoc         = getWaterdecompPrefPoc();
-    conf.waterdecompAj              = getWaterdecompAj();
-    conf.waterdecompGj              = getWaterdecompGj();
-    conf.waterdecompRespiration     = getWaterdecompRespiration();
-    conf.waterdecompExcretion       = getWaterdecompExcretion();
-    conf.waterdecompSenescence      = getWaterdecompSenescence();
-    conf.waterdecompMax             = getWaterdecompMax();
-
-    conf.seddecompAiDetritus        = getSeddecompAiDetritus();
-    conf.seddecompGiDetritus        = getSeddecompGiDetritus();
-    conf.seddecompPrefDetritus      = getSeddecompPrefDetritus();
-    conf.seddecompAj                = getSeddecompAj();
-    conf.seddecompGj                = getSeddecompGj();
-    conf.seddecompRespiration       = getSeddecompRespiration();
-    conf.seddecompExcretion         = getSeddecompExcretion();
-    conf.seddecompSenescence        = getSeddecompSenescence();
-    conf.seddecompMax               = getSeddecompMax();
-
-    conf.consumerAiHerbivore        = getConsumerAiHerbivore();
-    conf.consumerGiHerbivore        = getConsumerGiHerbivore();
-    conf.consumerPrefHerbivore      = getConsumerPrefHerbivore();
-    conf.consumerAiSedconsumer      = getConsumerAiSedconsumer();
-    conf.consumerGiSedconsumer      = getConsumerGiSedconsumer();
-    conf.consumerPrefSedconsumer    = getConsumerPrefSedconsumer();
-    conf.consumerAj                 = getConsumerAj();
-    conf.consumerGj                 = getConsumerGj();
-    conf.consumerRespiration        = getConsumerRespiration();
-    conf.consumerExcretion          = getConsumerExcretion();
-    conf.consumerSenescence         = getConsumerSenescence();
-    conf.consumerEgestion           = getConsumerEgestion();
-    conf.consumerMax                = getConsumerMax();
-
-    conf.macroSenescence            = getMacroSenescence();
-    conf.macroRespiration           = getMacroRespiration();
-    conf.macroExcretion             = getMacroExcretion();
-    conf.macroTemp                  = getMacroTemp();
-    conf.macroGross                 = getMacroGross();
-    conf.macroMassMax               = getMacroMassMax();
-    conf.macroVelocityMax           = getMacroVelocityMax();
-
-    conf.sedconsumerAiDetritus      = getSedconsumerAiDetritus();
-    conf.sedconsumerGiDetritus      = getSedconsumerGiDetritus();
-    conf.sedconsumerPrefDetritus    = getSedconsumerPrefDetritus();
-    conf.sedconsumerAiSeddecomp     = getSedconsumerAiSeddecomp();
-    conf.sedconsumerGiSeddecomp     = getSedconsumerGiSeddecomp();
-    conf.sedconsumerPrefSeddecomp   = getSedconsumerPrefSeddecomp();
-    conf.sedconsumerAj              = getSedconsumerAj();
-    conf.sedconsumerGj              = getSedconsumerGj();
-    conf.sedconsumerRespiration     = getSedconsumerRespiration();
-    conf.sedconsumerExcretion       = getSedconsumerExcretion();
-    conf.sedconsumerSenescence      = getSedconsumerSenescence();
-    conf.sedconsumerMax             = getSedconsumerMax();
-
-    conf.hydroMaps = getHydroMaps();
-    conf.daysToRun = getDaysToRun();
-
-    conf.parFile = getPARFile();
-    conf.tempFile = getTempFile();
-
+    getAllInput(conf);
     conf.write(file);
 }
 
@@ -928,6 +820,9 @@ void MainWindow::getAllStockInput(Configuration & c)
     c.sedconsumerExcretion = getSedconsumerExcretion()/24;
     c.sedconsumerSenescence = getSedconsumerSenescence()/24;
     c.sedconsumerMax = getSedconsumerMax()/24;
+
+    // c.periAj
+    // c.periGj <-- these are written to in the model right away, I don't think it is supposed to be user input
 }
 
 bool MainWindow::verifyAllInput() const
