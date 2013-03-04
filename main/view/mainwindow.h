@@ -384,12 +384,12 @@ private:
     /**
      * Get all the input from the GUI and set appropriate globals.
      */
-    void getAllInput(Configuration &c);
+    void getAllInput(Configuration &c) const;
 
     /**
      * Get all the stock input from the GUI and set globals.
      */
-    void getAllStockInput(Configuration &c);
+    void getAllStockInput(Configuration &c) const;
 
     /**
      * Get all the input from the GUI and set appropriate globals.

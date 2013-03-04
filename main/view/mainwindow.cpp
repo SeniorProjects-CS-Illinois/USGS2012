@@ -701,7 +701,7 @@ void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool dis
     }
 }
 
-void MainWindow::getAllInput(Configuration & c)
+void MainWindow::getAllInput(Configuration & c) const
 {
     c.hydroMaps = getHydroMaps();
     c.daysToRun = getDaysToRun();
@@ -718,7 +718,7 @@ void MainWindow::getAllInput(Configuration & c)
     getAllStockInput(c); // There are so many, it would be best to separate this
 }
 
-void MainWindow::getAllStockInput(Configuration & c)
+void MainWindow::getAllStockInput(Configuration & c) const
 {
     set_stocks(getMacroBase(),
                getPhytoBase(),
