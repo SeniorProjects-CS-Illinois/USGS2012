@@ -31,7 +31,8 @@ typedef struct {
 
     int gui_flow_corners_only;
     int gui_timestep_factor;    // By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
-    int gui_days_to_run;  // number of days to run the code
+    /** \brief Number of days to run */
+    int gui_days_to_run;
     double gui_tss;  // TSS
     double gui_k_phyto;  // k-phyto
     double gui_k_macro; // k-macro
