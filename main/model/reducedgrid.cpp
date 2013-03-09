@@ -8,12 +8,13 @@ ReducedGrid<T>::ReducedGrid(int width_, int height_) {
 template <typename T>
 bool ReducedGrid<T>::locationExists(int x, int y) {
     int hashKey = getHashKey(x,y);
-    return dataset.contains(hashKey);
+    return indiciesHash.contains(hashKey);
 }
 
 template <typename T>
 void ReducedGrid<T>::addItem(T data, int x, int y) {
     if(compressed) {
+		std::cerr << "Cannot add items to a compressed grid" << std::endl;
         abort();
     }
     DataStruct_t entry;
@@ -26,9 +27,22 @@ void ReducedGrid<T>::addItem(T data, int x, int y) {
 
 template <typename T>
 T ReducedGrid<T>::get(int i) {
-	//TODO: Should store a length and make sure they're not grabbing elements past the list
-	// this is a slight security issue.
-    return dataset[i];
+	if(compressed) {
+		if(i > dataset.size()) {
+			std::cerr << "Beyond end of data, use size(), to check the size first!" << std::endl;
+			abort();
+		}
+		
+		return dataset[i];
+	}
+	else {
+		if(i > tempData.size()) {
+			std::cerr << "Beyond end of data, use size(), to check the size first!" << std::endl;
+			abort();
+		}
+		
+		return tempData[i].data;
+	}
 }
 
 template <typename T>
@@ -70,6 +84,16 @@ void ReducedGrid<T>::compress() {
             }
         }
     }
+}
+
+template <typename T>
+int ReducedGrid<T>::size() {
+	if(compressed) {
+		return dataset.size();
+	}
+	else {
+		return tempData.size();
+		}
 }
 
 template <typename T>

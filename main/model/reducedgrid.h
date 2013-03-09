@@ -44,6 +44,10 @@ class ReducedGrid
          * \return The success status of the compression operation
          */
         void compress();
+		
+		/** \brief Returns the size of the comressed or uncompressed dataset
+		 */
+		int size();
 
         /** \brief Returns the width of the reduced grid
          */

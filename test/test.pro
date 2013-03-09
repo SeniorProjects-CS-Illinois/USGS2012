@@ -1,5 +1,7 @@
 QT+= testlib
 
+CONFIG += testcase
+
 TARGET = runTests
 DEPENDPATH += .
 
