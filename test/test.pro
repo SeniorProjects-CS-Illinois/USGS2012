@@ -1,10 +1,9 @@
 QT+= testlib
-TEMPLATE = app
+
 TARGET = runTests
 DEPENDPATH += .
-INCLUDEPATH += . \
-               ..\main\model
 
+INCLUDEPATH += ../main/model
 
 # Input
 SOURCES += TestClass.cpp \

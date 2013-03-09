@@ -1,3 +1,6 @@
+#ifndef __REDUCEDGRID_H__
+#define __REDUCEDGRID_H__
+
 #include "grid.h"
 #include <QVector>
 #include <QHash>
@@ -15,7 +18,7 @@ class ReducedGrid
          * \param[in] width The width of the grid
          * \param[in] height The height of the grid
          */
-        ReducedGrid(int width, int height);
+        ReducedGrid(int width_, int height_);
            
         /** \brief Returns if the location exists in the reduced grid
          * \param[in] x The x coordinate
@@ -68,8 +71,6 @@ class ReducedGrid
     private:
         /** \brief Contains true of the reduced grid has been compressed */
         bool compressed;
-        /** \brief Grid that contains wether or not a location actually has a data element */
-        Grid<bool> hasData;
         /** \brief Contains the indicies into the data */
         QHash<int, int> indiciesHash;   
         /** \brief The compressed vector containing the final data */
@@ -88,3 +89,7 @@ class ReducedGrid
         QVector<DataStruct> tempData;
 
 };
+
+#include "reducedgrid.cpp"
+
+#endif
