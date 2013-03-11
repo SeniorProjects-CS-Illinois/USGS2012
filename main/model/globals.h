@@ -22,7 +22,6 @@ typedef struct {
     double COMPARE_MAX; ///< represents the maximum of the x or y vector among all patches, this is used to calculate max step
 
     // GUI variables
-    int output_frequency;
     int current_day; ///< Keeps track of how often output should be generated
     const char* file_extension;
 
@@ -45,9 +44,7 @@ typedef struct {
     QString which_stock; // which-stock?
 
     // GUI input hydro maps and days for each map
-    QStringList gui_filenames_list;
     QStringList uniqueHydroFilenames;
-    std::vector<int> gui_days_vector;
     int num_unique_files;
     int gui_filenames_filesize;
     int num_hydro_files;
@@ -93,94 +90,6 @@ typedef struct {
     double MAX_POC;
     double MAX_DETRITUS;
 
-    double max_waterdecomp;
-    double max_seddecomp;
-    double max_herbivore;
-    double herbivore_egestion;
-    double max_sedconsumer;
-    double sedconsumer_egestion_seddecomp;
-    double max_consum;
-    double e_macro;
-    double e_phyto;
-    double e_waterdecomp;
-    double e_seddecomp;
-    double e_herbivore;
-    double e_sedconsumer;
-    double sedconsumer_egestion_detritus;
-    double e_consum;
-    double r_phyto;
-    double r_waterdecomp;
-    double r_seddecomp;
-    double r_herbivore;
-    double r_sedconsumer;
-    double r_consum;
-    double s_phyto;
-    double s_waterdecomp;
-    double s_seddecomp;
-    double s_herbivore;
-    double s_sedconsumer;
-    double s_consum;
-    double consum_egestion;
-
-    // below variables are ripe for sensitivity analysis
-    // prey parameters - Ai and Gi, coded 1 -> 0
-    double Ai_waterdecomp_DOC;
-    double Ai_waterdecomp_POC;
-    double Ai_Peri_DOC;
-    double Ai_Peri_POC;
-    double Ai_seddecomp_detritus;
-    double Ai_herbivore_phyto;
-    double Ai_herbivore_waterdecomp;
-    double Ai_herbivore_peri;
-    double Ai_sedconsumer_seddecomp;
-    double Ai_sedconsumer_peri;
-    double Ai_sedconsumer_detritus;
-    double Ai_consum_herbivore;
-    double Ai_consum_sedconsumer;
-    double Gi_waterdecomp_DOC;
-    double Gi_waterdecomp_POC;
-    double Gi_Peri_DOC;
-    double Gi_Peri_POC;
-    double Gi_seddecomp_detritus;
-    double Gi_herbivore_phyto;
-    double Gi_herbivore_waterdecomp;
-    double Gi_herbivore_peri;
-    double Gi_sedconsumer_seddecomp;
-    double Gi_sedconsumer_peri;
-    double Gi_sedconsumer_detritus;
-    double Gi_consum_herbivore;
-    double Gi_consum_sedconsumer;
-    double pref_waterdecomp_DOC;
-    double pref_waterdecomp_POC;
-    double pref_Peri_DOC;
-    double pref_Peri_POC;
-    double pref_seddecomp_detritus;
-    double pref_herbivore_phyto;
-    double pref_herbivore_waterdecomp;
-    double pref_herbivore_peri;
-    double pref_sedconsumer_seddecomp;
-    double pref_sedconsumer_peri;
-    double pref_sedconsumer_detritus;
-    double pref_consum_herbivore;
-    double pref_consum_sedconsumer;
-
-    // peri updated every timestep based on macro density  
-    // density dependent crowding effects on linear scale - capped at Aj and Gj - coded 1->0  
-    double Aj_phyto;
-    double Aj_waterdecomp;
-    double Aj_seddecomp;
-    double Aj_herbivore;
-    double Aj_sedconsumer;
-    double Aj_consum;
-    double Aj_peri;
-    double Gj_phyto;
-    double Gj_waterdecomp;
-    double Gj_seddecomp;
-    double Gj_herbivore;
-    double Gj_sedconsumer;
-    double Gj_consum;
-    double Gj_peri;
-
     // set k-macro .4 -> taken from interface
     // set k-phyto .4 -> taken from interface
     double k_herbivore;
@@ -190,13 +99,6 @@ typedef struct {
 
     //temperatue dependent coefficient for aquatic plants
     double Q10;
-    //Slider variables
-    double macro_base_temp;
-    double gross_macro_coef;
-    double resp_macro_coef;
-    double sen_macro_coef;
-    double macro_mas_max;
-    double macro_vel_max;
 
     // indices for the array for each stock
     int MACRO_INDEX;
@@ -238,6 +140,8 @@ typedef struct {
     int num_water_squares;
 
     QString total_carbon_csv;
+
+    unsigned char HOURS_PER_DAY;
 
 } Globals;
 

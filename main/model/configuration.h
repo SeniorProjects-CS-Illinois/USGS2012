@@ -8,7 +8,7 @@
 #include <fstream>
 #include <string>
 
-struct Configuration
+class Configuration
 {
 
 /** Structure of the .conf file:
@@ -16,15 +16,6 @@ struct Configuration
   *             Item                            (type)
   *---------------------------------------------------------
   *     Adjacent cells                          (bool)
-  *     Consum stock selected                   (bool)
-  *     Detritus stock selected                 (bool)
-  *     DOC stock selected                      (bool)
-  *     Herbivore stock selected                (bool)
-  *     Macro stock selected                    (bool)
-  *     POC stock selected                      (bool)
-  *     Phyto stock selected                    (bool)
-  *     Sedconsumer stock selected              (bool)
-  *     Seddecomp stock selected                (bool)
   *     Waterdecomp stock selected              (bool)
   *     Temperature file name                   (char*)
   *     PAR file name                           (char*)
@@ -115,12 +106,19 @@ struct Configuration
   *     Sedconsumer Ai Seddecomp                (float)
   *     Sedconsumer Gi Seddecomp                (float)
   *     Sedconsumer Pref Seddecomp              (float)
+  *     Sedconsumer Ai Peri                     (float)
+  *     Sedconsumer Gi Peri                     (float)
+  *     Sedconsumer Pref Peri                   (float)
+  *     Sedconsumer Egestion Seddecomp          (float)
+  *     Sedconsumer Egestion Detritus           (float)
   *     Sedconsumer Aj                          (float)
   *     Sedconsumer Gj                          (float)
   *     Sedconsumer Respiration                 (float)
   *     Sedconsumer Excretion                   (float)
   *     Sedconsumer Senescence                  (float)
   *     Sedconsumer Max                         (float)
+  *     Peri Aj                                 (float)
+  *     Peri Gj                                 (float)
   */
 
 public:
@@ -247,6 +245,11 @@ public:
     float sedconsumerAiSeddecomp;
     float sedconsumerGiSeddecomp;
     float sedconsumerPrefSeddecomp;
+    float sedconsumerAiPeri;
+    float sedconsumerGiPeri;
+    float sedconsumerPrefPeri;
+    float sedconsumerEgestionSeddecomp;
+    float sedconsumerEgestionDetritus;
     float sedconsumerAj;
     float sedconsumerGj;
     float sedconsumerRespiration;
@@ -254,6 +257,8 @@ public:
     float sedconsumerSenescence;
     float sedconsumerMax;
 
+    float periAj;
+    float periGj;
 
 private:
     /**

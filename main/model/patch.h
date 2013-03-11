@@ -4,6 +4,7 @@
 #include "math.h"
 
 #include "globals.h"
+#include "configuration.h"
 
 // comments can be found in patch.c
 
@@ -13,27 +14,27 @@
  */
 double assertRange(double value, double low, double high);
 
-void update_patches(int x, int y);
+void update_patches(int x, int y, Configuration & config);
 
-void go_macro(int x, int y);
+void go_macro(int x, int y, const Configuration & config);
 
-void go_phyto(int x, int y);
+void go_phyto(int x, int y, const Configuration & config);
 
-void go_herbivore(int x, int y);
+void go_herbivore(int x, int y, const Configuration & config);
 
-void go_waterdecomp(int x, int y);
+void go_waterdecomp(int x, int y, const Configuration & config);
 
-void go_seddecomp(int x, int y);
+void go_seddecomp(int x, int y, const Configuration & config);
 
-void go_sedconsumer(int x, int y);
+void go_sedconsumer(int x, int y, const Configuration & config);
 
-void go_consum(int x, int y);
+void go_consum(int x, int y, const Configuration & config);
 
-void go_DOC(int x, int y);
+void go_DOC(int x, int y, const Configuration & config);
 
-void go_POC(int x, int y);
+void go_POC(int x, int y, const Configuration & config);
 
-void go_detritus(int x, int y);
+void go_detritus(int x, int y, const Configuration & config);
 
 typedef struct _patch {
 

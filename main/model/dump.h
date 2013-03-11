@@ -12,6 +12,7 @@
 
 #include "globals.h"
 #include "patch.h"
+#include "configuration.h"
 
 
 /**
@@ -21,13 +22,13 @@
  * Each line represents one coordinate (x,y) in the River and holds the values of the DOCs in a patch.
  * \return 1 on successful completion, 0 indicates failure file could not be created.
  */
-int write_data();
+int write_data(const Configuration & config);
 
 /**
  * \brief Creates a folder <data_path> and places all the results from running the model into this file.
  * \return 1 on successful completion, 0 indicates failure file could not be created.
  */
-int dump_data();
+int dump_data(const Configuration & config);
 
 /** 
  * \brief Outputs an image
