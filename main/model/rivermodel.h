@@ -52,12 +52,12 @@ class RiverModel {
         Status getStatus(void);
 
         /**
-         * Returns an image of the currently selected stock.
+         * \brief Returns an image of the currently selected stock.
          */
         QImage getImage(void);
 
         /**
-         * Returns the stock requested.
+         * \brief Returns the stock requested.
          */
         QImage getImage(QString stockName);
 

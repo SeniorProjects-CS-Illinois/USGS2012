@@ -71,7 +71,8 @@ void HydroFile::loadFromFile(QString filename) {
 
     /* Now we move the data from the grid and place it in a vector whose
      * element indices are hashed using the x,y coordinates of corresponding
-     * cells   */
+     * cells   
+     */
     for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
         for(unsigned int y = 0; y < hydroData.getHeight(); y++) {
             if(hydroData(x,y).depth != 0) {
@@ -151,6 +152,12 @@ int HydroFile::getHashKey(int x, int y) const {
 }
 
 HydroFile::HydroData & HydroFile::getData(int x, int y) {
+    if(!patchExists(x,y))
+    {
+        std::cerr << "Cannot return a location that doesn't exist, use patchExists() before calling getData()!";
+        std::cerr << std::endl;
+        abort();
+    }
     int hashKey = getHashKey(x,y);
     int index = hydroDataSetIndices[hashKey];
     return hydroDataSet[index];
