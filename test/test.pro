@@ -1,8 +1,11 @@
-CONFIG += qtestlib
-TEMPLATE = app
+QT+= testlib
+
+CONFIG += testcase
+
 TARGET = runTests
 DEPENDPATH += .
-INCLUDEPATH += .
+
+INCLUDEPATH += ../main/model
 
 # Input
-SOURCES += exampleTestClass.cpp
+SOURCES += TestClass.cpp \

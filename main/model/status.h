@@ -13,37 +13,37 @@ class Status {
         //Functions relevant to the view
 
         /**
-         * Returns a percent complete for the current run.
+         * \brief Returns a percent complete for the current run.
          */
         float getProgress(void);
 
         /**
-         * Returns the state of the model.
+         * \brief Returns the state of the model.
          */
         ModelState getState(void);
 
         /**
-         * Returns an error message if an error occurred.
+         * \brief Returns an error message if an error occurred.
          */
         QString getErrorMessage(void);
 
         /**
-         * Returns the time elapsed in seconds.
+         * \brief Returns the time elapsed in seconds.
          */
         int getTimeElapsed(void);
 
         /**
-         * Returns the estimated time remaining in seconds.
+         * \brief Returns the estimated time remaining in seconds.
          */
         int getTimeRemaining(void);
 
         /**
-         * Returns true if a new image exists.
+         * \brief Returns true if a new image exists.
          */
         bool hasNewImage(void);
 
         /**
-         * Sets image availability to boolean parameter
+         * \brief Sets image availability to boolean parameter
          */
         void hasNewImage(bool newImageStatus);
 
@@ -53,23 +53,23 @@ class Status {
         //Functions relevant to the model
 
         /**
-         * Constructor.  Sets state to UNCONFIGURED.  Note that the model must be configured before you
+         * \brief Constructor.  Sets state to UNCONFIGURED.  Note that the model must be configured before you
          * can query for any status other than the model's state.
          */
         Status(void);
 
         /**
-         * Sets the ammount of work we have.
+         * \brief Sets the ammount of work we have.
          */
         void setWorkUnitsToProcess(unsigned long workUnitsToProcess);
 
         /**
-         * Adds additional work units to process
+         * \brief Adds additional work units to process
          */
         void addWorkUnitsToProcess(unsigned long workUnistsToProcess);
 
         /**
-         * Allows the model to update its state.
+         * \brief Allows the model to update its state.
          */
         void setState(ModelState newState);
 

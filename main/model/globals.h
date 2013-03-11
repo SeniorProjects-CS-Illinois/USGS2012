@@ -25,7 +25,23 @@ typedef struct {
     int current_day; ///< Keeps track of how often output should be generated
     const char* file_extension;
 
-    int gui_days_to_run;  // number of days to run the code
+    QString gui_photo_radiation_file;
+    QString gui_temperature_file;
+
+    int gui_flow_corners_only;
+    int gui_timestep_factor;    // By how much are we speeding up the code? Increasing the factor will reduce the number of iterations required
+    /** \brief Number of days to run */
+    int gui_days_to_run;
+    double gui_tss;  // TSS
+    double gui_k_phyto;  // k-phyto
+    double gui_k_macro; // k-macro
+    double gui_sen_macro_coef; // sen-macro-coef
+    double gui_resp_macro_coef; // resp-macro-coef
+    double gui_macro_base_temp; // macro-base-temp
+    double gui_macro_mass_max; // macro-mass-max
+    double gui_macro_vel_max; // macro-vel-max
+    double gui_gross_macro_coef; // gross-macro-coef
+    QString which_stock; // which-stock?
 
     // GUI input hydro maps and days for each map
     QStringList uniqueHydroFilenames;

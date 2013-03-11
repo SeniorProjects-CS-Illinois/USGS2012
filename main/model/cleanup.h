@@ -5,18 +5,18 @@
 #include "patch.h"
 
 /**
- * Frees the allocated structures in the application
-*/
+ * \brief Frees the allocated structures in the application
+ */
 void cleanup();
 
 
 /**
- * Frees up the 2D array of patches
+ * \brief Frees up the 2D array of patches
  */
 void clean_patches();
 
 /**
- * Empties the structures that we filled during model setup.
+ * \brief Empties the structures that we filled during model setup.
  */
 void empty_structures(void);
 
