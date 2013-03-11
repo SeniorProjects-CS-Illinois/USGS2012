@@ -93,12 +93,19 @@ Configuration::Configuration() :
     sedconsumerAiSeddecomp(-1.0),
     sedconsumerGiSeddecomp(-1.0),
     sedconsumerPrefSeddecomp(-1.0),
+    sedconsumerAiPeri(-1.0),
+    sedconsumerGiPeri(-1.0),
+    sedconsumerPrefPeri(-1.0),
+    sedconsumerEgestionSeddecomp(-1.0),
+    sedconsumerEgestionDetritus(-1.0),
     sedconsumerAj(-1.0),
     sedconsumerGj(-1.0),
     sedconsumerRespiration(-1.0),
     sedconsumerExcretion(-1.0),
     sedconsumerSenescence(-1.0),
-    sedconsumerMax(-1.0)
+    sedconsumerMax(-1.0),
+    periAj(-1.0),
+    periGj(-1.0)
 {
 
 }
@@ -221,12 +228,20 @@ void Configuration::write(QString const & filename) const
     file << sedconsumerAiSeddecomp << endl;
     file << sedconsumerGiSeddecomp << endl;
     file << sedconsumerPrefSeddecomp << endl;
+    file << sedconsumerAiPeri << endl;
+    file << sedconsumerGiPeri << endl;
+    file << sedconsumerPrefPeri << endl;
+    file << sedconsumerEgestionSeddecomp << endl;
+    file << sedconsumerEgestionDetritus << endl;
     file << sedconsumerAj << endl;
     file << sedconsumerGj << endl;
     file << sedconsumerRespiration << endl;
     file << sedconsumerExcretion << endl;
     file << sedconsumerSenescence << endl;
     file << sedconsumerMax << endl;
+
+    file << periAj << endl;
+    file << periGj << endl;
 
     file.close();
 }
@@ -346,12 +361,20 @@ void Configuration::read(QString const & filename)
     sedconsumerAiSeddecomp = nextFloat(file, str);
     sedconsumerGiSeddecomp = nextFloat(file, str);
     sedconsumerPrefSeddecomp = nextFloat(file, str);
+    sedconsumerAiPeri = nextFloat(file, str);
+    sedconsumerGiPeri = nextFloat(file, str);
+    sedconsumerPrefPeri = nextFloat(file, str);
+    sedconsumerEgestionSeddecomp = nextFloat(file, str);
+    sedconsumerEgestionDetritus = nextFloat(file, str);
     sedconsumerAj = nextFloat(file, str);
     sedconsumerGj = nextFloat(file, str);
     sedconsumerRespiration = nextFloat(file, str);
     sedconsumerExcretion = nextFloat(file, str);
     sedconsumerSenescence = nextFloat(file, str);
     sedconsumerMax = nextFloat(file, str);
+
+    periAj = nextFloat(file, str);
+    periGj = nextFloat(file, str);
 
     file.close();
 }

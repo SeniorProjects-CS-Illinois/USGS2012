@@ -4,10 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include "globals.h"
-#include "go.h"
-#include "color.h"
+#include <iostream>
 
 #include <QString>
 #include <QStringList>
@@ -15,19 +12,22 @@
 #include <QFile>
 #include <QTextStream>
 
-#include <iostream>
+#include "globals.h"
+#include "go.h"
+#include "color.h"
+#include "configuration.h"
 
 /**
  * Calls the helper functions import_hydro and setup_environmentals
  */
-void setup();
+void setup(const Configuration & config);
 
 /**
  * TODO This is a temp function until references the globals begin set can be eliminated.
  *
  * Sets the number of hydrofiles.
  */
-void set_num_hydrofiles(void);
+void set_num_hydrofiles(const Configuration & config);
 
 /**
  * Resets all the values in globals.h
@@ -37,7 +37,7 @@ void reset_globals();
 /**
  * Determines the unique hydrofiles.
  */
-void get_unique_hydrofiles();
+void get_unique_hydrofiles(const Configuration & config);
 
 /**
  * Opens the first hydro-map i.e 10k-map and finds the maximum pxcor and
@@ -71,29 +71,29 @@ void init_color_values();
 /**
  * Map's each hydrofile to the index of its unique hydrofile.
  */
-std::vector<int> map_hydro_files(QStringList & allHydroFiles, QStringList & uniqueHydroFiles);
+std::vector<int> map_hydro_files(const QVector<QString> &allHydroFiles, QStringList & uniqueHydroFiles);
 
 /**
  * Reads the Hydo map files and sets up the proper (x,y) patches
  * Input in the form of "pxcor pycor depth px-vector py-vector velocity"
  * and this must be the first line in the file.
  */
-void import_hydro();
+void import_hydro(const Configuration & config);
 
 /**
  * Reads from files the initial discharge (daily) and initial radiation (hourly) values and then imports the maps based on the discharge value
  */
-void setup_environmentals();
+void setup_environmentals(const Configuration & config);
 
 /**
  * Reads the "par.txt" file and initializes the photo_radiation array variables
  */
-void set_photo_radiation();
+void set_photo_radiation(const Configuration & config);
 
 /**
  * Reads the "water-temp.txt" file and initializes the temperature array variable
  */
-void set_temperature();
+void set_temperature(const Configuration & config);
 
 /**
  * Sets up the 10 stocks, currently has default values
