@@ -25,8 +25,8 @@ int write_data(const Configuration & config) {
     
     fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
             config.timestep, g.gui_days_to_run, config.tss,
-            config.kPhyto, config.kMacro, config.macroSenescence,
-            config.macroRespiration, config.macroTemp, config.macroMassMax,
+            config.kPhyto, config.kMacro, (config.macroSenescence/24),
+            (config.macroRespiration/24), config.macroTemp, config.macroMassMax,
             config.macroVelocityMax, config.macroGross, config.whichStock.toStdString().c_str());
     
     fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");

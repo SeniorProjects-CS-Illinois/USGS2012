@@ -704,6 +704,7 @@ void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool dis
 void MainWindow::getAllInput(Configuration & c) const
 {
     c.hydroMaps = getHydroMaps();
+    c.numHydroMaps = c.hydroMaps.size();
     c.daysToRun = getDaysToRun();
     c.parFile = getPARFile();
     c.tempFile = getTempFile();
@@ -720,22 +721,31 @@ void MainWindow::getAllInput(Configuration & c) const
 
 void MainWindow::getAllStockInput(Configuration & c) const
 {
-    set_stocks(getMacroBase(),
-               getPhytoBase(),
-               getDecompBase(),
-               getSeddecompBase(),
-               getHerbivoreBase(),
-               getSedconsumerBase(),
-               getDocBase(),
-               getPocBase(),
-               getDetritusBase(),
-               getConsumerBase());
+    c.macro = getMacroBase();
+    c.phyto = getPhytoBase();
+    c.decomp = getDecompBase();
+    c.seddecomp = getSeddecompBase();
+    c.herbivore = getHerbivoreBase();
+    c.sedconsumer = getSedconsumerBase();
+    c.doc = getDocBase();
+    c.poc = getPocBase();
+    c.detritus = getDetritusBase();
+    c.consumer = getConsumerBase();
 
-    // all values with /24 at the end are per hour
-    // values passed in as per day values
-    c.phytoSenescence = getPhytoSenescence()/24;
-    c.phytoRespiration = getPhytoRespiration()/24;
-    c.phytoExcretion = getPhytoExcretion()/24;
+    set_stocks(c.macro,
+               c.phyto,
+               c.decomp,
+               c.seddecomp,
+               c.herbivore,
+               c.sedconsumer,
+               c.doc,
+               c.poc,
+               c.detritus,
+               c.consumer);
+
+    c.phytoSenescence = getPhytoSenescence();
+    c.phytoRespiration = getPhytoRespiration();
+    c.phytoExcretion = getPhytoExcretion();
     c.phytoAj = getPhytoAj();
     c.phytoGj = getPhytoGj();
 
@@ -750,11 +760,11 @@ void MainWindow::getAllStockInput(Configuration & c) const
     c.herbivorePrefWaterdecomp = getHerbivorePrefWaterdecomp();
     c.herbivoreAj = getHerbivoreAj();
     c.herbivoreGj = getHerbivoreGj();
-    c.herbivoreRespiration = getHerbivoreRespiration()/24;
-    c.herbivoreExcretion = getHerbivoreExcretion()/24;
+    c.herbivoreRespiration = getHerbivoreRespiration();
+    c.herbivoreExcretion = getHerbivoreExcretion();
     c.herbivoreEgestion = getHerbivoreEgestion();
-    c.herbivoreSenescence = getHerbivoreSenescence()/24;
-    c.herbivoreMax = getHerbivoreMax()/24;
+    c.herbivoreSenescence = getHerbivoreSenescence();
+    c.herbivoreMax = getHerbivoreMax();
 
     c.waterdecompAiDoc = getWaterdecompAiDoc();
     c.waterdecompGiDoc = getWaterdecompGiDoc();
@@ -764,20 +774,20 @@ void MainWindow::getAllStockInput(Configuration & c) const
     c.waterdecompPrefPoc = getWaterdecompPrefPoc();
     c.waterdecompAj = getWaterdecompAj();
     c.waterdecompGj = getWaterdecompGj();
-    c.waterdecompRespiration = getWaterdecompRespiration()/24;
-    c.waterdecompExcretion = getWaterdecompExcretion()/24;
-    c.waterdecompSenescence = getWaterdecompSenescence()/24;
-    c.waterdecompMax = getWaterdecompMax()/24;
+    c.waterdecompRespiration = getWaterdecompRespiration();
+    c.waterdecompExcretion = getWaterdecompExcretion();
+    c.waterdecompSenescence = getWaterdecompSenescence();
+    c.waterdecompMax = getWaterdecompMax();
 
     c.seddecompAiDetritus = getSeddecompAiDetritus();
     c.seddecompGiDetritus = getSeddecompGiDetritus();
     c.seddecompPrefDetritus = getSeddecompPrefDetritus();
     c.seddecompAj = getSeddecompAj();
     c.seddecompGj = getSeddecompGj();
-    c.seddecompRespiration = getSeddecompRespiration()/24;
-    c.seddecompExcretion = getSeddecompExcretion()/24;
-    c.seddecompSenescence = getSeddecompSenescence()/24;
-    c.seddecompMax = getSeddecompMax()/24;
+    c.seddecompRespiration = getSeddecompRespiration();
+    c.seddecompExcretion = getSeddecompExcretion();
+    c.seddecompSenescence = getSeddecompSenescence();
+    c.seddecompMax = getSeddecompMax();
 
     c.consumerAiHerbivore = getConsumerAiHerbivore();
     c.consumerGiHerbivore = getConsumerGiHerbivore();
@@ -787,14 +797,14 @@ void MainWindow::getAllStockInput(Configuration & c) const
     c.consumerPrefSedconsumer = getConsumerPrefSedconsumer();
     c.consumerAj = getConsumerAj();
     c.consumerGj = getConsumerGj();
-    c.consumerRespiration = getConsumerRespiration()/24;
-    c.consumerExcretion = getConsumerExcretion()/24;
-    c.consumerSenescence = getConsumerSenescence()/24;
+    c.consumerRespiration = getConsumerRespiration();
+    c.consumerExcretion = getConsumerExcretion();
+    c.consumerSenescence = getConsumerSenescence();
     c.consumerEgestion = getConsumerEgestion();
-    c.consumerMax = getConsumerMax()/24;
+    c.consumerMax = getConsumerMax();
 
-    c.macroSenescence = getMacroSenescence()/24;
-    c.macroRespiration = getMacroRespiration()/24;
+    c.macroSenescence = getMacroSenescence();
+    c.macroRespiration = getMacroRespiration();
     c.macroExcretion = getMacroExcretion();
     c.macroTemp = getMacroTemp();
     c.macroGross = getMacroGross();
@@ -816,10 +826,10 @@ void MainWindow::getAllStockInput(Configuration & c) const
     /****************************************/
     c.sedconsumerAj = getSedconsumerAj();
     c.sedconsumerGj = getSedconsumerGj();
-    c.sedconsumerRespiration = getSedconsumerRespiration()/24;
-    c.sedconsumerExcretion = getSedconsumerExcretion()/24;
-    c.sedconsumerSenescence = getSedconsumerSenescence()/24;
-    c.sedconsumerMax = getSedconsumerMax()/24;
+    c.sedconsumerRespiration = getSedconsumerRespiration();
+    c.sedconsumerExcretion = getSedconsumerExcretion();
+    c.sedconsumerSenescence = getSedconsumerSenescence();
+    c.sedconsumerMax = getSedconsumerMax();
 
     // c.periAj
     // c.periGj <-- these are written to in the model right away, I don't think it is supposed to be user input

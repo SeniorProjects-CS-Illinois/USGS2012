@@ -58,9 +58,9 @@ void go_macro(int x, int y, const Configuration & config)
         patches[x][y].gross_photo_macro = (config.macroGross * patches[x][y].macro * ( macro_light / ( macro_light + 10.0)) * g.Q10 *
                                                (patches[x][y].K - patches[x][y].macro) / patches[x][y].K);
 
-        patches[x][y].respiration_macro = (config.macroRespiration / 24.0) * patches[x][y].macro * g.Q10;
+        patches[x][y].respiration_macro = (config.macroRespiration / g.HOURS_PER_DAY) * patches[x][y].macro * g.Q10;
 
-        patches[x][y].senescence_macro = config.macroSenescence * patches[x][y].macro / 24.0;
+        patches[x][y].senescence_macro = (config.macroSenescence / g.HOURS_PER_DAY) * (patches[x][y].macro / g.HOURS_PER_DAY);
 
         patches[x][y].growth_macro = patches[x][y].gross_photo_macro - patches[x][y].respiration_macro - patches[x][y].senescence_macro
                                           - patches[x][y].scouring_macro;
@@ -89,14 +89,14 @@ void go_phyto(int x, int y, const Configuration & config)
         //double light_k = 0.4;
 
 
-        patches[x][y].respiration_phyto = config.phytoRespiration * patches[x][y].phyto * g.Q10;
+        patches[x][y].respiration_phyto = (config.phytoRespiration / g.HOURS_PER_DAY) * patches[x][y].phyto * g.Q10;
         double pre_ln = (0.01 + g.photo_radiation  * exp(-1*patches[x][y].phyto * config.kPhyto * patches[x][y].depth));
         double be = (km + (g.photo_radiation * exp(-1 * patches[x][y].phyto * config.kPhyto * patches[x][y].depth)));
         //photosynthesis from phytoplankton derived from Huisman Weissing 1994
 
         patches[x][y].gross_photo_phyto = fabs(pre_ln / be) * (1.0 / patches[x][y].depth) * (patches[x][y].phyto / patches[x][y].turbidity) * g.Q10;
-        patches[x][y].excretion_phyto = config.phytoExcretion * patches[x][y].phyto;
-        patches[x][y].senescence_phyto = config.phytoSenescence * patches[x][y].phyto;
+        patches[x][y].excretion_phyto = (config.phytoExcretion / g.HOURS_PER_DAY) * patches[x][y].phyto;
+        patches[x][y].senescence_phyto = (config.phytoSenescence / g.HOURS_PER_DAY) * patches[x][y].phyto;
         patches[x][y].growth_phyto = patches[x][y].gross_photo_phyto - patches[x][y].excretion_phyto - 
                                  patches[x][y].respiration_phyto - patches[x][y].senescence_phyto;
 }
@@ -115,26 +115,26 @@ void go_herbivore(int x, int y, const Configuration & config)
     patches[x][y].herbivore_space_limitation = 1.0 - ((patches[x][y].herbivore - config.herbivoreAj) /(config.herbivoreGj - config.herbivoreAj));
     patches[x][y].herbivore_space_limitation = assertRange(patches[x][y].herbivore_space_limitation, 0.0, 1.0);
 
-    patches[x][y].herbivore_pred_phyto = config.herbivorePrefPhyto * config.herbivoreMax * patches[x][y].herbivore *
+    patches[x][y].herbivore_pred_phyto = config.herbivorePrefPhyto * (config.herbivoreMax / g.HOURS_PER_DAY) * patches[x][y].herbivore *
                                          patches[x][y].herbivore_space_limitation * patches[x][y].herbivore_phyto_prey_limitation;
 
     patches[x][y].herbivore_ingest_phyto = patches[x][y].herbivore_pred_phyto * (1.0 - config.herbivoreEgestion);
 
-    patches[x][y].herbivore_pred_peri = config.herbivorePrefPeri * config.herbivoreMax * patches[x][y].herbivore
+    patches[x][y].herbivore_pred_peri = config.herbivorePrefPeri * (config.herbivoreMax / g.HOURS_PER_DAY) * patches[x][y].herbivore
                                         * patches[x][y].herbivore_space_limitation * patches[x][y].herbivore_peri_prey_limitation;
 
     patches[x][y].herbivore_ingest_peri = patches[x][y].herbivore_pred_peri * (1.0 - config.herbivoreEgestion);
 
-    patches[x][y].herbivore_pred_waterdecomp = config.herbivorePrefWaterdecomp * config.herbivoreMax *
+    patches[x][y].herbivore_pred_waterdecomp = config.herbivorePrefWaterdecomp * (config.herbivoreMax / g.HOURS_PER_DAY) *
                                                patches[x][y].herbivore * patches[x][y].herbivore_space_limitation * patches[x][y].herbivore_waterdecomp_prey_limitation;
 
     patches[x][y].herbivore_ingest_waterdecomp = patches[x][y].herbivore_pred_waterdecomp * (1.0 - config.herbivoreEgestion);
 
-    patches[x][y].herbivore_respiration = config.herbivoreRespiration * patches[x][y].herbivore;
+    patches[x][y].herbivore_respiration = (config.herbivoreRespiration / g.HOURS_PER_DAY) * patches[x][y].herbivore;
 
-    patches[x][y].herbivore_excretion = config.herbivoreExcretion * patches[x][y].herbivore;
+    patches[x][y].herbivore_excretion = (config.herbivoreExcretion / g.HOURS_PER_DAY) * patches[x][y].herbivore;
 
-    patches[x][y].herbivore_senescence = config.herbivoreSenescence * patches[x][y].herbivore;
+    patches[x][y].herbivore_senescence = (config.herbivoreSenescence / g.HOURS_PER_DAY) * patches[x][y].herbivore;
 }
 
 void go_waterdecomp(int x, int y, const Configuration &config)
@@ -148,27 +148,26 @@ void go_waterdecomp(int x, int y, const Configuration &config)
     patches[x][y].waterdecomp_space_limitation = 1.0 - ((patches[x][y].waterdecomp - config.waterdecompAj) / (config.waterdecompGj - config.waterdecompAj));
     patches[x][y].waterdecomp_space_limitation = assertRange(patches[x][y].waterdecomp_space_limitation, 0.0, 1.0);
 
-    patches[x][y].waterdecomp_pred_doc = (config.waterdecompPrefDoc * config.waterdecompMax * patches[x][y].waterdecomp *
+    patches[x][y].waterdecomp_pred_doc = (config.waterdecompPrefDoc * (config.waterdecompMax / g.HOURS_PER_DAY) * patches[x][y].waterdecomp *
                                           patches[x][y].waterdecomp_space_limitation * patches[x][y].waterdecomp_doc_prey_limitation);
 
     patches[x][y].waterdecomp_ingest_doc = patches[x][y].waterdecomp_pred_doc;
 
-    patches[x][y].waterdecomp_pred_poc = config.waterdecompPrefPoc * config.waterdecompMax * patches[x][y].waterdecomp *
+    patches[x][y].waterdecomp_pred_poc = config.waterdecompPrefPoc * (config.waterdecompMax / g.HOURS_PER_DAY) * patches[x][y].waterdecomp *
                                          patches[x][y].waterdecomp_space_limitation * patches[x][y].waterdecomp_poc_prey_limitation;
 
     patches[x][y].waterdecomp_ingest_poc = patches[x][y].waterdecomp_pred_poc;
 
-    patches[x][y].waterdecomp_respiration = config.waterdecompRespiration * patches[x][y].waterdecomp;
+    patches[x][y].waterdecomp_respiration = (config.waterdecompRespiration / g.HOURS_PER_DAY) * patches[x][y].waterdecomp;
 
-    patches[x][y].waterdecomp_excretion = config.waterdecompExcretion * patches[x][y].waterdecomp;
+    patches[x][y].waterdecomp_excretion = (config.waterdecompExcretion / g.HOURS_PER_DAY) * patches[x][y].waterdecomp;
 
-    patches[x][y].waterdecomp_senescence = config.waterdecompSenescence * patches[x][y].waterdecomp;
+    patches[x][y].waterdecomp_senescence = (config.waterdecompSenescence / g.HOURS_PER_DAY) * patches[x][y].waterdecomp;
 }
 
 
 void go_seddecomp(int x, int y, const Configuration & config)
 {
-    // update seddecomp_detritus_prey_limitation
     patches[x][y].seddecomp_detritus_prey_limitation = patches[x][y].detritus / (config.seddecompAiDetritus - config.seddecompGiDetritus);
 
     if(patches[x][y].seddecomp_detritus_prey_limitation > 1.0)
@@ -176,7 +175,6 @@ void go_seddecomp(int x, int y, const Configuration & config)
     else if(patches[x][y].seddecomp_detritus_prey_limitation < 0.0)
         patches[x][y].seddecomp_detritus_prey_limitation = 0.0;
 
-    // update seddecomp_space_limitation
     if( (config.seddecompGj - config.seddecompAj) != 0.0 ) {
         patches[x][y].seddecomp_space_limitation = 1.0 - ((patches[x][y].seddecomp - config.seddecompAj)/(config.seddecompGj - config.seddecompAj));
     } else {
@@ -188,27 +186,21 @@ void go_seddecomp(int x, int y, const Configuration & config)
     else if(patches[x][y].seddecomp_space_limitation < 0.0)
         patches[x][y].seddecomp_space_limitation = 0.0;
 
-    // update seddecomp_pred_detritus
-    patches[x][y].seddecomp_pred_detritus = config.seddecompPrefDetritus * config.seddecompMax * patches[x][y].seddecomp *
+    patches[x][y].seddecomp_pred_detritus = config.seddecompPrefDetritus * (config.seddecompMax / g.HOURS_PER_DAY) * patches[x][y].seddecomp *
                                             patches[x][y].seddecomp_detritus_prey_limitation *
                                             patches[x][y].seddecomp_space_limitation;
 
-    // update seddecomp_ingest_detritus
     patches[x][y].seddecomp_ingest_detritus = patches[x][y].seddecomp_pred_detritus;
 
-    // update seddecomp_respiration
-    patches[x][y].seddecomp_respiration = config.seddecompRespiration * patches[x][y].seddecomp;
+    patches[x][y].seddecomp_respiration = (config.seddecompRespiration / g.HOURS_PER_DAY) * patches[x][y].seddecomp;
 
-    // update seddecomp_excretion
-    patches[x][y].seddecomp_excretion = config.seddecompExcretion * patches[x][y].seddecomp;
+    patches[x][y].seddecomp_excretion = (config.seddecompExcretion / g.HOURS_PER_DAY) * patches[x][y].seddecomp;
 
-    // update seddecomp_senescence
-    patches[x][y].seddecomp_senescence = config.seddecompSenescence * patches[x][y].seddecomp;
+    patches[x][y].seddecomp_senescence = (config.seddecompSenescence / g.HOURS_PER_DAY) * patches[x][y].seddecomp;
 }
 
 void go_sedconsumer(int x, int y, const Configuration & config)
 {
-    // update sedconsumer_seddecomp_prey_limitation
     patches[x][y].sedconsumer_seddecomp_prey_limitation = patches[x][y].seddecomp / (config.sedconsumerAiSeddecomp - config.sedconsumerGiSeddecomp);
 
     if( patches[x][y].sedconsumer_seddecomp_prey_limitation > 1.0 )
@@ -216,7 +208,6 @@ void go_sedconsumer(int x, int y, const Configuration & config)
     else if ( patches[x][y].sedconsumer_seddecomp_prey_limitation < 0.0 )
         patches[x][y].sedconsumer_seddecomp_prey_limitation = 0.0;
 
-    // update sedconsumer_peri_prey_limitation
     patches[x][y].sedconsumer_peri_prey_limitation = patches[x][y].peri / (config.sedconsumerAiPeri - config.sedconsumerGiPeri);
 
     if( patches[x][y].sedconsumer_peri_prey_limitation > 1.0 )
@@ -224,7 +215,6 @@ void go_sedconsumer(int x, int y, const Configuration & config)
     else if (patches[x][y].sedconsumer_peri_prey_limitation < 0.0)
         patches[x][y].sedconsumer_peri_prey_limitation = 0.0;
 
-    // update sedconsumer_detritus_prey_limitation
     patches[x][y].sedconsumer_detritus_prey_limitation = patches[x][y].detritus / (config.sedconsumerAiDetritus - config.sedconsumerGiDetritus);
 
     if( patches[x][y].sedconsumer_detritus_prey_limitation > 1.0 )
@@ -232,7 +222,6 @@ void go_sedconsumer(int x, int y, const Configuration & config)
     else if ( patches[x][y].sedconsumer_detritus_prey_limitation < 0.0 )
         patches[x][y].sedconsumer_detritus_prey_limitation = 0.0;
 
-    // update sedconsumer_space_limitation
     patches[x][y].sedconsumer_space_limitation = 1.0 - ((patches[x][y].sedconsumer - config.sedconsumerAj)/(config.sedconsumerGj - config.sedconsumerAj));
 
     if( patches[x][y].sedconsumer_space_limitation > 1.0 )
@@ -240,87 +229,68 @@ void go_sedconsumer(int x, int y, const Configuration & config)
     else if ( patches[x][y].sedconsumer_space_limitation < 0.0 )
         patches[x][y].sedconsumer_space_limitation = 0.0;
 
-    // update sedconsumer_pred_peri
-    patches[x][y].sedconsumer_pred_peri = config.sedconsumerPrefPeri * config.sedconsumerMax * patches[x][y].sedconsumer *
+    patches[x][y].sedconsumer_pred_peri = config.sedconsumerPrefPeri * (config.sedconsumerMax / g.HOURS_PER_DAY) * patches[x][y].sedconsumer *
                                           patches[x][y].sedconsumer_space_limitation * 
                                           patches[x][y].sedconsumer_peri_prey_limitation;
 
-    // update sedconsumer_ingest_peri
     patches[x][y].sedconsumer_ingest_peri = patches[x][y].sedconsumer_pred_peri * (1.0 - config.sedconsumerEgestionSeddecomp); // is it weird there is no peri version for this?
 
-    // update sedconsumer_pred_seddecomp
-    patches[x][y].sedconsumer_pred_seddecomp = config.sedconsumerPrefSeddecomp * config.sedconsumerMax * patches[x][y].sedconsumer *
+    patches[x][y].sedconsumer_pred_seddecomp = config.sedconsumerPrefSeddecomp * (config.sedconsumerMax / g.HOURS_PER_DAY) * patches[x][y].sedconsumer *
                                                patches[x][y].sedconsumer_space_limitation *
                                                patches[x][y].sedconsumer_seddecomp_prey_limitation;
 
-    // update sedconsumer_ingest_seddecomp
     patches[x][y].sedconsumer_ingest_seddecomp = patches[x][y].sedconsumer_pred_seddecomp * (1.0 - config.sedconsumerEgestionSeddecomp);
 
-    // update sedconsumer_pred_detritus
-    patches[x][y].sedconsumer_pred_detritus = config.sedconsumerPrefDetritus * config.sedconsumerMax * patches[x][y].sedconsumer *
+    patches[x][y].sedconsumer_pred_detritus = config.sedconsumerPrefDetritus * (config.sedconsumerMax / g.HOURS_PER_DAY) * patches[x][y].sedconsumer *
                                               patches[x][y].sedconsumer_space_limitation * 
                                               patches[x][y].sedconsumer_detritus_prey_limitation;
 
-    // update sedconsumer_ingest_detritus
     patches[x][y].sedconsumer_ingest_detritus = patches[x][y].sedconsumer_pred_detritus * (1.0 - config.sedconsumerEgestionDetritus);
 
-    // update sedconsumer_respiration
-    patches[x][y].sedconsumer_respiration = config.sedconsumerRespiration * patches[x][y].sedconsumer;
+    patches[x][y].sedconsumer_respiration = (config.sedconsumerRespiration / g.HOURS_PER_DAY) * patches[x][y].sedconsumer;
 
-    // update sedconsumer_excretion
-    patches[x][y].sedconsumer_excretion = config.sedconsumerExcretion * patches[x][y].sedconsumer;
+    patches[x][y].sedconsumer_excretion = (config.sedconsumerExcretion / g.HOURS_PER_DAY) * patches[x][y].sedconsumer;
 
-    // update sedconsumer_senescence
-    patches[x][y].sedconsumer_senescence = config.sedconsumerSenescence * patches[x][y].sedconsumer;
+    patches[x][y].sedconsumer_senescence = (config.sedconsumerSenescence / g.HOURS_PER_DAY) * patches[x][y].sedconsumer;
 }
 
 void go_consum(int x, int y, const Configuration & config)
 {
-    // update consum_sedconsumer_prey_limitation
     patches[x][y].consum_sedconsumer_prey_limitation = patches[x][y].sedconsumer / (config.consumerAiSedconsumer - config.consumerGiSedconsumer);
     if( patches[x][y].consum_sedconsumer_prey_limitation > 1.0 )
         patches[x][y].consum_sedconsumer_prey_limitation = 1.0;
     else if ( patches[x][y].consum_sedconsumer_prey_limitation < 0.0 )
         patches[x][y].consum_sedconsumer_prey_limitation = 0.0;
 
-    // update consum_herbivore_prey_limitation
     patches[x][y].consum_herbivore_prey_limitation = patches[x][y].herbivore / (config.consumerAiHerbivore - config.consumerGiHerbivore);
     if( patches[x][y].consum_herbivore_prey_limitation > 1.0 )
         patches[x][y].consum_herbivore_prey_limitation = 1.0;
     else if ( patches[x][y].consum_herbivore_prey_limitation < 0.0 )
         patches[x][y].consum_herbivore_prey_limitation = 0.0;
 
-    // update consum_space_limitation
     patches[x][y].consum_space_limitation = 1.0 - ((patches[x][y].consum - config.consumerAj)/(config.consumerGj - config.consumerAj));
     if( patches[x][y].consum_space_limitation > 1.0 )
         patches[x][y].consum_space_limitation = 1.0;
     else if ( patches[x][y].consum_space_limitation < 0.0 )
         patches[x][y].consum_space_limitation = 0.0;
 
-    // update consum_pred_herbivore
-    patches[x][y].consum_pred_herbivore = config.consumerPrefHerbivore * config.consumerMax * patches[x][y].consum *
+    patches[x][y].consum_pred_herbivore = config.consumerPrefHerbivore * (config.consumerMax / g.HOURS_PER_DAY) * patches[x][y].consum *
                                           patches[x][y].consum_space_limitation * 
                                           patches[x][y].consum_herbivore_prey_limitation;
 
-    // update consum_ingest_herbivore
     patches[x][y].consum_ingest_herbivore = patches[x][y].consum_pred_herbivore * (1.0- config.consumerEgestion);
 
-    // update consum_pred_sedconsumer
-    patches[x][y].consum_pred_sedconsumer = config.consumerPrefSedconsumer * config.consumerMax * patches[x][y].consum *
+    patches[x][y].consum_pred_sedconsumer = config.consumerPrefSedconsumer * (config.consumerMax / g.HOURS_PER_DAY) * patches[x][y].consum *
                                             patches[x][y].consum_space_limitation *
                                             patches[x][y].consum_sedconsumer_prey_limitation;
 
-    // update consum_ingest_sedconsumer
     patches[x][y].consum_ingest_sedconsumer = patches[x][y].consum_pred_sedconsumer * (1.0 - config.consumerEgestion);
 
-    // update consum_respiration
-    patches[x][y].consum_respiration = config.consumerRespiration * patches[x][y].consum;
+    patches[x][y].consum_respiration = (config.consumerRespiration / g.HOURS_PER_DAY) * patches[x][y].consum;
 
-    // update consum_excretion
-    patches[x][y].consum_excretion = config.consumerExcretion * patches[x][y].consum;
+    patches[x][y].consum_excretion = (config.consumerExcretion / g.HOURS_PER_DAY) * patches[x][y].consum;
 
-    // update consum_senescence
-    patches[x][y].consum_senescence = config.consumerSenescence * patches[x][y].consum;
+    patches[x][y].consum_senescence = (config.consumerSenescence / g.HOURS_PER_DAY) * patches[x][y].consum;
 }
 
 void go_DOC(int x, int y, const Configuration & config)
