@@ -4,22 +4,24 @@
 /**
  * Calls the helper functions import_hydro and setup_environmentals
  */
-void setup() {
+void setup(const Configuration & config)
+{
     reset_globals();
-    set_num_hydrofiles();
-    get_unique_hydrofiles();
+    set_num_hydrofiles(config);
+    get_unique_hydrofiles(config);
     find_map_sizes();
     init_patches();
     init_color_values();
-    import_hydro();
-    setup_environmentals();
+    import_hydro(config);
+    setup_environmentals(config);
     setup_stocks();
 }
 
 /**
  * Resets all the values in globals.h
  */
-void reset_globals() {
+void reset_globals()
+{
     g.MAP_WIDTH = 0;
     g.MAP_HEIGHT = 0;
     g.hours = 0;
@@ -43,105 +45,22 @@ void reset_globals() {
     g.MAX_POC = 0.0;
     g.MAX_DETRITUS = 0.0;
 
-    g.max_waterdecomp = 6.26/24.0;
-    g.max_seddecomp = 6.26/24.0;
-    g.max_herbivore = 1.0/24.0;
-    g.herbivore_egestion = 0.2;
-    g.max_sedconsumer = 0.55/24.0;
-    g.sedconsumer_egestion_seddecomp = 0.35;
-    g.max_consum = 0.125/24.0;
-    g.e_waterdecomp = 0.173/24.0;
-    g.e_seddecomp = 0.173/24.0;
-    g.e_herbivore = 0.4/24.0;
-    g.e_sedconsumer = 0.01/24.0;
-    g.sedconsumer_egestion_detritus = 0.9;
-    g.e_consum = 0.0032/24.0;
-    g.r_waterdecomp = 0.6/24.0;
-    g.r_seddecomp = 0.6/24.0;
-    g.r_herbivore = 0.08/24.0;
-    g.r_sedconsumer = 0.04/24.0;
-    g.r_consum = 0.0125/24.0;
-    g.s_waterdecomp = 0.05/24.0;
-    g.s_seddecomp = 0.05/24.0;
-    g.s_herbivore = 0.01/24.0;
-    g.s_sedconsumer = 0.01/24.0;
-    g.s_consum = 0.002/24.0;
-    g.consum_egestion = 0.2;
-
-    g.Ai_waterdecomp_DOC = 30.0;
-    g.Ai_waterdecomp_POC = 30.0;
-    g.Ai_Peri_DOC = 30.0;
-    g.Ai_Peri_POC = 30.0;
-    g.Ai_seddecomp_detritus = 0.6;
-    g.Ai_herbivore_phyto = 20;
-    g.Ai_herbivore_waterdecomp = 3.0;
-    g.Ai_herbivore_peri = 3.0;
-    g.Ai_sedconsumer_seddecomp = 3.0;
-    g.Ai_sedconsumer_peri = 2.0;
-    g.Ai_sedconsumer_detritus = 3.5;
-    g.Ai_consum_herbivore = 3.5;
-    g.Ai_consum_sedconsumer = 4.0;
-    g.Gi_waterdecomp_DOC = 0.05;
-    g.Gi_waterdecomp_POC = 0.05;
-    g.Gi_Peri_DOC = 0.05;
-    g.Gi_Peri_POC = 0.05;
-    g.Gi_seddecomp_detritus = 0.005;
-    g.Gi_herbivore_phyto = 0.01;
-    g.Gi_herbivore_waterdecomp = 0.01;
-    g.Gi_herbivore_peri = 0.01;
-    g.Gi_sedconsumer_seddecomp = 0.02;
-    g.Gi_sedconsumer_peri = 0.02;
-    g.Gi_sedconsumer_detritus = 0.02;
-    g.Gi_consum_herbivore = 0.025;
-    g.Gi_consum_sedconsumer = 0.04;
-    g.pref_waterdecomp_DOC = 0.5;
-    g.pref_waterdecomp_POC = 0.5;
-    g.pref_Peri_DOC = 0.5;
-    g.pref_Peri_POC = 0.5;
-    g.pref_seddecomp_detritus = 1.0;
-    g.pref_herbivore_phyto = 0.7;
-    g.pref_herbivore_waterdecomp = 0.15;
-    g.pref_herbivore_peri = 0.15;
-    g.pref_sedconsumer_seddecomp = 0.5;
-    g.pref_sedconsumer_peri = 0.4;
-    g.pref_sedconsumer_detritus = 0.1;
-    g.pref_consum_herbivore = 0.7;
-    g.pref_consum_sedconsumer = 0.3;
-
-    g.Aj_phyto = 10.0;
-    g.Aj_waterdecomp = 1.2;
-    g.Aj_seddecomp = 0.2;
-    g.Aj_herbivore = 2.4;
-    g.Aj_sedconsumer = 2.0;
-    g.Aj_consum = 0.65;
-    g.Gj_phyto = 100.0;
-    g.Gj_waterdecomp = 20.0;
-    g.Gj_seddecomp = 120.0;
-    g.Gj_herbivore = 108.0;
-    g.Gj_sedconsumer = 20.0;
-    g.Gj_consum = 6.5;
-
     g.k_herbivore = 0.2;
     g.k_POC = 0.2;
 
     g.theta = 1.072;
-
-    g.macro_base_temp = 19.7;
-    g.gross_macro_coef = 0.08;
-    g.resp_macro_coef = 0.04;
-    g.sen_macro_coef = 0.08;
-    g.macro_mas_max = 1000.0;
-    g.macro_vel_max = 1.0;
 }
 
-void set_num_hydrofiles(void){
-    g.gui_filenames_filesize = g.gui_filenames_list.size();
-    g.num_hydro_files = g.gui_filenames_list.size();
+void set_num_hydrofiles(const Configuration & config)
+{
+    g.gui_filenames_filesize = config.hydroMaps.size();
+    g.num_hydro_files = config.hydroMaps.size();
 }
 
-void get_unique_hydrofiles(){
+void get_unique_hydrofiles(const Configuration & config)
+{
     //Get unique hydrofiles
-    g.uniqueHydroFilenames = g.gui_filenames_list;
+    g.uniqueHydroFilenames = config.hydroMaps.toList();
     g.uniqueHydroFilenames.removeDuplicates();
     g.num_unique_files = g.uniqueHydroFilenames.size();
 }
@@ -150,7 +69,8 @@ void get_unique_hydrofiles(){
  * Opens the first hydro-map i.e 10k-map and finds the maximum pxcor and
  * the maximum pycor, we assign these values to MAP_WIDTH and MAP_HEIGHT
  */
-void find_map_sizes() {
+void find_map_sizes()
+{
     int max_map_width = 0;
     int max_map_height = 0;
 
@@ -188,7 +108,8 @@ void find_map_sizes() {
  * Reads a hydro_file finds the biggest pycor and pxcor and assigns them to MAP_WIDTH and MAP_HEIGHT
  * @param hydro_file the hydrolic file with data regarding patches
  */
-void find_map_width_height(QFile * hydroFile) {
+void find_map_width_height(QFile * hydroFile)
+{
     int max_x = 0;
     int max_y = 0;
 
@@ -211,7 +132,8 @@ void find_map_width_height(QFile * hydroFile) {
     g.MAP_HEIGHT = max_y+1;
 }
 
-void init_patch_values(int col, int row) {
+void init_patch_values(int col, int row)
+{
     patches[col][row].max_vector = 0.0;
     patches[col][row].pxcor = col;
     patches[col][row].pycor = row;
@@ -378,7 +300,8 @@ void init_patch_values(int col, int row) {
 /**
  * Creates the 2D array of patches
  */
-void init_patches() {
+void init_patches()
+{
     // initialize the patches
     int row = 0;
     int col = 0;
@@ -401,7 +324,8 @@ void init_patches() {
 /**
  * Creates the 2D array of colors
  */
-void init_color_values() {
+void init_color_values()
+{
     int row = 0;
     int col = 0;
     int i = 0;
@@ -421,7 +345,8 @@ void init_color_values() {
 /**
  * TODO:  Replace this function and respective variables with a hash table...
  */
-std::vector<int> map_hydro_files(QStringList & allHydroFiles, QStringList & uniqueHydroFiles){
+std::vector<int> map_hydro_files(const QVector<QString> & allHydroFiles, QStringList & uniqueHydroFiles)
+{
     std::vector<int> mappingToUniqueFiles;
     mappingToUniqueFiles.resize( allHydroFiles.size() );
     for(int i = 0; i < allHydroFiles.size(); i++){
@@ -435,8 +360,9 @@ std::vector<int> map_hydro_files(QStringList & allHydroFiles, QStringList & uniq
  * Input is in the form of "pxcor pycor depth px-vector py-vector velocity"
  * and this word formation must be the first line in the file.
  */
-void import_hydro() {
-    g.hydromap_index_vector = map_hydro_files(g.gui_filenames_list, g.uniqueHydroFilenames);
+void import_hydro(const Configuration & config)
+{
+    g.hydromap_index_vector = map_hydro_files(config.hydroMaps, g.uniqueHydroFilenames);
 
     for(int i = 0;i < g.uniqueHydroFilenames.size(); i++) {
         QFile hydroFile( g.uniqueHydroFilenames[i] );
@@ -482,18 +408,20 @@ void import_hydro() {
 /**
  * Reads from files the initial discharge (daily) and initial radiation (hourly) values and then imports the maps based on the discharge value
  */
-void setup_environmentals() {
+void setup_environmentals(const Configuration & config)
+{
     g.temp_dif = 0;
     g.par_dif = 0;
-    set_photo_radiation();
-    set_temperature();
+    set_photo_radiation(config);
+    set_temperature(config);
 }
 
 /*
  * Reads the "par.txt" file and initializes the photo_radiation array variables
  */
-void set_photo_radiation() {
-    QString filename = g.gui_photo_radiation_file;
+void set_photo_radiation(const Configuration & config)
+{
+    QString filename = config.parFile;
 
     QFile parFile( filename );
     if( !parFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
@@ -517,8 +445,9 @@ void set_photo_radiation() {
 /**
  * Reads the "water-temp.txt" file and initializes the temperature array variable
  */
-void set_temperature() {
-    QString filename = g.gui_temperature_file;
+void set_temperature(const Configuration & config)
+{
+    QString filename = config.tempFile;
 
 
     QFile temperatureFile( filename );
@@ -543,7 +472,8 @@ void set_temperature() {
 /**
  * Sets up the 10 stocks, currently has default values
  */
-void setup_stocks() {
+void setup_stocks()
+{
     set_stocks(1.0f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f, 10.0f, 10.0f, 1.0f, 0.1f);
 }
 
@@ -552,7 +482,8 @@ void setup_stocks() {
  */
 void set_stocks(float macro, float phyto, float waterdecomp, float seddecomp,
         float herbivore, float sedconsumer, float doc, float poc,
-        float detritus, float consum) {
+        float detritus, float consum)
+{
     int x, y;
     for(x = 0; x < g.MAP_WIDTH; x++) {
         for(y = 0; y < g.MAP_HEIGHT; y++) {

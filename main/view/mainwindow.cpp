@@ -175,7 +175,10 @@ void MainWindow::runClicked()
     }
 
     // set model values
-    getAllInput();
+    Configuration modelConfig;
+    getAllInput(modelConfig);
+
+    model.setConfiguration(modelConfig);
 
     modelThread.start();
     progressThread.start();
@@ -189,7 +192,7 @@ void MainWindow::runClicked()
 
 void MainWindow::whichstockChanged(QString newStock)
 {
-    model.set_whichstock(newStock);
+    model.setWhichStock(newStock);
 
     Status status = model.getStatus();
     // TODO: if no images available, don't do this
@@ -274,115 +277,7 @@ void MainWindow::saveConfiguration()
 void MainWindow::saveConfiguration(QString file) const
 {
     Configuration conf;
-
-    // set all values for configuration
-    conf.adjacent                   = getAdjacent();
-    conf.outputFreq                 = getOutputFreq();
-    conf.timestep                   = getTimestep();
-    conf.numHydroMaps               = getNumHydroMaps();
-    conf.tss                        = getTSS();
-    conf.kMacro                     = getKMacro();
-    conf.kPhyto                     = getKPhyto();
-
-    // stock parameters
-    conf.macro                      = getMacroBase();
-    conf.phyto                      = getPhytoBase();
-    conf.consumer                   = getConsumerBase();
-    conf.decomp                     = getDecompBase();
-    conf.sedconsumer                = getSedconsumerBase();
-    conf.seddecomp                  = getSeddecompBase();
-    conf.herbivore                  = getHerbivoreBase();
-    conf.detritus                   = getDetritusBase();
-    conf.poc                        = getPocBase();
-    conf.doc                        = getDocBase();
-
-    conf.phytoSenescence            = getPhytoSenescence();
-    conf.phytoRespiration           = getPhytoRespiration();
-    conf.phytoExcretion             = getPhytoExcretion();
-    conf.phytoAj                    = getPhytoAj();
-    conf.phytoGj                    = getPhytoGj();
-
-    conf.herbivoreAiPhyto           = getHerbivoreAiPhyto();
-    conf.herbivoreGiPhyto           = getHerbivoreGiPhyto();
-    conf.herbivorePrefPhyto         = getHerbivorePrefPhyto();
-    conf.herbivoreAiPeri            = getHerbivoreAiPeri();
-    conf.herbivoreGiPeri            = getHerbivoreGiPeri();
-    conf.herbivorePrefPeri          = getHerbivorePrefPeri();
-    conf.herbivoreAiWaterdecomp     = getHerbivoreAiWaterdecomp();
-    conf.herbivoreGiWaterdecomp     = getHerbivoreGiWaterdecomp();
-    conf.herbivorePrefWaterdecomp   = getHerbivorePrefWaterdecomp();
-    conf.herbivoreAj                = getHerbivoreAj();
-    conf.herbivoreGj                = getHerbivoreGj();
-    conf.herbivoreRespiration       = getHerbivoreRespiration();
-    conf.herbivoreExcretion         = getHerbivoreExcretion();
-    conf.herbivoreEgestion          = getHerbivoreEgestion();
-    conf.herbivoreSenescence        = getHerbivoreSenescence();
-    conf.herbivoreMax               = getHerbivoreMax();
-
-    conf.waterdecompAiDoc           = getWaterdecompAiDoc();
-    conf.waterdecompGiDoc           = getWaterdecompGiDoc();
-    conf.waterdecompPrefDoc         = getWaterdecompPrefDoc();
-    conf.waterdecompAiPoc           = getWaterdecompAiPoc();
-    conf.waterdecompGiPoc           = getWaterdecompGiPoc();
-    conf.waterdecompPrefPoc         = getWaterdecompPrefPoc();
-    conf.waterdecompAj              = getWaterdecompAj();
-    conf.waterdecompGj              = getWaterdecompGj();
-    conf.waterdecompRespiration     = getWaterdecompRespiration();
-    conf.waterdecompExcretion       = getWaterdecompExcretion();
-    conf.waterdecompSenescence      = getWaterdecompSenescence();
-    conf.waterdecompMax             = getWaterdecompMax();
-
-    conf.seddecompAiDetritus        = getSeddecompAiDetritus();
-    conf.seddecompGiDetritus        = getSeddecompGiDetritus();
-    conf.seddecompPrefDetritus      = getSeddecompPrefDetritus();
-    conf.seddecompAj                = getSeddecompAj();
-    conf.seddecompGj                = getSeddecompGj();
-    conf.seddecompRespiration       = getSeddecompRespiration();
-    conf.seddecompExcretion         = getSeddecompExcretion();
-    conf.seddecompSenescence        = getSeddecompSenescence();
-    conf.seddecompMax               = getSeddecompMax();
-
-    conf.consumerAiHerbivore        = getConsumerAiHerbivore();
-    conf.consumerGiHerbivore        = getConsumerGiHerbivore();
-    conf.consumerPrefHerbivore      = getConsumerPrefHerbivore();
-    conf.consumerAiSedconsumer      = getConsumerAiSedconsumer();
-    conf.consumerGiSedconsumer      = getConsumerGiSedconsumer();
-    conf.consumerPrefSedconsumer    = getConsumerPrefSedconsumer();
-    conf.consumerAj                 = getConsumerAj();
-    conf.consumerGj                 = getConsumerGj();
-    conf.consumerRespiration        = getConsumerRespiration();
-    conf.consumerExcretion          = getConsumerExcretion();
-    conf.consumerSenescence         = getConsumerSenescence();
-    conf.consumerEgestion           = getConsumerEgestion();
-    conf.consumerMax                = getConsumerMax();
-
-    conf.macroSenescence            = getMacroSenescence();
-    conf.macroRespiration           = getMacroRespiration();
-    conf.macroExcretion             = getMacroExcretion();
-    conf.macroTemp                  = getMacroTemp();
-    conf.macroGross                 = getMacroGross();
-    conf.macroMassMax               = getMacroMassMax();
-    conf.macroVelocityMax           = getMacroVelocityMax();
-
-    conf.sedconsumerAiDetritus      = getSedconsumerAiDetritus();
-    conf.sedconsumerGiDetritus      = getSedconsumerGiDetritus();
-    conf.sedconsumerPrefDetritus    = getSedconsumerPrefDetritus();
-    conf.sedconsumerAiSeddecomp     = getSedconsumerAiSeddecomp();
-    conf.sedconsumerGiSeddecomp     = getSedconsumerGiSeddecomp();
-    conf.sedconsumerPrefSeddecomp   = getSedconsumerPrefSeddecomp();
-    conf.sedconsumerAj              = getSedconsumerAj();
-    conf.sedconsumerGj              = getSedconsumerGj();
-    conf.sedconsumerRespiration     = getSedconsumerRespiration();
-    conf.sedconsumerExcretion       = getSedconsumerExcretion();
-    conf.sedconsumerSenescence      = getSedconsumerSenescence();
-    conf.sedconsumerMax             = getSedconsumerMax();
-
-    conf.hydroMaps = getHydroMaps();
-    conf.daysToRun = getDaysToRun();
-
-    conf.parFile = getPARFile();
-    conf.tempFile = getTempFile();
-
+    getAllInput(conf);
     conf.write(file);
 }
 
@@ -806,124 +701,138 @@ void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool dis
     }
 }
 
-void MainWindow::getAllInput()
+void MainWindow::getAllInput(Configuration & c) const
 {
-    // TODO: is this confusing with the different naming conventions?
-    QVector<QString> maps = getHydroMaps();
-    QVector<uint16_t> days = getDaysToRun();
-    for(int i = 0; i < maps.size(); i++)
-    {
-        model.set_hydro_filenames(maps[i], days[i]);
-    }
-    model.set_par_file(getPARFile().toStdString().c_str());
-    model.set_temperature_file(getTempFile().toStdString().c_str());
-    model.set_timestep(getTimestep());
-    model.set_whichstock(getWhichStock().toStdString().c_str());
-    model.set_TSS(getTSS());
-    model.set_k_phyto(getKPhyto());
-    model.set_k_macro(getKMacro());
-    model.set_output_frequency(getOutputFreq());
-    model.set_flow_corners(getAdjacent());
+    c.hydroMaps = getHydroMaps();
+    c.numHydroMaps = c.hydroMaps.size();
+    c.daysToRun = getDaysToRun();
+    c.parFile = getPARFile();
+    c.tempFile = getTempFile();
+    c.timestep = getTimestep();
+    c.whichStock = getWhichStock();
+    c.tss = getTSS();
+    c.kPhyto = getKPhyto();
+    c.kMacro = getKMacro();
+    c.outputFreq = getOutputFreq();
+    c.adjacent = getAdjacent();
 
-    getAllStockInput(); // There are so many, it would be best to separate this
+    getAllStockInput(c); // There are so many, it would be best to separate this
 }
 
-void MainWindow::getAllStockInput()
+void MainWindow::getAllStockInput(Configuration & c) const
 {
-    set_stocks(getMacroBase(),
-               getPhytoBase(),
-               getDecompBase(),
-               getSeddecompBase(),
-               getHerbivoreBase(),
-               getSedconsumerBase(),
-               getDocBase(),
-               getPocBase(),
-               getDetritusBase(),
-               getConsumerBase());
+    c.macro = getMacroBase();
+    c.phyto = getPhytoBase();
+    c.decomp = getDecompBase();
+    c.seddecomp = getSeddecompBase();
+    c.herbivore = getHerbivoreBase();
+    c.sedconsumer = getSedconsumerBase();
+    c.doc = getDocBase();
+    c.poc = getPocBase();
+    c.detritus = getDetritusBase();
+    c.consumer = getConsumerBase();
 
-    // all values with /24 at the end are per hour
-    // values passed in as per day values
-    model.set_senescence_phyto(getPhytoSenescence()/24);
-    model.set_respiration_phyto(getPhytoRespiration()/24);
-    model.set_excretion_phyto(getPhytoExcretion()/24);
-    model.set_aj_phyto(getPhytoAj());
-    model.set_gj_phyto(getPhytoGj());
+    set_stocks(c.macro,
+               c.phyto,
+               c.decomp,
+               c.seddecomp,
+               c.herbivore,
+               c.sedconsumer,
+               c.doc,
+               c.poc,
+               c.detritus,
+               c.consumer);
 
-    model.set_ai_herbivore_phyto(getHerbivoreAiPhyto());
-    model.set_gi_herbivore_phyto(getHerbivoreGiPhyto());
-    model.set_pref_herbivore_phyto(getHerbivorePrefPhyto());
-    model.set_ai_herbivore_peri(getHerbivoreAiPeri());
-    model.set_gi_herbivore_peri(getHerbivoreGiPeri());
-    model.set_pref_herbivore_peri(getHerbivorePrefPeri());
-    model.set_ai_herbivore_waterdecomp(getHerbivoreAiWaterdecomp());
-    model.set_gi_herbivore_waterdecomp(getHerbivoreGiWaterdecomp());
-    model.set_pref_herbivore_waterdecomp(getHerbivorePrefWaterdecomp());
-    model.set_aj_herbivore(getHerbivoreAj());
-    model.set_gj_herbivore(getHerbivoreGj());
-    model.set_respiration_herbivore(getHerbivoreRespiration()/24);
-    model.set_excretion_herbivore(getHerbivoreExcretion()/24);
-    model.set_herbivore_egestion(getHerbivoreEgestion());
-    model.set_senescence_herbivore(getHerbivoreSenescence()/24);
-    model.set_max_herbivore(getHerbivoreMax()/24);
+    c.phytoSenescence = getPhytoSenescence();
+    c.phytoRespiration = getPhytoRespiration();
+    c.phytoExcretion = getPhytoExcretion();
+    c.phytoAj = getPhytoAj();
+    c.phytoGj = getPhytoGj();
 
-    model.set_ai_waterdecomp_doc(getWaterdecompAiDoc());
-    model.set_gi_waterdecomp_doc(getWaterdecompGiDoc());
-    model.set_pref_waterdecomp_doc(getWaterdecompPrefDoc());
-    model.set_ai_waterdecomp_poc(getWaterdecompAiPoc());
-    model.set_gi_waterdecomp_poc(getWaterdecompGiPoc());
-    model.set_pref_waterdecomp_poc(getWaterdecompPrefPoc());
-    model.set_aj_waterdecomp(getWaterdecompAj());
-    model.set_gj_waterdecomp(getWaterdecompGj());
-    model.set_respiration_waterdecomp(getWaterdecompRespiration()/24);
-    model.set_excretion_waterdecomp(getWaterdecompExcretion()/24);
-    model.set_senescence_waterdecomp(getWaterdecompSenescence()/24);
-    model.set_max_waterdecomp(getWaterdecompMax()/24);
+    c.herbivoreAiPhyto = getHerbivoreAiPhyto();
+    c.herbivoreGiPhyto = getHerbivoreGiPhyto();
+    c.herbivorePrefPhyto = getHerbivorePrefPhyto();
+    c.herbivoreAiPeri = getHerbivoreAiPeri();
+    c.herbivoreGiPeri = getHerbivoreGiPeri();
+    c.herbivorePrefPeri = getHerbivorePrefPeri();
+    c.herbivoreAiWaterdecomp = getHerbivoreAiWaterdecomp();
+    c.herbivoreGiWaterdecomp = getHerbivoreGiWaterdecomp();
+    c.herbivorePrefWaterdecomp = getHerbivorePrefWaterdecomp();
+    c.herbivoreAj = getHerbivoreAj();
+    c.herbivoreGj = getHerbivoreGj();
+    c.herbivoreRespiration = getHerbivoreRespiration();
+    c.herbivoreExcretion = getHerbivoreExcretion();
+    c.herbivoreEgestion = getHerbivoreEgestion();
+    c.herbivoreSenescence = getHerbivoreSenescence();
+    c.herbivoreMax = getHerbivoreMax();
 
-    model.set_ai_seddecomp_detritus(getSeddecompAiDetritus());
-    model.set_gi_seddecomp_detritus(getSeddecompGiDetritus());
-    model.set_pref_seddecomp_detritus(getSeddecompPrefDetritus());
-    model.set_aj_seddecomp(getSeddecompAj());
-    model.set_gj_seddecomp(getSeddecompGj());
-    model.set_respiration_seddecomp(getSeddecompRespiration()/24);
-    model.set_excretion_seddecomp(getSeddecompExcretion()/24);
-    model.set_senescence_seddecomp(getSeddecompSenescence()/24);
-    model.set_max_seddecomp(getSeddecompMax()/24);
+    c.waterdecompAiDoc = getWaterdecompAiDoc();
+    c.waterdecompGiDoc = getWaterdecompGiDoc();
+    c.waterdecompPrefDoc = getWaterdecompPrefDoc();
+    c.waterdecompAiPoc = getWaterdecompAiPoc();
+    c.waterdecompGiPoc = getWaterdecompGiPoc();
+    c.waterdecompPrefPoc = getWaterdecompPrefPoc();
+    c.waterdecompAj = getWaterdecompAj();
+    c.waterdecompGj = getWaterdecompGj();
+    c.waterdecompRespiration = getWaterdecompRespiration();
+    c.waterdecompExcretion = getWaterdecompExcretion();
+    c.waterdecompSenescence = getWaterdecompSenescence();
+    c.waterdecompMax = getWaterdecompMax();
 
-    model.set_ai_consum_herbivore(getConsumerAiHerbivore());
-    model.set_gi_consum_herbivore(getConsumerGiHerbivore());
-    model.set_pref_consum_herbivore(getConsumerPrefHerbivore());
-    model.set_ai_consum_sedconsumer(getConsumerAiSedconsumer());
-    model.set_gi_consum_sedconsumer(getConsumerGiSedconsumer());
-    model.set_pref_consum_sedconsumer(getConsumerPrefSedconsumer());
-    model.set_aj_consum(getConsumerAj());
-    model.set_gj_consum(getConsumerGj());
-    model.set_respiration_consum(getConsumerRespiration()/24);
-    model.set_excretion_consum(getConsumerExcretion()/24);
-    model.set_senescence_consum(getConsumerSenescence()/24);
-    model.set_consum_egestion(getConsumerEgestion());
-    model.set_max_consum(getConsumerMax()/24);
+    c.seddecompAiDetritus = getSeddecompAiDetritus();
+    c.seddecompGiDetritus = getSeddecompGiDetritus();
+    c.seddecompPrefDetritus = getSeddecompPrefDetritus();
+    c.seddecompAj = getSeddecompAj();
+    c.seddecompGj = getSeddecompGj();
+    c.seddecompRespiration = getSeddecompRespiration();
+    c.seddecompExcretion = getSeddecompExcretion();
+    c.seddecompSenescence = getSeddecompSenescence();
+    c.seddecompMax = getSeddecompMax();
 
-    model.set_sen_macro_coef(getMacroSenescence()/24);
-    model.set_resp_macro_coef(getMacroRespiration()/24);
-    model.set_excretion_macro(getMacroExcretion());
-    model.set_macro_base_temp(getMacroTemp());
-    model.set_gross_macro_coef(getMacroGross());
-    model.set_macro_mass_max(getMacroMassMax());
-    model.set_macro_vel_max(getMacroVelocityMax());
+    c.consumerAiHerbivore = getConsumerAiHerbivore();
+    c.consumerGiHerbivore = getConsumerGiHerbivore();
+    c.consumerPrefHerbivore = getConsumerPrefHerbivore();
+    c.consumerAiSedconsumer = getConsumerAiSedconsumer();
+    c.consumerGiSedconsumer = getConsumerGiSedconsumer();
+    c.consumerPrefSedconsumer = getConsumerPrefSedconsumer();
+    c.consumerAj = getConsumerAj();
+    c.consumerGj = getConsumerGj();
+    c.consumerRespiration = getConsumerRespiration();
+    c.consumerExcretion = getConsumerExcretion();
+    c.consumerSenescence = getConsumerSenescence();
+    c.consumerEgestion = getConsumerEgestion();
+    c.consumerMax = getConsumerMax();
 
-    model.set_ai_sedconsumer_detritus(getSedconsumerAiDetritus());
-    model.set_gi_sedconsumer_detritus(getSedconsumerGiDetritus());
-    model.set_pref_sedconsumer_detritus(getSedconsumerPrefDetritus());
-    model.set_ai_sedconsumer_seddecomp(getSedconsumerAiSeddecomp());
-    model.set_gi_sedconsumer_seddecomp(getSedconsumerGiSeddecomp());
-    model.set_pref_sedconsumer_seddecomp(getSedconsumerPrefSeddecomp());
-    // TODO: peri?
-    model.set_aj_sedconsumer(getSedconsumerAj());
-    model.set_gj_sedconsumer(getSedconsumerGj());
-    model.set_respiration_sedconsumer(getSedconsumerRespiration()/24);
-    model.set_excretion_sedconsumer(getSedconsumerExcretion()/24);
-    model.set_senescence_sedconsumer(getSedconsumerSenescence()/24);
-    model.set_max_sedconsumer(getSedconsumerMax()/24);
+    c.macroSenescence = getMacroSenescence();
+    c.macroRespiration = getMacroRespiration();
+    c.macroExcretion = getMacroExcretion();
+    c.macroTemp = getMacroTemp();
+    c.macroGross = getMacroGross();
+    c.macroMassMax = getMacroMassMax();
+    c.macroVelocityMax = getMacroVelocityMax();
+
+    c.sedconsumerAiDetritus = getSedconsumerAiDetritus();
+    c.sedconsumerGiDetritus = getSedconsumerGiDetritus();
+    c.sedconsumerPrefDetritus = getSedconsumerPrefDetritus();
+    c.sedconsumerAiSeddecomp = getSedconsumerAiSeddecomp();
+    c.sedconsumerGiSeddecomp = getSedconsumerGiSeddecomp();
+    c.sedconsumerPrefSeddecomp = getSedconsumerPrefSeddecomp();
+    /****************************************/
+    c.sedconsumerAiPeri = 2.0;
+    c.sedconsumerGiPeri = 0.02;
+    c.sedconsumerPrefPeri = 0.4;
+    c.sedconsumerEgestionSeddecomp = 0.35; // what is this?
+    c.sedconsumerEgestionDetritus = 0.9; // what is this?
+    /****************************************/
+    c.sedconsumerAj = getSedconsumerAj();
+    c.sedconsumerGj = getSedconsumerGj();
+    c.sedconsumerRespiration = getSedconsumerRespiration();
+    c.sedconsumerExcretion = getSedconsumerExcretion();
+    c.sedconsumerSenescence = getSedconsumerSenescence();
+    c.sedconsumerMax = getSedconsumerMax();
+
+    // c.periAj
+    // c.periGj <-- these are written to in the model right away, I don't think it is supposed to be user input
 }
 
 bool MainWindow::verifyAllInput() const
