@@ -43,7 +43,6 @@ void RiverModel::initializeModelStatus()
     }
 
     modelStatus.setState(Status::READY);
-    modelStatus.setState(Status::RUNNING);
 }
 
 //     was doing aside from creating output dirs.
@@ -53,7 +52,12 @@ void RiverModel::run(void) {
     initialize_globals();
     initializeModelStatus();
 
+    modelStatus.setState(Status::RUNNING);
+
     g.gui_days_to_run = 0;
+    int days_elapsed = 0;
+    int hours_elapsed = 0;
+
     for(int index = 0; index < config.hydroMaps.size(); index++)
     {
         cout << "RUNNING FILE: " << config.hydroMaps[index].toStdString();
@@ -63,17 +67,19 @@ void RiverModel::run(void) {
         g.hydro_group = (g.hydromap_index_vector[index] + 1); //Set the new hydromap that will run
         g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
 
-        int day;
-        while( (day = (g.hours / 24)) < g.gui_days_to_run)
+        while( days_elapsed < g.gui_days_to_run)
         {
-            cout << "Day: " << (day+1) << " - Hour: " << ((g.hours)%24) \
+            cout << "Day: " << (days_elapsed + 1) << " - Hour: " << ((g.hours)%24) \
                 << " | Progress: " << (int)(modelStatus.getProgress()*100) \
                 << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
                 << " / " << modelStatus.getTimeRemaining() << endl;
             go(config);
             modelStatus.updateProgress();
-            if (day > 0 && g.current_day % config.outputFreq == 0)
-            {
+
+            hours_elapsed++;
+
+            if( hours_elapsed % 24 == 0) {
+                days_elapsed++;
                 modelStatus.hasNewImage(true);
             }
         }
