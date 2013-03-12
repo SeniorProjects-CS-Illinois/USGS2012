@@ -70,14 +70,17 @@ void go(Configuration & config)
     // increment tick
     g.hours++;
 
-    int day = g.hours%24;
-    if (day == 0)
+    int hourOfDay = g.hours%24;
+    if (hourOfDay == 0)
     {
-        update_color();
         g.current_day++;
         if(g.current_day == config.outputFreq)
         {
+            g.imageMutex.lock();
+            update_color();
             output_image();
+            g.imageMutex.unlock();
+
             dump_data(config);
             average_carbon(g.hours/24);
             g.current_day = 0;
