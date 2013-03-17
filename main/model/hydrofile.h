@@ -10,10 +10,9 @@
 #include <QRgb>
 #include <QVector2D>
 #include <QVector>
+#include "carbonflowmap.h"
+#include "carbonsources.h"
 #include "grid.h"
-
-//TODO Replace this type when we start to implement CarbonflowMap related stuff.
-typedef int CarbonFlowMap;
 
 
 class HydroFile {
@@ -38,7 +37,7 @@ class HydroFile {
          * iterations using the hydrofile's data.
          * Memoizes and returns a CarbonFlowMap pointer.
          */
-        //CarbonFlowMap * getCarbonFlowMap(int iterations);
+        CarbonFlowMap * getCarbonFlowMap(int iterations);
 
         /**
          * \brief Checks if a water cell exists at the given (x,y) coordinate
@@ -115,6 +114,8 @@ class HydroFile {
          * \brief Returns an entire cell's data at the given (x,y) coordinate.
          */
         HydroData & getData(int x, int y);
+
+        void initializeCarbonSources(Grid<CarbonSource> & sources);
 
         //void copy(HydroFile const & other);
         //void clear();

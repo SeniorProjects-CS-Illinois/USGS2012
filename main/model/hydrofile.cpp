@@ -96,13 +96,20 @@ HydroFile const & HydroFile::operator=( HydroFile const & other ) {
     //TODO Once the carbon flow map is implemented
     return other;
 }
+*/
 
 CarbonFlowMap * HydroFile::getCarbonFlowMap(int iterations)
 {
-    //TODO Build and memoize the carbonflowmap for the given number of iterations
-    return NULL;
+    if(carbonFlowMap != NULL && iterations == carbonFlowIterations){
+        return carbonFlowMap;
+    } else if( carbonFlowMap != NULL ){
+        delete carbonFlowMap;
+        carbonFlowIterations = 0;
+    }
+    carbonFlowMap = new CarbonFlowMap(this, iterations);
+    carbonFlowIterations = iterations;
+    return carbonFlowMap;
 }
-*/
 
 bool HydroFile::patchExists(int x, int y) const {
     int hashKey = getHashKey(x,y);
