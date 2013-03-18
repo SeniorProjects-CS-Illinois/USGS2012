@@ -1,1 +1,1 @@
-QMAKE_CXX = clang
+ 
