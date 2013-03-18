@@ -14,9 +14,9 @@ class CarbonFlowMap {
         HydroFile * hydroFile;
         int iterations;
 
-        void initializeCarbonSources(Grid<CarbonSources> & source);
-        void pushCarbon(Grid<CarbonSources> & source, Grid<CarbonSources> & dest);
-        QVector<CarbonSource> getFlowTargets(int x, int y);
+        void initializeCarbonCollection(Grid<CarbonSourceCollection> & source);
+        void pushCarbon(Grid<CarbonSourceCollection> & source, Grid<CarbonSourceCollection> & dest);
+        QVector<CarbonSource> * getFlowTargets(int x, int y);
 
 };
 

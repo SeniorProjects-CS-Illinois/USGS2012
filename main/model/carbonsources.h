@@ -1,38 +1,37 @@
 #ifndef CARBONSOURCES_H
 #define CARBONSOURCES_H
 
-#include <vector>
+#include <QVector>
 
 /**
  * Holds the source information for an individual cell
  */
 
-using std::vector;
-
 struct CarbonSource {
+    CarbonSource() : x(-1), y(-1), ammount(-1.0) {}
     CarbonSource(int x, int y, float ammount) : x(x), y(y), ammount(ammount) {}
     int x;
     int y;
     float ammount;
 };
 
-class CarbonSources {
+class CarbonSourceCollection {
     public:
-        void initalizeSource(int newX, int newY, bool isInputCell);
+        void initializeSource(int newX, int newY);
 
         void addSource(int x, int y, float ammount);
-        void addSource(CarbonSource source);
-        void addSources(vector<CarbonSource> sources);
+        void addSource(CarbonSource & source);
+        void addSources(QVector<CarbonSource> & sources);
 
         void removeSourcesPercent(float percent);
 
-        vector<CarbonSource> getSources();
-        vector<CarbonSource> getSourcesPercentage(float percent);
+        const QVector<CarbonSource> getSources() const;
+        const QVector<CarbonSource> getSourcesPercentage(float percent) const;
 
     private:
         int x;
         int y;
-        vector<CarbonSource> sources;
+        QVector<CarbonSource> sources;
 };
 
 #endif

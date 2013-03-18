@@ -98,19 +98,6 @@ HydroFile const & HydroFile::operator=( HydroFile const & other ) {
 }
 */
 
-CarbonFlowMap * HydroFile::getCarbonFlowMap(int iterations)
-{
-    if(carbonFlowMap != NULL && iterations == carbonFlowIterations){
-        return carbonFlowMap;
-    } else if( carbonFlowMap != NULL ){
-        delete carbonFlowMap;
-        carbonFlowIterations = 0;
-    }
-    carbonFlowMap = new CarbonFlowMap(this, iterations);
-    carbonFlowIterations = iterations;
-    return carbonFlowMap;
-}
-
 bool HydroFile::patchExists(int x, int y) const {
     int hashKey = getHashKey(x,y);
     return hydroDataSetIndices.contains(hashKey);

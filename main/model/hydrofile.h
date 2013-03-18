@@ -10,8 +10,6 @@
 #include <QRgb>
 #include <QVector2D>
 #include <QVector>
-#include "carbonflowmap.h"
-#include "carbonsources.h"
 #include "grid.h"
 
 
@@ -31,13 +29,6 @@ class HydroFile {
          * \param[in] filename The name of the file to load
          */
         void loadFromFile(QString filename);
-
-        /**
-         * \brief Given an int, precomputes flows for the specified number of
-         * iterations using the hydrofile's data.
-         * Memoizes and returns a CarbonFlowMap pointer.
-         */
-        CarbonFlowMap * getCarbonFlowMap(int iterations);
 
         /**
          * \brief Checks if a water cell exists at the given (x,y) coordinate
@@ -85,8 +76,6 @@ class HydroFile {
         };
 
         bool hydroFileLoaded;
-        CarbonFlowMap * carbonFlowMap;
-        int carbonFlowIterations;
         QString hydroMapFileName;
         int width;
         int height;
@@ -114,11 +103,6 @@ class HydroFile {
          * \brief Returns an entire cell's data at the given (x,y) coordinate.
          */
         HydroData & getData(int x, int y);
-
-        void initializeCarbonSources(Grid<CarbonSource> & sources);
-
-        //void copy(HydroFile const & other);
-        //void clear();
 };
 
 #endif

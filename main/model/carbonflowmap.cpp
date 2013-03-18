@@ -6,11 +6,11 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
     hydroFile = newHydroFile;
     iterations = numIterations;
 
-    Grid<CarbonSource> * source = new Grid<CarbonSource>(hydroFile->getWidth(), hydroFile->getHeight());
-    Grid<CarbonSource> * dest = new Grid<CarbonSource>(hydroFile->getWidth(), hydroFile->getHeight());
+    Grid<CarbonSourceCollection> * source = new Grid<CarbonSourceCollection>(hydroFile->getMapWidth(), hydroFile->getMapHeight());
+    Grid<CarbonSourceCollection> * dest = new Grid<CarbonSourceCollection>(hydroFile->getMapWidth(), hydroFile->getMapHeight());
 
-    initializeCarbonSources(*source);
-    initializeCarbonSources(*dest);
+    initializeCarbonCollection(*source);
+    initializeCarbonCollection(*dest);
 
     for(int i = 0; i < iterations; i++){
         swap(source, dest);
@@ -21,41 +21,45 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
      * TODO: After pushing the carbon, store it all efficicently and
      * get rid of temp data.
      */
+
+    delete source;
+    delete dest;
 }
 
-void CarbonFlowMap::initializeCarbonSources(Grid<CarbonSource> & sources){
-    for(int i = 0; i < hydroFile->getWidth(); i++){
-        for( int j = 0; j < hydroFile->getHeight(); j++){
-            sources(i,j).initializeSource();
+void CarbonFlowMap::initializeCarbonCollection(Grid<CarbonSourceCollection> & sources){
+    for(int i = 0; i < hydroFile->getMapWidth(); i++){
+        for( int j = 0; j < hydroFile->getMapHeight(); j++){
+            sources(i,j).initializeSource(i,j);
         }
     }
 }
 
 void CarbonFlowMap::pushCarbon(
-    Grid<CarbonSources> & source,
-    Grid<CarbonSources> & dest)
+    Grid<CarbonSourceCollection> & source,
+    Grid<CarbonSourceCollection> & dest)
 {
-    for( int i = 0; i < hydroFile->getWidth(); i++) {
-        for( int j = 0; j < hydroFile->getHeight(); j++) {
-            if(patchExists(i,j)) {
-                QVector<CarbonSource> targets = getFlowTargets(i,j);
+    for( int i = 0; i < hydroFile->getMapWidth(); i++) {
+        for( int j = 0; j < hydroFile->getMapHeight(); j++) {
+            if(hydroFile->patchExists(i,j)) {
+                QVector<CarbonSource> * targets = getFlowTargets(i,j);
                 float carbonLost = 0.0;
-                for(int i = 0; i < targets.size(); i++){
-                    CarbonSource carbonTarget = targets[i];
+                for(int i = 0; i < targets->size(); i++){
+                    CarbonSource carbonTarget = targets->at(i);
                     carbonLost += carbonTarget.ammount;
-                    vector<CarbonSources> & carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.ammount);
+                    QVector<CarbonSource> carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.ammount);
                     dest(carbonTarget.x, carbonTarget.y).addSources(carbonPushed);
                 }
 
+                delete targets;
                 dest(i,j).removeSourcesPercent(carbonLost);
-            }s
+            }
         }
     }
 }
 
-QVector<CarbonSource> CarbonFlowMap::getFlowTargets(int i, int j){
-    QVector<CarbonSource> targets = new QVector<CarbonSource>();
-    QVector2D flowVector = getVector(i,j);
+QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
+    QVector<CarbonSource> * targets = new QVector<CarbonSource>();
+    QVector2D flowVector = hydroFile->getVector(i,j);
 
     int width = g.patch_length;
     int height = g.patch_length;
@@ -72,14 +76,14 @@ QVector<CarbonSource> CarbonFlowMap::getFlowTargets(int i, int j){
     //Target A
     int iA = floor(newX/((double)width));
     int jA = floor(newY/((double)height));
-    if((i != iA && j != jA) {
+    if(i != iA && j != jA) {
         if(hydroFile->patchExists(iA, jA)) {
             double targetWidthA = (double)((iA+1)*width) - newX;
             double targetHeightA = (double)((jA+1)*height)-newY;
             double targetAreaA = targetWidthA*targetHeightA;
             float percentA = targetAreaA/cellArea;
             CarbonSource targetA(iA, jA, percentA);
-            targets.append(targetA);
+            targets->append(targetA);
         }
     }
 
@@ -93,7 +97,7 @@ QVector<CarbonSource> CarbonFlowMap::getFlowTargets(int i, int j){
             double targetAreaB = targetWidthB*targetHeightB;
             float percentB = targetAreaB/cellArea;
             CarbonSource targetB(iB, jB, percentB);
-            targets.append(targetB);
+            targets->append(targetB);
         }
     }
 
@@ -107,7 +111,7 @@ QVector<CarbonSource> CarbonFlowMap::getFlowTargets(int i, int j){
             double targetAreaC = targetWidthC*targetHeightC;
             float percentC = targetAreaC/cellArea;
             CarbonSource targetC(iC, jC, percentC);
-            targets.append(targetC);
+            targets->append(targetC);
         }
     }
 
@@ -121,7 +125,7 @@ QVector<CarbonSource> CarbonFlowMap::getFlowTargets(int i, int j){
             double targetAreaD = targetWidthD*targetHeightD;
             float percentD = targetAreaD/cellArea;
             CarbonSource targetD(iD, jD, percentD);
-            targets.append(targetD);
+            targets->append(targetD);
         }
     }
     return targets;
