@@ -5,6 +5,7 @@
 #include <QString>
 #include <QStringList>
 #include "hydrofile.h"
+#include "grid.h"
 
 class HydroFileDict
 {
@@ -19,6 +20,12 @@ class HydroFileDict
 
         int getMaxWidth();
         int getMaxHeight();
+
+        /**
+         * @brief Iterates through all cells of all maps to find all patches used
+         * @return A Grid of booleans indicating the existance of a patch.
+         */
+        Grid<bool> getPatchUsageGrid();
 
     private:
         QStringList filenames;

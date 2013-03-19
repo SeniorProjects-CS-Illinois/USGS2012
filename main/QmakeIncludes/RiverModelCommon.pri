@@ -8,6 +8,7 @@ SOURCES += model/rivermodel.cpp \
     model/color.cpp \
     model/dump.cpp \
     model/go.cpp \
+    model/grid.cpp \
     model/patch.cpp \
     model/pred.cpp \
     model/setup.cpp \
@@ -35,3 +36,18 @@ HEADERS  += model/rivermodel.h \
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides
 include(./SettingsOverrides.pri)
+
+HEADERS += \
+    model/river.h
+
+SOURCES += \
+    model/river.cpp
+
+HEADERS += \
+    model/constants.h
+
+HEADERS += \
+    model/patchCollection.h
+
+SOURCES += \
+    model/patchCollection.cpp

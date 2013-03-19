@@ -28,6 +28,7 @@ const HydroFile * HydroFileDict::operator[](const QString filename) const
     return dict[filename];
 }
 
+//TODO Keep track of max width when adding hydrofiles and store in member variable
 int HydroFileDict::getMaxWidth()
 {
     int maxWidth = 0;
@@ -43,6 +44,7 @@ int HydroFileDict::getMaxWidth()
     return maxWidth;
 }
 
+//TODO Keep track of max height when adding hydrofiles and store in member variable
 int HydroFileDict::getMaxHeight()
 {
     int maxHeight = 0;
@@ -62,4 +64,25 @@ HydroFileDict::~HydroFileDict() {
     for( QHash<QString, HydroFile *>::iterator i = dict.begin(); i != dict.end(); i++){
         delete *i;
     }
+}
+
+Grid<bool> HydroFileDict::getPatchUsageGrid() {
+    int width = getMaxWidth();
+    int height = getMaxHeight();
+
+    Grid<bool> patchUsage(width, height);
+    for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++) {
+            patchUsage(x,y) = false;
+            for(int i = 0; i < filenames.size(); i++) {
+                QString filename = filenames[i];
+                if (dict[filename]->patchExists(x,y)) {
+                    patchUsage(x,y) = true;
+                    continue;
+                }
+            }
+        }
+    }
+
+    return patchUsage;
 }
