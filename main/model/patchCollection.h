@@ -198,7 +198,7 @@ class PatchCollection {
          * @brief Creates a new patch by adding default values to the appropriate QVectors
          * @return The index of the new patch in the QVectors
          */
-        int initializePatches(Configuration & config);
+        void initializePatches(Configuration & config);
 
         /**
          * @brief Provides a key to use with the index map given an x and y coordinate
@@ -209,7 +209,10 @@ class PatchCollection {
         int getIndexMapKey(int x, int y) const;
 
         int size;
+        int width;
+        int height;
         QHash<int,int> indexMap;
+
 };
 
 #endif // PATCHCOLLECTION_H

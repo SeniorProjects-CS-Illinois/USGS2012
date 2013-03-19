@@ -8,7 +8,6 @@ SOURCES += model/rivermodel.cpp \
     model/color.cpp \
     model/dump.cpp \
     model/go.cpp \
-    model/grid.cpp \
     model/patch.cpp \
     model/pred.cpp \
     model/setup.cpp \

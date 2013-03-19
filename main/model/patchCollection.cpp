@@ -4,13 +4,13 @@
 PatchCollection::PatchCollection(Configuration & config, HydroFileDict & hydroDict) {
     size = 0;
 
-    Grid<bool> patchUsage = hydroDict.getPatchUsageGrid();
-    int width = patchUsage.getWidth();
-    int height = patchUsage.getHeight();
+    const Grid<bool> patchUsage = hydroDict.getPatchUsageGrid();
+    width = patchUsage.getWidth();
+    height = patchUsage.getHeight();
 
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
-            if( patchUsage(x,y) ) {
+            if( patchUsage.get(x,y) ) {
                 int newIndex = pxcor.size();
 
                 pxcor.append(x);
@@ -43,7 +43,7 @@ int PatchCollection::getSize() const {
     return size;
 }
 
-int PatchCollection::initializePatches(Configuration & config) {
+void PatchCollection::initializePatches(Configuration & config) {
     pcolor.fill(0, size);
 
     px_vector.fill(0.0, size);
@@ -190,6 +190,4 @@ int PatchCollection::initializePatches(Configuration & config) {
     waterdecomp_respiration.fill(0.0, size);
     waterdecomp_senescence.fill(0.0, size);
     turbidity.fill(0.0, size);
-
-    return newPatchIndex;
 }

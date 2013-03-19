@@ -30,7 +30,7 @@ class Grid {
          * \param[in] x The x coordinate
          * \param[in] y The y coordinate
          */
-        T const & operator()(std::size_t x, std::size_t y) const;
+        const T & operator()(std::size_t x, std::size_t y) const;
 
         /**
          * \brief Provides access to elements using normal 1D indexing.
@@ -42,7 +42,35 @@ class Grid {
          * \brief Provides access to elements using normal 1D indexing.
          * \param[in] index the index
          */
-        T const & operator()(std::size_t index) const;
+        const T & operator()(std::size_t index) const;
+
+        /**
+         * \brief Gets the given value at the given (x,y) position.
+         * \param x The x coordinate
+         * \param y The y coordinate
+         */
+        T get(std::size_t x, std::size_t y) const;
+
+        /**
+         * \brief Gets the given value at the given index.
+         * \param index The index of the array
+         */
+        T get(std::size_t index) const;
+
+        /**
+         * \brief Sets the given value at the given (x,y) position.
+         * \param x The x coordinate
+         * \param y The y coordinate
+         * \param val The value to set
+         */
+        void set(std::size_t x, std::size_t y, const T & val);
+
+        /**
+         * \brief Sets the given value at the given index.
+         * \param index The index of the array
+         * \param val The value to set
+         */
+        void set(std::size_t index, const T & val);
 
         /**
          * \brief Functions to provide direct access to the array.
@@ -53,12 +81,12 @@ class Grid {
         /**
          * \brief Returns the width provided in the constructor.
          */
-        std::size_t getWidth(void);
+        std::size_t getWidth(void) const;
 
         /**
          * \brief Returns the height provided in the constructor.
          */
-        std::size_t getHeight(void);
+        std::size_t getHeight(void) const;
 
 
     private:

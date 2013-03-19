@@ -4,6 +4,7 @@
 #include "configuration.h"
 #include "hydrofiledict.h"
 #include "hydrofile.h"
+#include "patchCollection.h"
 
 
 class River {
@@ -27,7 +28,7 @@ class River {
          * @brief Sets the current PAR to use in future calculations
          * @param newPAR New PAR to use.
          */
-        void setCurrentPAR(double newPAR);
+        void setCurrentPAR(int newPAR);
 
         /**
          * @brief Iterates over the river and performs calculations on each patch
@@ -35,6 +36,7 @@ class River {
         void processPatches();
 
     private:
+        PatchCollection p;
         Configuration config;
 
         HydroFile * currHydroFile;

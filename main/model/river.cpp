@@ -1,10 +1,10 @@
 #include "river.h"
 
-River::River(Configuration & newConfig, HydroFileDict & hydroFileDict) {
+River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
+    : p(newConfig,hydroFileDict)
+{
+
     config = newConfig;
-
-    //TODO: Don't store the dict, but instead pass it to (future) patchCollection class.
-
 
     currHydroFile = NULL;
     currWaterTemp = -1.0;
@@ -60,7 +60,7 @@ void River::setCurrentPAR(int newPAR) {
 
 
 void processPatches() {
-    //TODO Iterator over patch collection and perform computations
+    //TODO Iterate over patch collection and perform computations
 }
 
 
