@@ -190,6 +190,9 @@ void River::flow() {
 void River::copyFlowData(Grid<FlowData> & flowData) {
     for(int x = 0; x < g.MAP_WIDTH; x++) {
         for(int y = 0; y < g.MAP_HEIGHT; y++) {
+            if(!p.patchExists(x,y)) {
+                continue;
+            }
             int index = p.getIndex(x,y);
             flowData(x,y).DOC         = p.DOC[index];
             flowData(x,y).POC         = p.POC[index];
@@ -202,6 +205,9 @@ void River::copyFlowData(Grid<FlowData> & flowData) {
 void River::storeFlowData(Grid<FlowData> & flowData) {
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
+            if(!p.patchExists(x,y)) {
+                continue;
+            }
             int index = p.getIndex(x,y);
             p.DOC[index] = flowData(x,y).DOC;
             p.POC[index] = flowData(x,y).POC;
