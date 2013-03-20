@@ -462,7 +462,7 @@ void River::processPatches() {
         }
 
         //the amount of light that reaches the bottom of a water column
-        p.bottom_light[i] = g.photo_radiation
+        p.bottom_light[i] = currPAR
                 * exp( (-1 * depth) * p.turbidity[i] );
 
         //TODO why is this code altering the config? Config should never be edited by model. -ECP
@@ -489,7 +489,7 @@ void River::processPatches() {
 
         //TODO Ask Kevin what theta is and why it is 1.072.  I want to add
         //it to the constants file but "THETA" is really ambiguous. -ECP
-        Q10 = pow(g.theta, (g.temperature - config.macroTemp));
+        Q10 = pow(g.theta, (currWaterTemp - config.macroTemp));
 
         //TODO pull velocity from hydrofile rather than patches
         if(velocity < config.macroVelocityMax) {
@@ -501,7 +501,7 @@ void River::processPatches() {
             p.K[i] = 0.01;
         }
         //Same at bottom-light
-        double macro_light = g.photo_radiation * exp( (-1*depth) * p.turbidity[i] );
+        double macro_light = currPar * exp( (-1*depth) * p.turbidity[i] );
 
         p.gross_photo_macro[i] = config.macroGross * p.macro[i]
                 * ( macro_light / ( macro_light + 10.0)) * Q10
@@ -535,7 +535,7 @@ void River::processPatches() {
         //base temperature for nominal growth
         //TODO What is base temperature and why is it a magic number?
         double base_temperature = 8.0;
-        Q10 = pow(g.theta, (g.temperature - base_temperature));
+        Q10 = pow(g.theta, (currWaterTemp - base_temperature));
         double km = 10; //half saturation constant
 
 
@@ -547,9 +547,9 @@ void River::processPatches() {
 
         p.respiration_phyto[i] = (config.phytoRespiration / HOURS_PER_DAY) * p.phyto[i] * Q10;
 
-        double pre_ln = 0.01 + g.photo_radiation
+        double pre_ln = 0.01 + currPAR
                 * exp(-1 * p.phyto[i] * config.kPhyto * depth);
-        double be = km + g.photo_radiation
+        double be = km + currPAR
                 * exp(-1 * p.phyto[i] * config.kPhyto * depth);
 
         //photosynthesis from phytoplankton derived from Huisman Weissing 1994
