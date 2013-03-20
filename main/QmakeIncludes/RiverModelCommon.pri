@@ -21,6 +21,7 @@ HEADERS  += model/rivermodel.h \
     model/cleanup.h \
     model/color.h \
     model/dump.h \
+    model/flowdata.h \
     model/globals.h \
     model/go.h \
     model/patch.h \

@@ -60,6 +60,7 @@ int HydroFileDict::getMaxHeight() const
     return maxHeight;
 }
 
+//TODO Create an assignment operator, otherwise we will loose our hydromaps.
 HydroFileDict::~HydroFileDict() {
     for( QHash<QString, HydroFile *>::iterator i = dict.begin(); i != dict.end(); i++){
         delete *i;

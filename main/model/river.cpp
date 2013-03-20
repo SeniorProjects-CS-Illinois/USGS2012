@@ -50,8 +50,8 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     double max_vector_component = 0.0;
     int x, y;
 
-    for (x = 0; x < g.MAP_WIDTH; x++) {
-        for (y = 0; y < g.MAP_HEIGHT; y++) {
+    for (x = 0; x < width; x++) {
+        for (y = 0; y < height; y++) {
             int patchIndex = p.getIndex(x,y);
 
             // if the hydro maps contained information about this patch
@@ -188,8 +188,8 @@ void River::flow() {
 }
 
 void River::copyFlowData(Grid<FlowData> & flowData) {
-    for(int x = 0; x < g.MAP_WIDTH; x++) {
-        for(int y = 0; y < g.MAP_HEIGHT; y++) {
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
             if(!p.patchExists(x,y)) {
                 continue;
             }
@@ -254,8 +254,8 @@ double River::getMaxTimestep() {
 }
 
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
-    for(int x = 0; x < g.MAP_WIDTH; x++) {
-        for(int y = 0; y < g.MAP_HEIGHT; y++) {
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
             if( !currHydroFile->patchExists(x,y) ) {
                 continue;
             }
@@ -501,7 +501,7 @@ void River::processPatches() {
             p.K[i] = 0.01;
         }
         //Same at bottom-light
-        double macro_light = currPar * exp( (-1*depth) * p.turbidity[i] );
+        double macro_light = currPAR * exp( (-1*depth) * p.turbidity[i] );
 
         p.gross_photo_macro[i] = config.macroGross * p.macro[i]
                 * ( macro_light / ( macro_light + 10.0)) * Q10

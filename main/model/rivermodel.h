@@ -8,6 +8,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
+#include <vector>
+
 #include "status.h"
 #include "globals.h"
 #include "setup.h"
@@ -16,10 +22,9 @@
 #include "dump.h"
 #include "cleanup.h"
 #include "configuration.h"
-
-#include <QString>
-#include <QStringList>
-#include <vector>
+#include "hydrofiledict.h"
+#include "hydrofile.h"
+#include "river.h"
 
 using std::cout;
 using std::endl;
@@ -36,6 +41,11 @@ class RiverModel {
          * Runs the model.
          */
         void run(void);
+
+        /**
+         * Runs the refactored model.
+         */
+        void newRun(void);
 
         /**
          * Set the configuration for the river model.
@@ -71,5 +81,9 @@ class RiverModel {
     private:
         Status modelStatus;
         Configuration config;
+        HydroFileDict hydroFiles;
+        QVector<double> waterTemps;
+        QVector<int> parValues;
+
 };
 #endif

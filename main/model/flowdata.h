@@ -1,3 +1,6 @@
+#ifndef FLOWDATA_H
+#define FLOWDATA_H
+
 typedef struct FlowData
 {
     double depth;
@@ -9,3 +12,6 @@ typedef struct FlowData
     double phyto;
     double waterdecomp;
 } FlowData;
+
+
+#endif
