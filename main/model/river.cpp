@@ -50,8 +50,13 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     double max_vector_component = 0.0;
     int x, y;
 
+    //TODO Iterate over patches rather than (x,y) coordinates
     for (x = 0; x < width; x++) {
         for (y = 0; y < height; y++) {
+            //Nothing to do at this (x,y) if no patch exists.
+            if (!p.patchExists(x,y)) {
+                continue;
+            }
             int patchIndex = p.getIndex(x,y);
 
             // if the hydro maps contained information about this patch
@@ -72,12 +77,23 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
             }
 
 
-
-            //Avoid doing the next section of calculations if there is never
-            //any water in this patch for the duration of the simulation.
-            if(p.patchExists(x,y)) {
+            if(currHydroFile == NULL) {
+                //We are configuring the first hydromap.  Zeroize all land.
+                if(!newHydroFile->patchExists(x,y)){
+                    p.detritus[patchIndex] = 0.0;
+                    p.DOC[patchIndex] = 0.0;
+                    p.POC[patchIndex] = 0.0;
+                    p.phyto[patchIndex] = 0.0;
+                    p.macro[patchIndex] = 0.0;
+                    p.waterdecomp[patchIndex] = 0.0;
+                    p.seddecomp[patchIndex] = 0.0;
+                    p.herbivore[patchIndex] = 0.0;
+                    p.sedconsumer[patchIndex] = 0.0;
+                    p.consum[patchIndex] = 0.0;
+                }
+            } else {
                 double currentDepth = 0.0;
-                if (currHydroFile != NULL && currHydroFile->patchExists(x,y)) {
+                if (currHydroFile->patchExists(x,y)) {
                     currentDepth = currHydroFile->getDepth(x,y);
                 }
 
@@ -110,7 +126,8 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
                 //TODO Comparing floats with == is bad and probably a bug -ECP
                 if (currentDepth == 0.0 && newDepth > 0.0) {
                     //TODO Check with Kevin to make sure these detritus calculations make sense
-                    // in the transition from land->water and water->land
+                    // in the transition from land->water and water->land. (i.e. should it decay
+                    // further for multiple days that it is a land patch? -ECP
                     p.detritus[patchIndex] *= 0.5;
                 }
             }

@@ -45,15 +45,24 @@ int PatchCollection::getSize() const {
 }
 
 
+/*
+ * TODO  Should patches be initialized via config values?  For now
+ * I'm setting the following based on the following 2011 code.  -ECP
+ *
+ * void setup_stocks() {
+ *     set_stocks(1.0f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f, 10.0f, 10.0f, 1.0f, 0.1f);
+ * }
+ *
+ * void set_stocks(float macro, float phyto, float waterdecomp, float seddecomp,
+ *     float herbivore, float sedconsumer, float doc, float poc,
+ *     float detritus, float consum)
+ * {
+ *     //Code that sets each water patch here
+ * }
+ */
 void PatchCollection::initializePatches(Configuration & config) {
     pcolor.fill(0, size);
 
-    //px_vector.fill(0.0, size);
-    //py_vector.fill(0.0, size);
-    //max_vector.fill(0.0, size);
-    //depth.fill(0.0, size);
-    //current_depth.fill(0.0, size);
-    //velocity.fill(0.0, size);
     aqa_point.fill(0, size);
 
     waterdecomp_doc_prey_limitation.fill(0.0, size);
@@ -78,17 +87,20 @@ void PatchCollection::initializePatches(Configuration & config) {
     consum_space_limitation.fill(0.0, size);
 
     assimilation.fill(0.0, size);
-    detritus.fill(0.0, size);
-    DOC.fill(0.0, size);
-    POC.fill(0.0, size);
-    waterdecomp.fill(0.0, size);
-    seddecomp.fill(0.0, size);
-    macro.fill(0.0, size);
-    phyto.fill(0.0, size);
-    herbivore.fill(0.0, size);
-    sedconsumer.fill(0.0, size);
+
+    //TODO Should this block be initialized using the config? -ECP
+    detritus.fill(1.0, size);
+    DOC.fill(10.0, size);
+    POC.fill(10.0, size);
+    waterdecomp.fill(10.0, size);
+    seddecomp.fill(1.0, size);
+    macro.fill(1.0, size);
+    phyto.fill(10.0, size);
+    herbivore.fill(1.0, size);
+    sedconsumer.fill(1.0, size);
     peri.fill(0.0, size);
-    consum.fill(0.0, size);
+    consum.fill(0.1, size);
+
     bottom_light.fill(0.0, size);
     consumer.fill(0.0, size);
     consum_consumption.fill(0.0, size);
