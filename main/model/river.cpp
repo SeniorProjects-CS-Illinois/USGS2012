@@ -456,6 +456,11 @@ void River::processPatches() {
         int patchX = p.pxcor[i];
         int patchY = p.pycor[i];
 
+        //Only process patches if they exist in the currHydroFile
+        if(!currHydroFile->patchExists(patchX,patchY)) {
+            continue;
+        }
+
         double depth = currHydroFile->getDepth(patchX, patchY);
 
         //Don't process patches that are currently land

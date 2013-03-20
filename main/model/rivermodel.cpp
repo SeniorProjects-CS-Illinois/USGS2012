@@ -103,14 +103,14 @@ void RiverModel::newRun() {
         totalDaysToRun += *it;
     }
 
-
-
     //TODO refactor and integrate all the setup stuff...
-    setup(config);
+    //setup(config);
 
     //TODO Create a function for hydroFileDict initialization
     QStringList hydroFileNames;
-    hydroFileNames.fromVector(config.hydroMaps);
+    for(int i = 0; i < config.hydroMaps.size(); i++){
+        hydroFileNames.append(config.hydroMaps[i]);
+    }
     HydroFileDict hydroFiles(hydroFileNames);
 
     //TODO Create a function for waterTemp initialization

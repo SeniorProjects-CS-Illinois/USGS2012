@@ -1,5 +1,9 @@
 #include "hydrofiledict.h"
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 HydroFileDict::HydroFileDict(QStringList newFilenames)
 {
     filenames = newFilenames;
@@ -7,6 +11,8 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
+        cout << "LOADING HYDROFILES:" << endl;
+        cout << filename.toStdString() << endl;
         if( !dict.contains(filename) ) {
             HydroFile * newHydroFile = new HydroFile(filename);
             dict.insert(filename, newHydroFile);
