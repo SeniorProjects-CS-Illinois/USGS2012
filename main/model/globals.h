@@ -141,8 +141,6 @@ typedef struct {
 
     QString total_carbon_csv;
 
-    unsigned char HOURS_PER_DAY;
-
 } Globals;
 
 extern Globals g;

@@ -100,7 +100,5 @@ void initialize_globals(void){
 
     g.total_carbon_csv = "default";
 
-    g.HOURS_PER_DAY = 24;
-
     g.num_water_squares = 0;
 }

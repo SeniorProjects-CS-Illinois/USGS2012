@@ -1,5 +1,6 @@
 #ifndef RIVER_H
 #define RIVER_H
+#include "constants.h"
 #include "globals.h"
 #include "configuration.h"
 #include "hydrofiledict.h"
