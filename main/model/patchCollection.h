@@ -14,7 +14,7 @@
  */
 class PatchCollection {
     public:
-        PatchCollection(Configuration & config, HydroFileDict & hydroDict);
+        PatchCollection(const Configuration & newConfig, HydroFileDict & hydroDict);
 
         /**
          * @brief Provides an index to a patch given an x and y coordinate
@@ -212,6 +212,7 @@ class PatchCollection {
         int width;
         int height;
         QHash<int,int> indexMap;
+        Configuration config;
 
 };
 

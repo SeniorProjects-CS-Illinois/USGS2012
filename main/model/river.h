@@ -1,5 +1,8 @@
 #ifndef RIVER_H
 #define RIVER_H
+#include <QString>
+#include <QDateTime>
+#include <QFile>
 #include <QVector2D>
 #include "constants.h"
 #include "globals.h"
@@ -42,6 +45,14 @@ class River {
          * @brief Makes the river flow for a simulated hour
          */
         void flow();
+
+
+        /**
+         * @brief Outputs the patch data to a csv file
+         * @param outputPath Location to save the file
+         * @param filenamePrefix Prefix for filename
+         */
+        int saveCSV() const;
 
     private:
         /**

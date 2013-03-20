@@ -38,6 +38,9 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
     currHydroFile = NULL;
     currWaterTemp = -1.0;
     currPAR = -1;
+
+    width = hydroFileDict.getMaxWidth();
+    height = hydroFileDict.getMaxHeight();
 }
 
 
@@ -272,6 +275,78 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
         }
     }
 }
+
+int River::saveCSV() const {
+    QString file_name = "./results/data/map_data_";
+    QDateTime date_time = QDateTime::currentDateTime();
+    QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
+    file_name.append(date_time_str);
+    file_name.append(".csv");
+
+    const char* cfile_name = file_name.toStdString().c_str();
+    FILE* f = fopen(cfile_name, "w");
+    if (f == NULL) {
+        printf("file name: %s could not be opened\n", cfile_name);
+        return 0;
+    }
+
+    // GUI variables used
+    fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
+
+    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
+            config.timestep, g.gui_days_to_run, config.tss,
+            config.kPhyto, config.kMacro, (config.macroSenescence/24),
+            (config.macroRespiration/24), config.macroTemp, config.macroMassMax,
+            config.macroVelocityMax, config.macroGross, config.whichStock.toStdString().c_str());
+
+    fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");
+
+    int x,y;
+    int pxcor, pycor, pcolor;
+    double px_vector, py_vector;
+    double depth;
+    double velocity;
+    double assimilation;
+    double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consum;
+
+    for(x = 0; x < width; x++) {
+        for(y=0;y < height; y++) {
+            depth = currHydroFile->getDepth(x,y);
+            if( depth <= 0.0) {
+                continue;
+            }
+            QVector2D flowVector = currHydroFile->getVector(x,y);
+            velocity = flowVector.length();
+
+            int i = p.getIndex(x,y);
+            pxcor = p.pxcor[i];
+            pycor = p.pycor[i];
+            pcolor = p.pcolor[i];
+            px_vector = p.px_vector[i];
+            py_vector = p.py_vector[i];
+            assimilation = p.assimilation[i];
+            detritus = p.detritus[i];
+            DOC = p.DOC[i];
+            POC = p.POC[i];
+            waterdecomp = p.waterdecomp[i];
+            seddecomp = p.seddecomp[i];
+            macro = p.macro[i];
+            phyto = p.phyto[i];
+            herbivore = p.herbivore[i];
+            sedconsumer = p.sedconsumer[i];
+            peri = p.peri[i];
+            consum = p.consum[i];
+
+
+            fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
+                      velocity,assimilation,detritus,DOC,POC,
+                      waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum);
+        }
+    }
+    fclose(f);
+    return 1;
+}
+
 
 
 void River::processPatches() {

@@ -1,7 +1,8 @@
 #include "patchCollection.h"
 
 
-PatchCollection::PatchCollection(Configuration & config, HydroFileDict & hydroDict) {
+PatchCollection::PatchCollection(const Configuration & newConfig, HydroFileDict & hydroDict) {
+    config = newConfig;
     size = 0;
 
     const Grid<bool> patchUsage = hydroDict.getPatchUsageGrid();
@@ -42,6 +43,7 @@ bool PatchCollection::patchExists(int x, int y) const {
 int PatchCollection::getSize() const {
     return size;
 }
+
 
 void PatchCollection::initializePatches(Configuration & config) {
     pcolor.fill(0, size);
