@@ -1,6 +1,9 @@
 TEMPLATE = app
 win32:CONFIG += static
 
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -fopenmp
+
 SOURCES += model/rivermodel.cpp \
     model/status.cpp \
     model/globals.cpp \
@@ -9,7 +12,9 @@ SOURCES += model/rivermodel.cpp \
     model/dump.cpp \
     model/go.cpp \
     model/patch.cpp \
+    model/patchCollection.cpp \
     model/pred.cpp \
+    model/river.cpp \
     model/setup.cpp \
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \
@@ -20,12 +25,15 @@ HEADERS  += model/rivermodel.h \
     model/status.h \
     model/cleanup.h \
     model/color.h \
+    model/constants.h \
     model/dump.h \
     model/flowdata.h \
     model/globals.h \
     model/go.h \
     model/patch.h \
+    model/patchCollection.h \
     model/pred.h \
+    model/river.h \
     model/setup.h \
     model/grid.h \
     model/hydrofile.h \
@@ -36,18 +44,3 @@ HEADERS  += model/rivermodel.h \
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides
 include(./SettingsOverrides.pri)
-
-HEADERS += \
-    model/river.h
-
-SOURCES += \
-    model/river.cpp
-
-HEADERS += \
-    model/constants.h
-
-HEADERS += \
-    model/patchCollection.h
-
-SOURCES += \
-    model/patchCollection.cpp

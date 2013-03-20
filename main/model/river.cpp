@@ -80,7 +80,7 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
             if(currHydroFile == NULL) {
                 //We are configuring the first hydromap.  Zeroize all land.
                 if(!newHydroFile->patchExists(x,y)){
-                    p.detritus[patchIndex] = 0.0;
+                    p.detritus[patchIndex] *= 0.0;
                     p.DOC[patchIndex] = 0.0;
                     p.POC[patchIndex] = 0.0;
                     p.phyto[patchIndex] = 0.0;
@@ -451,6 +451,7 @@ void River::processPatches() {
     //TODO refactor this massive function into smaller functions
     int patchCount = p.getSize();
 
+    #pragma omp parallel for
     for(int i = 0; i < patchCount; i++) {
 
         int patchX = p.pxcor[i];
