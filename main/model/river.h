@@ -1,11 +1,13 @@
 #ifndef RIVER_H
 #define RIVER_H
+#include <QVector2D>
 #include "constants.h"
 #include "globals.h"
 #include "configuration.h"
 #include "hydrofiledict.h"
 #include "hydrofile.h"
 #include "patchCollection.h"
+#include "flowdata.h"
 
 
 class River {
@@ -36,7 +38,25 @@ class River {
          */
         void processPatches();
 
+        /**
+         * @brief Makes the river flow for a simulated hour
+         */
+        void flow();
+
     private:
+        /**
+         * @brief Helper function for flow that handles flowing fow a single timestep
+         */
+        void flowSingleTimestep(Grid<FlowData> & source, Grid<FlowData> & dest, Configuration & config);
+
+        //Temp functions, will be replaced in move to carbonFlowMap
+        void copyFlowData(Grid<FlowData> & flowData);
+        void storeFlowData(Grid<FlowData> & flowData);
+        bool is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst);
+        double getMaxTimestep();
+
+
+
         PatchCollection p;
         Configuration config;
 
@@ -44,9 +64,8 @@ class River {
         double currWaterTemp;
         int currPAR;
 
-
-
-
+        int width;
+        int height;
 };
 
 #endif // RIVER_H

@@ -87,6 +87,192 @@ void River::setCurrentPAR(int newPAR) {
     currPAR = newPAR;// - (int)(newPAR * g.par_dif);
 }
 
+void River::flow() {
+    //TODO Replace with CarbonFlowMap stuff
+
+    Grid<FlowData> * source = new Grid<FlowData>(width, height);
+    Grid<FlowData> * dest = new Grid<FlowData>(width, height);
+    copyFlowData(*dest);
+    *source = *dest;
+
+    int max_time = 60/config.timestep;
+    //TODO other usages of nan_trigger should be booleans as it is here.
+    g.nan_trigger = false;
+    for (int t = 0; t < max_time; t++)
+    {
+        std::swap(source, dest);
+        flowSingleTimestep(*source, *dest, config);
+        if (g.nan_trigger) {
+            break;
+        }
+    }
+
+    storeFlowData(*dest);
+    delete source;
+    delete dest;
+}
+
+void River::copyFlowData(Grid<FlowData> & flowData) {
+    for(int x = 0; x < g.MAP_WIDTH; x++) {
+        for(int y = 0; y < g.MAP_HEIGHT; y++) {
+            int index = p.getIndex(x,y);
+            flowData(x,y).DOC         = p.DOC[index];
+            flowData(x,y).POC         = p.POC[index];
+            flowData(x,y).phyto       = p.phyto[index];
+            flowData(x,y).waterdecomp = p.waterdecomp[index];
+        }
+    }
+}
+
+void River::storeFlowData(Grid<FlowData> & flowData) {
+    for(int x = 0; x < width; x++) {
+        for(int y = 0; y < height; y++) {
+            int index = p.getIndex(x,y);
+            p.DOC[index] = flowData(x,y).DOC;
+            p.POC[index] = flowData(x,y).POC;
+            p.phyto[index] = flowData(x,y).phyto;
+            p.waterdecomp[index] = flowData(x,y).waterdecomp;
+        }
+    }
+}
+
+bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> &dst) {
+    if ( /*isnan( dst(x,y).DOC + dst(x,y).DOC*move_factor )*/
+        dst(x,y).DOC + dst(x,y).DOC*move_factor
+            != dst(x,y).DOC + dst(x,y).DOC*move_factor)
+    {
+        return true;
+    }
+    if ( /*isnan( dst(x,y).POC + dst(x,y).POC*move_factor )*/
+            dst(x,y).POC + dst(x,y).POC*move_factor
+                != dst(x,y).POC + dst(x,y).POC*move_factor)
+    {
+        return true;
+    }
+    if ( /*isnan( dst(x,y).phyto + dst(x,y).phyto*move_factor )*/
+            dst(x,y).phyto + dst(x,y).phyto*move_factor
+                != dst(x,y).phyto + dst(x,y).phyto*move_factor)
+    {
+        return true;
+    }
+    if ( /*isnan( dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor )*/
+            dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor
+                != dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor)
+    {
+        return true;
+    }
+    return false;
+}
+
+double River::getMaxTimestep() {
+    if (g.COMPARE_MAX == 0.0)
+    {
+        return 1.0;
+    }
+    return (((double)g.patch_length)/((double)g.COMPARE_MAX));
+}
+
+void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
+    for(int x = 0; x < g.MAP_WIDTH; x++) {
+        for(int y = 0; y < g.MAP_HEIGHT; y++) {
+            if( !currHydroFile->patchExists(x,y) ) {
+                continue;
+            }
+
+            double depth = currHydroFile->getDepth(x,y);
+            QVector2D flowVector = currHydroFile->getVector(x,y);
+            double velocity = flowVector.length();
+
+            if( depth <= 0.0 || velocity <= 0.0 ) {
+                continue;
+            }
+
+            double px_vector = flowVector.x();
+            double py_vector = flowVector.y();
+
+            double corner_patch = fabs( py_vector * px_vector )/g.max_area;
+            double tb_patch = fabs( py_vector*( g.patch_length - fabs(px_vector) ) )/g.max_area;
+            double rl_patch = fabs( px_vector*( g.patch_length - fabs(py_vector) ) )/g.max_area;
+
+            // if a neighbor patch is dry, the carbon does not move in that direction
+            double max_timestep = getMaxTimestep();
+            bool tb_moved = false;
+            bool corner_moved = false;
+            bool rl_moved = false;
+
+            int px = (int)(max_timestep * px_vector);
+            int py = (int)(max_timestep * py_vector);
+
+            // is this the opposite of what is waned?
+            if (config.adjacent) {
+                if (px >= 1) {
+                    px = 1;
+                } else if (px <= -1) {
+                    px = -1;
+                } else {
+                    px = 0;
+                }
+
+                if (py >= 1) {
+                    py = 1;
+                } else if (py <= -1) {
+                    py = -1;
+                } else {
+                    py = 0;
+                }
+            }
+
+            // flow carbon to the top/bottom patches
+            if ( p.patchExists(x, y+py) && (py!=0) ) {
+                if (is_calc_nan(x,y+py,tb_patch, dest)) {
+                    g.nan_trigger = true;
+                } else {
+                    dest(x, y+py).DOC += source(x,y).DOC*tb_patch;
+                    dest(x, y+py).POC += source(x,y).POC*tb_patch;
+                    dest(x, y+py).phyto += source(x,y).phyto*tb_patch;
+                    dest(x, y+py).waterdecomp += source(x,y).waterdecomp*tb_patch;
+                    tb_moved = true;
+                }
+            }
+
+            // flow carbon to the corner patch
+            if ( p.patchExists(x+px, y+py) && (px!=0) && (py!=0)) {
+                if (is_calc_nan(x+px,y+py,corner_patch, dest)) {
+                    g.nan_trigger = true;
+                } else {
+                    dest(x+px, y+py).DOC += source(x,y).DOC*corner_patch;
+                    dest(x+px, y+py).POC += source(x,y).POC*corner_patch;
+                    dest(x+px, y+py).phyto += source(x,y).phyto*corner_patch;
+                    dest(x+px, y+py).waterdecomp += source(x,y).waterdecomp*corner_patch;
+                    corner_moved = true;
+                }
+            }
+
+            // flow carbon to the left/right patches
+            //TODO code pushes carbon onto land patches...
+            if ( p.patchExists(x+px, y) && (px!=0) ) {
+                if ( is_calc_nan(x+px,y,rl_patch, dest) ) {
+                    g.nan_trigger = true;
+                } else {
+                    dest(x+px, y).DOC += source(x,y).DOC*rl_patch;
+                    dest(x+px, y).POC += source(x,y).POC*rl_patch;
+                    dest(x+px, y).phyto += source(x,y).phyto*rl_patch;
+                    dest(x+px, y).waterdecomp += source(x,y).waterdecomp*rl_patch;
+                    rl_moved = true;
+                }
+            }
+
+            // how much components did we loose
+            double patch_loss = tb_patch*tb_moved + corner_patch*corner_moved + rl_patch*rl_moved;
+            dest(x,y).DOC = source(x,y).DOC - source(x,y).DOC*patch_loss;
+            dest(x,y).POC = source(x,y).POC - source(x,y).POC*patch_loss;
+            dest(x,y).phyto = source(x,y).phyto - source(x,y).phyto*patch_loss;
+            dest(x,y).waterdecomp = source(x,y).waterdecomp - source(x,y).waterdecomp*patch_loss;
+
+        }
+    }
+}
+
 
 void River::processPatches() {
     //TODO refactor this massive function into smaller functions
@@ -96,6 +282,12 @@ void River::processPatches() {
         //Don't process patches that are currently land
         if(p.depth[i] <= 0.0)
             continue;
+
+        int patchX = p.pxcor[i];
+        int patchY = p.pycor[i];
+
+        QVector2D flowVector = currHydroFile->getVector(patchX, patchY);
+        double velocity = flowVector.length();
 
         ///////////////////////////////////////////
         //
@@ -113,24 +305,39 @@ void River::processPatches() {
         //the amount of light that reaches the bottom of a water column
         p.bottom_light[i] = g.photo_radiation
                 * exp( (-1 * p.depth[i])*p.turbidity[i] );
-        config.periAj = p.macro[i] / 10.0 ;
-        config.periGj = p.macro[i] / 2.0;
-        config.seddecompAj = p.detritus[i] / 20.0;
-        config.seddecompGj = p.detritus[i] / 5.0;
+
+        //TODO why is this code altering the config? Config should never be edited by model. -ECP
+        //Also these two do not ever get used.  Commenting them out for now.
+        //config.periAj = p.macro[i] / 10.0 ;
+        //config.periGj = p.macro[i] / 2.0;
+
+        //TODO These config values never gets used before being overwritten here
+        //Is this correct behavior?  Converting to local variables for now.
+        //config.seddecompAj = p.detritus[i] / 20.0;
+        //config.seddecompGj = p.detritus[i] / 5.0;
+        double seddecompAj = p.detritus[i] / 20.0;
+        double seddecompGj = p.detritus[i] / 5.0;
 
         ///////////////////////////////////////////
         //
         // From 2011 team's go_macro function
         //
         ///////////////////////////////////////////
-        g.Q10 = pow(g.theta, (g.temperature - config.macroTemp));
+
+        //Converting to local variable
+        //Q10 = pow(g.theta, (g.temperature - config.macroTemp));
+        double Q10;
+
+        //TODO Ask Kevin what theta is and why it is 1.072.  I want to add
+        //it to the constants file but "THETA" is really ambiguous. -ECP
+        Q10 = pow(g.theta, (g.temperature - config.macroTemp));
 
         //TODO pull velocity from hydrofile rather than patches
-        if(p.velocity[i] < config.macroVelocityMax) {
+        if(velocity < config.macroVelocityMax) {
             p.K[i] = g.max_area
                     * (config.macroMassMax
                        - (config.macroMassMax  / config.macroVelocityMax)
-                       * p.velocity[i]);
+                       * velocity);
         } else {
             p.K[i] = 0.01;
         }
@@ -138,11 +345,11 @@ void River::processPatches() {
         double macro_light = g.photo_radiation * exp( (-1*p.depth[i]) * p.turbidity[i] );
 
         p.gross_photo_macro[i] = config.macroGross * p.macro[i]
-                * ( macro_light / ( macro_light + 10.0)) * g.Q10
+                * ( macro_light / ( macro_light + 10.0)) * Q10
                 * ( p.K[i] - p.macro[i]) / p.K[i];
 
         p.respiration_macro[i] = (config.macroRespiration / HOURS_PER_DAY)
-                * p.macro[i] * g.Q10;
+                * p.macro[i] * Q10;
 
         p.senescence_macro[i] = (config.macroSenescence / HOURS_PER_DAY)
                 * (p.macro[i] / HOURS_PER_DAY);
@@ -169,7 +376,7 @@ void River::processPatches() {
         //base temperature for nominal growth
         //TODO What is base temperature and why is it a magic number?
         double base_temperature = 8.0;
-        g.Q10 = pow(g.theta, (g.temperature - base_temperature));
+        Q10 = pow(g.theta, (g.temperature - base_temperature));
         double km = 10; //half saturation constant
 
 
@@ -179,7 +386,7 @@ void River::processPatches() {
         //double light_k = 0.4;
 
 
-        p.respiration_phyto[i] = (config.phytoRespiration / HOURS_PER_DAY) * p.phyto[i] * g.Q10;
+        p.respiration_phyto[i] = (config.phytoRespiration / HOURS_PER_DAY) * p.phyto[i] * Q10;
         double pre_ln = (0.01 + g.photo_radiation
                 * exp(-1 * p.phyto[i] * config.kPhyto * p.depth[i]));
         double be = (km + (g.photo_radiation
@@ -187,7 +394,7 @@ void River::processPatches() {
 
         //photosynthesis from phytoplankton derived from Huisman Weissing 1994
         p.gross_photo_phyto[i] = fabs(pre_ln / be) * (1.0 / p.depth[i])
-                * (p.phyto[i] / p.turbidity[i]) * g.Q10;
+                * (p.phyto[i] / p.turbidity[i]) * Q10;
         p.excretion_phyto[i] = (config.phytoExcretion / HOURS_PER_DAY) * p.phyto[i];
         p.senescence_phyto[i] = (config.phytoSenescence / HOURS_PER_DAY) * p.phyto[i];
         p.growth_phyto[i] = p.gross_photo_phyto[i] - p.excretion_phyto[i] -
@@ -281,10 +488,10 @@ void River::processPatches() {
 
         //TODO Comparing floats like this is wrong and is likely a bug -ECP
         //TODO Also, why is this calculation different from the others? -ECP
-        if( (config.seddecompGj - config.seddecompAj) != 0.0 ) {
+        if( (seddecompGj - seddecompAj) != 0.0 ) {
             p.seddecomp_space_limitation[i] = 1.0
-                    - ((p.seddecomp[i] - config.seddecompAj)
-                       / (config.seddecompGj - config.seddecompAj));
+                    - ((p.seddecomp[i] - seddecompAj)
+                       / (seddecompGj - seddecompAj));
             boundPercentage(p.seddecomp_space_limitation[i]);
         } else {
             p.seddecomp_space_limitation[i] = 0.0;
@@ -409,10 +616,10 @@ void River::processPatches() {
 
         //TODO: get velocity from hydrofile
 
-        if(p.velocity[i] > 0.0)
+        if(velocity > 0.0)
         {
             // exchange between POC and detritus determined by an approximation of Stoke's Law
-            p.detritus_POC_transfer[i] = p.detritus[i] * (.25 * log10(((p.velocity[i] / 40.0 ) + .0001) + 1.0));
+            p.detritus_POC_transfer[i] = p.detritus[i] * (.25 * log10(((velocity / 40.0 ) + .0001) + 1.0));
         }
         // cap at 100%. *need reference
         boundUpper(p.detritus_POC_transfer[i], 1.0);
@@ -433,13 +640,13 @@ void River::processPatches() {
         ///////////////////////////////////////////
 
         //TODO get velocity from hydroFile
-        if(p.velocity[i] > 0.0) {
-            p.POC_detritus_transfer[i] = p.POC[i] * (1.0 - (0.25 * log10((( p.velocity[i] / 40.0) + 0.0001) + 1.0)));
+        if(velocity > 0.0) {
+            p.POC_detritus_transfer[i] = p.POC[i] * (1.0 - (0.25 * log10((( velocity / 40.0) + 0.0001) + 1.0)));
         }
         boundLower(p.POC_detritus_transfer[i], 0.0);
 
         //TODO Comparing a float using equality is super bad and this is probably a bug...
-        if(p.velocity[i] == 0.0) {
+        if(velocity == 0.0) {
             p.POC_detritus_transfer[i] = p.POC[i] * 0.9;
         }
 
@@ -520,7 +727,7 @@ void River::processPatches() {
         //
         ///////////////////////////////////////////
         p.detritus_POC_transfer[i] = p.detritus[i]
-                * (0.25 * log10(p.velocity[i] / 40.0 + 0.01) + 0.5);
+                * (0.25 * log10(velocity / 40.0 + 0.01) + 0.5);
         p.detritus[i] = p.detritus[i] + p.detritus_growth[i] - p.seddecomp_pred_detritus[i]
                 - p.detritus_POC_transfer[i];
         boundLower(p.detritus[i], 0.001);
