@@ -126,25 +126,24 @@ int HydroFile::getMapWidth() const {
 }
 
 void HydroFile::setMapSize(QStringList & hydroFileData) {
-    width = 0;
-    height = 0;
+    int maxX = 0;
+    int maxY = 0;
 
     for(int index = 6; index < hydroFileData.size(); index += 6) {
 
         int patch_x = hydroFileData[index].toInt();
         int patch_y = hydroFileData[index + 1].toInt();
 
-        if(patch_x > width) {
-            width = patch_x;
+        if(patch_x > maxX) {
+            maxX = patch_x;
         }
-        if(patch_y > height) {
-            height = patch_y;
+        if(patch_y > maxY) {
+            maxY = patch_y;
         }
     }
 
-    //TODO: Why is this here? Is there an out of bounds exception they tried to fix here?
-    width++;
-    height++;
+    width = maxX + 1;
+    height = maxY + 1;
 }
 
 int HydroFile::getHashKey(int x, int y) const {

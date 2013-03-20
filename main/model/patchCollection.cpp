@@ -48,12 +48,12 @@ int PatchCollection::getSize() const {
 void PatchCollection::initializePatches(Configuration & config) {
     pcolor.fill(0, size);
 
-    px_vector.fill(0.0, size);
-    py_vector.fill(0.0, size);
-    max_vector.fill(0.0, size);
-    depth.fill(0.0, size);
-    current_depth.fill(0.0, size);
-    velocity.fill(0.0, size);
+    //px_vector.fill(0.0, size);
+    //py_vector.fill(0.0, size);
+    //max_vector.fill(0.0, size);
+    //depth.fill(0.0, size);
+    //current_depth.fill(0.0, size);
+    //velocity.fill(0.0, size);
     aqa_point.fill(0, size);
 
     waterdecomp_doc_prey_limitation.fill(0.0, size);

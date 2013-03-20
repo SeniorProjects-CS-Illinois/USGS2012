@@ -48,6 +48,8 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     // TODO Read over 2011 code to make sure we handle everything
     // in hyrdofile transitions -ECP
 
+
+
     currHydroFile = newHydroFile;
 }
 
@@ -311,10 +313,13 @@ int River::saveCSV() const {
 
     for(x = 0; x < width; x++) {
         for(y=0;y < height; y++) {
-            depth = currHydroFile->getDepth(x,y);
-            if( depth <= 0.0) {
+            //Skip if cell doesn't exist or is land
+            if( !currHydroFile->patchExists(x,y) || currHydroFile->getDepth(x,y) <= 0.0 ) {
                 continue;
             }
+
+            depth = currHydroFile->getDepth(x,y);
+
             QVector2D flowVector = currHydroFile->getVector(x,y);
             velocity = flowVector.length();
 
@@ -322,8 +327,8 @@ int River::saveCSV() const {
             pxcor = p.pxcor[i];
             pycor = p.pycor[i];
             pcolor = p.pcolor[i];
-            px_vector = p.px_vector[i];
-            py_vector = p.py_vector[i];
+            px_vector = flowVector.x();
+            py_vector = flowVector.y();
             assimilation = p.assimilation[i];
             detritus = p.detritus[i];
             DOC = p.DOC[i];
@@ -354,12 +359,15 @@ void River::processPatches() {
     int patchCount = p.getSize();
 
     for(int i = 0; i < patchCount; i++) {
-        //Don't process patches that are currently land
-        if(p.depth[i] <= 0.0)
-            continue;
 
         int patchX = p.pxcor[i];
         int patchY = p.pycor[i];
+
+        double depth = currHydroFile->getDepth(patchX, patchY);
+
+        //Don't process patches that are currently land
+        if(depth <= 0.0)
+            continue;
 
         QVector2D flowVector = currHydroFile->getVector(patchX, patchY);
         double velocity = flowVector.length();
@@ -379,7 +387,7 @@ void River::processPatches() {
 
         //the amount of light that reaches the bottom of a water column
         p.bottom_light[i] = g.photo_radiation
-                * exp( (-1 * p.depth[i])*p.turbidity[i] );
+                * exp( (-1 * depth) * p.turbidity[i] );
 
         //TODO why is this code altering the config? Config should never be edited by model. -ECP
         //Also these two do not ever get used.  Commenting them out for now.
@@ -417,7 +425,7 @@ void River::processPatches() {
             p.K[i] = 0.01;
         }
         //Same at bottom-light
-        double macro_light = g.photo_radiation * exp( (-1*p.depth[i]) * p.turbidity[i] );
+        double macro_light = g.photo_radiation * exp( (-1*depth) * p.turbidity[i] );
 
         p.gross_photo_macro[i] = config.macroGross * p.macro[i]
                 * ( macro_light / ( macro_light + 10.0)) * Q10
@@ -462,13 +470,14 @@ void River::processPatches() {
 
 
         p.respiration_phyto[i] = (config.phytoRespiration / HOURS_PER_DAY) * p.phyto[i] * Q10;
-        double pre_ln = (0.01 + g.photo_radiation
-                * exp(-1 * p.phyto[i] * config.kPhyto * p.depth[i]));
-        double be = (km + (g.photo_radiation
-                * exp(-1 * p.phyto[i] * config.kPhyto * p.depth[i])));
+
+        double pre_ln = 0.01 + g.photo_radiation
+                * exp(-1 * p.phyto[i] * config.kPhyto * depth);
+        double be = km + g.photo_radiation
+                * exp(-1 * p.phyto[i] * config.kPhyto * depth);
 
         //photosynthesis from phytoplankton derived from Huisman Weissing 1994
-        p.gross_photo_phyto[i] = fabs(pre_ln / be) * (1.0 / p.depth[i])
+        p.gross_photo_phyto[i] = fabs(pre_ln / be) * (1.0 / depth)
                 * (p.phyto[i] / p.turbidity[i]) * Q10;
         p.excretion_phyto[i] = (config.phytoExcretion / HOURS_PER_DAY) * p.phyto[i];
         p.senescence_phyto[i] = (config.phytoSenescence / HOURS_PER_DAY) * p.phyto[i];
