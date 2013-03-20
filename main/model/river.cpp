@@ -45,10 +45,80 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 
 
 void River::setCurrentHydroFile(HydroFile *newHydroFile) {
-    // TODO Read over 2011 code to make sure we handle everything
-    // in hyrdofile transitions -ECP
+    // TODO Get rid of max_vector and g.COMPARE_MAX
+    double max_vector = 0.0;
+    double max_vector_component = 0.0;
+    int x, y;
+
+    for (x = 0; x < g.MAP_WIDTH; x++) {
+        for (y = 0; y < g.MAP_HEIGHT; y++) {
+            int patchIndex = p.getIndex(x,y);
+
+            // if the hydro maps contained information about this patch
+            // get maximum component length of it's flow vector.
+            if (newHydroFile->patchExists(x,y)) {
+                QVector2D flowVector = newHydroFile->getVector(x,y);
+
+                if (fabs(flowVector.x()) > fabs(flowVector.y())) {
+                    max_vector_component = fabs(flowVector.x());
+                } else {
+                    max_vector_component = fabs(flowVector.y());
+                }
+            } else {
+                max_vector_component = 0.0;
+            }
+            if (max_vector < max_vector_component) {
+                max_vector = max_vector_component;
+            }
 
 
+
+            //Avoid doing the next section of calculations if there is never
+            //any water in this patch for the duration of the simulation.
+            if(p.patchExists(x,y)) {
+                double currentDepth = 0.0;
+                if (currHydroFile != NULL && currHydroFile->patchExists(x,y)) {
+                    currentDepth = currHydroFile->getDepth(x,y);
+                }
+
+                double newDepth = 0.0;
+                if (newHydroFile->patchExists(x,y)) {
+                    newDepth = newHydroFile->getDepth(x,y);
+                }
+
+                //patch was previously water and is now land
+                //TODO Comparing floats with == is bad and probably a bug -ECP
+                if (currentDepth > 0.0 && newDepth == 0.0) {
+                    p.detritus[patchIndex] += p.DOC[patchIndex] + p.POC[patchIndex]
+                            + p.phyto[patchIndex] + p.macro[patchIndex]
+                            + p.waterdecomp[patchIndex] + p.seddecomp[patchIndex]
+                            + p.herbivore[patchIndex] + p.sedconsumer[patchIndex]
+                            + p.consum[patchIndex];
+
+                    p.DOC[patchIndex] = 0.0;
+                    p.POC[patchIndex] = 0.0;
+                    p.phyto[patchIndex] = 0.0;
+                    p.macro[patchIndex] = 0.0;
+                    p.waterdecomp[patchIndex] = 0.0;
+                    p.seddecomp[patchIndex] = 0.0;
+                    p.herbivore[patchIndex] = 0.0;
+                    p.sedconsumer[patchIndex] = 0.0;
+                    p.consum[patchIndex] = 0.0;
+                }
+
+                //patch was previously land and is now water
+                //TODO Comparing floats with == is bad and probably a bug -ECP
+                if (currentDepth == 0.0 && newDepth > 0.0) {
+                    //TODO Check with Kevin to make sure these detritus calculations make sense
+                    // in the transition from land->water and water->land
+                    p.detritus[patchIndex] *= 0.5;
+                }
+            }
+        }// endfor y
+    }// endfor x
+
+    // update the maximum vector for the timestep
+    g.COMPARE_MAX = max_vector;
 
     currHydroFile = newHydroFile;
 }
