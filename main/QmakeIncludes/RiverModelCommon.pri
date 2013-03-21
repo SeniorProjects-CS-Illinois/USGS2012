@@ -7,42 +7,46 @@ win32:CONFIG += static
 QMAKE_CXXFLAGS += -pg
 QMAKE_LFLAGS += -pg
 
-SOURCES += model/rivermodel.cpp \
-    model/status.cpp \
-    model/globals.cpp \
-    model/cleanup.cpp \
+SOURCES += model/cleanup.cpp \
     model/color.cpp \
+    model/configuration.cpp \
     model/dump.cpp \
+    model/globals.cpp \
     model/go.cpp \
-    model/patch.cpp \
-    model/patchCollection.cpp \
-    model/pred.cpp \
-    model/river.cpp \
-    model/setup.cpp \
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \
-    model/configuration.cpp \
+    model/patch.cpp \
+    model/patchcollection.cpp \
+    model/patchcomputation.cpp \
+    model/pred.cpp \
     model/reducedgrid.cpp \
+    model/river.cpp \
+    model/rivermodel.cpp \
+    model/setup.cpp \
+    model/status.cpp \
+    model/utility.cpp \
 
-HEADERS  += model/rivermodel.h \
-    model/status.h \
-    model/cleanup.h \
+HEADERS  += model/cleanup.h \
     model/color.h \
+    model/configuration.h \
     model/constants.h \
     model/dump.h \
     model/flowdata.h \
     model/globals.h \
     model/go.h \
-    model/patch.h \
-    model/patchCollection.h \
-    model/pred.h \
-    model/river.h \
-    model/setup.h \
     model/grid.h \
     model/hydrofile.h \
     model/hydrofiledict.h \
-    model/configuration.h \
+    model/patch.h \
+    model/patchcollection.h \
+    model/patchcomputation.h \
+    model/pred.h \
     model/reducedgrid.h \
+    model/river.h \
+    model/rivermodel.h \
+    model/setup.h \
+    model/status.h \
+    model/utility.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides

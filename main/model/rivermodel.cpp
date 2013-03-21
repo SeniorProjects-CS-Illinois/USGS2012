@@ -190,6 +190,7 @@ void RiverModel::initializeModelStatus(int daysToRun)
 }
 
 void RiverModel::initializeHydroMaps(const Configuration &config) {
+    cout << "LOADING HYDROFILES" << endl;
     QStringList hydroFileNames;
     for(int i = 0; i < config.hydroMaps.size(); i++) {
         hydroFileNames.append(config.hydroMaps[i]);
@@ -198,6 +199,7 @@ void RiverModel::initializeHydroMaps(const Configuration &config) {
 }
 
 void RiverModel::initializeWaterTemps(const Configuration &config) {
+    cout << "LOADING WATER TEMPS" << endl;
     QString waterTempFilename = config.tempFile;
     QFile temperatureFile( waterTempFilename );
     if( !temperatureFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
@@ -213,6 +215,7 @@ void RiverModel::initializeWaterTemps(const Configuration &config) {
 }
 
 void RiverModel::initializePARValues(const Configuration &config) {
+    cout << "LOADING PAR VALUES" << endl;
     QString parFileFilename = config.parFile;
 
     QFile parFile( parFileFilename );
@@ -230,8 +233,8 @@ void RiverModel::initializePARValues(const Configuration &config) {
 
 int RiverModel::getDaysToRun(const Configuration &config) {
     int daysToRun = 0;
-    QVector<uint16_t>::Iterator it;
-    for (it = modelConfig.daysToRun.begin(); it != modelConfig.daysToRun.end(); it++)
+    QVector<uint16_t>::ConstIterator it;
+    for (it = config.daysToRun.begin(); it != config.daysToRun.end(); it++)
     {
         daysToRun += *it;
     }

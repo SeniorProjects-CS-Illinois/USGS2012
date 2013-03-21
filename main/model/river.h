@@ -10,7 +10,8 @@
 #include "configuration.h"
 #include "hydrofiledict.h"
 #include "hydrofile.h"
-#include "patchCollection.h"
+#include "patchcollection.h"
+#include "patchcomputation.h"
 #include "flowdata.h"
 
 

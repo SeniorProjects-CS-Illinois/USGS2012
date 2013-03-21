@@ -1,4 +1,4 @@
-#include "patchCollection.h"
+#include "patchcollection.h"
 
 
 PatchCollection::PatchCollection(const Configuration & newConfig, HydroFileDict & hydroDict) {
