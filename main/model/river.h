@@ -49,7 +49,7 @@ class River {
         /**
          * @brief Makes the river flow for a simulated hour
          */
-        void flow();
+        void flow(Grid<FlowData> * source, Grid<FlowData> * dest);
 
 
         /**

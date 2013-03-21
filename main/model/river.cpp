@@ -48,6 +48,8 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     // TODO Get rid of max_vector_component and g.COMPARE_MAX
     double max_vector_component = 0.0;
 
+                cout << "Hi there" << endl;
+
     for (int i = 0; i < p.getSize(); i++ ) {
         int x = p.pxcor[i];
         int y = p.pycor[i];
@@ -55,8 +57,6 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
         if(newHydroFile->patchExists(x,y)){
             double depth = newHydroFile->getDepth(x,y);
             QVector2D flowVector = newHydroFile->getVector(x,y);
-
-
 
             p.hasWater[i] = true;
             p.depth[i] = depth;
@@ -109,95 +109,6 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
         }
     }
 
-    /*
-    int x, y;
-
-    //TODO Iterate over patches rather than (x,y) coordinates
-    for (x = 0; x < width; x++) {
-        for (y = 0; y < height; y++) {
-            //Nothing to do at this (x,y) if no patch exists.
-            if (!p.patchExists(x,y)) {
-                continue;
-            }
-            int patchIndex = p.getIndex(x,y);
-
-            // if the hydro maps contained information about this patch
-            // get maximum component length of it's flow vector.
-            if (newHydroFile->patchExists(x,y)) {
-                QVector2D flowVector = newHydroFile->getVector(x,y);
-
-                if (fabs(flowVector.x()) > fabs(flowVector.y())) {
-                    max_vector_component = fabs(flowVector.x());
-                } else {
-                    max_vector_component = fabs(flowVector.y());
-                }
-            } else {
-                max_vector_component = 0.0;
-            }
-            if (max_vector < max_vector_component) {
-                max_vector = max_vector_component;
-            }
-
-
-            if(currHydroFile == NULL) {
-                //We are configuring the first hydromap.  Zeroize all land.
-                if(!newHydroFile->patchExists(x,y)){
-                    p.detritus[patchIndex] *= 0.0;
-                    p.DOC[patchIndex] = 0.0;
-                    p.POC[patchIndex] = 0.0;
-                    p.phyto[patchIndex] = 0.0;
-                    p.macro[patchIndex] = 0.0;
-                    p.waterdecomp[patchIndex] = 0.0;
-                    p.seddecomp[patchIndex] = 0.0;
-                    p.herbivore[patchIndex] = 0.0;
-                    p.sedconsumer[patchIndex] = 0.0;
-                    p.consum[patchIndex] = 0.0;
-                }
-            } else {
-                double currentDepth = 0.0;
-                if (currHydroFile->patchExists(x,y)) {
-                    currentDepth = currHydroFile->getDepth(x,y);
-                }
-
-                double newDepth = 0.0;
-                if (newHydroFile->patchExists(x,y)) {
-                    newDepth = newHydroFile->getDepth(x,y);
-                }
-
-                //patch was previously water and is now land
-                //TODO Comparing floats with == is bad and probably a bug -ECP
-                if (currentDepth > 0.0 && newDepth == 0.0) {
-                    p.detritus[patchIndex] += p.DOC[patchIndex] + p.POC[patchIndex]
-                            + p.phyto[patchIndex] + p.macro[patchIndex]
-                            + p.waterdecomp[patchIndex] + p.seddecomp[patchIndex]
-                            + p.herbivore[patchIndex] + p.sedconsumer[patchIndex]
-                            + p.consum[patchIndex];
-
-                    p.DOC[patchIndex] = 0.0;
-                    p.POC[patchIndex] = 0.0;
-                    p.phyto[patchIndex] = 0.0;
-                    p.macro[patchIndex] = 0.0;
-                    p.waterdecomp[patchIndex] = 0.0;
-                    p.seddecomp[patchIndex] = 0.0;
-                    p.herbivore[patchIndex] = 0.0;
-                    p.sedconsumer[patchIndex] = 0.0;
-                    p.consum[patchIndex] = 0.0;
-                }
-
-                //patch was previously land and is now water
-                //TODO Comparing floats with == is bad and probably a bug -ECP
-                if (currentDepth == 0.0 && newDepth > 0.0) {
-                    //TODO Check with Kevin to make sure these detritus calculations make sense
-                    // in the transition from land->water and water->land. (i.e. should it decay
-                    // further for multiple days that it is a land patch? -ECP
-                    p.detritus[patchIndex] *= 0.5;
-                }
-            }
-        }// endfor y
-    }// endfor x
-
-    */
-
     // update the maximum vector for the timestep
     g.COMPARE_MAX = max_vector_component;
 
@@ -243,13 +154,14 @@ void River::setCurrentPAR(int newPAR) {
     currPAR = newPAR;// - (int)(newPAR * g.par_dif);
 }
 
-void River::flow() {
+void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
     //TODO Replace with CarbonFlowMap stuff
+    //Grid<FlowData> * source = new Grid<FlowData>(width, height);
+    //Grid<FlowData> * dest = new Grid<FlowData>(width, height);
 
-    Grid<FlowData> * source = new Grid<FlowData>(width, height);
-    Grid<FlowData> * dest = new Grid<FlowData>(width, height);
     copyFlowData(*dest);
-    *source = *dest;
+    copyFlowData(*source);
+    //*source = *dest;
 
     int max_time = 60/config.timestep;
     //TODO other usages of nan_trigger should be booleans as it is here.
@@ -264,8 +176,8 @@ void River::flow() {
     }
 
     storeFlowData(*dest);
-    delete source;
-    delete dest;
+    //delete source;
+    //delete dest;
 }
 
 void River::copyFlowData(Grid<FlowData> & flowData) {
@@ -330,7 +242,7 @@ void River::storeFlowData(Grid<FlowData> & flowData) {
     */
 }
 
-bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> &dst) {
+bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst) {
     if ( /*isnan( dst(x,y).DOC + dst(x,y).DOC*move_factor )*/
         dst(x,y).DOC + dst(x,y).DOC*move_factor
             != dst(x,y).DOC + dst(x,y).DOC*move_factor)
@@ -547,489 +459,562 @@ void River::processPatches() {
     //TODO refactor this massive function into smaller functions
     int patchCount = p.getSize();
 
-    #pragma omp parallel for
-    for(int i = 0; i < patchCount; i++) {
+    #pragma omp parallel
+    {
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
-        //Only process patches if they currently contain water
-        if(!p.hasWater[i]) {
-            continue;
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's update_patches function
+            //
+            ///////////////////////////////////////////
+            p.turbidity[i] = ( .29587 + config.tss)
+                    + (config.kPhyto * (p.phyto[i]/ 900.0) )
+                    + (config.kMacro * (p.macro[i] / 900.0) );
+
+            if(p.turbidity[i] < 0.0){
+                p.turbidity[i] = 0.01;
+            }
+
+            //the amount of light that reaches the bottom of a water column
+            p.bottom_light[i] = currPAR
+                    * exp( (-1 * p.depth[i]) * p.turbidity[i] );
+
+            //TODO why is this code altering the config? Config should never be edited by model. -ECP
+            //Also these two do not ever get used.  Commenting them out for now.
+            //config.periAj = p.macro[i] / 10.0 ;
+            //config.periGj = p.macro[i] / 2.0;
+
+            // TODO These config values never gets used before being overwritten here
+            // Is this correct behavior?  Converting to local variables for now. Also moving
+            // them to where they are used as p.detritus is not writen to before then.
+            //config.seddecompAj = p.detritus[i] / 20.0;
+            //config.seddecompGj = p.detritus[i] / 5.0;
+
         }
 
-        double depth = p.depth[i];
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_macro function
+            //
+            ///////////////////////////////////////////
 
-        double velocity = p.flowMagnitude[i];
+            //Converting to local variable
+            //Q10 = pow(g.theta, (g.temperature - config.macroTemp));
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's update_patches function
-        //
-        ///////////////////////////////////////////
-        p.turbidity[i] = ( .29587 + config.tss)
-                + (config.kPhyto * (p.phyto[i]/ 900.0) )
-                + (config.kMacro * (p.macro[i] / 900.0) );
+            //TODO Ask Kevin what theta is and why it is 1.072.  I want to add
+            //it to the constants file but "THETA" is really ambiguous. -ECP
+            double Q10 = pow(g.theta, (currWaterTemp - config.macroTemp));
 
-        if(p.turbidity[i] < 0.0){
-            p.turbidity[i] = 0.01;
+            //TODO pull velocity from hydrofile rather than patches
+            if(p.flowMagnitude[i] < config.macroVelocityMax) {
+                p.K[i] = g.max_area
+                        * (config.macroMassMax
+                           - (config.macroMassMax  / config.macroVelocityMax)
+                           * p.flowMagnitude[i]);
+            } else {
+                p.K[i] = 0.01;
+            }
+            //Same at bottom-light
+            double macro_light = currPAR * exp( (-1*p.depth[i]) * p.turbidity[i] );
+
+            p.gross_photo_macro[i] = config.macroGross * p.macro[i]
+                    * ( macro_light / ( macro_light + 10.0)) * Q10
+                    * ( p.K[i] - p.macro[i]) / p.K[i];
+
+            p.respiration_macro[i] = (config.macroRespiration / HOURS_PER_DAY)
+                    * p.macro[i] * Q10;
+
+            p.senescence_macro[i] = (config.macroSenescence / HOURS_PER_DAY)
+                    * (p.macro[i] / HOURS_PER_DAY);
+
+            p.growth_macro[i] = p.gross_photo_macro[i] - p.respiration_macro[i]
+                    - p.senescence_macro[i] - p.scouring_macro[i];
+
+            p.macro[i] += p.growth_macro[i];
+
+            boundLower(p.macro[i], 0.001);
+        }
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_phyto function
+            //
+            ///////////////////////////////////////////
+
+            //TODO write a bounding function.
+
+            //minimum and maximum caps on biomass
+            boundValue(p.phyto[i], 0.001, 900000.0);
+
+
+            //base temperature for nominal growth
+            //TODO What is base temperature and why is it a magic number?
+            double base_temperature = 8.0;
+            double Q10 = pow(g.theta, (currWaterTemp - base_temperature));
+            double km = 10; //half saturation constant
+
+
+            // TODO  Figure out if the following commented light_k lines were lost in translation from netgui
+            // It is set but never used. -ECP
+            //this is the attenuation coefficient of phytoplank m^2/g of phyto plankton
+            //double light_k = 0.4;
+
+
+            p.respiration_phyto[i] = (config.phytoRespiration / HOURS_PER_DAY) * p.phyto[i] * Q10;
+
+            double pre_ln = 0.01 + currPAR
+                    * exp(-1 * p.phyto[i] * config.kPhyto * p.depth[i]);
+            double be = km + currPAR
+                    * exp(-1 * p.phyto[i] * config.kPhyto * p.depth[i]);
+
+            //photosynthesis from phytoplankton derived from Huisman Weissing 1994
+            p.gross_photo_phyto[i] = fabs(pre_ln / be) * (1.0 / p.depth[i])
+                    * (p.phyto[i] / p.turbidity[i]) * Q10;
+            p.excretion_phyto[i] = (config.phytoExcretion / HOURS_PER_DAY) * p.phyto[i];
+            p.senescence_phyto[i] = (config.phytoSenescence / HOURS_PER_DAY) * p.phyto[i];
+            p.growth_phyto[i] = p.gross_photo_phyto[i] - p.excretion_phyto[i] -
+                    p.respiration_phyto[i] - p.senescence_phyto[i];
+        }
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_herbivore function
+            //
+            ///////////////////////////////////////////
+
+            p.herbivore_phyto_prey_limitation[i] = p.phyto[i]
+                    / (config.herbivoreAiPhyto - config.herbivoreGiPhyto);
+            boundPercentage(p.herbivore_phyto_prey_limitation[i]);
+
+            p.herbivore_peri_prey_limitation[i] = p.peri[i]
+                    / (config.herbivoreAiPeri - config.herbivoreGiPeri);
+            boundPercentage(p.herbivore_peri_prey_limitation[i]);
+
+            p.herbivore_waterdecomp_prey_limitation[i] = p.waterdecomp[i]
+                    / (config.herbivoreAiWaterdecomp - config.herbivoreGiWaterdecomp);
+            boundPercentage(p.herbivore_waterdecomp_prey_limitation[i]);
+
+            p.herbivore_space_limitation[i] = 1.0
+                    - ((p.herbivore[i] - config.herbivoreAj)
+                        / (config.herbivoreGj - config.herbivoreAj));
+            boundPercentage(p.herbivore_space_limitation[i]);
+
+            p.herbivore_pred_phyto[i] = config.herbivorePrefPhyto
+                    * (config.herbivoreMax / HOURS_PER_DAY) * p.herbivore[i]
+                    * p.herbivore_space_limitation[i] * p.herbivore_phyto_prey_limitation[i];
+            p.herbivore_ingest_phyto[i] = p.herbivore_pred_phyto[i] * (1.0 - config.herbivoreEgestion);
+
+            p.herbivore_pred_peri[i] = config.herbivorePrefPeri
+                    * (config.herbivoreMax / HOURS_PER_DAY) * p.herbivore[i]
+                    * p.herbivore_space_limitation[i] * p.herbivore_peri_prey_limitation[i];
+            p.herbivore_ingest_peri[i] = p.herbivore_pred_peri[i] * (1.0 - config.herbivoreEgestion);
+
+            p.herbivore_pred_waterdecomp[i] = config.herbivorePrefWaterdecomp
+                    * (config.herbivoreMax / HOURS_PER_DAY) * p.herbivore[i]
+                    * p.herbivore_space_limitation[i] * p.herbivore_waterdecomp_prey_limitation[i];
+            p.herbivore_ingest_waterdecomp[i] = p.herbivore_pred_waterdecomp[i] * (1.0 - config.herbivoreEgestion);
+
+            p.herbivore_respiration[i] = (config.herbivoreRespiration / HOURS_PER_DAY) * p.herbivore[i];
+            p.herbivore_excretion[i] = (config.herbivoreExcretion / HOURS_PER_DAY) * p.herbivore[i];
+            p.herbivore_senescence[i] = (config.herbivoreSenescence / HOURS_PER_DAY) * p.herbivore[i];
         }
 
-        //the amount of light that reaches the bottom of a water column
-        p.bottom_light[i] = currPAR
-                * exp( (-1 * depth) * p.turbidity[i] );
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_waterdecomp function
+            //
+            ///////////////////////////////////////////
 
-        //TODO why is this code altering the config? Config should never be edited by model. -ECP
-        //Also these two do not ever get used.  Commenting them out for now.
-        //config.periAj = p.macro[i] / 10.0 ;
-        //config.periGj = p.macro[i] / 2.0;
+            p.waterdecomp_doc_prey_limitation[i] = p.DOC[i]
+                    / (config.waterdecompAiDoc - config.waterdecompGiDoc);
+            boundPercentage(p.waterdecomp_doc_prey_limitation[i]);
 
-        //TODO These config values never gets used before being overwritten here
-        //Is this correct behavior?  Converting to local variables for now.
-        //config.seddecompAj = p.detritus[i] / 20.0;
-        //config.seddecompGj = p.detritus[i] / 5.0;
-        double seddecompAj = p.detritus[i] / 20.0;
-        double seddecompGj = p.detritus[i] / 5.0;
+            p.waterdecomp_poc_prey_limitation[i] = p.POC[i]
+                    / (config.waterdecompAiPoc - config.waterdecompGiPoc);
+            boundPercentage(p.waterdecomp_poc_prey_limitation[i]);
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_macro function
-        //
-        ///////////////////////////////////////////
+            p.waterdecomp_space_limitation[i] = 1.0
+                    - ((p.waterdecomp[i] - config.waterdecompAj)
+                        / (config.waterdecompGj - config.waterdecompAj));
+            boundPercentage(p.waterdecomp_space_limitation[i]);
 
-        //Converting to local variable
-        //Q10 = pow(g.theta, (g.temperature - config.macroTemp));
-        double Q10;
+            p.waterdecomp_pred_doc[i] = config.waterdecompPrefDoc
+                    * (config.waterdecompMax / HOURS_PER_DAY) * p.waterdecomp[i]
+                    * p.waterdecomp_space_limitation[i] * p.waterdecomp_doc_prey_limitation[i];
+            p.waterdecomp_ingest_doc[i] = p.waterdecomp_pred_doc[i];
 
-        //TODO Ask Kevin what theta is and why it is 1.072.  I want to add
-        //it to the constants file but "THETA" is really ambiguous. -ECP
-        Q10 = pow(g.theta, (currWaterTemp - config.macroTemp));
+            p.waterdecomp_pred_poc[i] = config.waterdecompPrefPoc
+                    * (config.waterdecompMax / HOURS_PER_DAY) * p.waterdecomp[i]
+                    * p.waterdecomp_space_limitation[i] * p.waterdecomp_poc_prey_limitation[i];
+            p.waterdecomp_ingest_poc[i] = p.waterdecomp_pred_poc[i];
 
-        //TODO pull velocity from hydrofile rather than patches
-        if(velocity < config.macroVelocityMax) {
-            p.K[i] = g.max_area
-                    * (config.macroMassMax
-                       - (config.macroMassMax  / config.macroVelocityMax)
-                       * velocity);
-        } else {
-            p.K[i] = 0.01;
+            p.waterdecomp_respiration[i] = (config.waterdecompRespiration / HOURS_PER_DAY) * p.waterdecomp[i];
+            p.waterdecomp_excretion[i] = (config.waterdecompExcretion / HOURS_PER_DAY) * p.waterdecomp[i];
+            p.waterdecomp_senescence[i] = (config.waterdecompSenescence / HOURS_PER_DAY) * p.waterdecomp[i];
         }
-        //Same at bottom-light
-        double macro_light = currPAR * exp( (-1*depth) * p.turbidity[i] );
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
-        p.gross_photo_macro[i] = config.macroGross * p.macro[i]
-                * ( macro_light / ( macro_light + 10.0)) * Q10
-                * ( p.K[i] - p.macro[i]) / p.K[i];
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_seddecomp function
+            //
+            ///////////////////////////////////////////
 
-        p.respiration_macro[i] = (config.macroRespiration / HOURS_PER_DAY)
-                * p.macro[i] * Q10;
+            p.seddecomp_detritus_prey_limitation[i] = p.detritus[i]
+                    / (config.seddecompAiDetritus - config.seddecompGiDetritus);
+            boundPercentage(p.seddecomp_detritus_prey_limitation[i]);
 
-        p.senescence_macro[i] = (config.macroSenescence / HOURS_PER_DAY)
-                * (p.macro[i] / HOURS_PER_DAY);
+            double seddecompAj = p.detritus[i] / 20.0;
+            double seddecompGj = p.detritus[i] / 5.0;
 
-        p.growth_macro[i] = p.gross_photo_macro[i] - p.respiration_macro[i]
-                - p.senescence_macro[i] - p.scouring_macro[i];
+            //TODO Comparing floats like this is wrong and is likely a bug -ECP
+            //TODO Also, why is this calculation different from the others? -ECP
+            if( (seddecompGj - seddecompAj) != 0.0 ) {
+                p.seddecomp_space_limitation[i] = 1.0
+                        - ((p.seddecomp[i] - seddecompAj)
+                           / (seddecompGj - seddecompAj));
+                boundPercentage(p.seddecomp_space_limitation[i]);
+            } else {
+                p.seddecomp_space_limitation[i] = 0.0;
+            }
 
-        p.macro[i] += p.growth_macro[i];
+            p.seddecomp_pred_detritus[i] = config.seddecompPrefDetritus
+                    * (config.seddecompMax / HOURS_PER_DAY) * p.seddecomp[i]
+                    * p.seddecomp_detritus_prey_limitation[i] * p.seddecomp_space_limitation[i];
+            p.seddecomp_ingest_detritus[i] = p.seddecomp_pred_detritus[i];
 
-        boundLower(p.macro[i], 0.001);
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_phyto function
-        //
-        ///////////////////////////////////////////
-
-        //TODO write a bounding function.
-
-        //minimum and maximum caps on biomass
-        boundValue(p.phyto[i], 0.001, 900000.0);
-
-
-        //base temperature for nominal growth
-        //TODO What is base temperature and why is it a magic number?
-        double base_temperature = 8.0;
-        Q10 = pow(g.theta, (currWaterTemp - base_temperature));
-        double km = 10; //half saturation constant
-
-
-        // TODO  Figure out if the following commented light_k lines were lost in translation from netgui
-        // It is set but never used. -ECP
-        //this is the attenuation coefficient of phytoplank m^2/g of phyto plankton
-        //double light_k = 0.4;
-
-
-        p.respiration_phyto[i] = (config.phytoRespiration / HOURS_PER_DAY) * p.phyto[i] * Q10;
-
-        double pre_ln = 0.01 + currPAR
-                * exp(-1 * p.phyto[i] * config.kPhyto * depth);
-        double be = km + currPAR
-                * exp(-1 * p.phyto[i] * config.kPhyto * depth);
-
-        //photosynthesis from phytoplankton derived from Huisman Weissing 1994
-        p.gross_photo_phyto[i] = fabs(pre_ln / be) * (1.0 / depth)
-                * (p.phyto[i] / p.turbidity[i]) * Q10;
-        p.excretion_phyto[i] = (config.phytoExcretion / HOURS_PER_DAY) * p.phyto[i];
-        p.senescence_phyto[i] = (config.phytoSenescence / HOURS_PER_DAY) * p.phyto[i];
-        p.growth_phyto[i] = p.gross_photo_phyto[i] - p.excretion_phyto[i] -
-                p.respiration_phyto[i] - p.senescence_phyto[i];
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_herbivore function
-        //
-        ///////////////////////////////////////////
-
-        p.herbivore_phyto_prey_limitation[i] = p.phyto[i]
-                / (config.herbivoreAiPhyto - config.herbivoreGiPhyto);
-        boundPercentage(p.herbivore_phyto_prey_limitation[i]);
-
-        p.herbivore_peri_prey_limitation[i] = p.peri[i]
-                / (config.herbivoreAiPeri - config.herbivoreGiPeri);
-        boundPercentage(p.herbivore_peri_prey_limitation[i]);
-
-        p.herbivore_waterdecomp_prey_limitation[i] = p.waterdecomp[i]
-                / (config.herbivoreAiWaterdecomp - config.herbivoreGiWaterdecomp);
-        boundPercentage(p.herbivore_waterdecomp_prey_limitation[i]);
-
-        p.herbivore_space_limitation[i] = 1.0
-                - ((p.herbivore[i] - config.herbivoreAj)
-                    / (config.herbivoreGj - config.herbivoreAj));
-        boundPercentage(p.herbivore_space_limitation[i]);
-
-        p.herbivore_pred_phyto[i] = config.herbivorePrefPhyto
-                * (config.herbivoreMax / HOURS_PER_DAY) * p.herbivore[i]
-                * p.herbivore_space_limitation[i] * p.herbivore_phyto_prey_limitation[i];
-        p.herbivore_ingest_phyto[i] = p.herbivore_pred_phyto[i] * (1.0 - config.herbivoreEgestion);
-
-        p.herbivore_pred_peri[i] = config.herbivorePrefPeri
-                * (config.herbivoreMax / HOURS_PER_DAY) * p.herbivore[i]
-                * p.herbivore_space_limitation[i] * p.herbivore_peri_prey_limitation[i];
-        p.herbivore_ingest_peri[i] = p.herbivore_pred_peri[i] * (1.0 - config.herbivoreEgestion);
-
-        p.herbivore_pred_waterdecomp[i] = config.herbivorePrefWaterdecomp
-                * (config.herbivoreMax / HOURS_PER_DAY) * p.herbivore[i]
-                * p.herbivore_space_limitation[i] * p.herbivore_waterdecomp_prey_limitation[i];
-        p.herbivore_ingest_waterdecomp[i] = p.herbivore_pred_waterdecomp[i] * (1.0 - config.herbivoreEgestion);
-
-        p.herbivore_respiration[i] = (config.herbivoreRespiration / HOURS_PER_DAY) * p.herbivore[i];
-        p.herbivore_excretion[i] = (config.herbivoreExcretion / HOURS_PER_DAY) * p.herbivore[i];
-        p.herbivore_senescence[i] = (config.herbivoreSenescence / HOURS_PER_DAY) * p.herbivore[i];
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_waterdecomp function
-        //
-        ///////////////////////////////////////////
-
-        p.waterdecomp_doc_prey_limitation[i] = p.DOC[i]
-                / (config.waterdecompAiDoc - config.waterdecompGiDoc);
-        boundPercentage(p.waterdecomp_doc_prey_limitation[i]);
-
-        p.waterdecomp_poc_prey_limitation[i] = p.POC[i]
-                / (config.waterdecompAiPoc - config.waterdecompGiPoc);
-        boundPercentage(p.waterdecomp_poc_prey_limitation[i]);
-
-        p.waterdecomp_space_limitation[i] = 1.0
-                - ((p.waterdecomp[i] - config.waterdecompAj)
-                    / (config.waterdecompGj - config.waterdecompAj));
-        boundPercentage(p.waterdecomp_space_limitation[i]);
-
-        p.waterdecomp_pred_doc[i] = config.waterdecompPrefDoc
-                * (config.waterdecompMax / HOURS_PER_DAY) * p.waterdecomp[i]
-                * p.waterdecomp_space_limitation[i] * p.waterdecomp_doc_prey_limitation[i];
-        p.waterdecomp_ingest_doc[i] = p.waterdecomp_pred_doc[i];
-
-        p.waterdecomp_pred_poc[i] = config.waterdecompPrefPoc
-                * (config.waterdecompMax / HOURS_PER_DAY) * p.waterdecomp[i]
-                * p.waterdecomp_space_limitation[i] * p.waterdecomp_poc_prey_limitation[i];
-        p.waterdecomp_ingest_poc[i] = p.waterdecomp_pred_poc[i];
-
-        p.waterdecomp_respiration[i] = (config.waterdecompRespiration / HOURS_PER_DAY) * p.waterdecomp[i];
-        p.waterdecomp_excretion[i] = (config.waterdecompExcretion / HOURS_PER_DAY) * p.waterdecomp[i];
-        p.waterdecomp_senescence[i] = (config.waterdecompSenescence / HOURS_PER_DAY) * p.waterdecomp[i];
-
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_seddecomp function
-        //
-        ///////////////////////////////////////////
-
-        p.seddecomp_detritus_prey_limitation[i] = p.detritus[i]
-                / (config.seddecompAiDetritus - config.seddecompGiDetritus);
-        boundPercentage(p.seddecomp_detritus_prey_limitation[i]);
-
-        //TODO Comparing floats like this is wrong and is likely a bug -ECP
-        //TODO Also, why is this calculation different from the others? -ECP
-        if( (seddecompGj - seddecompAj) != 0.0 ) {
-            p.seddecomp_space_limitation[i] = 1.0
-                    - ((p.seddecomp[i] - seddecompAj)
-                       / (seddecompGj - seddecompAj));
-            boundPercentage(p.seddecomp_space_limitation[i]);
-        } else {
-            p.seddecomp_space_limitation[i] = 0.0;
+            p.seddecomp_respiration[i] = (config.seddecompRespiration / HOURS_PER_DAY) * p.seddecomp[i];
+            p.seddecomp_excretion[i] = (config.seddecompExcretion / HOURS_PER_DAY) * p.seddecomp[i];
+            p.seddecomp_senescence[i] = (config.seddecompSenescence / HOURS_PER_DAY) * p.seddecomp[i];
         }
 
-        p.seddecomp_pred_detritus[i] = config.seddecompPrefDetritus
-                * (config.seddecompMax / HOURS_PER_DAY) * p.seddecomp[i]
-                * p.seddecomp_detritus_prey_limitation[i] * p.seddecomp_space_limitation[i];
-        p.seddecomp_ingest_detritus[i] = p.seddecomp_pred_detritus[i];
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
-        p.seddecomp_respiration[i] = (config.seddecompRespiration / HOURS_PER_DAY) * p.seddecomp[i];
-        p.seddecomp_excretion[i] = (config.seddecompExcretion / HOURS_PER_DAY) * p.seddecomp[i];
-        p.seddecomp_senescence[i] = (config.seddecompSenescence / HOURS_PER_DAY) * p.seddecomp[i];
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_sedconsumer function
+            //
+            ///////////////////////////////////////////
 
+            p.sedconsumer_seddecomp_prey_limitation[i] = p.seddecomp[i]
+                    / (config.sedconsumerAiSeddecomp - config.sedconsumerGiSeddecomp);
+            boundPercentage(p.sedconsumer_seddecomp_prey_limitation[i]);
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_sedconsumer function
-        //
-        ///////////////////////////////////////////
+            p.sedconsumer_peri_prey_limitation[i] = p.peri[i]
+                    / (config.sedconsumerAiPeri - config.sedconsumerGiPeri);
+            boundPercentage(p.sedconsumer_peri_prey_limitation[i]);
 
-        p.sedconsumer_seddecomp_prey_limitation[i] = p.seddecomp[i]
-                / (config.sedconsumerAiSeddecomp - config.sedconsumerGiSeddecomp);
-        boundPercentage(p.sedconsumer_seddecomp_prey_limitation[i]);
+            p.sedconsumer_detritus_prey_limitation[i] = p.detritus[i]
+                    / (config.sedconsumerAiDetritus - config.sedconsumerGiDetritus);
+            boundPercentage(p.sedconsumer_detritus_prey_limitation[i]);
 
-        p.sedconsumer_peri_prey_limitation[i] = p.peri[i]
-                / (config.sedconsumerAiPeri - config.sedconsumerGiPeri);
-        boundPercentage(p.sedconsumer_peri_prey_limitation[i]);
+            p.sedconsumer_space_limitation[i] = 1.0
+                    - ((p.sedconsumer[i] - config.sedconsumerAj)
+                       / (config.sedconsumerGj - config.sedconsumerAj));
+            boundPercentage(p.sedconsumer_space_limitation[i]);
 
-        p.sedconsumer_detritus_prey_limitation[i] = p.detritus[i]
-                / (config.sedconsumerAiDetritus - config.sedconsumerGiDetritus);
-        boundPercentage(p.sedconsumer_detritus_prey_limitation[i]);
+            p.sedconsumer_pred_peri[i] = config.sedconsumerPrefPeri
+                    * (config.sedconsumerMax / HOURS_PER_DAY) * p.sedconsumer[i]
+                    * p.sedconsumer_space_limitation[i] * p.sedconsumer_peri_prey_limitation[i];
+            // TODO is it weird there is no peri version for this? -Bill
+            p.sedconsumer_ingest_peri[i] = p.sedconsumer_pred_peri[i] * (1.0 - config.sedconsumerEgestionSeddecomp);
 
-        p.sedconsumer_space_limitation[i] = 1.0
-                - ((p.sedconsumer[i] - config.sedconsumerAj)
-                   / (config.sedconsumerGj - config.sedconsumerAj));
-        boundPercentage(p.sedconsumer_space_limitation[i]);
+            p.sedconsumer_pred_seddecomp[i] = config.sedconsumerPrefSeddecomp
+                    * (config.sedconsumerMax / HOURS_PER_DAY) * p.sedconsumer[i]
+                    * p.sedconsumer_space_limitation[i] * p.sedconsumer_seddecomp_prey_limitation[i];
+            p.sedconsumer_ingest_seddecomp[i] = p.sedconsumer_pred_seddecomp[i] * (1.0 - config.sedconsumerEgestionSeddecomp);
 
-        p.sedconsumer_pred_peri[i] = config.sedconsumerPrefPeri
-                * (config.sedconsumerMax / HOURS_PER_DAY) * p.sedconsumer[i]
-                * p.sedconsumer_space_limitation[i] * p.sedconsumer_peri_prey_limitation[i];
-        // TODO is it weird there is no peri version for this? -Bill
-        p.sedconsumer_ingest_peri[i] = p.sedconsumer_pred_peri[i] * (1.0 - config.sedconsumerEgestionSeddecomp);
+            p.sedconsumer_pred_detritus[i] = config.sedconsumerPrefDetritus
+                    * (config.sedconsumerMax / HOURS_PER_DAY) * p.sedconsumer[i]
+                    * p.sedconsumer_space_limitation[i] * p.sedconsumer_detritus_prey_limitation[i];
+            p.sedconsumer_ingest_detritus[i] = p.sedconsumer_pred_detritus[i] * (1.0 - config.sedconsumerEgestionDetritus);
 
-        p.sedconsumer_pred_seddecomp[i] = config.sedconsumerPrefSeddecomp
-                * (config.sedconsumerMax / HOURS_PER_DAY) * p.sedconsumer[i]
-                * p.sedconsumer_space_limitation[i] * p.sedconsumer_seddecomp_prey_limitation[i];
-        p.sedconsumer_ingest_seddecomp[i] = p.sedconsumer_pred_seddecomp[i] * (1.0 - config.sedconsumerEgestionSeddecomp);
-
-        p.sedconsumer_pred_detritus[i] = config.sedconsumerPrefDetritus
-                * (config.sedconsumerMax / HOURS_PER_DAY) * p.sedconsumer[i]
-                * p.sedconsumer_space_limitation[i] * p.sedconsumer_detritus_prey_limitation[i];
-        p.sedconsumer_ingest_detritus[i] = p.sedconsumer_pred_detritus[i] * (1.0 - config.sedconsumerEgestionDetritus);
-
-        p.sedconsumer_respiration[i] = (config.sedconsumerRespiration / HOURS_PER_DAY) * p.sedconsumer[i];
-        p.sedconsumer_excretion[i] = (config.sedconsumerExcretion / HOURS_PER_DAY) * p.sedconsumer[i];
-        p.sedconsumer_senescence[i] = (config.sedconsumerSenescence / HOURS_PER_DAY) * p.sedconsumer[i];
-
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_consum function
-        //
-        ///////////////////////////////////////////
-
-        p.consum_sedconsumer_prey_limitation[i] = p.sedconsumer[i]
-                / (config.consumerAiSedconsumer - config.consumerGiSedconsumer);
-        boundPercentage(p.consum_sedconsumer_prey_limitation[i]);
-
-        p.consum_herbivore_prey_limitation[i] = p.herbivore[i]
-                / (config.consumerAiHerbivore - config.consumerGiHerbivore);
-        boundPercentage(p.consum_herbivore_prey_limitation[i]);
-
-        p.consum_space_limitation[i] = 1.0
-                - ((p.consum[i] - config.consumerAj)
-                   / (config.consumerGj - config.consumerAj));
-        boundPercentage(p.consum_space_limitation[i]);
-
-        p.consum_pred_herbivore[i] = config.consumerPrefHerbivore
-                * (config.consumerMax / HOURS_PER_DAY) * p.consum[i]
-                * p.consum_space_limitation[i] * p.consum_herbivore_prey_limitation[i];
-        p.consum_ingest_herbivore[i] = p.consum_pred_herbivore[i] * (1.0- config.consumerEgestion);
-
-        p.consum_pred_sedconsumer[i] = config.consumerPrefSedconsumer
-                * (config.consumerMax / HOURS_PER_DAY) * p.consum[i]
-                * p.consum_space_limitation[i] * p.consum_sedconsumer_prey_limitation[i];
-        p.consum_ingest_sedconsumer[i] = p.consum_pred_sedconsumer[i] * (1.0 - config.consumerEgestion);
-
-        p.consum_respiration[i] = (config.consumerRespiration / HOURS_PER_DAY) * p.consum[i];
-        p.consum_excretion[i] = (config.consumerExcretion / HOURS_PER_DAY) * p.consum[i];
-        p.consum_senescence[i] = (config.consumerSenescence / HOURS_PER_DAY) * p.consum[i];
-
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_DOC function
-        //
-        ///////////////////////////////////////////
-
-        // 4% of photosynthetic gets released into the water column. Wetzel lit.
-        p.macro_exudation[i] = config.macroExcretion * p.macro[i];
-
-        // Dead objects < 1um are considered DOC in Wetzel book..
-        p.micro_death[i] = p.senescence_macro[i] * .01 + p.senescence_phyto[i] * .01;
-
-        // *need reference
-        p.excretion[i] = p.herbivore_excretion[i] + p.waterdecomp_excretion[i] +
-                p.seddecomp_excretion[i] + p.sedconsumer_excretion[i] +
-                p.consum_excretion[i] + p.excretion_phyto[i] + p.peri_excretion[i];
-
-        // *need reference
-        p.flocculation[i] = .01 * p.DOC[i];
-
-        p.DOC_growth[i] = p.macro_exudation[i] + p.micro_death[i] + p.excretion[i];
-
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_POC function
-        //
-        ///////////////////////////////////////////
-
-        //TODO: get velocity from hydrofile
-
-        if(velocity > 0.0)
-        {
-            // exchange between POC and detritus determined by an approximation of Stoke's Law
-            p.detritus_POC_transfer[i] = p.detritus[i] * (.25 * log10(((velocity / 40.0 ) + .0001) + 1.0));
-        }
-        // cap at 100%. *need reference
-        boundUpper(p.detritus_POC_transfer[i], 1.0);
-
-        // approximations of the percention of dead objects < 10um that will be in water column; Wetzel Limnology textbook.
-        p.small_death[i] = p.senescence_macro[i] * 0.09 + p.senescence_phyto[i] * 0.09 +
-                p.scouring_macro[i] * 0.1 + p.waterdecomp_senescence[i] *
-                0.7 + 0.3 * p.peri_senescence[i];
-
-        // flocculation, leaching approximation
-        p.POC_growth[i] = p.flocculation[i] + p.detritus_POC_transfer[i];
-
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's go_detritus function
-        //
-        ///////////////////////////////////////////
-
-        //TODO get velocity from hydroFile
-        if(velocity > 0.0) {
-            p.POC_detritus_transfer[i] = p.POC[i] * (1.0 - (0.25 * log10((( velocity / 40.0) + 0.0001) + 1.0)));
-        }
-        boundLower(p.POC_detritus_transfer[i], 0.0);
-
-        //TODO Comparing a float using equality is super bad and this is probably a bug...
-        if(velocity == 0.0) {
-            p.POC_detritus_transfer[i] = p.POC[i] * 0.9;
+            p.sedconsumer_respiration[i] = (config.sedconsumerRespiration / HOURS_PER_DAY) * p.sedconsumer[i];
+            p.sedconsumer_excretion[i] = (config.sedconsumerExcretion / HOURS_PER_DAY) * p.sedconsumer[i];
+            p.sedconsumer_senescence[i] = (config.sedconsumerSenescence / HOURS_PER_DAY) * p.sedconsumer[i];
         }
 
-        if(p.gross_photo_macro[i] < 0.0) {
-            // to incorporate scoured macrophytes into detritus
-            p.macro_death[i] = 0.0 - p.gross_photo_macro[i];
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_consum function
+            //
+            ///////////////////////////////////////////
+
+            p.consum_sedconsumer_prey_limitation[i] = p.sedconsumer[i]
+                    / (config.consumerAiSedconsumer - config.consumerGiSedconsumer);
+            boundPercentage(p.consum_sedconsumer_prey_limitation[i]);
+
+            p.consum_herbivore_prey_limitation[i] = p.herbivore[i]
+                    / (config.consumerAiHerbivore - config.consumerGiHerbivore);
+            boundPercentage(p.consum_herbivore_prey_limitation[i]);
+
+            p.consum_space_limitation[i] = 1.0
+                    - ((p.consum[i] - config.consumerAj)
+                       / (config.consumerGj - config.consumerAj));
+            boundPercentage(p.consum_space_limitation[i]);
+
+            p.consum_pred_herbivore[i] = config.consumerPrefHerbivore
+                    * (config.consumerMax / HOURS_PER_DAY) * p.consum[i]
+                    * p.consum_space_limitation[i] * p.consum_herbivore_prey_limitation[i];
+            p.consum_ingest_herbivore[i] = p.consum_pred_herbivore[i] * (1.0- config.consumerEgestion);
+
+            p.consum_pred_sedconsumer[i] = config.consumerPrefSedconsumer
+                    * (config.consumerMax / HOURS_PER_DAY) * p.consum[i]
+                    * p.consum_space_limitation[i] * p.consum_sedconsumer_prey_limitation[i];
+            p.consum_ingest_sedconsumer[i] = p.consum_pred_sedconsumer[i] * (1.0 - config.consumerEgestion);
+
+            p.consum_respiration[i] = (config.consumerRespiration / HOURS_PER_DAY) * p.consum[i];
+            p.consum_excretion[i] = (config.consumerExcretion / HOURS_PER_DAY) * p.consum[i];
+            p.consum_senescence[i] = (config.consumerSenescence / HOURS_PER_DAY) * p.consum[i];
         }
 
-        // Dead objects > 10um will sink Wetzel book..
-        p.large_death[i] = p.senescence_macro[i] * 0.9 + p.scouring_macro[i] * 0.9 +
-                p.senescence_phyto[i] * 0.9 + p.seddecomp_senescence[i] +
-                p.waterdecomp_senescence[i] * 0.3 + p.herbivore_senescence[i] +
-                p.sedconsumer_senescence[i] + p.consum_senescence[i] + 0.07 * p.peri_senescence[i];
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
-        p.egestion[i] = config.herbivoreEgestion + p.sedconsumer_egestion[i] + config.consumerEgestion;
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_DOC function
+            //
+            ///////////////////////////////////////////
 
-        p.detritus_growth[i] = p.large_death[i] + p.POC_detritus_transfer[i] +
-                p.egestion[i] + p.macro_death[i];
+            // 4% of photosynthetic gets released into the water column. Wetzel lit.
+            p.macro_exudation[i] = config.macroExcretion * p.macro[i];
 
+            // Dead objects < 1um are considered DOC in Wetzel book..
+            p.micro_death[i] = p.senescence_macro[i] * .01 + p.senescence_phyto[i] * .01;
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_phyto function
-        //
-        ///////////////////////////////////////////
-        p.phyto[i] = p.phyto[i] + p.growth_phyto[i] - p.herbivore_pred_phyto[i];
-        boundLower(p.phyto[i], 0.001);
+            // *need reference
+            p.excretion[i] = p.herbivore_excretion[i] + p.waterdecomp_excretion[i] +
+                    p.seddecomp_excretion[i] + p.sedconsumer_excretion[i] +
+                    p.consum_excretion[i] + p.excretion_phyto[i] + p.peri_excretion[i];
 
+            // *need reference
+            p.flocculation[i] = .01 * p.DOC[i];
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_herbivore function
-        //
-        ///////////////////////////////////////////
-        p.herbivore[i] = p.herbivore[i] + p.herbivore_ingest_phyto[i]
-                + p.herbivore_ingest_peri[i] + p.herbivore_ingest_waterdecomp[i]
-                - (p.herbivore_respiration[i] + p.herbivore_excretion[i] + p.herbivore_senescence[i])
-                - p.consum_pred_herbivore[i];
-        boundLower(p.herbivore[i], 0.001);
+            p.DOC_growth[i] = p.macro_exudation[i] + p.micro_death[i] + p.excretion[i];
+        }
 
-
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_seddecomp function
-        //
-        ///////////////////////////////////////////
-        p.seddecomp[i] = p.seddecomp[i] + p.seddecomp_ingest_detritus[i]
-                - (p.seddecomp_respiration[i] + p.seddecomp_excretion[i] + p.seddecomp_senescence[i])
-                - p.sedconsumer_pred_seddecomp[i];
-        boundLower(p.seddecomp[i], 0.001);
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_waterdecomp function
-        //
-        ///////////////////////////////////////////
-        p.waterdecomp[i] = p.waterdecomp[i] + p.waterdecomp_ingest_doc[i] + p.waterdecomp_ingest_poc[i]
-                - (p.waterdecomp_respiration[i] + p.waterdecomp_excretion[i]
-                + p.waterdecomp_senescence[i]) - p.herbivore_pred_waterdecomp[i];
-        boundLower(p.waterdecomp[i], 0.001);
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_POC function
+            //
+            ///////////////////////////////////////////
+
+            if(p.flowMagnitude[i] > 0.0)
+            {
+                // exchange between POC and detritus determined by an approximation of Stoke's Law
+                p.detritus_POC_transfer[i] = p.detritus[i] * (.25 * log10(((p.flowMagnitude[i] / 40.0 ) + .0001) + 1.0));
+            }
+            // cap at 100%. *need reference
+            boundUpper(p.detritus_POC_transfer[i], 1.0);
+
+            // approximations of the percention of dead objects < 10um that will be in water column; Wetzel Limnology textbook.
+            p.small_death[i] = p.senescence_macro[i] * 0.09 + p.senescence_phyto[i] * 0.09 +
+                    p.scouring_macro[i] * 0.1 + p.waterdecomp_senescence[i] *
+                    0.7 + 0.3 * p.peri_senescence[i];
+
+            // flocculation, leaching approximation
+            p.POC_growth[i] = p.flocculation[i] + p.detritus_POC_transfer[i];
+        }
+
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's go_detritus function
+            //
+            ///////////////////////////////////////////
 
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_sedconsumer function
-        //
-        ///////////////////////////////////////////
-        p.sedconsumer[i] = p.sedconsumer[i] + p.sedconsumer_ingest_peri[i] + p.sedconsumer_ingest_seddecomp[i]
-                - (p.sedconsumer_respiration[i] + p.sedconsumer_excretion[i] + p.sedconsumer_senescence[i])
-                - p.consum_pred_sedconsumer[i];
-        boundLower(p.sedconsumer[i], 0.001);
+            if(p.flowMagnitude[i] > 0.0) {
+                p.POC_detritus_transfer[i] = p.POC[i] * (1.0 - (0.25 * log10((( p.flowMagnitude[i] / 40.0) + 0.0001) + 1.0)));
+            }
+            boundLower(p.POC_detritus_transfer[i], 0.0);
+
+            //TODO Comparing a float using equality is super bad and this is probably a bug...
+            if(p.flowMagnitude[i] == 0.0) {
+                p.POC_detritus_transfer[i] = p.POC[i] * 0.9;
+            }
+
+            if(p.gross_photo_macro[i] < 0.0) {
+                // to incorporate scoured macrophytes into detritus
+                p.macro_death[i] = 0.0 - p.gross_photo_macro[i];
+            }
+
+            // Dead objects > 10um will sink Wetzel book..
+            p.large_death[i] = p.senescence_macro[i] * 0.9 + p.scouring_macro[i] * 0.9 +
+                    p.senescence_phyto[i] * 0.9 + p.seddecomp_senescence[i] +
+                    p.waterdecomp_senescence[i] * 0.3 + p.herbivore_senescence[i] +
+                    p.sedconsumer_senescence[i] + p.consum_senescence[i] + 0.07 * p.peri_senescence[i];
+
+            p.egestion[i] = config.herbivoreEgestion + p.sedconsumer_egestion[i] + config.consumerEgestion;
+
+            p.detritus_growth[i] = p.large_death[i] + p.POC_detritus_transfer[i] +
+                    p.egestion[i] + p.macro_death[i];
+        }
+
+        #pragma omp for
+        for(int i = 0; i < patchCount; i++) {
+            //Only process patches if they currently contain water
+            if(!p.hasWater[i]) {
+                continue;
+            }
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_phyto function
+            //
+            ///////////////////////////////////////////
+            p.phyto[i] = p.phyto[i] + p.growth_phyto[i] - p.herbivore_pred_phyto[i];
+            boundLower(p.phyto[i], 0.001);
 
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_detritus function
-        //
-        ///////////////////////////////////////////
-        p.detritus_POC_transfer[i] = p.detritus[i]
-                * (0.25 * log10(velocity / 40.0 + 0.01) + 0.5);
-        p.detritus[i] = p.detritus[i] + p.detritus_growth[i] - p.seddecomp_pred_detritus[i]
-                - p.detritus_POC_transfer[i];
-        boundLower(p.detritus[i], 0.001);
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_herbivore function
+            //
+            ///////////////////////////////////////////
+            p.herbivore[i] = p.herbivore[i] + p.herbivore_ingest_phyto[i]
+                    + p.herbivore_ingest_peri[i] + p.herbivore_ingest_waterdecomp[i]
+                    - (p.herbivore_respiration[i] + p.herbivore_excretion[i] + p.herbivore_senescence[i])
+                    - p.consum_pred_herbivore[i];
+            boundLower(p.herbivore[i], 0.001);
 
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_DOC function
-        //
-        ///////////////////////////////////////////
-        p.DOC[i] = p.DOC[i] + p.DOC_growth[i] - p.waterdecomp_pred_doc[i] - p.flocculation[i];
-        boundLower(p.DOC[i], 0.001);
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_seddecomp function
+            //
+            ///////////////////////////////////////////
+            p.seddecomp[i] = p.seddecomp[i] + p.seddecomp_ingest_detritus[i]
+                    - (p.seddecomp_respiration[i] + p.seddecomp_excretion[i] + p.seddecomp_senescence[i])
+                    - p.sedconsumer_pred_seddecomp[i];
+            boundLower(p.seddecomp[i], 0.001);
 
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_POC function
-        //
-        ///////////////////////////////////////////
-        p.POC[i] = p.POC[i] + p.POC_growth[i] - p.waterdecomp_pred_poc[i] - p.POC_detritus_transfer[i];
-        boundLower(p.POC[i], 0.001);
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_waterdecomp function
+            //
+            ///////////////////////////////////////////
+            p.waterdecomp[i] = p.waterdecomp[i] + p.waterdecomp_ingest_doc[i] + p.waterdecomp_ingest_poc[i]
+                    - (p.waterdecomp_respiration[i] + p.waterdecomp_excretion[i]
+                    + p.waterdecomp_senescence[i]) - p.herbivore_pred_waterdecomp[i];
+            boundLower(p.waterdecomp[i], 0.001);
 
 
-        ///////////////////////////////////////////
-        //
-        // From 2011 team's pred_consum function
-        //
-        ///////////////////////////////////////////
-        p.consum[i] = p.consum[i] + p.consum_ingest_herbivore[i] + p.consum_ingest_sedconsumer[i]
-                - (p.consum_respiration[i] + p.consum_excretion[i] + p.consum_senescence[i]);
-        boundLower(p.consum[i], 0.001);
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_sedconsumer function
+            //
+            ///////////////////////////////////////////
+            p.sedconsumer[i] = p.sedconsumer[i] + p.sedconsumer_ingest_peri[i] + p.sedconsumer_ingest_seddecomp[i]
+                    - (p.sedconsumer_respiration[i] + p.sedconsumer_excretion[i] + p.sedconsumer_senescence[i])
+                    - p.consum_pred_sedconsumer[i];
+            boundLower(p.sedconsumer[i], 0.001);
+
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_detritus function
+            //
+            ///////////////////////////////////////////
+            p.detritus_POC_transfer[i] = p.detritus[i]
+                    * (0.25 * log10(p.flowMagnitude[i] / 40.0 + 0.01) + 0.5);
+            p.detritus[i] = p.detritus[i] + p.detritus_growth[i] - p.seddecomp_pred_detritus[i]
+                    - p.detritus_POC_transfer[i];
+            boundLower(p.detritus[i], 0.001);
+
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_DOC function
+            //
+            ///////////////////////////////////////////
+            p.DOC[i] = p.DOC[i] + p.DOC_growth[i] - p.waterdecomp_pred_doc[i] - p.flocculation[i];
+            boundLower(p.DOC[i], 0.001);
+
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_POC function
+            //
+            ///////////////////////////////////////////
+            p.POC[i] = p.POC[i] + p.POC_growth[i] - p.waterdecomp_pred_poc[i] - p.POC_detritus_transfer[i];
+            boundLower(p.POC[i], 0.001);
+
+
+            ///////////////////////////////////////////
+            //
+            // From 2011 team's pred_consum function
+            //
+            ///////////////////////////////////////////
+            p.consum[i] = p.consum[i] + p.consum_ingest_herbivore[i] + p.consum_ingest_sedconsumer[i]
+                    - (p.consum_respiration[i] + p.consum_excretion[i] + p.consum_senescence[i]);
+            boundLower(p.consum[i], 0.001);
+        }
     }
 }
 

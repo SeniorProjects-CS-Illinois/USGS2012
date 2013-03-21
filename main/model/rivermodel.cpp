@@ -155,6 +155,11 @@ void RiverModel::newRun() {
 
     //Creates a new river and initializes its patches
     River river(config, hydroFiles);
+    int width = hydroFiles.getMaxWidth();
+    int height = hydroFiles.getMaxHeight();
+
+    Grid<FlowData> * source = new Grid<FlowData>(width, height);
+    Grid<FlowData> * dest = new Grid<FlowData>(width, height);
 
     for (int hydroIndex = 0; hydroIndex < config.hydroMaps.size(); hydroIndex++) {
         QString hydroFileName = config.hydroMaps[hydroIndex];
@@ -180,7 +185,7 @@ void RiverModel::newRun() {
 
                 river.setCurrentPAR( parValues[hours_elapsed] );
                 river.processPatches();
-                river.flow();
+                river.flow(source, dest);
 
                 modelStatus.updateProgress();
                 hours_elapsed++;
@@ -198,6 +203,9 @@ void RiverModel::newRun() {
             }
         }
     }
+
+    delete source;
+    delete dest;
 
     //TODO Identify refactoring changes in cleanup.  Delete new'd data (i.e. hydromaps)
     //cleanup();
