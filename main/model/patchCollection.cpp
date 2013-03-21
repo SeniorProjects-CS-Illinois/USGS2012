@@ -65,6 +65,12 @@ void PatchCollection::initializePatches(Configuration & config) {
 
     aqa_point.fill(0, size);
 
+    flowX.fill(0.0, size);
+    flowY.fill(0.0, size);
+    flowMagnitude.fill(0.0, size);
+    depth.fill(0.0, size);
+    hasWater.fill(false, size);
+
     waterdecomp_doc_prey_limitation.fill(0.0, size);
     waterdecomp_poc_prey_limitation.fill(0.0, size);
     peri_doc_prey_limitation.fill(0.0, size);

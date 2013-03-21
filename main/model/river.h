@@ -14,6 +14,10 @@
 #include "flowdata.h"
 
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 class River {
     public:
         River(Configuration & newConfig, HydroFileDict & hydroFileDict);
@@ -66,6 +70,7 @@ class River {
         void storeFlowData(Grid<FlowData> & flowData);
         bool is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst);
         double getMaxTimestep();
+        bool is_valid_patch(int x, int y);
 
 
 

@@ -45,9 +45,71 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 
 
 void River::setCurrentHydroFile(HydroFile *newHydroFile) {
-    // TODO Get rid of max_vector and g.COMPARE_MAX
-    double max_vector = 0.0;
+    // TODO Get rid of max_vector_component and g.COMPARE_MAX
     double max_vector_component = 0.0;
+
+    for (int i = 0; i < p.getSize(); i++ ) {
+        int x = p.pxcor[i];
+        int y = p.pycor[i];
+
+        if(newHydroFile->patchExists(x,y)){
+            double depth = newHydroFile->getDepth(x,y);
+            QVector2D flowVector = newHydroFile->getVector(x,y);
+
+
+
+            p.hasWater[i] = true;
+            p.depth[i] = depth;
+            p.flowX[i] = flowVector.x();
+            p.flowY[i] = flowVector.y();
+            p.flowMagnitude[i] = flowVector.length();
+
+            if (max_vector_component < fabs(flowVector.x()) ) {
+                max_vector_component = fabs(flowVector.x());
+            }
+            if( max_vector_component < fabs(flowVector.y())) {
+                max_vector_component = fabs(flowVector.y());
+            }
+
+        } else {
+            p.hasWater[i] = false;
+            p.depth[i] = 0.0;
+            p.flowX[i] = 0.0;
+            p.flowY[i] = 0.0;
+            p.flowMagnitude[i] = 0.0;
+        }
+
+        // update miscellanous variables inside the patch
+
+        double current_depth = 0.0;
+        if(currHydroFile != NULL && currHydroFile->patchExists(x,y)){
+            current_depth = currHydroFile->getDepth(x,y);
+        }
+
+        // Water -> Land
+        if (current_depth > 0.0 && p.depth[i] == 0.0) {
+            p.detritus[i] += p.DOC[i] + p.POC[i] + p.phyto[i] +
+                    p.macro[i] + p.waterdecomp[i] +
+                    p.seddecomp[i] + p.herbivore[i] + p.sedconsumer[i] + p.consum[i];
+
+            p.DOC[i] = 0.0;
+            p.POC[i] = 0.0;
+            p.phyto[i] = 0.0;
+            p.macro[i] = 0.0;
+            p.waterdecomp[i] = 0.0;
+            p.seddecomp[i] = 0.0;
+            p.herbivore[i] = 0.0;
+            p.sedconsumer[i] = 0.0;
+            p.consum[i] = 0.0;
+        }
+
+        // Land -> Water
+        if (current_depth == 0.0 && p.depth[i] > 0.0) {
+            p.detritus[i] *= 0.5;
+        }
+    }
+
+    /*
     int x, y;
 
     //TODO Iterate over patches rather than (x,y) coordinates
@@ -134,8 +196,10 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
         }// endfor y
     }// endfor x
 
+    */
+
     // update the maximum vector for the timestep
-    g.COMPARE_MAX = max_vector;
+    g.COMPARE_MAX = max_vector_component;
 
     currHydroFile = newHydroFile;
 }
@@ -205,6 +269,24 @@ void River::flow() {
 }
 
 void River::copyFlowData(Grid<FlowData> & flowData) {
+    for(int i = 0; i < p.getSize(); i++) {
+        int x = p.pxcor[i];
+        int y = p.pycor[i];
+
+        flowData(x,y).hasWater    = p.hasWater[i];
+        flowData(x,y).depth       = p.depth[i];
+        flowData(x,y).velocity    = p.flowMagnitude[i];
+        flowData(x,y).px_vector   = p.flowX[i];
+        flowData(x,y).py_vector   = p.flowY[i];
+        flowData(x,y).DOC         = p.DOC[i];
+        flowData(x,y).POC         = p.POC[i];
+        flowData(x,y).phyto       = p.phyto[i];
+        flowData(x,y).waterdecomp = p.waterdecomp[i];
+
+    }
+
+
+    /*
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
             if(!p.patchExists(x,y)) {
@@ -216,10 +298,23 @@ void River::copyFlowData(Grid<FlowData> & flowData) {
             flowData(x,y).phyto       = p.phyto[index];
             flowData(x,y).waterdecomp = p.waterdecomp[index];
         }
-    }
+    }*/
 }
 
 void River::storeFlowData(Grid<FlowData> & flowData) {
+    for(int i = 0; i < p.getSize(); i++) {
+        int x = p.pxcor[i];
+        int y = p.pycor[i];
+
+        p.DOC[i]         = flowData(x,y).DOC;
+        p.POC[i]         = flowData(x,y).POC;
+        p.phyto[i]       = flowData(x,y).phyto;
+        p.waterdecomp[i] = flowData(x,y).waterdecomp;
+    }
+
+
+
+    /*
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
             if(!p.patchExists(x,y)) {
@@ -232,6 +327,7 @@ void River::storeFlowData(Grid<FlowData> & flowData) {
             p.waterdecomp[index] = flowData(x,y).waterdecomp;
         }
     }
+    */
 }
 
 bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> &dst) {
@@ -273,20 +369,12 @@ double River::getMaxTimestep() {
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
-            if( !currHydroFile->patchExists(x,y) ) {
+            if( !source(x,y).hasWater || source(x,y).velocity <= 0.0 ) {
                 continue;
             }
 
-            double depth = currHydroFile->getDepth(x,y);
-            QVector2D flowVector = currHydroFile->getVector(x,y);
-            double velocity = flowVector.length();
-
-            if( depth <= 0.0 || velocity <= 0.0 ) {
-                continue;
-            }
-
-            double px_vector = flowVector.x();
-            double py_vector = flowVector.y();
+            double px_vector = source(x,y).px_vector;
+            double py_vector = source(x,y).py_vector;
 
             double corner_patch = fabs( py_vector * px_vector )/g.max_area;
             double tb_patch = fabs( py_vector*( g.patch_length - fabs(px_vector) ) )/g.max_area;
@@ -294,9 +382,9 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
 
             // if a neighbor patch is dry, the carbon does not move in that direction
             double max_timestep = getMaxTimestep();
-            bool tb_moved = false;
-            bool corner_moved = false;
-            bool rl_moved = false;
+            int tb_moved = 0;
+            int corner_moved = 0;
+            int rl_moved = 0;
 
             int px = (int)(max_timestep * px_vector);
             int py = (int)(max_timestep * py_vector);
@@ -321,7 +409,7 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
             }
 
             // flow carbon to the top/bottom patches
-            if ( p.patchExists(x, y+py) && (py!=0) ) {
+            if ( is_valid_patch(x, y+py) && (py!=0) ) {
                 if (is_calc_nan(x,y+py,tb_patch, dest)) {
                     g.nan_trigger = true;
                 } else {
@@ -329,12 +417,12 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
                     dest(x, y+py).POC += source(x,y).POC*tb_patch;
                     dest(x, y+py).phyto += source(x,y).phyto*tb_patch;
                     dest(x, y+py).waterdecomp += source(x,y).waterdecomp*tb_patch;
-                    tb_moved = true;
+                    tb_moved = 1;
                 }
             }
 
             // flow carbon to the corner patch
-            if ( p.patchExists(x+px, y+py) && (px!=0) && (py!=0)) {
+            if ( is_valid_patch(x+px, y+py) && (px!=0) && (py!=0)) {
                 if (is_calc_nan(x+px,y+py,corner_patch, dest)) {
                     g.nan_trigger = true;
                 } else {
@@ -342,13 +430,13 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
                     dest(x+px, y+py).POC += source(x,y).POC*corner_patch;
                     dest(x+px, y+py).phyto += source(x,y).phyto*corner_patch;
                     dest(x+px, y+py).waterdecomp += source(x,y).waterdecomp*corner_patch;
-                    corner_moved = true;
+                    corner_moved = 1;
                 }
             }
 
             // flow carbon to the left/right patches
             //TODO code pushes carbon onto land patches...
-            if ( p.patchExists(x+px, y) && (px!=0) ) {
+            if ( is_valid_patch(x+px, y) && (px!=0) ) {
                 if ( is_calc_nan(x+px,y,rl_patch, dest) ) {
                     g.nan_trigger = true;
                 } else {
@@ -356,7 +444,7 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
                     dest(x+px, y).POC += source(x,y).POC*rl_patch;
                     dest(x+px, y).phyto += source(x,y).phyto*rl_patch;
                     dest(x+px, y).waterdecomp += source(x,y).waterdecomp*rl_patch;
-                    rl_moved = true;
+                    rl_moved = 1;
                 }
             }
 
@@ -370,6 +458,14 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
         }
     }
 }
+
+bool River::is_valid_patch(int x, int y) {
+    if (x <0 || y < 0) return false;
+    if (x >= width || y >= height) return false;
+    return true;
+}
+
+
 
 int River::saveCSV() const {
     QString file_name = "./results/data/map_data_";
@@ -454,22 +550,14 @@ void River::processPatches() {
     #pragma omp parallel for
     for(int i = 0; i < patchCount; i++) {
 
-        int patchX = p.pxcor[i];
-        int patchY = p.pycor[i];
-
-        //Only process patches if they exist in the currHydroFile
-        if(!currHydroFile->patchExists(patchX,patchY)) {
+        //Only process patches if they currently contain water
+        if(!p.hasWater[i]) {
             continue;
         }
 
-        double depth = currHydroFile->getDepth(patchX, patchY);
+        double depth = p.depth[i];
 
-        //Don't process patches that are currently land
-        if(depth <= 0.0)
-            continue;
-
-        QVector2D flowVector = currHydroFile->getVector(patchX, patchY);
-        double velocity = flowVector.length();
+        double velocity = p.flowMagnitude[i];
 
         ///////////////////////////////////////////
         //

@@ -39,12 +39,14 @@ class PatchCollection {
         int getSize() const;
 
 
-        /*
-         * TODO No effort was yet made to remove unneeded variables
-         * (i.e. things list max_vector and stuff made irrelevent by our new code)
-         */
         QVector<int> pxcor;
         QVector<int> pycor;
+        QVector<double> flowX;
+        QVector<double> flowY;
+        QVector<double> flowMagnitude;
+        QVector<double> depth;
+        QVector<bool> hasWater;
+
         QVector<int> pcolor;
 
         //QVector<double> px_vector;     ///< flow vector in the x_direction for hydraulics

@@ -4,6 +4,9 @@ win32:CONFIG += static
 QMAKE_CXXFLAGS += -fopenmp
 LIBS += -fopenmp
 
+#QMAKE_CXXFLAGS += -pg
+#QMAKE_LFLAGS += -pg
+
 SOURCES += model/rivermodel.cpp \
     model/status.cpp \
     model/globals.cpp \
