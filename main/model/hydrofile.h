@@ -12,10 +12,6 @@
 #include <QVector>
 #include "grid.h"
 
-//TODO Replace this type when we start to implement CarbonflowMap related stuff.
-typedef int CarbonFlowMap;
-
-
 class HydroFile {
     public:
         /**
@@ -23,8 +19,6 @@ class HydroFile {
          */
         HydroFile(QString filename);
         HydroFile();
-        //~HydroFile();
-        //HydroFile const & operator=( HydroFile const & other );
 
         /**
          * \brief Loads the current hydroFile using a file, only if not previously initialized.
@@ -32,13 +26,6 @@ class HydroFile {
          * \param[in] filename The name of the file to load
          */
         void loadFromFile(QString filename);
-
-        /**
-         * \brief Given an int, precomputes flows for the specified number of
-         * iterations using the hydrofile's data.
-         * Memoizes and returns a CarbonFlowMap pointer.
-         */
-        //CarbonFlowMap * getCarbonFlowMap(int iterations);
 
         /**
          * \brief Checks if a water cell exists at the given (x,y) coordinate
@@ -97,8 +84,6 @@ class HydroFile {
         };
 
         bool hydroFileLoaded;
-        CarbonFlowMap * carbonFlowMap;
-        int carbonFlowIterations;
         QString hydroMapFileName;
         int width;
         int height;
@@ -126,9 +111,6 @@ class HydroFile {
          * \brief Returns an entire cell's data at the given (x,y) coordinate.
          */
         HydroData & getData(int x, int y);
-
-        //void copy(HydroFile const & other);
-        //void clear();
 };
 
 #endif

@@ -3,7 +3,6 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
-//#include <stdio.h>
 #include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -32,10 +31,7 @@ using std::endl;
 class RiverModel {
     public:
 
-        /**
-         * Initialize the status for the model.
-         */
-        void initializeModelStatus();
+
 
         /**
          * Runs the model.
@@ -79,11 +75,31 @@ class RiverModel {
         void setWhichStock(QString stockName);
 
     private:
+        void printHourlyMessage(int daysElapsed, int hourOfDay);
+
+
+        /**
+         * Initialize the status for the model.
+         */
+        void initializeModelStatus(int daysToRun);
+
+
+        void initializeHydroMaps(const Configuration & config);
+
+        void initializeWaterTemps(const Configuration & config);
+
+        void initializePARValues(const Configuration & config);
+
+        int getDaysToRun(const Configuration & config);
+
+
         Status modelStatus;
-        Configuration config;
-        HydroFileDict hydroFiles;
+        Configuration modelConfig;
+        HydroFileDict hydroFileDict;
         QVector<double> waterTemps;
         QVector<int> parValues;
+
+        QString displayedStock;
 
 };
 #endif

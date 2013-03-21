@@ -24,6 +24,18 @@ HydroFileDict::HydroFileDict(){
 
 }
 
+HydroFileDict::HydroFileDict(const HydroFileDict &other) {
+    copy(other);
+}
+
+HydroFileDict & HydroFileDict::operator=(const HydroFileDict &rhs) {
+    if(this != &rhs) {
+        clear();
+        copy(rhs);
+    }
+    return *this;
+}
+
 HydroFile * & HydroFileDict::operator[](const QString filename)
 {
     return dict[filename];
@@ -68,9 +80,7 @@ int HydroFileDict::getMaxHeight() const
 
 //TODO Create an assignment operator, otherwise we will loose our hydromaps.
 HydroFileDict::~HydroFileDict() {
-    for( QHash<QString, HydroFile *>::iterator i = dict.begin(); i != dict.end(); i++){
-        delete *i;
-    }
+    clear();
 }
 
 const Grid<bool> HydroFileDict::getPatchUsageGrid() const {
@@ -92,4 +102,21 @@ const Grid<bool> HydroFileDict::getPatchUsageGrid() const {
     }
 
     return patchUsage;
+}
+
+void HydroFileDict::clear() {
+    for( QHash<QString, HydroFile *>::iterator i = dict.begin(); i != dict.end(); i++){
+        delete *i;
+    }
+}
+
+void HydroFileDict::copy(const HydroFileDict &rhs) {
+    filenames = QStringList(rhs.filenames);
+    for(int i = 0; i < filenames.size(); i++) {
+        QString filename = filenames[i];
+        HydroFile * hydroFileCopy = new HydroFile();
+        *hydroFileCopy = *(rhs.dict[filename]);
+
+        dict.insert(filename, hydroFileCopy);
+    }
 }

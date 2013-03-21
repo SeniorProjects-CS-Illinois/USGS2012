@@ -57,7 +57,7 @@ class River {
          * @param outputPath Location to save the file
          * @param filenamePrefix Prefix for filename
          */
-        int saveCSV() const;
+        int saveCSV(QString displayedStock, int daysElapsed) const;
 
     private:
         /**

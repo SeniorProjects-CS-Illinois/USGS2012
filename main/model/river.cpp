@@ -382,7 +382,7 @@ bool River::is_valid_patch(int x, int y) {
 
 
 
-int River::saveCSV() const {
+int River::saveCSV(QString displayedStock, int daysElapsed) const {
     QString file_name = "./results/data/map_data_";
     QDateTime date_time = QDateTime::currentDateTime();
     QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
@@ -400,10 +400,12 @@ int River::saveCSV() const {
     fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
 
     fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
-            config.timestep, g.gui_days_to_run, config.tss,
+            config.timestep, daysElapsed, config.tss,
             config.kPhyto, config.kMacro, (config.macroSenescence/24),
             (config.macroRespiration/24), config.macroTemp, config.macroMassMax,
-            config.macroVelocityMax, config.macroGross, config.whichStock.toStdString().c_str());
+            config.macroVelocityMax, config.macroGross, displayedStock.toStdString().c_str());
+
+    //TODO Print out the hydrofile used for this simulated day.
 
     fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");
 

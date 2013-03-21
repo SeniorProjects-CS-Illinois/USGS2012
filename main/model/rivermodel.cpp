@@ -12,7 +12,7 @@ Status RiverModel::getStatus(void){
  * Returns an image of the currently selected stock.
  */
 QImage RiverModel::getImage(void){
-    return getImage(config.whichStock);
+    return getImage(displayedStock);
 }
 
 /**
@@ -34,23 +34,12 @@ QImage RiverModel::getImage(QString stockName){
     return stockImage;
 }
 
-void RiverModel::initializeModelStatus()
-{
-    QVector<uint16_t>::Iterator it;
-    for (it = config.daysToRun.begin(); it != config.daysToRun.end(); it++)
-    {
-        modelStatus.addWorkUnitsToProcess((*it) * 24);
-    }
-
-    modelStatus.setState(Status::READY);
-}
-
 //     was doing aside from creating output dirs.
 void RiverModel::run(void) {
-    setup(config);
+    setup(modelConfig);
 
     initialize_globals();
-    initializeModelStatus();
+    initializeModelStatus(getDaysToRun(modelConfig));
 
     modelStatus.setState(Status::RUNNING);
 
@@ -58,12 +47,12 @@ void RiverModel::run(void) {
     int days_elapsed = 0;
     int hours_elapsed = 0;
 
-    for(int index = 0; index < config.hydroMaps.size(); index++)
+    for(int index = 0; index < modelConfig.hydroMaps.size(); index++)
     {
-        cout << "RUNNING FILE: " << config.hydroMaps[index].toStdString();
-        cout << " FOR " << config.daysToRun[index] << " DAYS" << endl;
+        cout << "RUNNING FILE: " << modelConfig.hydroMaps[index].toStdString();
+        cout << " FOR " << modelConfig.daysToRun[index] << " DAYS" << endl;
 
-        g.gui_days_to_run += config.daysToRun[index];  //Set howmany days to run the new hydromap
+        g.gui_days_to_run += modelConfig.daysToRun[index];  //Set howmany days to run the new hydromap
         g.hydro_group = (g.hydromap_index_vector[index] + 1); //Set the new hydromap that will run
         g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
 
@@ -73,7 +62,7 @@ void RiverModel::run(void) {
                 << " | Progress: " << (int)(modelStatus.getProgress()*100) \
                 << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
                 << " / " << modelStatus.getTimeRemaining() << endl;
-            go(config);
+            go(modelConfig);
             modelStatus.updateProgress();
 
             hours_elapsed++;
@@ -92,29 +81,123 @@ void RiverModel::run(void) {
 }
 
 void RiverModel::newRun() {
-    initialize_globals(); //Fine
+    //TODO Get rid of these two functions if possible.
+    initialize_globals();
     reset_globals();
 
+    int daysToRun = getDaysToRun(modelConfig);
 
-    int totalDaysToRun = 0;
-    //TODO: Stick this in its own function.
-    QVector<uint16_t>::Iterator it;
-    for (it = config.daysToRun.begin(); it != config.daysToRun.end(); it++)
-    {
-        totalDaysToRun += *it;
+    initializeHydroMaps(modelConfig);
+    initializeWaterTemps(modelConfig);
+    initializePARValues(modelConfig);
+
+    initializeModelStatus(daysToRun);
+    modelStatus.setState(Status::RUNNING);
+
+    int weeksElapsed = 0;
+    int daysElapsed = 0;
+    int hoursElapsed = 0;
+
+    //Creates the river and initializes its patches
+    River river(modelConfig, hydroFileDict);
+
+    // These are temp structures used in the flowing of the river.  Created
+    // here so they are not initialized and destroyed repeatedly.
+    int width = hydroFileDict.getMaxWidth();
+    int height = hydroFileDict.getMaxHeight();
+    Grid<FlowData> * source = new Grid<FlowData>(width, height);
+    Grid<FlowData> * dest = new Grid<FlowData>(width, height);
+
+    //Get a hydrofile to process
+    for (int hydroIndex = 0; hydroIndex < modelConfig.hydroMaps.size(); hydroIndex++) {
+        //NEW HYDROFILE
+        QString hydroFileName = modelConfig.hydroMaps[hydroIndex];
+        int daysToRunHydroFile = modelConfig.daysToRun[hydroIndex];
+
+        HydroFile * currHydroFile = hydroFileDict[hydroFileName];
+        river.setCurrentHydroFile(currHydroFile);
+        cout << "RUNNING FILE: " << hydroFileName.toStdString() << " FOR " << daysToRunHydroFile << " DAYS" << endl;
+
+        for(int dayOnHydroFile = 0; dayOnHydroFile < daysToRunHydroFile; dayOnHydroFile++) {
+            if(daysElapsed % 7 == 0){
+                //BEGINNING OF WEEK
+                river.setCurrentWaterTemperature( waterTemps[weeksElapsed] );
+            }
+            //BEGINNING OF DAY
+
+
+            for(int hour = 0; hour < HOURS_PER_DAY; hour++) {
+                //NEW HOUR
+                printHourlyMessage(daysElapsed, hour);
+
+                river.setCurrentPAR( parValues[hoursElapsed] );
+                river.processPatches();
+                river.flow(source, dest);
+
+                modelStatus.updateProgress();
+                hoursElapsed++;
+            }
+            //END OF DAY
+
+            //TODO Gather max patch values here if other code needs them
+            river.saveCSV(displayedStock, daysElapsed);
+
+            //TODO Add back in image generation
+            modelStatus.hasNewImage(true);
+
+            daysElapsed++;
+            if(daysElapsed % 7 == 0){
+                //END OF WEEK
+                weeksElapsed++;
+            }
+        }
     }
 
-    //TODO refactor and integrate all the setup stuff...
-    //setup(config);
+    //Remove temp structures used for flowing river
+    delete source;
+    delete dest;
 
-    //TODO Create a function for hydroFileDict initialization
+    //TODO Identify refactoring changes in cleanup.  Delete new'd data (i.e. hydromaps)
+    //cleanup();
+
+    cout << endl << "PROCESSING COMPLETE" << endl;
+    modelStatus.setState(Status::COMPLETE);
+}
+
+void RiverModel::setConfiguration(const Configuration & configuration)
+{
+    modelConfig = configuration;
+    displayedStock = modelConfig.whichStock;
+}
+
+void RiverModel::setWhichStock(QString stockName)
+{
+    displayedStock = stockName;
+}
+
+void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
+    int currentDay = daysElapsed + 1;
+    cout << "Day: " << currentDay << " - Hour: " << hourOfDay \
+        << " | Progress: " << (int)(modelStatus.getProgress()*100) \
+        << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
+        << " / " << modelStatus.getTimeRemaining() << endl;
+}
+
+void RiverModel::initializeModelStatus(int daysToRun)
+{
+    modelStatus.addWorkUnitsToProcess(daysToRun * 24);
+    modelStatus.setState(Status::READY);
+}
+
+void RiverModel::initializeHydroMaps(const Configuration &config) {
     QStringList hydroFileNames;
-    for(int i = 0; i < config.hydroMaps.size(); i++){
+    for(int i = 0; i < config.hydroMaps.size(); i++) {
         hydroFileNames.append(config.hydroMaps[i]);
     }
-    HydroFileDict hydroFiles(hydroFileNames);
+    hydroFileDict = HydroFileDict(hydroFileNames);
+}
 
-    //TODO Create a function for waterTemp initialization
+void RiverModel::initializeWaterTemps(const Configuration &config) {
     QString waterTempFilename = config.tempFile;
     QFile temperatureFile( waterTempFilename );
     if( !temperatureFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
@@ -127,8 +210,9 @@ void RiverModel::newRun() {
         waterTemps.append(line.toDouble() );
     }
     temperatureFile.close();
+}
 
-    //TODO Create a function for parValue initialization
+void RiverModel::initializePARValues(const Configuration &config) {
     QString parFileFilename = config.parFile;
 
     QFile parFile( parFileFilename );
@@ -142,88 +226,16 @@ void RiverModel::newRun() {
         parValues.append( line.toInt() );
     }
     parFile.close();
+}
 
-    //TODO pass in totalDaysToRun as a parameter.
-    initializeModelStatus();
-
-    modelStatus.setState(Status::RUNNING); //Fine
-
-    //TODO Already set in initialize_globals, does it need to be a global?
-    g.gui_days_to_run = 0;
-    int weeks_elapsed = 0; //Fine
-    int days_elapsed = 0; //Fine
-    int hours_elapsed = 0; //Fine
-
-    //Creates a new river and initializes its patches
-    River river(config, hydroFiles);
-    int width = hydroFiles.getMaxWidth();
-    int height = hydroFiles.getMaxHeight();
-
-    Grid<FlowData> * source = new Grid<FlowData>(width, height);
-    Grid<FlowData> * dest = new Grid<FlowData>(width, height);
-
-    for (int hydroIndex = 0; hydroIndex < config.hydroMaps.size(); hydroIndex++) {
-        QString hydroFileName = config.hydroMaps[hydroIndex];
-        int daysToRunHydroFile = config.daysToRun[hydroIndex];
-
-        g.gui_days_to_run += config.daysToRun[hydroIndex];  //Set howmany days to run the new hydromap
-
-        HydroFile * currHydroFile = hydroFiles[hydroFileName];
-        river.setCurrentHydroFile(currHydroFile);
-
-        cout << "RUNNING FILE: " << hydroFileName.toStdString() << " FOR " << daysToRunHydroFile << " DAYS" << endl;
-
-        for(int dayOnHydroFile = 0; dayOnHydroFile < daysToRunHydroFile; dayOnHydroFile++) {
-            river.setCurrentWaterTemperature( waterTemps[weeks_elapsed] );
-
-            for(int hour = 0; hour < HOURS_PER_DAY; hour++) {
-                //TODO Make the following cout statement a function.
-                int currentDay = days_elapsed + 1;
-                cout << "Day: " << currentDay << " - Hour: " << hour \
-                    << " | Progress: " << (int)(modelStatus.getProgress()*100) \
-                    << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
-                    << " / " << modelStatus.getTimeRemaining() << endl;
-
-                river.setCurrentPAR( parValues[hours_elapsed] );
-                river.processPatches();
-                river.flow(source, dest);
-
-                modelStatus.updateProgress();
-                hours_elapsed++;
-            }
-            //TODO Gather max patch values here if other code needs them
-            //TODO Pass as a parameter which stock and days_elapsed.
-            river.saveCSV();
-
-            //TODO Add back in image generation
-
-            days_elapsed++;
-            modelStatus.hasNewImage(true);
-            if(days_elapsed % 7 == 0){
-                weeks_elapsed++;
-            }
-        }
+int RiverModel::getDaysToRun(const Configuration &config) {
+    int daysToRun = 0;
+    QVector<uint16_t>::Iterator it;
+    for (it = modelConfig.daysToRun.begin(); it != modelConfig.daysToRun.end(); it++)
+    {
+        daysToRun += *it;
     }
 
-    delete source;
-    delete dest;
-
-    //TODO Identify refactoring changes in cleanup.  Delete new'd data (i.e. hydromaps)
-    //cleanup();
-
-    cout << endl << "PROCESSING COMPLETE" << endl;
-    modelStatus.setState(Status::COMPLETE);
-
+    return daysToRun;
 }
 
-void RiverModel::setConfiguration(const Configuration & configuration)
-{
-    //TODO change this so it also sets a whichstock member variable
-    config = configuration;
-}
-
-void RiverModel::setWhichStock(QString stockName)
-{
-    //TODO Change this so it assigns to a member variable
-    config.whichStock = stockName;
-}

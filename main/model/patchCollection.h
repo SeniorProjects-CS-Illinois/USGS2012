@@ -49,12 +49,6 @@ class PatchCollection {
 
         QVector<int> pcolor;
 
-        //QVector<double> px_vector;     ///< flow vector in the x_direction for hydraulics
-        //QVector<double> py_vector;     ///< flow vector in the y_direction for hydraulics
-        //QVector<double> max_vector;    ///< largest flow vector
-        //QVector<double> depth;         ///< depth of an individual cell
-        //QVector<double> current_depth; ///< depth in the previous time_step
-        //QVector<double> velocity;      ///< the rate of flow for hydraulics
         QVector<int> aqa_point;        ///< biomass estimates of macro from USGS
 
         QVector<double> waterdecomp_doc_prey_limitation;       ///< NOT AVAILABLE
@@ -200,7 +194,7 @@ class PatchCollection {
          * @brief Creates a new patch by adding default values to the appropriate QVectors
          * @return The index of the new patch in the QVectors
          */
-        void initializePatches(Configuration & config);
+        void initializePatches(Configuration & config, int newSize);
 
         /**
          * @brief Provides a key to use with the index map given an x and y coordinate

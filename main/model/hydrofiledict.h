@@ -13,6 +13,8 @@ class HydroFileDict
     public:
         HydroFileDict(QStringList newFilenames);
         HydroFileDict();
+        HydroFileDict(const HydroFileDict & other);
+        HydroFileDict & operator=(const HydroFileDict &rhs);
         ~HydroFileDict();
 
         HydroFile * & operator[](const QString filename);
@@ -30,6 +32,9 @@ class HydroFileDict
     private:
         QStringList filenames;
         QHash<QString, HydroFile *> dict;
+
+        void copy(const HydroFileDict &rhs);
+        void clear();
 
 };
 

@@ -88,23 +88,6 @@ void HydroFile::loadFromFile(QString filename) {
     hydroFileLoaded = true;
 }
 
-/*
-HydroFile::~HydroFile() {
-    //TODO Once the carbon flow map is implemented
-}
-
-HydroFile const & HydroFile::operator=( HydroFile const & other ) {
-    //TODO Once the carbon flow map is implemented
-    return other;
-}
-
-CarbonFlowMap * HydroFile::getCarbonFlowMap(int iterations)
-{
-    //TODO Build and memoize the carbonflowmap for the given number of iterations
-    return NULL;
-}
-*/
-
 bool HydroFile::patchExists(int x, int y) const {
     int hashKey = getHashKey(x,y);
     return hydroDataSetIndices.contains(hashKey);
@@ -166,15 +149,6 @@ HydroFile::HydroData & HydroFile::getData(int x, int y) {
     int index = hydroDataSetIndices[hashKey];
     return hydroDataSet[index];
 }
-
-/*
-void HydroFile::copy(HydroFile const & other) {
-    //TODO
-}
-void HydroFile::clear() {
-    //TODO
-}
-*/
 
 void HydroFile::zeroHydroData(Grid<HydroData> & hydroData) {
 
