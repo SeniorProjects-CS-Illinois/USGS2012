@@ -55,6 +55,7 @@ void HydroFile::loadFromFile(QString filename) {
         data.depth          = hydroFileData[index + 2].toDouble();
         data.flowVector.setX( hydroFileData[index + 3].toDouble() );
         data.flowVector.setY( hydroFileData[index + 4].toDouble() );
+        data.fileVelocity   = hydroFileData[index + 5].toDouble();
 
         hydroData(patch_x, patch_y) = data;
 
@@ -115,6 +116,10 @@ const QVector2D & HydroFile::getVector(int x, int y) {
 
 double HydroFile::getDepth(int x, int y) {
     return getData(x,y).depth;
+}
+
+double HydroFile::getFileVelocity(int x, int y) {
+    return getData(x,y).fileVelocity;
 }
 
 int HydroFile::getMapHeight() const {

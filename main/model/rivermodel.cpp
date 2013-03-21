@@ -93,6 +93,7 @@ void RiverModel::run(void) {
 
 void RiverModel::newRun() {
     initialize_globals(); //Fine
+    reset_globals();
 
 
     int totalDaysToRun = 0;

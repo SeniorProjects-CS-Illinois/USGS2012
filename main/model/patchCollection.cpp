@@ -47,7 +47,10 @@ int PatchCollection::getSize() const {
 
 /*
  * TODO  Should patches be initialized via config values?  For now
- * I'm setting the following based on the following 2011 code.  -ECP
+ * I'm not sure why, but the following 2011 functions don't actually
+ * set the patches with initial values... If I make my code set the
+ * values passed via set_stocks as below, the program output changes quite a
+ * bit (At least after only a single simulated day of running...) -ECP
  *
  * void setup_stocks() {
  *     set_stocks(1.0f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f, 10.0f, 10.0f, 1.0f, 0.1f);
@@ -94,7 +97,12 @@ void PatchCollection::initializePatches(Configuration & config) {
 
     assimilation.fill(0.0, size);
 
-    //TODO Should this block be initialized using the config? -ECP
+    /*
+     * TODO Should this block be initialized using the config or even used?
+     * Until I know, I'm commenting it out so I match the output of the original
+     * code so I know my calculations are the same and not broken.  -ECP
+     */
+    /*
     detritus.fill(1.0, size);
     DOC.fill(10.0, size);
     POC.fill(10.0, size);
@@ -105,7 +113,19 @@ void PatchCollection::initializePatches(Configuration & config) {
     herbivore.fill(1.0, size);
     sedconsumer.fill(1.0, size);
     peri.fill(0.0, size);
-    consum.fill(0.1, size);
+    consum.fill(0.1, size);*/
+
+    detritus.fill(0.0, size);
+    DOC.fill(0.0, size);
+    POC.fill(0.0, size);
+    waterdecomp.fill(0.0, size);
+    seddecomp.fill(0.0, size);
+    macro.fill(0.0, size);
+    phyto.fill(0.0, size);
+    herbivore.fill(0.0, size);
+    sedconsumer.fill(0.0, size);
+    peri.fill(0.0, size);
+    consum.fill(0.0, size);
 
     bottom_light.fill(0.0, size);
     consumer.fill(0.0, size);

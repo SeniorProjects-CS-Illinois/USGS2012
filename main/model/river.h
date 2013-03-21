@@ -1,6 +1,6 @@
 #ifndef RIVER_H
 #define RIVER_H
-#include <omp.h>
+//#include <omp.h>
 #include <QString>
 #include <QDateTime>
 #include <QFile>

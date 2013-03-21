@@ -48,8 +48,6 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     // TODO Get rid of max_vector_component and g.COMPARE_MAX
     double max_vector_component = 0.0;
 
-                cout << "Hi there" << endl;
-
     for (int i = 0; i < p.getSize(); i++ ) {
         int x = p.pxcor[i];
         int y = p.pycor[i];
@@ -57,18 +55,23 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
         if(newHydroFile->patchExists(x,y)){
             double depth = newHydroFile->getDepth(x,y);
             QVector2D flowVector = newHydroFile->getVector(x,y);
+            double flowX = flowVector.x();
+            double flowY = flowVector.y();
+
+            //TODO Replace this link with flowVector.length() once we know if it is correct to do so.
+            double flowMagnitude = newHydroFile->getFileVelocity(x,y);
 
             p.hasWater[i] = true;
             p.depth[i] = depth;
-            p.flowX[i] = flowVector.x();
-            p.flowY[i] = flowVector.y();
-            p.flowMagnitude[i] = flowVector.length();
+            p.flowX[i] = flowX;
+            p.flowY[i] = flowY;
+            p.flowMagnitude[i] = flowMagnitude;
 
-            if (max_vector_component < fabs(flowVector.x()) ) {
-                max_vector_component = fabs(flowVector.x());
+            if (max_vector_component < fabs(flowX) ) {
+                max_vector_component = fabs(flowX);
             }
-            if( max_vector_component < fabs(flowVector.y())) {
-                max_vector_component = fabs(flowVector.y());
+            if( max_vector_component < fabs(flowY)) {
+                max_vector_component = fabs(flowY);
             }
 
         } else {
@@ -422,7 +425,7 @@ int River::saveCSV() const {
             depth = currHydroFile->getDepth(x,y);
 
             QVector2D flowVector = currHydroFile->getVector(x,y);
-            velocity = flowVector.length();
+            velocity = currHydroFile->getFileVelocity(x,y);
 
             int i = p.getIndex(x,y);
             pxcor = p.pxcor[i];
@@ -459,9 +462,9 @@ void River::processPatches() {
     //TODO refactor this massive function into smaller functions
     int patchCount = p.getSize();
 
-    #pragma omp parallel
+    //#pragma omp parallel
     {
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -498,7 +501,7 @@ void River::processPatches() {
 
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -546,7 +549,7 @@ void River::processPatches() {
 
             boundLower(p.macro[i], 0.001);
         }
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -592,7 +595,7 @@ void River::processPatches() {
             p.growth_phyto[i] = p.gross_photo_phyto[i] - p.excretion_phyto[i] -
                     p.respiration_phyto[i] - p.senescence_phyto[i];
         }
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -641,7 +644,7 @@ void River::processPatches() {
             p.herbivore_senescence[i] = (config.herbivoreSenescence / HOURS_PER_DAY) * p.herbivore[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -680,7 +683,7 @@ void River::processPatches() {
             p.waterdecomp_excretion[i] = (config.waterdecompExcretion / HOURS_PER_DAY) * p.waterdecomp[i];
             p.waterdecomp_senescence[i] = (config.waterdecompSenescence / HOURS_PER_DAY) * p.waterdecomp[i];
         }
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -721,7 +724,7 @@ void River::processPatches() {
             p.seddecomp_senescence[i] = (config.seddecompSenescence / HOURS_PER_DAY) * p.seddecomp[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -772,7 +775,7 @@ void River::processPatches() {
             p.sedconsumer_senescence[i] = (config.sedconsumerSenescence / HOURS_PER_DAY) * p.sedconsumer[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -813,7 +816,7 @@ void River::processPatches() {
             p.consum_senescence[i] = (config.consumerSenescence / HOURS_PER_DAY) * p.consum[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -843,7 +846,7 @@ void River::processPatches() {
             p.DOC_growth[i] = p.macro_exudation[i] + p.micro_death[i] + p.excretion[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -874,7 +877,7 @@ void River::processPatches() {
             p.POC_growth[i] = p.flocculation[i] + p.detritus_POC_transfer[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
@@ -915,7 +918,7 @@ void River::processPatches() {
                     p.egestion[i] + p.macro_death[i];
         }
 
-        #pragma omp for
+        //#pragma omp for
         for(int i = 0; i < patchCount; i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {

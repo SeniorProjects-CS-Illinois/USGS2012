@@ -62,6 +62,14 @@ class HydroFile {
         const QVector2D & getVector(int x, int y);
 
         /**
+         * \brief Gets the velocity reported in hydrofile file. May be incorrect.
+         * \param[in] x The x coordinate
+         * \param[in] y The y coordinate
+         * \return The velocity as recorded in hydrofile
+         */
+        double getFileVelocity(int x, int y);
+
+        /**
          * \brief Returns the map's width
          */
         int getMapWidth(void) const;
@@ -82,6 +90,9 @@ class HydroFile {
             int x;
             int y;
             QVector2D flowVector;
+            // Keeping track of this as we don't know why file's velocity
+            // doesn't match what is calculated using component vectors
+            double fileVelocity;
             double depth;
         };
 

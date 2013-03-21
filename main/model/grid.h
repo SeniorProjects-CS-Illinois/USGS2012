@@ -10,6 +10,7 @@
 template <typename T>
 class Grid {
     public:
+        Grid(){}
 
         /**
          * \brief Constructor.  Sets the dimensions of grid.
