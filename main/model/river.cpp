@@ -545,12 +545,12 @@ QColor River::getHeatMapColor(double carbonValue, double avgVal, double maxVal) 
         return QColor("green");
     }
 
-    if( carbonValue >= maxVal) {
-        return QColor("red");
-    }
-
     if( carbonValue == avgVal) {
         return QColor("yellow");
+    }
+
+    if( carbonValue >= maxVal) {
+        return QColor("red");
     }
 
     double distFromAverage = fabs(carbonValue - avgVal);
