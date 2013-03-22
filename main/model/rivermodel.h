@@ -102,6 +102,8 @@ class RiverModel {
 
         int getDaysToRun(const Configuration & config);
 
+        void saveAverages(Statistics & stats, int daysElapsed);
+
 
         Status modelStatus;
         Configuration modelConfig;
@@ -111,6 +113,8 @@ class RiverModel {
 
         QString displayedStock;
         QVector<QString> stockNames;
+
+        QString averagesFilename;
 
         QVector<QImage> images;
         QMutex imageMutex;

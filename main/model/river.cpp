@@ -395,6 +395,7 @@ Statistics River::generateStatistics() {
     return stats;
 }
 
+//TODO Use QFile
 int River::saveCSV(QString displayedStock, int daysElapsed) const {
     QString file_name = "./results/data/map_data_";
     QDateTime date_time = QDateTime::currentDateTime();

@@ -127,6 +127,7 @@ void RiverModel::newRun() {
             Statistics stats = river.generateStatistics();
             river.saveCSV(displayedStock, daysElapsed);
             river.generateImages(images, stockNames, imageMutex, stats);
+            saveAverages(stats,daysElapsed);
             modelStatus.hasNewImage(true);
 
             daysElapsed++;
@@ -283,3 +284,40 @@ int RiverModel::getDaysToRun(const Configuration &config) {
     return daysToRun;
 }
 
+void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
+    int currentDay = daysElapsed + 1;
+
+    QFile averagesFile;
+    QTextStream textStream;
+    if(averagesFilename.isEmpty()) {
+        //File does not yet exist.  We need to create a filename and add table headers
+        QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+        averagesFilename = "./results/data/carbon_avgs_" + dateAndTime + ".csv";
+        averagesFile.setFileName(averagesFilename);
+        if ( !averagesFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            cout << "Failed to open averagesFile for write." << endl;
+            abort();
+        }
+        textStream.setDevice(&averagesFile);
+        textStream << "Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer,"
+                   << "DOC,POC,Herbivore,Detritus,All Carbon\n";
+
+    }else{
+        //File already exists, open for append
+        averagesFile.setFileName(averagesFilename);
+        if ( !averagesFile.open(QIODevice::Append | QIODevice::Text)) {
+            cout << "Failed to open averagesFile for append." << endl;
+            abort();
+        }
+        textStream.setDevice(&averagesFile);
+    }
+
+    textStream << currentDay << "," << stats.avgMacro << "," << stats.avgPhyto << ","
+               << stats.avgWaterDecomp << "," << stats.avgSedDecomp << ","
+               << stats.avgSedConsumer << "," << stats.avgConsum << ","
+               << stats.avgDOC << "," << stats.avgPOC << "," << stats.avgHerbivore << ","
+               << stats.avgDetritus << "," << stats.avgCarbon << "\n";
+
+
+    averagesFile.close();
+}
