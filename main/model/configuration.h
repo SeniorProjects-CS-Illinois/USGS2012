@@ -124,19 +124,19 @@ class Configuration
 public:
 
     /**
-     * \brief Default constructor, basic initialization of
+     * @brief Default constructor, basic initialization of
      * member variables.
      */
     Configuration();
 
     /**
-     * \brief Write all data of current configuration to a
+     * @brief Write all data of current configuration to a
      * file in the order specified above.
      */
     void write(QString const & filename) const;
 
     /**
-     * \brief Read in a file to restore the saved configuration.
+     * @brief Read in a file to restore the saved configuration.
      */
     void read(QString const & filename);
 
@@ -262,22 +262,22 @@ public:
 
 private:
     /**
-     * \brief Read the next line of the file as a boolean.
+     * @brief Read the next line of the file as a boolean.
      */
     bool nextBool(std::ifstream & file, std::string & str);
 
     /**
-     * \brief Read the next line of the file as an integer.
+     * @brief Read the next line of the file as an integer.
      */
     uint16_t nextInt(std::ifstream & file, std::string & str);
 
     /**
-     * \brief Read the next line of the file as a float.
+     * @brief Read the next line of the file as a float.
      */
     float nextFloat(std::ifstream & file, std::string & str);
 
     /**
-     * \brief Read the next line of the file as a string.
+     * @brief Read the next line of the file as a string.
      */
     std::string & nextLine(std::ifstream & file, std::string & str) const;
 };

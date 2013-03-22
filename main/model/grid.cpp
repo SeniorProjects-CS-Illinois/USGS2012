@@ -13,7 +13,7 @@ T & Grid<T>::operator()(std::size_t x, std::size_t y){
 }
 
 template <typename T>
-T const & Grid<T>::operator()(std::size_t x, std::size_t y) const {
+const T & Grid<T>::operator()(std::size_t x, std::size_t y) const {
     return array[x*height + y];
 }
 
@@ -23,7 +23,7 @@ T & Grid<T>::operator()(std::size_t index){
 }
 
 template <typename T>
-T const & Grid<T>::operator()(std::size_t index) const {
+const T & Grid<T>::operator()(std::size_t index) const {
     return array[index];
 }
 
@@ -38,11 +38,31 @@ std::size_t Grid<T>::getArraySize(void){
 }
 
 template <typename T>
-std::size_t Grid<T>::getWidth(void) {
+T Grid<T>::get(std::size_t x, std::size_t y) const {
+    return array[x*height + y];
+}
+
+template <typename T>
+T Grid<T>::get(std::size_t index) const {
+    return array[index];
+}
+
+template <typename T>
+void Grid<T>::set(std::size_t x, std::size_t y, const T & val) {
+    array[x*height + y] = val;
+}
+
+template <typename T>
+void Grid<T>::set(std::size_t index, const T & val) {
+    array[index] = val;
+}
+
+template <typename T>
+std::size_t Grid<T>::getWidth(void) const {
     return width;
 }
 
 template <typename T>
-std::size_t Grid<T>::getHeight(void) {
+std::size_t Grid<T>::getHeight(void) const {
     return height;
 }

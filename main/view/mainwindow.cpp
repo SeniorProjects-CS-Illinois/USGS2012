@@ -732,17 +732,6 @@ void MainWindow::getAllStockInput(Configuration & c) const
     c.detritus = getDetritusBase();
     c.consumer = getConsumerBase();
 
-    set_stocks(c.macro,
-               c.phyto,
-               c.decomp,
-               c.seddecomp,
-               c.herbivore,
-               c.sedconsumer,
-               c.doc,
-               c.poc,
-               c.detritus,
-               c.consumer);
-
     c.phytoSenescence = getPhytoSenescence();
     c.phytoRespiration = getPhytoRespiration();
     c.phytoExcretion = getPhytoExcretion();
