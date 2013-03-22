@@ -1,7 +1,7 @@
 #ifndef PATCHCOMPUTATION_H
 #define PATCHCOMPUTATION_H
 #include <cmath>
-//#include <omp.h>
+#include <omp.h>
 #include "constants.h"
 #include "globals.h"
 #include "patchcollection.h"

@@ -1,7 +1,7 @@
 #include "patchcomputation.h"
 
 void PatchComputation::updatePatches(PatchCollection & p, const Configuration & config, int currPAR ) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -39,7 +39,7 @@ void PatchComputation::updatePatches(PatchCollection & p, const Configuration & 
 }
 
 void PatchComputation::macro(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -86,7 +86,7 @@ void PatchComputation::macro(PatchCollection & p, const Configuration & config, 
 }
 
 void PatchComputation::phyto(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -132,7 +132,7 @@ void PatchComputation::phyto(PatchCollection & p, const Configuration & config, 
 }
 
 void PatchComputation::herbivore(PatchCollection & p, const Configuration & config) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -182,7 +182,7 @@ void PatchComputation::herbivore(PatchCollection & p, const Configuration & conf
 }
 
 void PatchComputation::waterDecomp(PatchCollection & p, const Configuration & config) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -223,7 +223,7 @@ void PatchComputation::waterDecomp(PatchCollection & p, const Configuration & co
 }
 
 void PatchComputation::sedDecomp(PatchCollection & p, const Configuration & config) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -264,7 +264,7 @@ void PatchComputation::sedDecomp(PatchCollection & p, const Configuration & conf
 }
 
 void PatchComputation::sedConsumer(PatchCollection & p, const Configuration & config) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -316,7 +316,7 @@ void PatchComputation::sedConsumer(PatchCollection & p, const Configuration & co
 
 void PatchComputation::consum(PatchCollection & p, const Configuration & config) {
 
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -357,7 +357,7 @@ void PatchComputation::consum(PatchCollection & p, const Configuration & config)
 }
 
 void PatchComputation::DOC(PatchCollection & p, const Configuration & config){
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -387,7 +387,7 @@ void PatchComputation::DOC(PatchCollection & p, const Configuration & config){
 }
 
 void PatchComputation::POC(PatchCollection & p) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
@@ -417,7 +417,7 @@ void PatchComputation::POC(PatchCollection & p) {
 }
 
 void PatchComputation::detritus(PatchCollection & p, const Configuration & config) {
-    //#pragma omp for
+    #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {

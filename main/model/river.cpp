@@ -565,7 +565,7 @@ QColor River::getHeatMapColor(double carbonValue, double avgVal, double maxVal) 
 }
 
 void River::processPatches() {
-    //#pragma omp parallel
+    #pragma omp parallel
     {
         PatchComputation::updatePatches(p, config, currPAR);
         PatchComputation::macro(p, config, currPAR, currWaterTemp);
@@ -579,7 +579,7 @@ void River::processPatches() {
         PatchComputation::POC(p);
         PatchComputation::detritus(p, config);
 
-        //#pragma omp for
+        #pragma omp for
         for(int i = 0; i < p.getSize(); i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {

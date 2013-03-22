@@ -2,7 +2,7 @@
 #define RIVER_H
 
 #include <algorithm>
-//#include <omp.h>
+#include <omp.h>
 #include <QColor>
 #include <QDateTime>
 #include <QFile>
