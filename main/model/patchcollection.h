@@ -14,6 +14,12 @@
  */
 class PatchCollection {
     public:
+
+        /**
+         * @brief Constructor that initializes all patches for the river
+         * @param newConfig The config being used by the river.
+         * @param hydroDict The collection of hydrofiles used in this simulation.
+         */
         PatchCollection(const Configuration & newConfig, HydroFileDict & hydroDict);
 
         /**
@@ -209,7 +215,6 @@ class PatchCollection {
         int height;
         QHash<int,int> indexMap;
         Configuration config;
-
 };
 
 #endif // PATCHCOLLECTION_H
