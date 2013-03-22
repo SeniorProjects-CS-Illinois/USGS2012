@@ -52,11 +52,11 @@ void PatchComputation::macro(PatchCollection & p, const Configuration & config, 
 
         //TODO Ask Kevin what theta is and why it is 1.072.  I want to add
         //it to the constants file but "THETA" is really ambiguous. -ECP
-        double Q10 = pow(g.theta, (currWaterTemp - config.macroTemp));
+        double Q10 = pow(THETA, (currWaterTemp - config.macroTemp));
 
         //TODO pull velocity from hydrofile rather than patches
         if(p.flowMagnitude[i] < config.macroVelocityMax) {
-            p.K[i] = g.max_area
+            p.K[i] = PATCH_AREA
                     * (config.macroMassMax
                        - (config.macroMassMax  / config.macroVelocityMax)
                        * p.flowMagnitude[i]);
@@ -104,7 +104,7 @@ void PatchComputation::phyto(PatchCollection & p, const Configuration & config, 
         //base temperature for nominal growth
         //TODO What is base temperature and why is it a magic number?
         double base_temperature = 8.0;
-        double Q10 = pow(g.theta, (currWaterTemp - base_temperature));
+        double Q10 = pow(THETA, (currWaterTemp - base_temperature));
         double km = 10; //half saturation constant
 
 

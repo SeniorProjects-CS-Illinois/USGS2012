@@ -211,7 +211,7 @@ double River::getMaxTimestep() {
     {
         return 1.0;
     }
-    return (((double)g.patch_length)/((double)g.COMPARE_MAX));
+    return (((double)PATCH_LENGTH)/((double)g.COMPARE_MAX));
 }
 
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
@@ -224,9 +224,9 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
             double px_vector = source(x,y).px_vector;
             double py_vector = source(x,y).py_vector;
 
-            double corner_patch = fabs( py_vector * px_vector )/g.max_area;
-            double tb_patch = fabs( py_vector*( g.patch_length - fabs(px_vector) ) )/g.max_area;
-            double rl_patch = fabs( px_vector*( g.patch_length - fabs(py_vector) ) )/g.max_area;
+            double corner_patch = fabs( py_vector * px_vector ) / PATCH_AREA;
+            double tb_patch = fabs( py_vector*( PATCH_LENGTH - fabs(px_vector) ) ) / PATCH_AREA;
+            double rl_patch = fabs( px_vector*( PATCH_LENGTH - fabs(py_vector) ) ) / PATCH_AREA;
 
             // if a neighbor patch is dry, the carbon does not move in that direction
             double max_timestep = getMaxTimestep();
