@@ -26,65 +26,19 @@ QImage RiverModel::getImage(QString stockName){
     stockName = stockName.toLower();
     QImage stockImage;
 
-    g.imageMutex.lock();
-    for(int i = 0; i < g.NUM_STOCKS; i++){
-        if(g.stock_names[i] == stockName){
-            stockImage = *(g.images[i]);
+    imageMutex.lock();
+    for(int i = 0; i < NUM_IMAGES; i++){
+        if(stockNames[i] == stockName){
+            stockImage = images[i];
             break;
         }
     }
-    g.imageMutex.unlock();
+    imageMutex.unlock();
 
     return stockImage;
 }
 
-//     was doing aside from creating output dirs.
-void RiverModel::run(void) {
-    setup(modelConfig);
-
-    initialize_globals();
-    initializeModelStatus(getDaysToRun(modelConfig));
-
-    modelStatus.setState(Status::RUNNING);
-
-    g.gui_days_to_run = 0;
-    int days_elapsed = 0;
-    int hours_elapsed = 0;
-
-    for(int index = 0; index < modelConfig.hydroMaps.size(); index++)
-    {
-        cout << "RUNNING FILE: " << modelConfig.hydroMaps[index].toStdString();
-        cout << " FOR " << modelConfig.daysToRun[index] << " DAYS" << endl;
-
-        g.gui_days_to_run += modelConfig.daysToRun[index];  //Set howmany days to run the new hydromap
-        g.hydro_group = (g.hydromap_index_vector[index] + 1); //Set the new hydromap that will run
-        g.hydro_changed = 1;  //Confirm that a new hydro map has been loaded
-
-        while( days_elapsed < g.gui_days_to_run)
-        {
-            cout << "Day: " << (days_elapsed + 1) << " - Hour: " << ((g.hours)%24) \
-                << " | Progress: " << (int)(modelStatus.getProgress()*100) \
-                << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
-                << " / " << modelStatus.getTimeRemaining() << endl;
-            go(modelConfig);
-            modelStatus.updateProgress();
-
-            hours_elapsed++;
-
-            if( hours_elapsed % 24 == 0) {
-                days_elapsed++;
-                modelStatus.hasNewImage(true);
-            }
-        }
-    }
-
-    cleanup();
-
-    cout << endl << "PROCESSING COMPLETE" << endl;
-    modelStatus.setState(Status::COMPLETE);
-}
-
-void RiverModel::newRun() {
+void RiverModel::run() {
     initializeModel(modelConfig);
 
     int weeksElapsed = 0;
@@ -171,7 +125,6 @@ void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
 void RiverModel::initializeModel(const Configuration &config){
     //TODO Get rid of these two functions if possible.
     initialize_globals();
-    reset_globals();
 
     initializeHydroMaps(modelConfig);
     initializeWaterTemps(modelConfig);
@@ -214,7 +167,7 @@ void RiverModel::initializeStockNames() {
     stockNames.append("doc");
     stockNames.append("poc");
     stockNames.append("detritus");
-    stockNames.append("all_carbon");
+    stockNames.append("average");
 }
 
 void RiverModel::initializeHydroMaps(const Configuration &config) {

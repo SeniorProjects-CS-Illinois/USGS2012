@@ -32,6 +32,6 @@ int main(int argc, char *argv[]) {
 
     model.setConfiguration(config);
 
-    model.newRun();
+    model.run();
     return 0;
 }

@@ -1,33 +1,22 @@
 #ifndef RIVERMODEL_H
 #define RIVERMODEL_H
 
-#include <sys/types.h>
-#include <stdlib.h>
 #include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <QString>
 #include <QFile>
-#include <QTextStream>
-#include <QStringList>
-#include <QVector>
 #include <QImage>
 #include <QMutex>
-#include <vector>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
+#include <QVector>
 
-#include "status.h"
+#include "configuration.h"
 #include "constants.h"
 #include "globals.h"
-#include "setup.h"
-#include "patch.h"
-#include "go.h"
-#include "dump.h"
-#include "cleanup.h"
-#include "configuration.h"
-#include "hydrofiledict.h"
 #include "hydrofile.h"
+#include "hydrofiledict.h"
 #include "river.h"
+#include "status.h"
 
 using std::cout;
 using std::endl;
@@ -40,11 +29,6 @@ class RiverModel {
          * Runs the model.
          */
         void run(void);
-
-        /**
-         * Runs the refactored model.
-         */
-        void newRun(void);
 
         /**
          * Set the configuration for the river model.

@@ -39,13 +39,13 @@ class PatchCollection {
         int getSize() const;
 
 
-        QVector<int> pxcor;
-        QVector<int> pycor;
-        QVector<double> flowX;
-        QVector<double> flowY;
-        QVector<double> flowMagnitude;
-        QVector<double> depth;
-        QVector<bool> hasWater;
+        QVector<int> pxcor;             ///< the x_coordinate for the patch
+        QVector<int> pycor;             ///< the y_coordinate for the patch
+        QVector<double> flowX;          ///< flow vector in the x_direction for hydraulics
+        QVector<double> flowY;          ///< flow vector in the y_direction for hydraulics
+        QVector<double> flowMagnitude;  ///< the rate of flow for hydraulics
+        QVector<double> depth;          ///< depth of the water
+        QVector<bool> hasWater;         ///< indicates whether or not the patch has water
 
         QVector<int> pcolor;
 
