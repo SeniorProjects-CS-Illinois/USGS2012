@@ -1,8 +1,3 @@
-#include <sys/types.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <QDir>
 
 #include "model/rivermodel.h"
