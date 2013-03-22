@@ -3,7 +3,6 @@
 River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
     : p(newConfig,hydroFileDict)
 {
-
     config = newConfig;
 
     currHydroFile = NULL;
@@ -14,7 +13,8 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
     height = hydroFileDict.getMaxHeight();
 }
 
-
+//TODO This function is relatively slow because of many hashtable lookups
+// in HydroFile class.  Consider pros and cons of using a grid instead.
 void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     // TODO Get rid of max_vector_component and g.COMPARE_MAX
     double max_vector_component = 0.0;
@@ -176,23 +176,6 @@ void River::storeFlowData(Grid<FlowData> & flowData) {
         p.phyto[i]       = flowData(x,y).phyto;
         p.waterdecomp[i] = flowData(x,y).waterdecomp;
     }
-
-
-
-    /*
-    for(int x = 0; x < width; x++) {
-        for(int y = 0; y < height; y++) {
-            if(!p.patchExists(x,y)) {
-                continue;
-            }
-            int index = p.getIndex(x,y);
-            p.DOC[index] = flowData(x,y).DOC;
-            p.POC[index] = flowData(x,y).POC;
-            p.phyto[index] = flowData(x,y).phyto;
-            p.waterdecomp[index] = flowData(x,y).waterdecomp;
-        }
-    }
-    */
 }
 
 bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst) {
@@ -330,7 +313,87 @@ bool River::is_valid_patch(int x, int y) {
     return true;
 }
 
+Statistics River::generateStatistics() {
+    Statistics stats;
 
+    for(int i = 0; i < p.getSize(); i++) {
+        if(!p.hasWater[i]) {
+            continue;
+        }
+
+        stats.waterPatches++;
+
+        double carbon = 0.0;
+
+        //Macro
+        carbon += p.macro[i];
+        stats.totalMacro += p.macro[i];
+        stats.maxMacro = max(stats.maxMacro, p.macro[i]);
+
+        //Phyto
+        carbon += p.phyto[i];
+        stats.totalPhyto += p.phyto[i];
+        stats.maxPhyto = max(stats.maxPhyto, p.phyto[i]);
+
+        //Herbivore
+        carbon += p.herbivore[i];
+        stats.totalHerbivore += p.herbivore[i];
+        stats.maxHerbivore = max(stats.maxHerbivore, p.herbivore[i]);
+
+        //WaterDecomp
+        carbon += p.waterdecomp[i];
+        stats.totalWaterDecomp += p.waterdecomp[i];
+        stats.maxWaterDecomp = max(stats.maxWaterDecomp, p.waterdecomp[i]);
+
+        //SedDecomp
+        carbon += p.seddecomp[i];
+        stats.totalSedDecomp += p.seddecomp[i];
+        stats.maxSedDecomp = max(stats.maxSedDecomp, p.seddecomp[i]);
+
+        //SedConsum
+        carbon += p.sedconsumer[i];
+        stats.totalSedConsumer += p.sedconsumer[i];
+        stats.maxSedConsumer = max(stats.maxSedConsumer, p.sedconsumer[i]);
+
+        //Consum
+        carbon += p.consum[i];
+        stats.totalConsum += p.consum[i];
+        stats.maxConsum = max(stats.maxConsum, p.consum[i]);
+
+        //DOC
+        carbon += p.DOC[i];
+        stats.totalDOC += p.DOC[i];
+        stats.maxDOC = max(stats.maxDOC, p.DOC[i]);
+
+        //POC
+        carbon += p.POC[i];
+        stats.totalPOC += p.POC[i];
+        stats.maxPOC = max(stats.maxPOC, p.POC[i]);
+
+        //Detritus
+        carbon += p.detritus[i];
+        stats.totalDetritus += p.detritus[i];
+        stats.maxDetritus = max(stats.maxDetritus, p.detritus[i]);
+
+        //Carbon
+        stats.totalCarbon += carbon;
+        stats.maxCarbon = max(stats.maxCarbon, carbon);
+    }
+
+    stats.avgMacro       = stats.totalMacro / stats.waterPatches;
+    stats.avgPhyto       = stats.totalPhyto / stats.waterPatches;
+    stats.avgHerbivore   = stats.totalHerbivore / stats.waterPatches;
+    stats.avgWaterDecomp = stats.totalWaterDecomp / stats.waterPatches;
+    stats.avgSedDecomp   = stats.totalSedDecomp / stats.waterPatches;
+    stats.avgSedConsumer   = stats.totalSedConsumer / stats.waterPatches;
+    stats.avgConsum      = stats.totalConsum / stats.waterPatches;
+    stats.avgDOC         = stats.totalDOC / stats.waterPatches;
+    stats.avgPOC         = stats.totalPOC / stats.waterPatches;
+    stats.avgDetritus    = stats.totalDetritus / stats.waterPatches;
+    stats.avgCarbon      = stats.totalCarbon / stats.waterPatches;
+
+    return stats;
+}
 
 int River::saveCSV(QString displayedStock, int daysElapsed) const {
     QString file_name = "./results/data/map_data_";
@@ -408,12 +471,99 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
     return 1;
 }
 
+void River::generateImages(QVector<QImage> &images, QVector<QString> & stockNames,
+                           QMutex &imageMutex, Statistics & stats)
+{
+    imageMutex.lock();
+    for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
+        QColor color("black");
+        images[imageIndex].fill(color.rgb());
+    }
 
+    for(int i = 0; i < p.getSize(); i++){
+        if(!p.hasWater[i]) {
+            continue;
+        }
+
+        int x = p.pxcor[i];
+        int y = p.pycor[i];
+
+        QColor macroColor = getHeatMapColor(p.macro[i], stats.avgMacro, stats.maxMacro);
+        QColor phytoColor = getHeatMapColor(p.phyto[i], stats.avgPhyto, stats.maxPhyto);
+        QColor herbivoreColor = getHeatMapColor(p.herbivore[i], stats.avgHerbivore, stats.maxHerbivore);
+        QColor waterDecompColor = getHeatMapColor(p.waterdecomp[i], stats.avgWaterDecomp, stats.maxWaterDecomp);
+        QColor sedDecompColor = getHeatMapColor(p.seddecomp[i], stats.avgSedDecomp, stats.maxSedDecomp);
+        QColor sedConsumerColor = getHeatMapColor(p.sedconsumer[i], stats.avgSedConsumer, stats.maxSedConsumer);
+        QColor consumColor = getHeatMapColor(p.consum[i], stats.avgConsum, stats.maxConsum);
+        QColor DOCColor = getHeatMapColor(p.DOC[i], stats.avgDOC, stats.maxDOC);
+        QColor POCColor = getHeatMapColor(p.POC[i], stats.avgPOC, stats.maxPOC);
+        QColor detritusColor = getHeatMapColor(p.detritus[i], stats.avgDetritus, stats.maxDetritus);
+
+        images[STOCK_MACRO].setPixel( x, y, macroColor.rgb());
+        images[STOCK_PHYTO].setPixel(x, y, phytoColor.rgb());
+        images[STOCK_HERBIVORE].setPixel(x, y, herbivoreColor.rgb());
+        images[STOCK_WATERDECOMP].setPixel( x, y, waterDecompColor.rgb());
+        images[STOCK_SEDDECOMP].setPixel(x, y, sedDecompColor.rgb());
+        images[STOCK_SEDCONSUMER].setPixel(x, y, sedConsumerColor.rgb());
+        images[STOCK_CONSUMER].setPixel(x, y, consumColor.rgb());
+        images[STOCK_DOC].setPixel(x, y, DOCColor.rgb());
+        images[STOCK_POC].setPixel(x, y, POCColor.rgb());
+        images[STOCK_DETRITUS].setPixel(x, y, detritusColor.rgb());
+
+        int patchCarbon = p.macro[i] + p.phyto[i] + p.herbivore[i] + p.waterdecomp[i] + p.seddecomp[i]
+                + p.sedconsumer[i] + p.consum[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
+        QColor allCarbonColor = getHeatMapColor(patchCarbon, stats.avgCarbon, stats.maxCarbon);
+        images[STOCK_ALL_CARBON].setPixel(x, y, allCarbonColor.rgb());
+    }
+
+    //Due to the layout of the hydrofiles, the river will appear upside down if we don't flip it.
+    for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
+        images[imageIndex] = images[imageIndex].mirrored(false,true);
+    }
+    imageMutex.unlock();
+
+    QImageWriter writer;
+    writer.setFormat("png");
+
+    for(int i = 0; i < NUM_IMAGES; i++){
+        QString date_time_str = QDateTime::currentDateTime().toString("_MMM_d_H_mm_ss");
+
+        QString fileName = "./results/images/" + stockNames[i] + date_time_str + ".png";
+        writer.setFileName(fileName);
+        writer.write(images[i]);
+    }
+}
+
+/**
+ * Scales the color of the patch from green to red.
+ * @param value The value of the patch
+ * @param maxVal the max value for a patch
+ */
+QColor River::getHeatMapColor(double carbonValue, double avgVal, double maxVal) {
+    if( carbonValue <= 0.0 || maxVal <= 0.0 ) {
+        return QColor("green");
+    }
+
+    if( carbonValue >= maxVal) {
+        return QColor("red");
+    }
+
+    if( carbonValue == avgVal) {
+        return QColor("yellow");
+    }
+
+    double distFromAverage = fabs(carbonValue - avgVal);
+
+    if( carbonValue < avgVal) {
+        double relativeValue = distFromAverage / avgVal;
+        return QColor::fromHsv( 60 + (int)(60*relativeValue),255,255);
+    } else {
+        double relativeValue = distFromAverage / (maxVal - avgVal);
+        return QColor::fromHsv( 60 - (int)(60*relativeValue),255,255);
+    }
+}
 
 void River::processPatches() {
-    //TODO refactor this massive function into smaller functions
-    int patchCount = p.getSize();
-
     //#pragma omp parallel
     {
         PatchComputation::updatePatches(p, config, currPAR);
@@ -429,7 +579,7 @@ void River::processPatches() {
         PatchComputation::detritus(p, config);
 
         //#pragma omp for
-        for(int i = 0; i < patchCount; i++) {
+        for(int i = 0; i < p.getSize(); i++) {
             //Only process patches if they currently contain water
             if(!p.hasWater[i]) {
                 continue;

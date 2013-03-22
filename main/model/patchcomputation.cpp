@@ -50,9 +50,6 @@ void PatchComputation::macro(PatchCollection & p, const Configuration & config, 
 
         // From 2011 team's go_macro function
 
-        //Converting to local variable
-        //Q10 = pow(g.theta, (g.temperature - config.macroTemp));
-
         //TODO Ask Kevin what theta is and why it is 1.072.  I want to add
         //it to the constants file but "THETA" is really ambiguous. -ECP
         double Q10 = pow(g.theta, (currWaterTemp - config.macroTemp));

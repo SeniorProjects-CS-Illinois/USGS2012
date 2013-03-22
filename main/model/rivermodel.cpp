@@ -1,5 +1,9 @@
 #include "rivermodel.h"
 
+RiverModel::RiverModel() {
+
+}
+
 Status RiverModel::getStatus(void){
     Status modelStatusGUI = modelStatus;
 
@@ -81,18 +85,7 @@ void RiverModel::run(void) {
 }
 
 void RiverModel::newRun() {
-    //TODO Get rid of these two functions if possible.
-    initialize_globals();
-    reset_globals();
-
-    int daysToRun = getDaysToRun(modelConfig);
-
-    initializeHydroMaps(modelConfig);
-    initializeWaterTemps(modelConfig);
-    initializePARValues(modelConfig);
-
-    initializeModelStatus(daysToRun);
-    modelStatus.setState(Status::RUNNING);
+    initializeModel(modelConfig);
 
     int weeksElapsed = 0;
     int daysElapsed = 0;
@@ -100,13 +93,7 @@ void RiverModel::newRun() {
 
     //Creates the river and initializes its patches
     River river(modelConfig, hydroFileDict);
-
-    // These are temp structures used in the flowing of the river.  Created
-    // here so they are not initialized and destroyed repeatedly.
-    int width = hydroFileDict.getMaxWidth();
-    int height = hydroFileDict.getMaxHeight();
-    Grid<FlowData> * source = new Grid<FlowData>(width, height);
-    Grid<FlowData> * dest = new Grid<FlowData>(width, height);
+    modelStatus.setState(Status::RUNNING);
 
     //Get a hydrofile to process
     for (int hydroIndex = 0; hydroIndex < modelConfig.hydroMaps.size(); hydroIndex++) {
@@ -119,7 +106,7 @@ void RiverModel::newRun() {
         cout << "RUNNING FILE: " << hydroFileName.toStdString() << " FOR " << daysToRunHydroFile << " DAYS" << endl;
 
         for(int dayOnHydroFile = 0; dayOnHydroFile < daysToRunHydroFile; dayOnHydroFile++) {
-            if(daysElapsed % 7 == 0){
+            if(daysElapsed % DAYS_PER_WEEK == 0){
                 //BEGINNING OF WEEK
                 river.setCurrentWaterTemperature( waterTemps[weeksElapsed] );
             }
@@ -129,36 +116,32 @@ void RiverModel::newRun() {
             for(int hour = 0; hour < HOURS_PER_DAY; hour++) {
                 //NEW HOUR
                 printHourlyMessage(daysElapsed, hour);
-
                 river.setCurrentPAR( parValues[hoursElapsed] );
                 river.processPatches();
                 river.flow(source, dest);
-
                 modelStatus.updateProgress();
+
                 hoursElapsed++;
             }
             //END OF DAY
-
-            //TODO Gather max patch values here if other code needs them
+            Statistics stats = river.generateStatistics();
             river.saveCSV(displayedStock, daysElapsed);
-
-            //TODO Add back in image generation
+            river.generateImages(images, stockNames, imageMutex, stats);
             modelStatus.hasNewImage(true);
 
             daysElapsed++;
-            if(daysElapsed % 7 == 0){
+            if(daysElapsed % DAYS_PER_WEEK == 0){
                 //END OF WEEK
+
                 weeksElapsed++;
             }
         }
     }
 
     //Remove temp structures used for flowing river
-    delete source;
-    delete dest;
+    deleteTempGrids();
 
-    //TODO Identify refactoring changes in cleanup.  Delete new'd data (i.e. hydromaps)
-    //cleanup();
+    //TODO Run program in valgrind to make sure all memory is freed.
 
     cout << endl << "PROCESSING COMPLETE" << endl;
     modelStatus.setState(Status::COMPLETE);
@@ -183,10 +166,54 @@ void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
         << " / " << modelStatus.getTimeRemaining() << endl;
 }
 
+//TODO Move this to construct and add the "Big three" (CCtor, assignment operator, destructor)
+void RiverModel::initializeModel(const Configuration &config){
+    //TODO Get rid of these two functions if possible.
+    initialize_globals();
+    reset_globals();
+
+    initializeHydroMaps(modelConfig);
+    initializeWaterTemps(modelConfig);
+    initializePARValues(modelConfig);
+
+    // These are temp structures used in the flowing of the river.  Created
+    // here so they are not initialized and destroyed repeatedly.
+    initializeTempGrids(hydroFileDict);
+
+    initializeImageVector(hydroFileDict);
+    initializeStockNames();
+
+    int daysToRun = getDaysToRun(modelConfig);
+    initializeModelStatus(daysToRun);
+}
+
 void RiverModel::initializeModelStatus(int daysToRun)
 {
     modelStatus.addWorkUnitsToProcess(daysToRun * 24);
     modelStatus.setState(Status::READY);
+}
+
+void RiverModel::initializeImageVector(HydroFileDict &hydroFileDict){
+    int width = hydroFileDict.getMaxWidth();
+    int height = hydroFileDict.getMaxHeight();
+    for(int i = 0; i < NUM_IMAGES; i++) {
+        images.append(QImage(width,height, QImage::Format_ARGB32));
+    }
+}
+
+void RiverModel::initializeStockNames() {
+    //Make sure these are added in the same order as the enum in constants.h
+    stockNames.append("macro");
+    stockNames.append("phyto");
+    stockNames.append("herbivore");
+    stockNames.append("waterdecomp");
+    stockNames.append("seddecomp");
+    stockNames.append("sedconsumer");
+    stockNames.append("consum");
+    stockNames.append("doc");
+    stockNames.append("poc");
+    stockNames.append("detritus");
+    stockNames.append("all_carbon");
 }
 
 void RiverModel::initializeHydroMaps(const Configuration &config) {
@@ -229,6 +256,20 @@ void RiverModel::initializePARValues(const Configuration &config) {
         parValues.append( line.toInt() );
     }
     parFile.close();
+}
+
+void RiverModel::initializeTempGrids(HydroFileDict &hydroFileDict){
+    int width = hydroFileDict.getMaxWidth();
+    int height = hydroFileDict.getMaxHeight();
+    source = new Grid<FlowData>(width, height);
+    dest = new Grid<FlowData>(width, height);
+}
+
+
+//TODO Move to destructor when one is added.
+void RiverModel::deleteTempGrids(){
+    delete source;
+    delete dest;
 }
 
 int RiverModel::getDaysToRun(const Configuration &config) {

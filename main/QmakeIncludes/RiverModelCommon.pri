@@ -4,8 +4,8 @@ win32:CONFIG += static
 #QMAKE_CXXFLAGS += -fopenmp
 #LIBS += -fopenmp
 
-QMAKE_CXXFLAGS += -pg
-QMAKE_LFLAGS += -pg
+#QMAKE_CXXFLAGS += -pg
+#QMAKE_LFLAGS += -pg
 
 SOURCES += model/cleanup.cpp \
     model/color.cpp \
@@ -45,9 +45,13 @@ HEADERS  += model/cleanup.h \
     model/river.h \
     model/rivermodel.h \
     model/setup.h \
+    model/statistics.h \
     model/status.h \
     model/utility.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides
 include(./SettingsOverrides.pri)
+
+HEADERS += \
+

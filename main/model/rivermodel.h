@@ -11,9 +11,13 @@
 #include <QFile>
 #include <QTextStream>
 #include <QStringList>
+#include <QVector>
+#include <QImage>
+#include <QMutex>
 #include <vector>
 
 #include "status.h"
+#include "constants.h"
 #include "globals.h"
 #include "setup.h"
 #include "patch.h"
@@ -30,8 +34,7 @@ using std::endl;
 
 class RiverModel {
     public:
-
-
+        RiverModel();
 
         /**
          * Runs the model.
@@ -77,18 +80,25 @@ class RiverModel {
     private:
         void printHourlyMessage(int daysElapsed, int hourOfDay);
 
+        void initializeModel(const Configuration & config);
 
         /**
          * Initialize the status for the model.
          */
         void initializeModelStatus(int daysToRun);
 
+        void initializeImageVector(HydroFileDict & hydroFileDict);
+
+        void initializeStockNames();
 
         void initializeHydroMaps(const Configuration & config);
 
         void initializeWaterTemps(const Configuration & config);
 
         void initializePARValues(const Configuration & config);
+
+        void initializeTempGrids(HydroFileDict & hydroFileDict);
+        void deleteTempGrids();
 
         int getDaysToRun(const Configuration & config);
 
@@ -100,6 +110,12 @@ class RiverModel {
         QVector<int> parValues;
 
         QString displayedStock;
+        QVector<QString> stockNames;
 
+        QVector<QImage> images;
+        QMutex imageMutex;
+
+        Grid<FlowData> * source;
+        Grid<FlowData> * dest;
 };
 #endif

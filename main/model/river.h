@@ -1,23 +1,32 @@
 #ifndef RIVER_H
 #define RIVER_H
+
+#include <algorithm>
 //#include <omp.h>
-#include <QString>
+#include <QColor>
 #include <QDateTime>
 #include <QFile>
+#include <QImage>
+#include <QImageWriter>
+#include <QMutex>
+#include <QString>
 #include <QVector2D>
-#include "constants.h"
-#include "globals.h"
+
 #include "configuration.h"
-#include "hydrofiledict.h"
+#include "constants.h"
+#include "flowdata.h"
+#include "globals.h"
 #include "hydrofile.h"
+#include "hydrofiledict.h"
 #include "patchcollection.h"
 #include "patchcomputation.h"
-#include "flowdata.h"
-
+#include "statistics.h"
 
 #include <iostream>
 using std::cout;
 using std::endl;
+using std::max;
+
 
 class River {
     public:
@@ -60,6 +69,12 @@ class River {
          */
         int saveCSV(QString displayedStock, int daysElapsed) const;
 
+        void generateImages(QVector<QImage> & images, QVector<QString> & stockNames,
+                           QMutex & imageMutex, Statistics & stats);
+
+        Statistics generateStatistics();
+
+
     private:
         /**
          * @brief Helper function for flow that handles flowing fow a single timestep
@@ -73,6 +88,7 @@ class River {
         double getMaxTimestep();
         bool is_valid_patch(int x, int y);
 
+        QColor getHeatMapColor(double value, double avgValue, double maxValue);
 
 
         PatchCollection p;
