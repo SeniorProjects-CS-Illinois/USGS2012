@@ -2,6 +2,10 @@
 #include "grid.h"
 #include "reducedgrid.h"
 #include "configuration.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 class TestClass : public QObject
 {
@@ -63,23 +67,27 @@ void TestClass::reducedGridTest()
 
 void TestClass::configTest()
 {
-    qDebug("First config");
+    qDebug("Setup first config");
     Configuration config;
     config.adjacent = false;
-    config.numStocks = 1;
+//    config.numStocks = 1;
     config.numHydroMaps = 2;
+    config.hydroMaps.append("10k.txt");
+    config.hydroMaps.append("20k.txt");
+	config.daysToRun.append(10);
+    config.daysToRun.append(20);
     config.outputFreq = 3;
     config.timestep = 4;
     config.tss = 4.0;
     config.kPhyto = 5.0;
     config.kMacro = 6.0;
-    config.whichStock = "Poc";
+//    config.whichStock = "Poc";
     config.macro = 7.0;
     config.phyto = 9.0;
     config.consumer = 10.0;
     config.decomp = 11.0;
     config.sedconsumer = 12.0;
-    config.seddecomp = 1.30;
+    config.seddecomp = 13.0;
     config.herbivore = 14.0;
     config.detritus = 15.0;
     config.poc = 16.0;
@@ -169,26 +177,32 @@ void TestClass::configTest()
     qDebug("First config write");
     config.write("testconfig.txt");
 
-    qDebug("Second config");
     Configuration config2;
-    qDebug("Second config write");
+    qDebug("Load config");
     config2.read("testconfig.txt");
-    qDebug("checking vars");
     QVERIFY(config2.adjacent == false);
-    QVERIFY(config2.numStocks == 1);
+//    QVERIFY(config2.numStocks == 1);
+
     QVERIFY(config2.numHydroMaps == 2);
+    QVERIFY(config2.hydroMaps.size() == 2);
+    QVERIFY(config2.hydroMaps[0].compare("10k.txt") == 0);
+	QVERIFY(config2.hydroMaps[1].compare("20k.txt") == 0);
+    QVERIFY(config2.daysToRun.size() == 2);
+    QVERIFY(config2.daysToRun[0] == 10);
+	QVERIFY(config2.daysToRun[1] == 20);
+
     QVERIFY(config2.outputFreq == 3);
     QVERIFY(config2.timestep == 4);
     QVERIFY(config2.tss == 4.0);
     QVERIFY(config2.kPhyto == 5.0);
     QVERIFY(config2.kMacro == 6.0);
-    QVERIFY(config2.whichStock == "Poc");
+//    QVERIFY(config2.whichStock == "Poc");
     QVERIFY(config2.macro == 7.0);
     QVERIFY(config2.phyto == 9.0);
     QVERIFY(config2.consumer == 10.0);
     QVERIFY(config2.decomp == 11.0);
     QVERIFY(config2.sedconsumer == 12.0);
-    QVERIFY(config2.seddecomp == 1.30);
+    QVERIFY(config2.seddecomp == 13.0);
     QVERIFY(config2.herbivore == 14.0);
     QVERIFY(config2.detritus == 15.0);
     QVERIFY(config2.poc == 16.0);
