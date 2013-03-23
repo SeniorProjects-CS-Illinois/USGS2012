@@ -1,6 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS = main/RiverModelGUI.pro \
-          main/RiverModel.pro
+          main/RiverModel.pro \
+          test/test.pro 
 
 #custom target 'doc'
 dox.target = doc

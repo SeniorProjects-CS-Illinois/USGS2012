@@ -3,7 +3,12 @@ QT+= testlib
 CONFIG += testcase
 
 TARGET = runTests
-DEPENDPATH += .
+
+SOURCES +=  ../main/model/reducedgrid.cpp \
+            ../main/model/configuration.cpp \
+
+DEPENDPATH += . \
+              ../main \
 
 INCLUDEPATH += ../main/model
 
