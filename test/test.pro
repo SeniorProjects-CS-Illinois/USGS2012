@@ -4,13 +4,19 @@ CONFIG += testcase
 
 TARGET = runTests
 
-SOURCES +=  ../main/model/reducedgrid.cpp \
-            ../main/model/configuration.cpp \
-
 DEPENDPATH += . \
               ../main \
+
+SOURCES += ../main/model/configuration.cpp \
 
 INCLUDEPATH += ../main/model
 
 # Input
-SOURCES += TestClass.cpp \
+HEADERS +=  GridTests.h \
+            ReducedGridTests.h \
+            ConfigTests.h \
+
+SOURCES +=  TestClass.cpp \
+            GridTests.cpp \
+            ReducedGridTests.cpp \
+            ConfigTests.cpp \
