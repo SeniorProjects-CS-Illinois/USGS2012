@@ -16,7 +16,7 @@ HEADERS +=  GridTests.h \
             ReducedGridTests.h \
             ConfigTests.h \
 
-SOURCES +=  TestClass.cpp \
+SOURCES +=  TestMain.cpp \
             GridTests.cpp \
             ReducedGridTests.cpp \
             ConfigTests.cpp \
