@@ -1,6 +1,6 @@
 QT+= testlib
 
-CONFIG += testcase
+CONFIG += testcase debug
 
 TARGET = runTests
 
