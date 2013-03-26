@@ -8,7 +8,11 @@ class StatusTests : public QObject
 {
     Q_OBJECT
     private slots:
-    void statusTest();
+    void initStatusTest();
+    void setStatusTest();
+    void timeTest();
+    void hasImageTest();
+    void progressTest();
 };
 
 #endif
