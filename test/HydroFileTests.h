@@ -8,7 +8,15 @@ class HydroFileTests : public QObject
 {
     Q_OBJECT
     private slots:
-    void hydroFileTest();
+    void dimensionsTest();
+    void initTestCase();
+    void patchExistTest();
+    void patchNotExhistTest();
+    void depthTest();
+    void vectorTest();
+    void velocityTest();
+
+    HydroFile hydroFile_;
 };
 
 #endif
