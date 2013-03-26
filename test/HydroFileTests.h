@@ -6,6 +6,9 @@
 
 class HydroFileTests : public QObject
 {
+    private:
+    HydroFile hydroFile_;
+
     Q_OBJECT
     private slots:
     void dimensionsTest();
@@ -16,7 +19,6 @@ class HydroFileTests : public QObject
     void vectorTest();
     void velocityTest();
 
-    HydroFile hydroFile_;
 };
 
 #endif
