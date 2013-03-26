@@ -2,5 +2,5 @@
 
 void StatusTests::statusTest() {
     Status modelStatus;
-	QCOMPARE(Status::ModelState::UNCONFIGURED,  modelStatus.getState());
+	QCOMPARE(Status::UNCONFIGURED,  modelStatus.getState());
 }

@@ -87,7 +87,7 @@ void Status::setState(ModelState newState){
         return;
     }
 
-    if(newState == ERROR){
+    if(newState == ERROR_STATUS){
         currentState = newState;
         return;
     }
@@ -104,6 +104,6 @@ void Status::updateProgress(unsigned long workUnitsCompleted){
 }
 
 void Status::setErrorMessage(QString newErrorMessage){
-    setState(ERROR);
+    setState(ERROR_STATUS);
     errorMessage = newErrorMessage;
 }

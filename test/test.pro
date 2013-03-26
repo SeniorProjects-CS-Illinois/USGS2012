@@ -9,7 +9,7 @@ DEPENDPATH += . \
 
 SOURCES +=  ../main/model/configuration.cpp \
             ../main/model/hydrofile.cpp \
-#            ../main/model/status.cpp \
+            ../main/model/status.cpp \
 
 INCLUDEPATH += ../main/model
 

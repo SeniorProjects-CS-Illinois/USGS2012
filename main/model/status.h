@@ -7,7 +7,7 @@
 
 class Status {
     public:
-        enum ModelState { UNCONFIGURED, READY, RUNNING, COMPLETE, PAUSED, ERROR };
+        enum ModelState {UNCONFIGURED, READY, RUNNING, COMPLETE, PAUSED, ERROR_STATUS };
 
         //------------------------------
         //Functions relevant to the view
