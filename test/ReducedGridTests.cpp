@@ -2,11 +2,8 @@
 
 void ReducedGridTests::reducedGridTest()
 {
-	qDebug("Creating Reduced grid");
     ReducedGrid<int> grid(2,2);
-	qDebug("Checking for a location that shouldn't be there");
     QVERIFY(!grid.locationExists(1,1));
-	qDebug("Adding items");
     grid.addItem(1, 0,0);
 	grid.addItem(4, 1,1);
     
