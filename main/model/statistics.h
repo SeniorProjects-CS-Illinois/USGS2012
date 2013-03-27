@@ -1,6 +1,9 @@
 #ifndef STATISTICS_H
 #define STATISTICS_H
 
+/**
+ * @brief The Statistics struct contains the total, avg, and max stats for all patches on the map
+ */
 struct Statistics {
     //Totals over entire map
     double totalMacro;

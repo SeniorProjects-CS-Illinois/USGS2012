@@ -2,7 +2,7 @@
 #define RIVER_H
 
 #include <algorithm>
-//#include <omp.h>
+#include <omp.h>
 #include <QColor>
 #include <QDateTime>
 #include <QFile>
@@ -30,18 +30,24 @@ using std::max;
 
 class River {
     public:
+
+        /**
+         * @brief Constructor that initializes PatchCollection and default values
+         * @param newConfig Config used by the model
+         * @param hydroFileDict Collection of hydrofiles used in this simulation
+         */
         River(Configuration & newConfig, HydroFileDict & hydroFileDict);
 
 
         /**
-         * \brief Sets the hydromap to use in future calculations
-         * \param currHydroFile HydroFile to use
+         * @brief Sets the hydromap to use in future calculations
+         * @param currHydroFile HydroFile to use
          */
         void setCurrentHydroFile(HydroFile * newHydroFile);
 
         /**
-         * \brief Sets the current water temp to use in future calculations
-         * \param newTemp New temp to use.
+         * @brief Sets the current water temp to use in future calculations
+         * @param newTemp New temp to use.
          */
         void setCurrentWaterTemperature(double newTemp);
 
@@ -69,9 +75,21 @@ class River {
          */
         int saveCSV(QString displayedStock, int daysElapsed) const;
 
+        /**
+         * @brief Produces a visualization of the river at the current point in the
+         * simulation and saves the images to disk.
+         * @param images QVector to store the produced images in
+         * @param stockNames QVector of stock names used for file naming
+         * @param imageMutex Mutex to lock when writing the images in memory
+         * @param stats A collection of statistics collected about the river for color scaling
+         */
         void generateImages(QVector<QImage> & images, QVector<QString> & stockNames,
                            QMutex & imageMutex, Statistics & stats);
 
+        /**
+         * @brief Collects various facts about the river and places them in a Statistics struct
+         * @return A collection of stats about the river
+         */
         Statistics generateStatistics();
 
 
@@ -88,6 +106,15 @@ class River {
         double getMaxTimestep();
         bool is_valid_patch(int x, int y);
 
+        /**
+         * @brief Computes the color to draw based on the patch's
+         *        value compared to all other patches.  Resulting image
+         *        will be a heat map.
+         * @param value The current patch's value
+         * @param avgValue The average of the value across the map
+         * @param maxValue The max of the value across the map
+         * @return A QColor object containing the color to draw in an image
+         */
         QColor getHeatMapColor(double value, double avgValue, double maxValue);
 
 

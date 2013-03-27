@@ -109,36 +109,18 @@ void PatchCollection::initializePatches(Configuration & config, int newSize) {
 
     assimilation.fill(0.0, newSize);
 
-    /*
-     * TODO Should this block be initialized using the config or even used?
-     * Until I know, I'm commenting it out so I match the output of the original
-     * code so I know my calculations are the same and not broken.  -ECP
-     */
-    /*
-    detritus.fill(1.0, newSize);
-    DOC.fill(10.0, newSize);
-    POC.fill(10.0, newSize);
-    waterdecomp.fill(10.0, newSize);
-    seddecomp.fill(1.0, newSize);
-    macro.fill(1.0, newSize);
-    phyto.fill(10.0, newSize);
-    herbivore.fill(1.0, newSize);
-    sedconsumer.fill(1.0, newSize);
-    peri.fill(0.0, newSize);
-    consum.fill(0.1, newSize);*/
+    detritus.fill(config.detritus, newSize);
+    DOC.fill(config.doc, newSize);
+    POC.fill(config.poc, newSize);
+    waterdecomp.fill(config.decomp, newSize);
+    seddecomp.fill(config.seddecomp, newSize);
+    macro.fill(config.macro, newSize);
+    phyto.fill(config.phyto, newSize);
+    herbivore.fill(config.herbivore, newSize);
+    sedconsumer.fill(config.sedconsumer, newSize);
+    consum.fill(config.consumer, newSize);
 
-    detritus.fill(0.0, newSize);
-    DOC.fill(0.0, newSize);
-    POC.fill(0.0, newSize);
-    waterdecomp.fill(0.0, newSize);
-    seddecomp.fill(0.0, newSize);
-    macro.fill(0.0, newSize);
-    phyto.fill(0.0, newSize);
-    herbivore.fill(0.0, newSize);
-    sedconsumer.fill(0.0, newSize);
     peri.fill(0.0, newSize);
-    consum.fill(0.0, newSize);
-
     bottom_light.fill(0.0, newSize);
     consumer.fill(0.0, newSize);
     consum_consumption.fill(0.0, newSize);

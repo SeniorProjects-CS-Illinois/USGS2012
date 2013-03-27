@@ -1,13 +1,16 @@
 #ifndef PATCHCOMPUTATION_H
 #define PATCHCOMPUTATION_H
 #include <cmath>
-//#include <omp.h>
+#include <omp.h>
 #include "constants.h"
 #include "globals.h"
 #include "patchcollection.h"
 #include "configuration.h"
 #include "utility.h"
 
+/**
+ * @brief A collection of all the processing functions.
+ */
 namespace PatchComputation {
 
     void updatePatches(PatchCollection & p, const Configuration & config, int currPAR);
