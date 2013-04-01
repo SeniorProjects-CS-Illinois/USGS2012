@@ -29,6 +29,27 @@ namespace Utility {
      * @param value The percentage to adjust
      */
     void boundPercentage(double & value);
+
+    /**
+     * @brief Initializes an array to the provided size and default values
+     * @param array Pointer to initialize
+     * @param size Size of resulting array
+     * @param initialValue Value to fill in the array
+     */
+    template <typename T>
+    void initArray(T * & array, int size, T initialValue);
+
+    /**
+     * @brief Copies the provided array up to the provided number of elements
+     * @param other The array to copy
+     * @param size The number of elements to copy
+     * @return A pointer to the resulting array
+     */
+    template <typename T>
+    T * copyArray(T * other, int size);
+
 }
+
+#include "utility_templates.cpp"
 
 #endif // UTILITY_H
