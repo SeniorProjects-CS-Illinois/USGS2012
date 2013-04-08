@@ -61,11 +61,6 @@ class RiverModel {
          */
         void setWhichStock(QString stockName);
 
-        /**
-         * @brief reset the status for a new run.
-         */
-        void resetStatus();
-
     private:
         /**
          * @brief Writes a status message to a terminal window every simulated hour

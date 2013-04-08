@@ -79,6 +79,11 @@ public slots:
     void whichstockChanged(const QString & newStock);
 
     /**
+     * Finish up the running model.
+     */
+    void finished() const;
+
+    /**
      * Allow the user to click the run button.
      */
     void enableRun() const;
@@ -121,6 +126,7 @@ public slots:
 public:
 
     /* GETTERS */
+    RiverModel* getCurrentModel() const;
 
     bool getAdjacent() const;
 
@@ -349,7 +355,6 @@ private:
     enum Tab { CONFIGURATION, STOCK, OUTPUT };
 
     Ui::MainWindow* ui;
-    RiverModel model;
 
     ModelThread modelThread;
     ProgressThread progressThread;

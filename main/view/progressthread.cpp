@@ -64,3 +64,9 @@ void ProgressThread::emitProgress(int percentageDone, int timeElapsed, int timeR
     emit progressPercentUpdate(percentageDone);
     emit progressTimeUpdate(timeElapsed, timeRemaining);
 }
+
+
+void ProgressThread::setModel(RiverModel * rModel)
+{
+    model = rModel;
+}

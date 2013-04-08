@@ -10,22 +10,21 @@ using std::string;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    modelThread(this, &model),
-    progressThread(this, &model)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     // connect signals from progress thread
     connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
     connect(&progressThread, SIGNAL(progressTimeUpdate(int, int)), this, SLOT(progressTimeUpdate(int, int)));
-    connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
+    connect(&progressThread, SIGNAL(finished()), this, SLOT(finished()));
     connect(&progressThread, SIGNAL(imageUpdate(QImage)), this, SLOT(imageUpdate(QImage)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete getCurrentModel();
 }
 
 /* BEGIN public slots */
@@ -119,6 +118,7 @@ void MainWindow::selectDischargeFileClicked()
     {
         displayErrors("No discharge file selected");
     }
+
 }
 
 void MainWindow::selectTemperatureFileClicked()
@@ -168,8 +168,13 @@ void MainWindow::runClicked()
     Configuration modelConfig;
     getAllInput(modelConfig);
 
-    model.resetStatus();
-    model.setConfiguration(modelConfig);
+    delete getCurrentModel();
+
+    RiverModel * model = new RiverModel; // where to free this?
+    model->setConfiguration(modelConfig);
+
+    modelThread.setModel(model);
+    progressThread.setModel(model);
 
     modelThread.start();
     progressThread.start();
@@ -190,16 +195,27 @@ void MainWindow::clearOutput() const
 
 void MainWindow::whichstockChanged(QString const & newStock)
 {
-    model.setWhichStock(newStock);
+    RiverModel * model = getCurrentModel();
+    if (model == NULL)
+    {
+        return;
+    }
 
-    Status status = model.getStatus();
+    model->setWhichStock(newStock);
+
+    Status status = model->getStatus();
     // TODO: if no images available, don't do this
     if (    status.getState() == Status::COMPLETE
          || status.getState() == Status::RUNNING
          || status.getState() == Status::PAUSED)
     {
-        imageUpdate(model.getImage(newStock));
+        imageUpdate(model->getImage(newStock));
     }
+}
+
+void MainWindow::finished() const
+{
+    enableRun();
 }
 
 void MainWindow::enableRun() const
@@ -286,6 +302,11 @@ void MainWindow::loadConfiguration()
     {
         loadConfiguration(name);
     }
+}
+
+RiverModel* MainWindow::getCurrentModel() const
+{
+    return modelThread.getCurrentModel();
 }
 
 void MainWindow::loadConfiguration(QString const & file)
@@ -405,23 +426,6 @@ void MainWindow::loadConfiguration(QString const & file)
 /* END private slots */
 
 /* BEGIN public functions */
-
-/*void MainWindow::setToolTips()
-{
-
-  This is still here in case it is wanted on the tool tips along with units
-
-    ui->lineEditMacroGrossCoef->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditKMacro->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditKPhyto->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditTSS->setToolTip(tr("Enter a number between 0.0 and 20.0"));
-    ui->lineEditMacroMassMax->setToolTip(tr("Enter a value between 500.0 and 1500.0"));
-    ui->lineEditMacroTemp->setToolTip(tr("Enter a number between 11.7 and 27.7"));
-    ui->lineEditMacroVelocityMax->setToolTip(tr("Enter a value between 0.2 and 1.6"));
-    ui->lineEditMacroRespiration->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditMacroSenescence->setToolTip(tr("Enter a value between 0.0 and 1.0"));
-
-}*/
 
 /* GETTERS */
 bool MainWindow::getAdjacent() const { return ui->checkBoxAdjacentCells->isChecked(); }
