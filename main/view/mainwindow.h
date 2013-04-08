@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QMessageBox>
 
 #include "ui_mainwindow.h"
 #include "modelthread.h"
@@ -28,7 +29,7 @@ public:
      * member variables. Also, makes connections of
      * thread siganls to GUI slots.
      */
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget * parent = 0);
 
     /**
      * Destructor for deleting dynamic member variables.
@@ -75,7 +76,12 @@ public slots:
     /**
      * Update which stock image to show.
      */
-    void whichstockChanged(QString newStock);
+    void whichstockChanged(const QString & newStock);
+
+    /**
+     * Finish up the running model.
+     */
+    void finished() const;
 
     /**
      * Allow the user to click the run button.
@@ -105,7 +111,7 @@ public slots:
     /**
      * Update the displayed stock image.
      */
-    void imageUpdate(QImage stockImage) const;
+    void imageUpdate(const QImage & stockImage) const;
 
     /**
      * Save the current configuration to a file.
@@ -120,6 +126,7 @@ public slots:
 public:
 
     /* GETTERS */
+    RiverModel* getCurrentModel() const;
 
     bool getAdjacent() const;
 
@@ -242,7 +249,7 @@ public:
     void setKPhyto(float val);
     void setKMacro(float val);
 
-    void setWhichStock(QString stock);
+    void setWhichStock(const QString & stock);
 
     void setMacroBase(float val);
     void setPhytoBase(float val);
@@ -336,9 +343,9 @@ public:
     void setSedconsumerSenescence(float val);
     void setSedconsumerMax(float val);
 
-    void setTempFile(QString filename);
-    void setPARFile(QString filename);
-    void setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num);
+    void setTempFile(const QString & filename);
+    void setPARFile(const QString & filename);
+    void setHydroMaps(const QVector<QString> & filenames, const QVector<uint16_t> & days, size_t num);
 
 private:
 
@@ -348,7 +355,6 @@ private:
     enum Tab { CONFIGURATION, STOCK, OUTPUT };
 
     Ui::MainWindow* ui;
-    RiverModel model;
 
     ModelThread modelThread;
     ProgressThread progressThread;
@@ -356,15 +362,14 @@ private:
     Configuration uiConfig;
 
     /**
-     * Reset error message output box. All slots should
-     * call this in the beginning.
+     * Display an error message in a popup window.
      */
-    void clearErrors() const;
+    void displayErrors(const QString & message) const;
 
     /**
-     * Display an error message.
+     * Clear any previous output in the output tab.
      */
-    void displayErrors(const char * message, bool showConfig = true) const;
+    void clearOutput() const;
 
     /**
      * Add hydromap information to list.
@@ -374,22 +379,22 @@ private:
     /**
      * Save the configuration to the given file.
      */
-    void saveConfiguration(QString file) const;
+    void saveConfiguration(const QString & file) const;
 
     /**
      * Load the configuration from the given file.
      */
-    void loadConfiguration(QString file);
+    void loadConfiguration(const QString & file);
 
     /**
      * Get all the input from the GUI and set appropriate globals.
      */
-    void getAllInput(Configuration &c) const;
+    void getAllInput(Configuration & c) const;
 
     /**
      * Get all the stock input from the GUI and set globals.
      */
-    void getAllStockInput(Configuration &c) const;
+    void getAllStockInput(Configuration & c) const;
 
     /**
      * Get all the input from the GUI and set appropriate globals.
@@ -404,7 +409,7 @@ private:
     /**
      * Takes a discharge file and populates hydro map information.
      */
-    void dischargeToHydro(QString file);
+    void dischargeToHydro(const QString & file);
 
     /**
      * Combines all adjacent same-name files and sums their DTR.

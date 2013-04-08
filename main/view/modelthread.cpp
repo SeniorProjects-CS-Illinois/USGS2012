@@ -11,3 +11,13 @@ void ModelThread::run()
 {
     model->run();
 }
+
+void ModelThread::setModel(RiverModel * rModel)
+{
+    model = rModel;
+}
+
+RiverModel* ModelThread::getCurrentModel() const
+{
+    return model;
+}

@@ -15,7 +15,12 @@ public:
      * Constructor for this thread object. Takes in parent
      * for QT compliance and RiverModel to be run.
      */
-    explicit ProgressThread(QObject* parent = 0, RiverModel* rModel = 0, unsigned long interval = 1L);
+    explicit ProgressThread(QObject* parent = NULL, RiverModel* rModel = NULL, unsigned long interval = 1L);
+
+    /**
+     * Set the model for this thread to run.
+     */
+    void setModel(RiverModel * rModel);
 
     /**
      * Overidden run method that is called when the thread

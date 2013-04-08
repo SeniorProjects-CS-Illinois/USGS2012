@@ -10,30 +10,27 @@ using std::string;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    modelThread(this, &model),
-    progressThread(this, &model)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     // connect signals from progress thread
     connect(&progressThread, SIGNAL(progressPercentUpdate(int)), this, SLOT(progressPercentUpdate(int)));
     connect(&progressThread, SIGNAL(progressTimeUpdate(int, int)), this, SLOT(progressTimeUpdate(int, int)));
-    connect(&progressThread, SIGNAL(finished()), this, SLOT(enableRun()));
+    connect(&progressThread, SIGNAL(finished()), this, SLOT(finished()));
     connect(&progressThread, SIGNAL(imageUpdate(QImage)), this, SLOT(imageUpdate(QImage)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete getCurrentModel();
 }
 
 /* BEGIN public slots */
 
 void MainWindow::selectHydroMapClicked()
 {
-    clearErrors();
-
     // if the currently selected hydro map was not added, remove it
     if (uiConfig.hydroMaps.size() != uiConfig.daysToRun.size())
     {
@@ -56,7 +53,7 @@ void MainWindow::selectHydroMapClicked()
 
 void MainWindow::addHydroMapClicked()
 {
-    clearErrors();
+    QString errorMessage;
     if (!UI::isBoxNumerical(ui->lineEditDaysToRun))
     {
         displayErrors("Need to insert # days to run");
@@ -77,8 +74,6 @@ void MainWindow::addHydroMapClicked()
 
 void MainWindow::removeHydroMapClicked()
 {
-    clearErrors();
-
     QListWidget* list = ui->listWidgetHydroMap;
     QMutableVectorIterator<QString> itHydro(uiConfig.hydroMaps);
     QMutableVectorIterator<uint16_t> itDays(uiConfig.daysToRun);
@@ -109,8 +104,6 @@ void MainWindow::removeHydroMapClicked()
 
 void MainWindow::selectDischargeFileClicked()
 {
-    clearErrors();
-
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Discharge File"),
                                                     Files::defaultFileLocation(), tr("Text Files (*.txt)"));
@@ -125,12 +118,11 @@ void MainWindow::selectDischargeFileClicked()
     {
         displayErrors("No discharge file selected");
     }
+
 }
 
 void MainWindow::selectTemperatureFileClicked()
 {
-    clearErrors();
-
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select Temperature Data File"),
                                                     Files::defaultFileLocation(), tr("Text Files (*.txt)"));
@@ -147,8 +139,6 @@ void MainWindow::selectTemperatureFileClicked()
 
 void MainWindow::selectPARFileClicked()
 {
-    clearErrors();
-
     // open prompt to select file
     QString selected = QFileDialog::getOpenFileName(this, tr("Select PAR Data File"),
                                                     Files::defaultFileLocation(), tr("Text Files (*.txt)"));
@@ -165,7 +155,7 @@ void MainWindow::selectPARFileClicked()
 
 void MainWindow::runClicked()
 {
-    clearErrors();
+    clearOutput();
 
     // check if all input is valid
     if (!verifyAllInput())
@@ -178,7 +168,13 @@ void MainWindow::runClicked()
     Configuration modelConfig;
     getAllInput(modelConfig);
 
-    model.setConfiguration(modelConfig);
+    delete getCurrentModel();
+
+    RiverModel * model = new RiverModel; // where to free this?
+    model->setConfiguration(modelConfig);
+
+    modelThread.setModel(model);
+    progressThread.setModel(model);
 
     modelThread.start();
     progressThread.start();
@@ -190,18 +186,36 @@ void MainWindow::runClicked()
     disableRun();
 }
 
-void MainWindow::whichstockChanged(QString newStock)
+void MainWindow::clearOutput() const
 {
-    model.setWhichStock(newStock);
+    progressTimeUpdate(0, 0);
+    ui->progressBar->reset();
+    ui->labelImageOutput->clear();
+}
 
-    Status status = model.getStatus();
+void MainWindow::whichstockChanged(QString const & newStock)
+{
+    RiverModel * model = getCurrentModel();
+    if (model == NULL)
+    {
+        return;
+    }
+
+    model->setWhichStock(newStock);
+
+    Status status = model->getStatus();
     // TODO: if no images available, don't do this
     if (    status.getState() == Status::COMPLETE
          || status.getState() == Status::RUNNING
          || status.getState() == Status::PAUSED)
     {
-        imageUpdate(model.getImage(newStock));
+        imageUpdate(model->getImage(newStock));
     }
+}
+
+void MainWindow::finished() const
+{
+    enableRun();
 }
 
 void MainWindow::enableRun() const
@@ -216,7 +230,6 @@ void MainWindow::disableRun() const
 
 void MainWindow::timestepUpdate(int newVal) const
 {
-    clearErrors();
     ui->horizontalSliderTimestep->setValue(newVal);
     ui->horizontalSliderTimestep->setToolTip(QString::number(newVal));
     ui->labelTimestepVal->setText(QString::number(newVal));
@@ -234,7 +247,7 @@ void MainWindow::progressTimeUpdate(int elapsed, int remaining) const
     ui->labelTimeRemainingValue->setText(QString::number(remaining));
 }
 
-void MainWindow::imageUpdate(QImage stockImage) const
+void MainWindow::imageUpdate(QImage const & stockImage) const
 {
     // max size of the image
     int maxWidth = 400;
@@ -274,7 +287,7 @@ void MainWindow::saveConfiguration()
     }
 }
 
-void MainWindow::saveConfiguration(QString file) const
+void MainWindow::saveConfiguration(QString const & file) const
 {
     Configuration conf;
     getAllInput(conf);
@@ -291,7 +304,12 @@ void MainWindow::loadConfiguration()
     }
 }
 
-void MainWindow::loadConfiguration(QString file)
+RiverModel* MainWindow::getCurrentModel() const
+{
+    return modelThread.getCurrentModel();
+}
+
+void MainWindow::loadConfiguration(QString const & file)
 {
     Configuration conf;
     conf.read(file);
@@ -408,23 +426,6 @@ void MainWindow::loadConfiguration(QString file)
 /* END private slots */
 
 /* BEGIN public functions */
-
-/*void MainWindow::setToolTips()
-{
-
-  This is still here in case it is wanted on the tool tips along with units
-
-    ui->lineEditMacroGrossCoef->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditKMacro->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditKPhyto->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditTSS->setToolTip(tr("Enter a number between 0.0 and 20.0"));
-    ui->lineEditMacroMassMax->setToolTip(tr("Enter a value between 500.0 and 1500.0"));
-    ui->lineEditMacroTemp->setToolTip(tr("Enter a number between 11.7 and 27.7"));
-    ui->lineEditMacroVelocityMax->setToolTip(tr("Enter a value between 0.2 and 1.6"));
-    ui->lineEditMacroRespiration->setToolTip(tr("Enter a number between 0.0 and 1.0"));
-    ui->lineEditMacroSenescence->setToolTip(tr("Enter a value between 0.0 and 1.0"));
-
-}*/
 
 /* GETTERS */
 bool MainWindow::getAdjacent() const { return ui->checkBoxAdjacentCells->isChecked(); }
@@ -549,7 +550,7 @@ void MainWindow::setKMacro(float val) { ui->lineEditKMacro->setText(QString::num
 void MainWindow::setTSS(float val) { ui->lineEditTSS->setText(QString::number(val)); uiConfig.tss = val; }
 
 // stock parameters
-void MainWindow::setWhichStock(QString stock) { ui->comboBoxWhichStock->setCurrentIndex(UI::comboBoxIndex(ui->comboBoxWhichStock, stock)); uiConfig.whichStock = stock; }
+void MainWindow::setWhichStock(QString const & stock) { ui->comboBoxWhichStock->setCurrentIndex(UI::comboBoxIndex(ui->comboBoxWhichStock, stock)); uiConfig.whichStock = stock; }
 
 void MainWindow::setMacroBase(float val) { ui->lineEditMacro->setText(QString::number(val)); uiConfig.macro = val; }
 void MainWindow::setPhytoBase(float val) { ui->lineEditPhyto->setText(QString::number(val)); uiConfig.phyto = val; }
@@ -643,19 +644,19 @@ void MainWindow::setSedconsumerExcretion(float val) { ui->lineEditSedconsumerExc
 void MainWindow::setSedconsumerSenescence(float val) { ui->lineEditSedconsumerSenescence->setText(QString::number(val)); uiConfig.sedconsumerSenescence = val; }
 void MainWindow::setSedconsumerMax(float val) { ui->lineEditSedconsumerMax->setText(QString::number(val)); uiConfig.sedconsumerMax = val; }
 
-void MainWindow::setTempFile(QString filename)
+void MainWindow::setTempFile(const QString & filename)
 {
     uiConfig.tempFile = filename;
     ui->labelTempFile->setText(Files::stripFile(filename));
 }
 
-void MainWindow::setPARFile(QString filename)
+void MainWindow::setPARFile(const QString & filename)
 {
     uiConfig.parFile = filename;
     ui->labelPARFile->setText(Files::stripFile(filename));
 }
 
-void MainWindow::setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days, size_t num)
+void MainWindow::setHydroMaps(const QVector<QString> & filenames, const QVector<uint16_t> & days, size_t num)
 {
     // first, clear out existing files
     clearHydroFiles();
@@ -672,18 +673,18 @@ void MainWindow::setHydroMaps(QVector<QString> filenames, QVector<uint16_t> days
 
 /* BEGIN private functions */
 
-void MainWindow::clearErrors() const
+void MainWindow::displayErrors(const QString & message) const
 {
-    displayErrors("None", false);
-}
-
-void MainWindow::displayErrors(const char *message, bool showConfig) const
-{
-    if (showConfig)
+    if (message.isEmpty())
     {
-        setTab(CONFIGURATION);
+        // do nothing and return
+        return;
     }
-    ui->textBrowserErrors->setText(tr(message));
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Error!");
+    msgBox.setText(message);
+    msgBox.exec(); // open box and keep it open
 }
 
 void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool display)
@@ -1313,7 +1314,7 @@ bool MainWindow::verifyAllStockInput() const
     return true;
 }
 
-void MainWindow::dischargeToHydro(QString file)
+void MainWindow::dischargeToHydro(const QString & file)
 {
     ifstream fStream;
     fStream.open(file.toStdString().c_str());
