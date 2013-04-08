@@ -166,6 +166,7 @@ void MainWindow::selectPARFileClicked()
 void MainWindow::runClicked()
 {
     clearErrors();
+    clearOutput();
 
     // check if all input is valid
     if (!verifyAllInput())
@@ -178,6 +179,7 @@ void MainWindow::runClicked()
     Configuration modelConfig;
     getAllInput(modelConfig);
 
+    model.resetStatus();
     model.setConfiguration(modelConfig);
 
     modelThread.start();
@@ -188,6 +190,13 @@ void MainWindow::runClicked()
 
     // disable run button for now
     disableRun();
+}
+
+void MainWindow::clearOutput() const
+{
+    progressTimeUpdate(0, 0);
+    ui->progressBar->reset();
+    ui->labelImageOutput->clear();
 }
 
 void MainWindow::whichstockChanged(QString newStock)

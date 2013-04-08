@@ -367,6 +367,11 @@ private:
     void displayErrors(const char * message, bool showConfig = true) const;
 
     /**
+     * Clear any previous output in the output tab.
+     */
+    void clearOutput() const;
+
+    /**
      * Add hydromap information to list.
      */
     void addHydroMap(QString file, uint16_t days, bool addInfo, bool display = true);

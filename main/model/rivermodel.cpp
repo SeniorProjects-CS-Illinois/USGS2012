@@ -113,6 +113,11 @@ void RiverModel::setWhichStock(QString stockName)
     displayedStock = stockName;
 }
 
+void RiverModel::resetStatus()
+{
+    modelStatus.reset();
+}
+
 void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
     int currentDay = daysElapsed + 1;
     cout << "Day: " << currentDay << " - Hour: " << hourOfDay \

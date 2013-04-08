@@ -47,6 +47,11 @@ class Status {
          */
         void hasNewImage(bool newImageStatus);
 
+        /**
+         * @brief clear out any information.
+         */
+        void reset();
+
 
 
         //-------------------------------
