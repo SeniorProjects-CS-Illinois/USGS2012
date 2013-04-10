@@ -20,7 +20,7 @@ namespace PatchComputation {
     void waterDecomp(PatchCollection & p, const Configuration & config);
     void sedDecomp(PatchCollection & p, const Configuration & config);
     void sedConsumer(PatchCollection & p, const Configuration & config);
-    void consum(PatchCollection & p, const Configuration & config);
+    void consumer(PatchCollection & p, const Configuration & config);
     void DOC(PatchCollection & p, const Configuration & config);
     void POC(PatchCollection & p);
     void detritus(PatchCollection & p, const Configuration & config);

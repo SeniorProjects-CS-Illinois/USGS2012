@@ -64,7 +64,7 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
         if (current_depth > 0.0 && p.depth[i] == 0.0) {
             p.detritus[i] += p.DOC[i] + p.POC[i] + p.phyto[i] +
                     p.macro[i] + p.waterdecomp[i] +
-                    p.seddecomp[i] + p.herbivore[i] + p.sedconsumer[i] + p.consum[i];
+                    p.seddecomp[i] + p.herbivore[i] + p.sedconsumer[i] + p.consumer[i];
 
             p.DOC[i] = 0.0;
             p.POC[i] = 0.0;
@@ -74,7 +74,7 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
             p.seddecomp[i] = 0.0;
             p.herbivore[i] = 0.0;
             p.sedconsumer[i] = 0.0;
-            p.consum[i] = 0.0;
+            p.consumer[i] = 0.0;
         }
 
         // Land -> Water
@@ -355,10 +355,10 @@ Statistics River::generateStatistics() {
         stats.totalSedConsumer += p.sedconsumer[i];
         stats.maxSedConsumer = max(stats.maxSedConsumer, p.sedconsumer[i]);
 
-        //Consum
-        carbon += p.consum[i];
-        stats.totalConsum += p.consum[i];
-        stats.maxConsum = max(stats.maxConsum, p.consum[i]);
+        //Consumer
+        carbon += p.consumer[i];
+        stats.totalConsum += p.consumer[i];
+        stats.maxConsum = max(stats.maxConsum, p.consumer[i]);
 
         //DOC
         carbon += p.DOC[i];
@@ -421,7 +421,7 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
 
     //TODO Print out the hydrofile used for this simulated day.
 
-    fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum");
+    fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer");
 
     int x,y;
     int pxcor, pycor, pcolor;
@@ -429,7 +429,7 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
     double depth;
     double velocity;
     double assimilation;
-    double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consum;
+    double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consumer;
 
     for(x = 0; x < width; x++) {
         for(y=0;y < height; y++) {
@@ -460,12 +460,12 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
             herbivore = p.herbivore[i];
             sedconsumer = p.sedconsumer[i];
             peri = p.peri[i];
-            consum = p.consum[i];
+            consumer = p.consumer[i];
 
 
             fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
                       velocity,assimilation,detritus,DOC,POC,
-                      waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consum);
+                      waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer);
         }
     }
     fclose(f);
@@ -495,7 +495,7 @@ void River::generateImages(QVector<QImage> &images, QVector<QString> & stockName
         QColor waterDecompColor = getHeatMapColor(p.waterdecomp[i], stats.avgWaterDecomp, stats.maxWaterDecomp);
         QColor sedDecompColor = getHeatMapColor(p.seddecomp[i], stats.avgSedDecomp, stats.maxSedDecomp);
         QColor sedConsumerColor = getHeatMapColor(p.sedconsumer[i], stats.avgSedConsumer, stats.maxSedConsumer);
-        QColor consumColor = getHeatMapColor(p.consum[i], stats.avgConsum, stats.maxConsum);
+        QColor consumColor = getHeatMapColor(p.consumer[i], stats.avgConsum, stats.maxConsum);
         QColor DOCColor = getHeatMapColor(p.DOC[i], stats.avgDOC, stats.maxDOC);
         QColor POCColor = getHeatMapColor(p.POC[i], stats.avgPOC, stats.maxPOC);
         QColor detritusColor = getHeatMapColor(p.detritus[i], stats.avgDetritus, stats.maxDetritus);
@@ -512,7 +512,7 @@ void River::generateImages(QVector<QImage> &images, QVector<QString> & stockName
         images[STOCK_DETRITUS].setPixel(x, y, detritusColor.rgb());
 
         int patchCarbon = p.macro[i] + p.phyto[i] + p.herbivore[i] + p.waterdecomp[i] + p.seddecomp[i]
-                + p.sedconsumer[i] + p.consum[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
+                + p.sedconsumer[i] + p.consumer[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
         QColor allCarbonColor = getHeatMapColor(patchCarbon, stats.avgCarbon, stats.maxCarbon);
         images[STOCK_ALL_CARBON].setPixel(x, y, allCarbonColor.rgb());
     }
@@ -574,7 +574,7 @@ void River::processPatches() {
         PatchComputation::waterDecomp(p, config);
         PatchComputation::sedDecomp(p, config);
         PatchComputation::sedConsumer(p, config);
-        PatchComputation::consum(p, config);
+        PatchComputation::consumer(p, config);
         PatchComputation::DOC(p, config);
         PatchComputation::POC(p);
         PatchComputation::detritus(p, config);

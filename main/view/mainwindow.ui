@@ -3567,7 +3567,7 @@
       </item>
       <item>
        <property name="text">
-        <string>Consum</string>
+        <string>Consumer</string>
        </property>
       </item>
       <item>
@@ -3625,7 +3625,7 @@
      <x>0</x>
      <y>0</y>
      <width>850</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

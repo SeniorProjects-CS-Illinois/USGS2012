@@ -93,15 +93,15 @@ class PatchCollection {
         double * sedconsumer_seddecomp_prey_limitation; ///< NOT AVAILABLE
         double * sedconsumer_peri_prey_limitation;      ///< NOT AVAILABLE
         double * sedconsumer_detritus_prey_limitation;  ///< NOT AVAILABLE
-        double * consum_herbivore_prey_limitation;      ///< NOT AVAILABLE
-        double * consum_sedconsumer_prey_limitation;    ///< NOT AVAILABLE
+        double * consumer_herbivore_prey_limitation;      ///< NOT AVAILABLE
+        double * consumer_sedconsumer_prey_limitation;    ///< NOT AVAILABLE
 
         double * peri_space_limitation;           ///< NOT AVAILABLE
         double * waterdecomp_space_limitation;    ///< NOT AVAILABLE
         double * seddecomp_space_limitation;      ///< NOT AVAILABLE
         double * herbivore_space_limitation;      ///< NOT AVAILABLE
         double * sedconsumer_space_limitation;    ///< NOT AVAILABLE
-        double * consum_space_limitation;         ///< NOT AVAILABLE
+        double * consumer_space_limitation;         ///< NOT AVAILABLE
 
         double * assimilation;                       ///< NOT AVAILABLE
         double * detritus;                           ///< NOT AVAILABLE
@@ -114,23 +114,19 @@ class PatchCollection {
         double * herbivore;                          ///< NOT AVAILABLE
         double * sedconsumer;                        ///< NOT AVAILABLE
         double * peri;                               ///< NOT AVAILABLE
-        double * consum;                             ///< NOT AVAILABLE
+        double * consumer;                           ///< consumers in the water column, such as fish
         double * bottom_light;                    ///< par that reaches the bottom of the river
 
-
-        //TODO What is the difference between consum and consumer?
-        //If only one is supposed to exist we may have a bug!
-        double * consumer;                           ///< consumers in the water column, such as fish
-        double * consum_consumption;              ///< NOT AVAILABLE
-        double * consum_ingest_herbivore;         ///< NOT AVAILABLE
-        double * consum_pred_herbivore;           ///< NOT AVAILABLE
-        double * consum_ingest_sedconsumer;       ///< NOT AVAILABLE
-        double * consum_pred_sedconsumer;         ///< NOT AVAILABLE
-        double * consum_excretion;                ///< NOT AVAILABLE
-        double * consum_sda;                      ///< NOT AVAILABLE
-        double * consum_senescence;               ///< NOT AVAILABLE
-        double * consum_respiration;              ///< NOT AVAILABLE
-        double * consum_growth;                   ///< NOT AVAILABLE
+        double * consumer_consumption;              ///< NOT AVAILABLE
+        double * consumer_ingest_herbivore;         ///< NOT AVAILABLE
+        double * consumer_pred_herbivore;           ///< NOT AVAILABLE
+        double * consumer_ingest_sedconsumer;       ///< NOT AVAILABLE
+        double * consumer_pred_sedconsumer;         ///< NOT AVAILABLE
+        double * consumer_excretion;                ///< NOT AVAILABLE
+        double * consumer_sda;                      ///< NOT AVAILABLE
+        double * consumer_senescence;               ///< NOT AVAILABLE
+        double * consumer_respiration;              ///< NOT AVAILABLE
+        double * consumer_growth;                   ///< NOT AVAILABLE
         double * detritus_growth;                 ///< NOT AVAILABLE
         double * detritus_POC_transfer;           ///< the amount of carbon that transfers from detritus to POC
         double * seddecomp_pred_detritus;         ///< NOT AVAILABLE
