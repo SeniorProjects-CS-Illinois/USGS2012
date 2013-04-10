@@ -172,7 +172,14 @@ QImage HydroFile::generateVisualization(int imageCellSize){
             if(patchExists(x,y) && getDepth(x,y) > 0) {
                 double cellDepth = getDepth(x,y);
                 double relativeDepth = cellDepth / maxDepth;
-                QColor depthColor = QColor::fromHsv( 120 - (int)(120*relativeDepth)+1 ,255,255);
+                int scaledValue = (int)(120*relativeDepth);
+                if(scaledValue > 120){
+                    scaledValue = 120;
+                } else if (scaledValue < 0) {
+                    scaledValue = 0;
+                }
+
+                QColor depthColor = QColor::fromHsv( 120 - scaledValue ,255,255);
 
                 for(int i = x * imageCellSize; i < (x + 1)*imageCellSize; i++) {
                     for(int j = y * imageCellSize; j < (y +1)*imageCellSize; j++) {
