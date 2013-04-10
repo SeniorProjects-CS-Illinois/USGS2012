@@ -14,7 +14,7 @@ Configuration::Configuration() :
     tss(-1.0),
     kPhyto(-1.0),
     kMacro(-1.0),
-    whichStock("Consum"),
+    whichStock("Consumer"),
     macro(-1.0),
     phyto(-1.0),
     consumer(-1.0),
