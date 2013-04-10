@@ -7,7 +7,7 @@
 
 class Status {
     public:
-        enum ModelState { UNCONFIGURED, READY, RUNNING, COMPLETE, PAUSED, ERROR };
+        enum ModelState {UNCONFIGURED, READY, RUNNING, COMPLETE, PAUSED, ERR};
 
         //------------------------------
         //Functions relevant to the view
@@ -46,6 +46,11 @@ class Status {
          * @brief Sets image availability to boolean parameter
          */
         void hasNewImage(bool newImageStatus);
+
+        /**
+         * @brief clear out any information.
+         */
+        void reset();
 
 
 

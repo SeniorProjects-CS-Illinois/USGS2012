@@ -8,7 +8,7 @@ namespace Files
     /**
      * Strips off all path info except file name.
      */
-    QString stripFile(QString path);
+    QString stripFile(const QString &path);
 
     /**
      * Used to make file selection faster.

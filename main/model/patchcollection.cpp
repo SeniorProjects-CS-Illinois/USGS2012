@@ -1,5 +1,20 @@
 #include "patchcollection.h"
 
+PatchCollection::PatchCollection(const PatchCollection &other) {
+    copy(other);
+}
+
+PatchCollection::~PatchCollection() {
+    clear();
+}
+
+PatchCollection & PatchCollection::operator=(const PatchCollection & rhs) {
+    if(this != &rhs) {
+        clear();
+        copy(rhs);
+    }
+    return *this;
+}
 
 PatchCollection::PatchCollection(const Configuration & newConfig, HydroFileDict & hydroDict) {
     config = newConfig;
@@ -33,7 +48,6 @@ PatchCollection::PatchCollection(const Configuration & newConfig, HydroFileDict 
             }
         }
     }
-
 }
 
 int PatchCollection::getIndexMapKey(int x, int y) const {
@@ -54,174 +68,466 @@ int PatchCollection::getSize() const {
     return size;
 }
 
-
-/*
- * TODO  Should patches be initialized via config values?  For now
- * I'm not sure why, but the following 2011 functions don't actually
- * set the patches with initial values... If I make my code set the
- * values passed via set_stocks as below, the program output changes quite a
- * bit (At least after only a single simulated day of running...) -ECP
- *
- * void setup_stocks() {
- *     set_stocks(1.0f, 10.0f, 10.0f, 1.0f, 1.0f, 1.0f, 10.0f, 10.0f, 1.0f, 0.1f);
- * }
- *
- * void set_stocks(float macro, float phyto, float waterdecomp, float seddecomp,
- *     float herbivore, float sedconsumer, float doc, float poc,
- *     float detritus, float consum)
- * {
- *     //Code that sets each water patch here
- * }
- */
 void PatchCollection::initializePatches(Configuration & config, int newSize) {
-    pcolor.fill(0, newSize);
+    Utility::initArray<int>(pcolor, newSize, 0);
 
-    aqa_point.fill(0, newSize);
+    Utility::initArray<int>(aqa_point, newSize, 0);
 
-    pxcor.fill(0, newSize);
-    pycor.fill(0, newSize);
-    flowX.fill(0.0, newSize);
-    flowY.fill(0.0, newSize);
-    flowMagnitude.fill(0.0, newSize);
-    depth.fill(0.0, newSize);
-    hasWater.fill(false, newSize);
+    Utility::initArray<int>(pxcor, newSize, 0);
+    Utility::initArray<int>(pycor, newSize, 0);
+    Utility::initArray<double>(flowX, newSize, 0.0);
+    Utility::initArray<double>(flowY, newSize, 0.0);
+    Utility::initArray<double>(flowMagnitude, newSize, 0.0);
+    Utility::initArray<double>(depth, newSize, 0.0);
+    Utility::initArray<bool>(hasWater, newSize, false);
 
-    waterdecomp_doc_prey_limitation.fill(0.0, newSize);
-    waterdecomp_poc_prey_limitation.fill(0.0, newSize);
-    peri_doc_prey_limitation.fill(0.0, newSize);
-    peri_poc_prey_limitation.fill(0.0, newSize);
-    seddecomp_detritus_prey_limitation.fill(0.0, newSize);
-    herbivore_phyto_prey_limitation.fill(0.0, newSize);
-    herbivore_waterdecomp_prey_limitation.fill(0.0, newSize);
-    herbivore_peri_prey_limitation.fill(0.0, newSize);
-    sedconsumer_seddecomp_prey_limitation.fill(0.0, newSize);
-    sedconsumer_peri_prey_limitation.fill(0.0, newSize);
-    sedconsumer_detritus_prey_limitation.fill(0.0, newSize);
-    consum_herbivore_prey_limitation.fill(0.0, newSize);
-    consum_sedconsumer_prey_limitation.fill(0.0, newSize);
+    Utility::initArray<double>(waterdecomp_doc_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_poc_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(peri_doc_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(peri_poc_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_detritus_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(herbivore_phyto_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(herbivore_waterdecomp_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(herbivore_peri_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_seddecomp_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_peri_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_detritus_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(consum_herbivore_prey_limitation, newSize, 0.0);
+    Utility::initArray<double>(consum_sedconsumer_prey_limitation, newSize, 0.0);
 
-    peri_space_limitation.fill(0.0, newSize);
-    waterdecomp_space_limitation.fill(0.0, newSize);
-    seddecomp_space_limitation.fill(0.0, newSize);
-    herbivore_space_limitation.fill(0.0, newSize);
-    sedconsumer_space_limitation.fill(0.0, newSize);
-    consum_space_limitation.fill(0.0, newSize);
+    Utility::initArray<double>(peri_space_limitation, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_space_limitation, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_space_limitation, newSize, 0.0);
+    Utility::initArray<double>(herbivore_space_limitation, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_space_limitation, newSize, 0.0);
+    Utility::initArray<double>(consum_space_limitation, newSize, 0.0);
 
-    assimilation.fill(0.0, newSize);
+    Utility::initArray<double>(assimilation, newSize, 0.0);
 
-    detritus.fill(config.detritus, newSize);
-    DOC.fill(config.doc, newSize);
-    POC.fill(config.poc, newSize);
-    waterdecomp.fill(config.decomp, newSize);
-    seddecomp.fill(config.seddecomp, newSize);
-    macro.fill(config.macro, newSize);
-    phyto.fill(config.phyto, newSize);
-    herbivore.fill(config.herbivore, newSize);
-    sedconsumer.fill(config.sedconsumer, newSize);
-    consum.fill(config.consumer, newSize);
+    Utility::initArray<double>(detritus, newSize, config.detritus);
+    Utility::initArray<double>(DOC, newSize, config.doc);
+    Utility::initArray<double>(POC, newSize, config.poc);
+    Utility::initArray<double>(waterdecomp, newSize, config.decomp);
+    Utility::initArray<double>(seddecomp, newSize, config.seddecomp);
+    Utility::initArray<double>(macro, newSize, config.macro);
+    Utility::initArray<double>(phyto, newSize, config.phyto);
+    Utility::initArray<double>(herbivore, newSize, config.herbivore);
+    Utility::initArray<double>(sedconsumer, newSize, config.sedconsumer);
+    Utility::initArray<double>(consum, newSize, config.consumer);
 
-    peri.fill(0.0, newSize);
-    bottom_light.fill(0.0, newSize);
-    consumer.fill(0.0, newSize);
-    consum_consumption.fill(0.0, newSize);
-    consum_ingest_herbivore.fill(0.0, newSize);
-    consum_pred_herbivore.fill(0.0, newSize);
-    consum_ingest_sedconsumer.fill(0.0, newSize);
-    consum_pred_sedconsumer.fill(0.0, newSize);
-    consum_excretion.fill(0.0, newSize);
-    consum_sda.fill(0.0, newSize);
-    consum_senescence.fill(0.0, newSize);
-    consum_respiration.fill(0.0, newSize);
-    consum_growth.fill(0.0, newSize);
-    detritus_growth.fill(0.0, newSize);
-    detritus_POC_transfer.fill(0.0, newSize);
-    seddecomp_pred_detritus.fill(0.0, newSize);
-    sedconsumer_pred_detritus.fill(0.0, newSize);
-    direction.fill(0.0, newSize);
-    DOC_growth.fill(0.0, newSize);
-    DOC_pred.fill(0.0, newSize);
-    egestion.fill(0.0, newSize);
-    excretion.fill(0.0, newSize);
-    excretion_phyto.fill(0.0, newSize);
-    flocculation.fill(0.0, newSize);
-    gross_photo.fill(0.0, newSize);
-    gross_photo_macro.fill(0.0, newSize);
-    gross_photo_phyto.fill(0.0, newSize);
-    growth_herbivore.fill(0.0, newSize);
-    growth_detritus.fill(0.0, newSize);
-    growth_macro.fill(0.0, newSize);
-    growth_sedconsumer.fill(0.0, newSize);
-    growth_phyto.fill(0.0, newSize);
-    growth_waterdecomp.fill(0.0, newSize);
-    herbivore_consumption.fill(0.0, newSize);
-    herbivore_ingest_peri.fill(0.0, newSize);
-    herbivore_pred_peri.fill(0.0, newSize);
-    herbivore_ingest_phyto.fill(0.0, newSize);
-    herbivore_pred_phyto.fill(0.0, newSize);
-    herbivore_ingest_waterdecomp.fill(0.0, newSize);
-    herbivore_pred_waterdecomp.fill(0.0, newSize);
-    herbivore_excretion.fill(0.0, newSize);
-    herbivore_sda.fill(0.0, newSize);
-    herbivore_senescence.fill(0.0, newSize);
-    herbivore_respiration.fill(0.0, newSize);
-    herbivore_growth.fill(0.0, newSize);
-    K.fill(0.0, newSize);
-    large_death.fill(0.0, newSize);
-    light.fill(0.0, newSize);
-    light_k.fill(0.0, newSize);
-    macro_death.fill(0.0, newSize);
-    macro_exudation.fill(0.0, newSize);
-    micro_death.fill(0.0, newSize);
-    phyto_maximum_growth_rate.fill(0.0, newSize);
-    phyto_pred.fill(0.0, newSize);
-    POC_detritus_transfer.fill(0.0, newSize);
-    POC_growth.fill(0.0, newSize);
-    POC_pred.fill(0.0, newSize);
-    phyto_density.fill(0.0, newSize);
-    peri_ingest_doc.fill(0.0, newSize);
-    peri_pred_doc.fill(0.0, newSize);
-    peri_ingest_poc.fill(0.0, newSize);
-    peri_pred_poc.fill(0.0, newSize);
-    peri_respiration.fill(0.0, newSize);
-    peri_excretion.fill(0.0, newSize);
-    peri_senescence.fill(0.0, newSize);
-    senescence.fill(0.0, newSize);
-    scouring.fill(0.0, newSize);
-    small_death.fill(0.0, newSize);
-    respiration.fill(0.0, newSize);
-    respiration_macro.fill(0.0, newSize);
-    respiration_phyto.fill(0.0, newSize);
-    scouring_macro.fill(0.0, newSize);
-    sedconsumer_ingest_peri.fill(0.0, newSize);
-    sedconsumer_pred_peri.fill(0.0, newSize);
-    senescence_macro.fill(0.0, newSize);
-    senescence_phyto.fill(0.0, newSize);
-    sedconsumer_consumption.fill(0.0, newSize);
-    sedconsumer_ingest_detritus.fill(0.0, newSize);
-    sedconsumer_ingest_seddecomp.fill(0.0, newSize);
-    sedconsumer_pred_seddecomp.fill(0.0, newSize);
-    sedconsumer_excretion.fill(0.0, newSize);
-    sedconsumer_egestion.fill(0.0, newSize);
-    sedconsumer_senescence.fill(0.0, newSize);
-    sedconsumer_respiration.fill(0.0, newSize);
-    sedconsumer_growth.fill(0.0, newSize);
-    seddecomp_consumption.fill(0.0, newSize);
-    seddecomp_ingest_detritus.fill(0.0, newSize);
-    seddecomp_excretion.fill(0.0, newSize);
-    seddecomp_growth.fill(0.0, newSize);
-    seddcomp_ingest_peri.fill(0.0, newSize);
-    seddecomp_pred_peri.fill(0.0, newSize);
-    seddecomp_respiration.fill(0.0, newSize);
-    seddecomp_senescence.fill(0.0, newSize);
-    velpoc.fill(0.0, newSize);
-    waterdecomp_consumption.fill(0.0, newSize);
-    waterdecomp_ingest_doc.fill(0.0, newSize);
-    waterdecomp_sda.fill(0.0, newSize);
-    waterdecomp_excretion.fill(0.0, newSize);
-    waterdecomp_ingest_poc.fill(0.0, newSize);
-    waterdecomp_pred_doc.fill(0.0, newSize);
-    waterdecomp_pred_poc.fill(0.0, newSize);
-    waterdecomp_respiration.fill(0.0, newSize);
-    waterdecomp_senescence.fill(0.0, newSize);
-    turbidity.fill(0.0, newSize);
+    Utility::initArray<double>(peri, newSize, 0.0);
+    Utility::initArray<double>(bottom_light, newSize, 0.0);
+    Utility::initArray<double>(consumer, newSize, 0.0);
+    Utility::initArray<double>(consum_consumption, newSize, 0.0);
+    Utility::initArray<double>(consum_ingest_herbivore, newSize, 0.0);
+    Utility::initArray<double>(consum_pred_herbivore, newSize, 0.0);
+    Utility::initArray<double>(consum_ingest_sedconsumer, newSize, 0.0);
+    Utility::initArray<double>(consum_pred_sedconsumer, newSize, 0.0);
+    Utility::initArray<double>(consum_excretion, newSize, 0.0);
+    Utility::initArray<double>(consum_sda, newSize, 0.0);
+    Utility::initArray<double>(consum_senescence, newSize, 0.0);
+    Utility::initArray<double>(consum_respiration, newSize, 0.0);
+    Utility::initArray<double>(consum_growth, newSize, 0.0);
+    Utility::initArray<double>(detritus_growth, newSize, 0.0);
+    Utility::initArray<double>(detritus_POC_transfer, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_pred_detritus, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_pred_detritus, newSize, 0.0);
+    Utility::initArray<double>(direction, newSize, 0.0);
+    Utility::initArray<double>(DOC_growth, newSize, 0.0);
+    Utility::initArray<double>(DOC_pred, newSize, 0.0);
+    Utility::initArray<double>(egestion, newSize, 0.0);
+    Utility::initArray<double>(excretion, newSize, 0.0);
+    Utility::initArray<double>(excretion_phyto, newSize, 0.0);
+    Utility::initArray<double>(flocculation, newSize, 0.0);
+    Utility::initArray<double>(gross_photo, newSize, 0.0);
+    Utility::initArray<double>(gross_photo_macro, newSize, 0.0);
+    Utility::initArray<double>(gross_photo_phyto, newSize, 0.0);
+    Utility::initArray<double>(growth_herbivore, newSize, 0.0);
+    Utility::initArray<double>(growth_detritus, newSize, 0.0);
+    Utility::initArray<double>(growth_macro, newSize, 0.0);
+    Utility::initArray<double>(growth_sedconsumer, newSize, 0.0);
+    Utility::initArray<double>(growth_phyto, newSize, 0.0);
+    Utility::initArray<double>(growth_waterdecomp, newSize, 0.0);
+    Utility::initArray<double>(herbivore_consumption, newSize, 0.0);
+    Utility::initArray<double>(herbivore_ingest_peri, newSize, 0.0);
+    Utility::initArray<double>(herbivore_pred_peri, newSize, 0.0);
+    Utility::initArray<double>(herbivore_ingest_phyto, newSize, 0.0);
+    Utility::initArray<double>(herbivore_pred_phyto, newSize, 0.0);
+    Utility::initArray<double>(herbivore_ingest_waterdecomp, newSize, 0.0);
+    Utility::initArray<double>(herbivore_pred_waterdecomp, newSize, 0.0);
+    Utility::initArray<double>(herbivore_excretion, newSize, 0.0);
+    Utility::initArray<double>(herbivore_sda, newSize, 0.0);
+    Utility::initArray<double>(herbivore_senescence, newSize, 0.0);
+    Utility::initArray<double>(herbivore_respiration, newSize, 0.0);
+    Utility::initArray<double>(herbivore_growth, newSize, 0.0);
+    Utility::initArray<double>(K, newSize, 0.0);
+    Utility::initArray<double>(large_death, newSize, 0.0);
+    Utility::initArray<double>(light, newSize, 0.0);
+    Utility::initArray<double>(light_k, newSize, 0.0);
+    Utility::initArray<double>(macro_death, newSize, 0.0);
+    Utility::initArray<double>(macro_exudation, newSize, 0.0);
+    Utility::initArray<double>(micro_death, newSize, 0.0);
+    Utility::initArray<double>(phyto_maximum_growth_rate, newSize, 0.0);
+    Utility::initArray<double>(phyto_pred, newSize, 0.0);
+    Utility::initArray<double>(POC_detritus_transfer, newSize, 0.0);
+    Utility::initArray<double>(POC_growth, newSize, 0.0);
+    Utility::initArray<double>(POC_pred, newSize, 0.0);
+    Utility::initArray<double>(phyto_density, newSize, 0.0);
+    Utility::initArray<double>(peri_ingest_doc, newSize, 0.0);
+    Utility::initArray<double>(peri_pred_doc, newSize, 0.0);
+    Utility::initArray<double>(peri_ingest_poc, newSize, 0.0);
+    Utility::initArray<double>(peri_pred_poc, newSize, 0.0);
+    Utility::initArray<double>(peri_respiration, newSize, 0.0);
+    Utility::initArray<double>(peri_excretion, newSize, 0.0);
+    Utility::initArray<double>(peri_senescence, newSize, 0.0);
+    Utility::initArray<double>(senescence, newSize, 0.0);
+    Utility::initArray<double>(scouring, newSize, 0.0);
+    Utility::initArray<double>(small_death, newSize, 0.0);
+    Utility::initArray<double>(respiration, newSize, 0.0);
+    Utility::initArray<double>(respiration_macro, newSize, 0.0);
+    Utility::initArray<double>(respiration_phyto, newSize, 0.0);
+    Utility::initArray<double>(scouring_macro, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_ingest_peri, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_pred_peri, newSize, 0.0);
+    Utility::initArray<double>(senescence_macro, newSize, 0.0);
+    Utility::initArray<double>(senescence_phyto, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_consumption, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_ingest_detritus, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_ingest_seddecomp, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_pred_seddecomp, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_excretion, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_egestion, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_senescence, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_respiration, newSize, 0.0);
+    Utility::initArray<double>(sedconsumer_growth, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_consumption, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_ingest_detritus, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_excretion, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_growth, newSize, 0.0);
+    Utility::initArray<double>(seddcomp_ingest_peri, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_pred_peri, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_respiration, newSize, 0.0);
+    Utility::initArray<double>(seddecomp_senescence, newSize, 0.0);
+    Utility::initArray<double>(velpoc, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_consumption, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_ingest_doc, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_sda, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_excretion, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_ingest_poc, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_pred_doc, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_pred_poc, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_respiration, newSize, 0.0);
+    Utility::initArray<double>(waterdecomp_senescence, newSize, 0.0);
+    Utility::initArray<double>(turbidity, newSize, 0.0);
+}
+
+
+void PatchCollection::clear(){
+    delete [] pxcor;
+    delete [] pycor;
+    delete [] flowX;
+    delete [] flowY;
+    delete [] flowMagnitude;
+    delete [] depth;
+    delete [] hasWater;
+
+    delete [] pcolor;
+
+    delete [] aqa_point;
+
+    delete [] waterdecomp_doc_prey_limitation;
+    delete [] waterdecomp_poc_prey_limitation;
+    delete [] peri_doc_prey_limitation;
+    delete [] peri_poc_prey_limitation;
+    delete [] seddecomp_detritus_prey_limitation;
+    delete [] herbivore_phyto_prey_limitation;
+    delete [] herbivore_waterdecomp_prey_limitation;
+    delete [] herbivore_peri_prey_limitation;
+    delete [] sedconsumer_seddecomp_prey_limitation;
+    delete [] sedconsumer_peri_prey_limitation;
+    delete [] sedconsumer_detritus_prey_limitation;
+    delete [] consum_herbivore_prey_limitation;
+    delete [] consum_sedconsumer_prey_limitation;
+
+    delete [] peri_space_limitation;
+    delete [] waterdecomp_space_limitation;
+    delete [] seddecomp_space_limitation;
+    delete [] herbivore_space_limitation;
+    delete [] sedconsumer_space_limitation;
+    delete [] consum_space_limitation;
+
+    delete [] assimilation;
+    delete [] detritus;
+    delete [] DOC;
+    delete [] POC;
+    delete [] waterdecomp;
+    delete [] seddecomp;
+    delete [] macro;
+    delete [] phyto;
+    delete [] herbivore;
+    delete [] sedconsumer;
+    delete [] peri;
+    delete [] consum;
+    delete [] bottom_light;
+    delete [] consumer;
+    delete [] consum_consumption;
+    delete [] consum_ingest_herbivore;
+    delete [] consum_pred_herbivore;
+    delete [] consum_ingest_sedconsumer;
+    delete [] consum_pred_sedconsumer;
+    delete [] consum_excretion;
+    delete [] consum_sda;
+    delete [] consum_senescence;
+    delete [] consum_respiration;
+    delete [] consum_growth;
+    delete [] detritus_growth;
+    delete [] detritus_POC_transfer;
+    delete [] seddecomp_pred_detritus;
+    delete [] sedconsumer_pred_detritus;
+    delete [] direction;
+    delete [] DOC_growth;
+    delete [] DOC_pred;
+    delete [] egestion;
+    delete [] excretion;
+    delete [] excretion_phyto;
+    delete [] flocculation;
+    delete [] gross_photo;
+    delete [] gross_photo_macro;
+    delete [] gross_photo_phyto;
+    delete [] growth_herbivore;
+    delete [] growth_detritus;
+    delete [] growth_macro;
+    delete [] growth_sedconsumer;
+    delete [] growth_phyto;
+    delete [] growth_waterdecomp;
+    delete [] herbivore_consumption;
+    delete [] herbivore_ingest_peri;
+    delete [] herbivore_pred_peri;
+    delete [] herbivore_ingest_phyto;
+    delete [] herbivore_pred_phyto;
+    delete [] herbivore_ingest_waterdecomp;
+    delete [] herbivore_pred_waterdecomp;
+    delete [] herbivore_excretion;
+    delete [] herbivore_sda;
+    delete [] herbivore_senescence;
+    delete [] herbivore_respiration;
+    delete [] herbivore_growth;
+    delete [] K;
+    delete [] large_death;
+    delete [] light;
+    delete [] light_k;
+    delete [] macro_death;
+    delete [] macro_exudation;
+    delete [] micro_death;
+    delete [] phyto_maximum_growth_rate;
+    delete [] phyto_pred;
+    delete [] POC_detritus_transfer;
+    delete [] POC_growth;
+    delete [] POC_pred;
+    delete [] phyto_density;
+    delete [] peri_ingest_doc;
+    delete [] peri_pred_doc;
+    delete [] peri_ingest_poc;
+    delete [] peri_pred_poc;
+    delete [] peri_respiration;
+    delete [] peri_excretion;
+    delete [] peri_senescence;
+    delete [] senescence;
+    delete [] scouring;
+    delete [] small_death;
+    delete [] respiration;
+    delete [] respiration_macro;
+    delete [] respiration_phyto;
+    delete [] scouring_macro;
+    delete [] sedconsumer_ingest_peri;
+    delete [] sedconsumer_pred_peri;
+    delete [] senescence_macro;
+    delete [] senescence_phyto;
+    delete [] sedconsumer_consumption;
+    delete [] sedconsumer_ingest_detritus;
+    delete [] sedconsumer_ingest_seddecomp;
+    delete [] sedconsumer_pred_seddecomp;
+    delete [] sedconsumer_excretion;
+    delete [] sedconsumer_egestion;
+    delete [] sedconsumer_senescence;
+    delete [] sedconsumer_respiration;
+    delete [] sedconsumer_growth;
+    delete [] seddecomp_consumption;
+    delete [] seddecomp_ingest_detritus;
+    delete [] seddecomp_excretion;
+    delete [] seddecomp_growth;
+    delete [] seddcomp_ingest_peri;
+    delete [] seddecomp_pred_peri;
+    delete [] seddecomp_respiration;
+    delete [] seddecomp_senescence;
+    delete [] velpoc;
+    delete [] waterdecomp_consumption;
+    delete [] waterdecomp_ingest_doc;
+    delete [] waterdecomp_sda;
+    delete [] waterdecomp_excretion;
+    delete [] waterdecomp_ingest_poc;
+    delete [] waterdecomp_pred_doc;
+    delete [] waterdecomp_pred_poc;
+    delete [] waterdecomp_respiration;
+    delete [] waterdecomp_senescence;
+    delete [] turbidity;
+}
+
+
+void PatchCollection::copy(const PatchCollection &other) {
+    width = other.width;
+    height = other.height;
+    size = other.size;
+    indexMap = other.indexMap;
+    config = other.config;
+
+
+    pxcor = Utility::copyArray<int>(other.pxcor, other.size);
+    pycor = Utility::copyArray<int>(other.pycor, other.size);
+    flowX = Utility::copyArray<double>(other.flowX, other.size);
+    flowY = Utility::copyArray<double>(other.flowY, other.size);
+    flowMagnitude = Utility::copyArray<double>(other.flowMagnitude, other.size);
+    depth = Utility::copyArray<double>(other.depth, other.size);
+    hasWater = Utility::copyArray<bool>(other.hasWater, other.size);
+
+    pcolor = Utility::copyArray<int>(other.pcolor, other.size);
+
+    aqa_point = Utility::copyArray<int>(other.aqa_point, other.size);
+
+    waterdecomp_doc_prey_limitation = Utility::copyArray<double>(other.waterdecomp_doc_prey_limitation, other.size);
+    waterdecomp_poc_prey_limitation = Utility::copyArray<double>(other.waterdecomp_poc_prey_limitation, other.size);
+    peri_doc_prey_limitation = Utility::copyArray<double>(other.peri_doc_prey_limitation, other.size);
+    peri_poc_prey_limitation = Utility::copyArray<double>(other.peri_poc_prey_limitation, other.size);
+    seddecomp_detritus_prey_limitation = Utility::copyArray<double>(other.seddecomp_detritus_prey_limitation, other.size);
+    herbivore_phyto_prey_limitation = Utility::copyArray<double>(other.herbivore_phyto_prey_limitation, other.size);
+    herbivore_waterdecomp_prey_limitation = Utility::copyArray<double>(other.herbivore_waterdecomp_prey_limitation, other.size);
+    herbivore_peri_prey_limitation = Utility::copyArray<double>(other.herbivore_peri_prey_limitation, other.size);
+    sedconsumer_seddecomp_prey_limitation = Utility::copyArray<double>(other.sedconsumer_seddecomp_prey_limitation, other.size);
+    sedconsumer_peri_prey_limitation = Utility::copyArray<double>(other.sedconsumer_peri_prey_limitation, other.size);
+    sedconsumer_detritus_prey_limitation = Utility::copyArray<double>(other.sedconsumer_detritus_prey_limitation, other.size);
+    consum_herbivore_prey_limitation = Utility::copyArray<double>(other.consum_herbivore_prey_limitation, other.size);
+    consum_sedconsumer_prey_limitation = Utility::copyArray<double>(other.consum_sedconsumer_prey_limitation, other.size);
+
+    peri_space_limitation = Utility::copyArray<double>(other.peri_space_limitation, other.size);
+    waterdecomp_space_limitation = Utility::copyArray<double>(other.waterdecomp_space_limitation, other.size);
+    seddecomp_space_limitation = Utility::copyArray<double>(other.seddecomp_space_limitation, other.size);
+    herbivore_space_limitation = Utility::copyArray<double>(other.herbivore_space_limitation, other.size);
+    sedconsumer_space_limitation = Utility::copyArray<double>(other.sedconsumer_space_limitation, other.size);
+    consum_space_limitation = Utility::copyArray<double>(other.consum_space_limitation, other.size);
+
+    assimilation = Utility::copyArray<double>(other.assimilation, other.size);
+    detritus = Utility::copyArray<double>(other.detritus, other.size);
+    DOC = Utility::copyArray<double>(other.DOC, other.size);
+    POC = Utility::copyArray<double>(other.POC, other.size);
+    waterdecomp = Utility::copyArray<double>(other.waterdecomp, other.size);
+    seddecomp = Utility::copyArray<double>(other.seddecomp, other.size);
+    macro = Utility::copyArray<double>(other.macro, other.size);
+    phyto = Utility::copyArray<double>(other.phyto, other.size);
+    herbivore = Utility::copyArray<double>(other.herbivore, other.size);
+    sedconsumer = Utility::copyArray<double>(other.sedconsumer, other.size);
+    peri = Utility::copyArray<double>(other.peri, other.size);
+    consum = Utility::copyArray<double>(other.consum, other.size);
+    bottom_light = Utility::copyArray<double>(other.bottom_light, other.size);
+    consumer = Utility::copyArray<double>(other.consumer, other.size);
+    consum_consumption = Utility::copyArray<double>(other.consum_consumption, other.size);
+    consum_ingest_herbivore = Utility::copyArray<double>(other.consum_ingest_herbivore, other.size);
+    consum_pred_herbivore = Utility::copyArray<double>(other.consum_pred_herbivore, other.size);
+    consum_ingest_sedconsumer = Utility::copyArray<double>(other.consum_ingest_sedconsumer, other.size);
+    consum_pred_sedconsumer = Utility::copyArray<double>(other.consum_pred_sedconsumer, other.size);
+    consum_excretion = Utility::copyArray<double>(other.consum_excretion, other.size);
+    consum_sda = Utility::copyArray<double>(other.consum_sda, other.size);
+    consum_senescence = Utility::copyArray<double>(other.consum_senescence, other.size);
+    consum_respiration = Utility::copyArray<double>(other.consum_respiration, other.size);
+    consum_growth = Utility::copyArray<double>(other.consum_growth, other.size);
+    detritus_growth = Utility::copyArray<double>(other.detritus_growth, other.size);
+    detritus_POC_transfer = Utility::copyArray<double>(other.detritus_POC_transfer, other.size);
+    seddecomp_pred_detritus = Utility::copyArray<double>(other.seddecomp_pred_detritus, other.size);
+    sedconsumer_pred_detritus = Utility::copyArray<double>(other.sedconsumer_pred_detritus, other.size);
+    direction = Utility::copyArray<double>(other.direction, other.size);
+    DOC_growth = Utility::copyArray<double>(other.DOC_growth, other.size);
+    DOC_pred = Utility::copyArray<double>(other.DOC_pred, other.size);
+    egestion = Utility::copyArray<double>(other.egestion, other.size);
+    excretion = Utility::copyArray<double>(other.excretion, other.size);
+    excretion_phyto = Utility::copyArray<double>(other.excretion_phyto, other.size);
+    flocculation = Utility::copyArray<double>(other.flocculation, other.size);
+    gross_photo = Utility::copyArray<double>(other.gross_photo, other.size);
+    gross_photo_macro = Utility::copyArray<double>(other.gross_photo_macro, other.size);
+    gross_photo_phyto = Utility::copyArray<double>(other.gross_photo_phyto, other.size);
+    growth_herbivore = Utility::copyArray<double>(other.growth_herbivore, other.size);
+    growth_detritus = Utility::copyArray<double>(other.growth_detritus, other.size);
+    growth_macro = Utility::copyArray<double>(other.growth_macro, other.size);
+    growth_sedconsumer = Utility::copyArray<double>(other.growth_sedconsumer, other.size);
+    growth_phyto = Utility::copyArray<double>(other.growth_phyto, other.size);
+    growth_waterdecomp = Utility::copyArray<double>(other.growth_waterdecomp, other.size);
+    herbivore_consumption = Utility::copyArray<double>(other.herbivore_consumption, other.size);
+    herbivore_ingest_peri = Utility::copyArray<double>(other.herbivore_ingest_peri, other.size);
+    herbivore_pred_peri = Utility::copyArray<double>(other.herbivore_pred_peri, other.size);
+    herbivore_ingest_phyto = Utility::copyArray<double>(other.herbivore_ingest_phyto, other.size);
+    herbivore_pred_phyto = Utility::copyArray<double>(other.herbivore_pred_phyto, other.size);
+    herbivore_ingest_waterdecomp = Utility::copyArray<double>(other.herbivore_ingest_waterdecomp, other.size);
+    herbivore_pred_waterdecomp = Utility::copyArray<double>(other.herbivore_pred_waterdecomp, other.size);
+    herbivore_excretion = Utility::copyArray<double>(other.herbivore_excretion, other.size);
+    herbivore_sda = Utility::copyArray<double>(other.herbivore_sda, other.size);
+    herbivore_senescence = Utility::copyArray<double>(other.herbivore_senescence, other.size);
+    herbivore_respiration = Utility::copyArray<double>(other.herbivore_respiration, other.size);
+    herbivore_growth = Utility::copyArray<double>(other.herbivore_growth, other.size);
+    K = Utility::copyArray<double>(other.K, other.size);
+    large_death = Utility::copyArray<double>(other.large_death, other.size);
+    light = Utility::copyArray<double>(other.light, other.size);
+    light_k = Utility::copyArray<double>(other.light_k, other.size);
+    macro_death = Utility::copyArray<double>(other.macro_death, other.size);
+    macro_exudation = Utility::copyArray<double>(other.macro_exudation, other.size);
+    micro_death = Utility::copyArray<double>(other.micro_death, other.size);
+    phyto_maximum_growth_rate = Utility::copyArray<double>(other.phyto_maximum_growth_rate, other.size);
+    phyto_pred = Utility::copyArray<double>(other.phyto_pred, other.size);
+    POC_detritus_transfer = Utility::copyArray<double>(other.POC_detritus_transfer, other.size);
+    POC_growth = Utility::copyArray<double>(other.POC_growth, other.size);
+    POC_pred = Utility::copyArray<double>(other.POC_pred, other.size);
+    phyto_density = Utility::copyArray<double>(other.phyto_density, other.size);
+    peri_ingest_doc = Utility::copyArray<double>(other.peri_ingest_doc, other.size);
+    peri_pred_doc = Utility::copyArray<double>(other.peri_pred_doc, other.size);
+    peri_ingest_poc = Utility::copyArray<double>(other.peri_ingest_poc, other.size);
+    peri_pred_poc = Utility::copyArray<double>(other.peri_pred_poc, other.size);
+    peri_respiration = Utility::copyArray<double>(other.peri_respiration, other.size);
+    peri_excretion = Utility::copyArray<double>(other.peri_excretion, other.size);
+    peri_senescence = Utility::copyArray<double>(other.peri_senescence, other.size);
+    senescence = Utility::copyArray<double>(other.senescence, other.size);
+    scouring = Utility::copyArray<double>(other.scouring, other.size);
+    small_death = Utility::copyArray<double>(other.small_death, other.size);
+    respiration = Utility::copyArray<double>(other.respiration, other.size);
+    respiration_macro = Utility::copyArray<double>(other.respiration_macro, other.size);
+    respiration_phyto = Utility::copyArray<double>(other.respiration_phyto, other.size);
+    scouring_macro = Utility::copyArray<double>(other.scouring_macro, other.size);
+    sedconsumer_ingest_peri = Utility::copyArray<double>(other.sedconsumer_ingest_peri, other.size);
+    sedconsumer_pred_peri = Utility::copyArray<double>(other.sedconsumer_pred_peri, other.size);
+    senescence_macro = Utility::copyArray<double>(other.senescence_macro, other.size);
+    senescence_phyto = Utility::copyArray<double>(other.senescence_phyto, other.size);
+    sedconsumer_consumption = Utility::copyArray<double>(other.sedconsumer_consumption, other.size);
+    sedconsumer_ingest_detritus = Utility::copyArray<double>(other.sedconsumer_ingest_detritus, other.size);
+    sedconsumer_ingest_seddecomp = Utility::copyArray<double>(other.sedconsumer_ingest_seddecomp, other.size);
+    sedconsumer_pred_seddecomp = Utility::copyArray<double>(other.sedconsumer_pred_seddecomp, other.size);
+    sedconsumer_excretion = Utility::copyArray<double>(other.sedconsumer_excretion, other.size);
+    sedconsumer_egestion = Utility::copyArray<double>(other.sedconsumer_egestion, other.size);
+    sedconsumer_senescence = Utility::copyArray<double>(other.sedconsumer_senescence, other.size);
+    sedconsumer_respiration = Utility::copyArray<double>(other.sedconsumer_respiration, other.size);
+    sedconsumer_growth = Utility::copyArray<double>(other.sedconsumer_growth, other.size);
+    seddecomp_consumption = Utility::copyArray<double>(other.seddecomp_consumption, other.size);
+    seddecomp_ingest_detritus = Utility::copyArray<double>(other.seddecomp_ingest_detritus, other.size);
+    seddecomp_excretion = Utility::copyArray<double>(other.seddecomp_excretion, other.size);
+    seddecomp_growth = Utility::copyArray<double>(other.seddecomp_growth, other.size);
+    seddcomp_ingest_peri = Utility::copyArray<double>(other.seddcomp_ingest_peri, other.size);
+    seddecomp_pred_peri = Utility::copyArray<double>(other.seddecomp_pred_peri, other.size);
+    seddecomp_respiration = Utility::copyArray<double>(other.seddecomp_respiration, other.size);
+    seddecomp_senescence = Utility::copyArray<double>(other.seddecomp_senescence, other.size);
+    velpoc = Utility::copyArray<double>(other.velpoc, other.size);
+    waterdecomp_consumption = Utility::copyArray<double>(other.waterdecomp_consumption, other.size);
+    waterdecomp_ingest_doc = Utility::copyArray<double>(other.waterdecomp_ingest_doc, other.size);
+    waterdecomp_sda = Utility::copyArray<double>(other.waterdecomp_sda, other.size);
+    waterdecomp_excretion = Utility::copyArray<double>(other.waterdecomp_excretion, other.size);
+    waterdecomp_ingest_poc = Utility::copyArray<double>(other.waterdecomp_ingest_poc, other.size);
+    waterdecomp_pred_doc = Utility::copyArray<double>(other.waterdecomp_pred_doc, other.size);
+    waterdecomp_pred_poc = Utility::copyArray<double>(other.waterdecomp_pred_poc, other.size);
+    waterdecomp_respiration = Utility::copyArray<double>(other.waterdecomp_respiration, other.size);
+    waterdecomp_senescence = Utility::copyArray<double>(other.waterdecomp_senescence, other.size);
+    turbidity = Utility::copyArray<double>(other.turbidity, other.size);
 }

@@ -13,6 +13,24 @@ class Grid {
         Grid(){}
 
         /**
+         * @brief Grid copy constructor
+         * @param other A grid to copy
+         */
+        Grid(const Grid<T> & other);
+
+        /**
+         * @brief Assignement operator
+         * @param rhs Grid to copy
+         * @return this Grid object
+         */
+        Grid<T> & operator=(const Grid<T> & rhs);
+
+        /**
+         * @brief Destructor
+         */
+        ~Grid();
+
+        /**
          * @brief Constructor.  Sets the dimensions of grid.
          * @param[in] xDim the size in the x dimensions
          * @param[in] yDim the size in the y dimensions
@@ -91,9 +109,21 @@ class Grid {
 
 
     private:
-        std::vector<T> array;
+        T * array;
         size_t width;
         size_t height;
+        size_t size;
+
+        /**
+         * @brief Grid copy helper
+         * @param other A grid to copy
+         */
+        void copy(const Grid<T> & other);
+
+        /**
+         * @brief Helper that clears the grid object
+         */
+        void clear(void);
 };
 
 #include "grid.cpp"

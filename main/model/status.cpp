@@ -37,12 +37,17 @@ void Status::hasNewImage(bool newImageStatus){
     newImageExists = newImageStatus;
 }
 
-Status::Status(void){
+void Status::reset()
+{
     currentState = UNCONFIGURED;
     timeElapsedBeforePauseState = 0;
     workUnitsProcessed = 0;
     workUnits = 0;
     newImageExists = false;
+}
+
+Status::Status(void){
+    reset();
 }
 
 void Status::setWorkUnitsToProcess(unsigned long workUnitsToProcess){
@@ -87,7 +92,7 @@ void Status::setState(ModelState newState){
         return;
     }
 
-    if(newState == ERROR){
+    if(newState == ERR){
         currentState = newState;
         return;
     }
@@ -104,6 +109,6 @@ void Status::updateProgress(unsigned long workUnitsCompleted){
 }
 
 void Status::setErrorMessage(QString newErrorMessage){
-    setState(ERROR);
+    setState(ERR);
     errorMessage = newErrorMessage;
 }
