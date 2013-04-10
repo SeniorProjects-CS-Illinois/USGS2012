@@ -55,6 +55,7 @@ void HydroFile::loadFromFile(QString filename) {
         data.depth          = hydroFileData[index + 2].toDouble();
         data.flowVector.setX( hydroFileData[index + 3].toDouble() );
         data.flowVector.setY( hydroFileData[index + 4].toDouble() );
+        data.fileVelocity   = hydroFileData[index + 5].toDouble();
 
         hydroData(patch_x, patch_y) = data;
 
@@ -87,17 +88,6 @@ void HydroFile::loadFromFile(QString filename) {
     hydroFileLoaded = true;
 }
 
-/*
-HydroFile::~HydroFile() {
-    //TODO Once the carbon flow map is implemented
-}
-
-HydroFile const & HydroFile::operator=( HydroFile const & other ) {
-    //TODO Once the carbon flow map is implemented
-    return other;
-}
-*/
-
 bool HydroFile::patchExists(int x, int y) const {
     int hashKey = getHashKey(x,y);
     return hydroDataSetIndices.contains(hashKey);
@@ -111,6 +101,10 @@ double HydroFile::getDepth(int x, int y) {
     return getData(x,y).depth;
 }
 
+double HydroFile::getFileVelocity(int x, int y) {
+    return getData(x,y).fileVelocity;
+}
+
 int HydroFile::getMapHeight() const {
     return height;
 }
@@ -120,25 +114,24 @@ int HydroFile::getMapWidth() const {
 }
 
 void HydroFile::setMapSize(QStringList & hydroFileData) {
-    width = 0;
-    height = 0;
+    int maxX = 0;
+    int maxY = 0;
 
     for(int index = 6; index < hydroFileData.size(); index += 6) {
 
         int patch_x = hydroFileData[index].toInt();
         int patch_y = hydroFileData[index + 1].toInt();
 
-        if(patch_x > width) {
-            width = patch_x;
+        if(patch_x > maxX) {
+            maxX = patch_x;
         }
-        if(patch_y > height) {
-            height = patch_y;
+        if(patch_y > maxY) {
+            maxY = patch_y;
         }
     }
 
-    //TODO: Why is this here? Is there an out of bounds exception they tried to fix here?
-    width++;
-    height++;
+    width = maxX + 1;
+    height = maxY + 1;
 }
 
 int HydroFile::getHashKey(int x, int y) const {
@@ -156,15 +149,6 @@ HydroFile::HydroData & HydroFile::getData(int x, int y) {
     int index = hydroDataSetIndices[hashKey];
     return hydroDataSet[index];
 }
-
-/*
-void HydroFile::copy(HydroFile const & other) {
-    //TODO
-}
-void HydroFile::clear() {
-    //TODO
-}
-*/
 
 void HydroFile::zeroHydroData(Grid<HydroData> & hydroData) {
 
@@ -188,7 +172,14 @@ QImage HydroFile::generateVisualization(int imageCellSize){
             if(patchExists(x,y) && getDepth(x,y) > 0) {
                 double cellDepth = getDepth(x,y);
                 double relativeDepth = cellDepth / maxDepth;
-                QColor depthColor = QColor::fromHsv( 120 - (int)(120*relativeDepth)+1 ,255,255);
+                int scaledValue = (int)(120*relativeDepth);
+                if(scaledValue > 120){
+                    scaledValue = 120;
+                } else if (scaledValue < 0) {
+                    scaledValue = 0;
+                }
+
+                QColor depthColor = QColor::fromHsv( 120 - scaledValue ,255,255);
 
                 for(int i = x * imageCellSize; i < (x + 1)*imageCellSize; i++) {
                     for(int j = y * imageCellSize; j < (y +1)*imageCellSize; j++) {

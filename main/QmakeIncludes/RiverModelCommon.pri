@@ -1,40 +1,46 @@
 TEMPLATE = app
 win32:CONFIG += static
 
-SOURCES += model/rivermodel.cpp \
-    model/status.cpp \
-    model/globals.cpp \
-    model/cleanup.cpp \
-    model/color.cpp \
-    model/dump.cpp \
-    model/go.cpp \
-    model/patch.cpp \
-    model/pred.cpp \
-    model/setup.cpp \
-    model/hydrofile.cpp \
-    model/hydrofiledict.cpp \
-    model/carbonflowmap.cpp \
-    model/configuration.cpp \
-    model/reducedgrid.cpp \
-    model/carbonsources.cpp
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -fopenmp
 
-HEADERS  += model/rivermodel.h \
-    model/status.h \
-    model/cleanup.h \
-    model/color.h \
-    model/dump.h \
+# Gprof flags for profiling the application.  Keep commented unless actively
+# profiling the program.  You should also disable openmp when profiling
+# otherwise the anaylsis will be inaccurate.
+#QMAKE_CXXFLAGS += -pg
+#QMAKE_LFLAGS += -pg
+
+SOURCES += model/carbonflowmap.cpp \
+    model/carbonsources.cpp \
+    model/configuration.cpp \
+    model/globals.cpp \    
+    model/hydrofile.cpp \
+    model/hydrofiledict.cpp \    
+    model/patchcollection.cpp \
+    model/patchcomputation.cpp \    
+    model/reducedgrid.cpp \
+    model/river.cpp \
+    model/rivermodel.cpp \
+    model/status.cpp \
+    model/utility.cpp \
+
+HEADERS  +=  model/carbonflowmap.h \
+    model/carbonsources.h \
+    model/configuration.h \
+    model/constants.h \
+    model/flowdata.h \
     model/globals.h \
-    model/go.h \
-    model/patch.h \
-    model/pred.h \
-    model/setup.h \
     model/grid.h \
     model/hydrofile.h \
     model/hydrofiledict.h \
-    model/carbonflowmap.h \
-    model/configuration.h \
+    model/patchcollection.h \
+    model/patchcomputation.h \
     model/reducedgrid.h \
-    model/carbonsources.h
+    model/river.h \
+    model/rivermodel.h \
+    model/statistics.h \
+    model/status.h \
+    model/utility.h \
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides

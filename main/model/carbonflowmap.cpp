@@ -1,5 +1,5 @@
 #include "carbonflowmap.h"
-#include <algorithm>
+
 using std::swap;
 
 CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
@@ -17,13 +17,21 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
         pushCarbon(*source, *dest);
     }
 
+
+
     /*
      * TODO: After pushing the carbon, store it all efficicently and
      * get rid of temp data.
      */
 
     delete source;
-    delete dest;
+    carbonSourceMapGrid = dest;
+    //delete dest;
+}
+
+
+CarbonSourceCollection CarbonFlowMap::getPatchSources(int x, int y) const {
+    return carbonSourceMapGrid->get(x,y);
 }
 
 void CarbonFlowMap::initializeCarbonCollection(Grid<CarbonSourceCollection> & sources){
@@ -43,8 +51,8 @@ void CarbonFlowMap::pushCarbon(
             if(hydroFile->patchExists(i,j)) {
                 QVector<CarbonSource> * targets = getFlowTargets(i,j);
                 float carbonLost = 0.0;
-                for(int i = 0; i < targets->size(); i++){
-                    CarbonSource carbonTarget = targets->at(i);
+                for(int targetIndex = 0; targetIndex < targets->size(); targetIndex++){
+                    CarbonSource carbonTarget = targets->at(targetIndex);
                     carbonLost += carbonTarget.ammount;
                     QVector<CarbonSource> carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.ammount);
                     dest(carbonTarget.x, carbonTarget.y).addSources(carbonPushed);
@@ -61,8 +69,8 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     QVector<CarbonSource> * targets = new QVector<CarbonSource>();
     QVector2D flowVector = hydroFile->getVector(i,j);
 
-    int width = g.patch_length;
-    int height = g.patch_length;
+    int width = PATCH_LENGTH;;
+    int height = PATCH_LENGTH;
     double cellArea = (double)(width*height);
 
     int x = i * width;

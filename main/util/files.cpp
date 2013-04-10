@@ -1,6 +1,6 @@
 #include "files.h"
 
-QString Files::stripFile(QString path)
+QString Files::stripFile(QString const & path)
 {
     int lastSlashIndex = path.lastIndexOf("/");
     return path.mid(lastSlashIndex + 1);
