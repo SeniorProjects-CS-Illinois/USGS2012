@@ -314,7 +314,7 @@ void PatchComputation::sedConsumer(PatchCollection & p, const Configuration & co
     }
 }
 
-void PatchComputation::consum(PatchCollection & p, const Configuration & config) {
+void PatchComputation::consumer(PatchCollection & p, const Configuration & config) {
 
     #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
@@ -325,34 +325,34 @@ void PatchComputation::consum(PatchCollection & p, const Configuration & config)
 
 
 
-        // From 2011 team's go_consum function
+        // From 2011 team's go_consumer function
 
-        p.consum_sedconsumer_prey_limitation[i] = p.sedconsumer[i]
+        p.consumer_sedconsumer_prey_limitation[i] = p.sedconsumer[i]
                 / (config.consumerAiSedconsumer - config.consumerGiSedconsumer);
-        Utility::boundPercentage(p.consum_sedconsumer_prey_limitation[i]);
+        Utility::boundPercentage(p.consumer_sedconsumer_prey_limitation[i]);
 
-        p.consum_herbivore_prey_limitation[i] = p.herbivore[i]
+        p.consumer_herbivore_prey_limitation[i] = p.herbivore[i]
                 / (config.consumerAiHerbivore - config.consumerGiHerbivore);
-        Utility::boundPercentage(p.consum_herbivore_prey_limitation[i]);
+        Utility::boundPercentage(p.consumer_herbivore_prey_limitation[i]);
 
-        p.consum_space_limitation[i] = 1.0
-                - ((p.consum[i] - config.consumerAj)
+        p.consumer_space_limitation[i] = 1.0
+                - ((p.consumer[i] - config.consumerAj)
                    / (config.consumerGj - config.consumerAj));
-        Utility::boundPercentage(p.consum_space_limitation[i]);
+        Utility::boundPercentage(p.consumer_space_limitation[i]);
 
-        p.consum_pred_herbivore[i] = config.consumerPrefHerbivore
-                * (config.consumerMax / HOURS_PER_DAY) * p.consum[i]
-                * p.consum_space_limitation[i] * p.consum_herbivore_prey_limitation[i];
-        p.consum_ingest_herbivore[i] = p.consum_pred_herbivore[i] * (1.0- config.consumerEgestion);
+        p.consumer_pred_herbivore[i] = config.consumerPrefHerbivore
+                * (config.consumerMax / HOURS_PER_DAY) * p.consumer[i]
+                * p.consumer_space_limitation[i] * p.consumer_herbivore_prey_limitation[i];
+        p.consumer_ingest_herbivore[i] = p.consumer_pred_herbivore[i] * (1.0- config.consumerEgestion);
 
-        p.consum_pred_sedconsumer[i] = config.consumerPrefSedconsumer
-                * (config.consumerMax / HOURS_PER_DAY) * p.consum[i]
-                * p.consum_space_limitation[i] * p.consum_sedconsumer_prey_limitation[i];
-        p.consum_ingest_sedconsumer[i] = p.consum_pred_sedconsumer[i] * (1.0 - config.consumerEgestion);
+        p.consumer_pred_sedconsumer[i] = config.consumerPrefSedconsumer
+                * (config.consumerMax / HOURS_PER_DAY) * p.consumer[i]
+                * p.consumer_space_limitation[i] * p.consumer_sedconsumer_prey_limitation[i];
+        p.consumer_ingest_sedconsumer[i] = p.consumer_pred_sedconsumer[i] * (1.0 - config.consumerEgestion);
 
-        p.consum_respiration[i] = (config.consumerRespiration / HOURS_PER_DAY) * p.consum[i];
-        p.consum_excretion[i] = (config.consumerExcretion / HOURS_PER_DAY) * p.consum[i];
-        p.consum_senescence[i] = (config.consumerSenescence / HOURS_PER_DAY) * p.consum[i];
+        p.consumer_respiration[i] = (config.consumerRespiration / HOURS_PER_DAY) * p.consumer[i];
+        p.consumer_excretion[i] = (config.consumerExcretion / HOURS_PER_DAY) * p.consumer[i];
+        p.consumer_senescence[i] = (config.consumerSenescence / HOURS_PER_DAY) * p.consumer[i];
     }
 }
 
@@ -377,7 +377,7 @@ void PatchComputation::DOC(PatchCollection & p, const Configuration & config){
         // *need reference
         p.excretion[i] = p.herbivore_excretion[i] + p.waterdecomp_excretion[i] +
                 p.seddecomp_excretion[i] + p.sedconsumer_excretion[i] +
-                p.consum_excretion[i] + p.excretion_phyto[i] + p.peri_excretion[i];
+                p.consumer_excretion[i] + p.excretion_phyto[i] + p.peri_excretion[i];
 
         // *need reference
         p.flocculation[i] = .01 * p.DOC[i];
@@ -446,7 +446,7 @@ void PatchComputation::detritus(PatchCollection & p, const Configuration & confi
         p.large_death[i] = p.senescence_macro[i] * 0.9 + p.scouring_macro[i] * 0.9 +
                 p.senescence_phyto[i] * 0.9 + p.seddecomp_senescence[i] +
                 p.waterdecomp_senescence[i] * 0.3 + p.herbivore_senescence[i] +
-                p.sedconsumer_senescence[i] + p.consum_senescence[i] + 0.07 * p.peri_senescence[i];
+                p.sedconsumer_senescence[i] + p.consumer_senescence[i] + 0.07 * p.peri_senescence[i];
 
         p.egestion[i] = config.herbivoreEgestion + p.sedconsumer_egestion[i] + config.consumerEgestion;
 
@@ -467,7 +467,7 @@ void PatchComputation::predHerbivore(PatchCollection & p, int i) {
     p.herbivore[i] = p.herbivore[i] + p.herbivore_ingest_phyto[i]
             + p.herbivore_ingest_peri[i] + p.herbivore_ingest_waterdecomp[i]
             - (p.herbivore_respiration[i] + p.herbivore_excretion[i] + p.herbivore_senescence[i])
-            - p.consum_pred_herbivore[i];
+            - p.consumer_pred_herbivore[i];
     Utility::boundLower(p.herbivore[i], 0.001);
 }
 
@@ -491,7 +491,7 @@ void PatchComputation::predSedConsumer(PatchCollection & p, int i) {
     // From 2011 team's pred_sedconsumer function
     p.sedconsumer[i] = p.sedconsumer[i] + p.sedconsumer_ingest_peri[i] + p.sedconsumer_ingest_seddecomp[i]
             - (p.sedconsumer_respiration[i] + p.sedconsumer_excretion[i] + p.sedconsumer_senescence[i])
-            - p.consum_pred_sedconsumer[i];
+            - p.consumer_pred_sedconsumer[i];
     Utility::boundLower(p.sedconsumer[i], 0.001);
 }
 
@@ -518,7 +518,7 @@ void PatchComputation::predPOC(PatchCollection & p, int i) {
 
 void PatchComputation::predConsum(PatchCollection & p, int i) {
     // From 2011 team's pred_consum function
-    p.consum[i] = p.consum[i] + p.consum_ingest_herbivore[i] + p.consum_ingest_sedconsumer[i]
-            - (p.consum_respiration[i] + p.consum_excretion[i] + p.consum_senescence[i]);
-    Utility::boundLower(p.consum[i], 0.001);
+    p.consumer[i] = p.consumer[i] + p.consumer_ingest_herbivore[i] + p.consumer_ingest_sedconsumer[i]
+            - (p.consumer_respiration[i] + p.consumer_excretion[i] + p.consumer_senescence[i]);
+    Utility::boundLower(p.consumer[i], 0.001);
 }

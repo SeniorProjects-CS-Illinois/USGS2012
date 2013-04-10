@@ -163,7 +163,7 @@ void RiverModel::initializeStockNames() {
     stockNames.append("waterdecomp");
     stockNames.append("seddecomp");
     stockNames.append("sedconsumer");
-    stockNames.append("consum");
+    stockNames.append("consumer");
     stockNames.append("doc");
     stockNames.append("poc");
     stockNames.append("detritus");
