@@ -169,3 +169,16 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
 
     return targets;
 }
+
+void CarbonFlowMap::printDebug(){
+    //Debugging info
+    for(unsigned int x = 0; x < carbonSourceMapGrid->getWidth(); x++){
+        for(unsigned int y = 0; y < carbonSourceMapGrid->getHeight(); y++) {
+            const QVector<CarbonSource> & patchSources = *getPatchSources(x,y).getSources();
+            for(int i = 0; i < patchSources.size(); i++) {
+                cout << "(" << x << "," << y << ") receives " << patchSources[i].amount * 100.0 << "% from (";
+                cout << patchSources[i].x << "," << patchSources[i].y << ")" << endl;
+            }
+        }
+    }
+}

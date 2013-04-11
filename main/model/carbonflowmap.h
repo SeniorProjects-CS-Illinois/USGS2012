@@ -16,6 +16,8 @@ class CarbonFlowMap {
         CarbonFlowMap(HydroFile * hydroFile, int iterations);
         const CarbonSourceCollection & getPatchSources(int x, int y) const;
 
+        void printDebug();
+
     private:
         HydroFile * hydroFile;
         int iterations;
