@@ -29,7 +29,6 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
     }
 
 
-
     /*
      * TODO: After pushing the carbon, store it all efficicently and
      * get rid of temp data.
@@ -58,19 +57,20 @@ void CarbonFlowMap::pushCarbon(
     Grid<CarbonSourceCollection> & dest)
 {
 
-    for( int i = 0; i < hydroFile->getMapWidth(); i++) {
-        for( int j = 0; j < hydroFile->getMapHeight(); j++) {
-            if(hydroFile->patchExists(i,j)) {
-                QVector<CarbonSource> * targets = getFlowTargets(i,j);
-                float carbonPushedToOtherWaterPatches = 0.0;
-                for(int targetIndex = 0; targetIndex < targets->size(); targetIndex++){
-                    CarbonSource carbonTarget = targets->at(targetIndex);
+    for( int x = 0; x < hydroFile->getMapWidth(); x++) {
+        for( int y = 0; y < hydroFile->getMapHeight(); y++) {
+            if(hydroFile->patchExists(x,y)) {
+                QVector<CarbonSource> * targets = getFlowTargets(x,y);
+                double carbonPushedToOtherWaterPatches = 0.0;
+
+                for(int i = 0; i < targets->size(); i++){
+                    CarbonSource carbonTarget = (*targets)[i];
                     carbonPushedToOtherWaterPatches += carbonTarget.amount;
-                    QVector<CarbonSource> carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.amount);
+                    QVector<CarbonSource> carbonPushed = source(x,y).getSourcesPercentage(carbonTarget.amount);
                     dest(carbonTarget.x, carbonTarget.y).addSources(carbonPushed);
                 }
-                float percentStationaryCarbon = 1.0 - carbonPushedToOtherWaterPatches;
-                dest(i,j).addSources( source(i,j).getSourcesPercentage(percentStationaryCarbon) );
+                double percentStationaryCarbon = 1.0 - carbonPushedToOtherWaterPatches;
+                dest(x,y).addSources( source(x,y).getSourcesPercentage(percentStationaryCarbon) );
                 //TODO: Avoid new and deleting over and over...
                 delete targets;
             }
@@ -87,8 +87,8 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
 
     //One cell can flow into at most four others
     //Percents are calculated by target's area over area of a cell
-    double newX = x + flowVector.x()*60;
-    double newY = y + flowVector.y()*60;
+    double newX = x + flowVector.x() * 60;
+    double newY = y + flowVector.y() * 60;
 
     /**
      * Note: HydroFiles have 0,0 in the bottom left
@@ -132,7 +132,7 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
         double targetWidthA = xB - newX;
         double targetHeightA = yC - newY;
         double targetAreaA = targetWidthA*targetHeightA;
-        float percentA = targetAreaA/PATCH_AREA;
+        double percentA = targetAreaA/PATCH_AREA;
         CarbonSource targetA(iA, jA, percentA);
         targets->append(targetA);
     }
@@ -142,7 +142,7 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
         double targetWidthB = (newX+PATCH_LENGTH) - xB;
         double targetHeightB = yD - newY;
         double targetAreaB = targetWidthB*targetHeightB;
-        float percentB = targetAreaB/PATCH_AREA;
+        double percentB = targetAreaB/PATCH_AREA;
         CarbonSource targetB(iB, jB, percentB);
         targets->append(targetB);
     }
@@ -152,7 +152,7 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
         double targetWidthC = xD-newX;
         double targetHeightC = (newY+PATCH_LENGTH) - yC;
         double targetAreaC = targetWidthC*targetHeightC;
-        float percentC = targetAreaC/PATCH_AREA;
+        double percentC = targetAreaC/PATCH_AREA;
         CarbonSource targetC(iC, jC, percentC);
         targets->append(targetC);
     }
@@ -162,7 +162,7 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
         double targetWidthD = (newX+PATCH_LENGTH) - xD;
         double targetHeightD = (newY+PATCH_LENGTH) - yD;
         double targetAreaD = targetWidthD*targetHeightD;
-        float percentD = targetAreaD/PATCH_AREA;
+        double percentD = targetAreaD/PATCH_AREA;
         CarbonSource targetD(iD, jD, percentD);
         targets->append(targetD);
     }

@@ -231,7 +231,7 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
         for(int sourceIndex = 0; sourceIndex < patchCarbonSources->size(); sourceIndex++) {
             int sourceX = (*patchCarbonSources)[sourceIndex].x;
             int sourceY = (*patchCarbonSources)[sourceIndex].y;
-            float sourceAmount = (*patchCarbonSources)[sourceIndex].amount;
+            double sourceAmount = (*patchCarbonSources)[sourceIndex].amount;
 
             DOC += source(sourceX,sourceY).DOC * sourceAmount;
             POC += source(sourceX,sourceY).POC * sourceAmount;
