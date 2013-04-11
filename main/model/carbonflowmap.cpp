@@ -69,12 +69,12 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     QVector<CarbonSource> * targets = new QVector<CarbonSource>();
     QVector2D flowVector = hydroFile->getVector(i,j);
 
-    int width = PATCH_LENGTH;;
-    int height = PATCH_LENGTH;
-    double cellArea = (double)(width*height);
+    int patchWidth = PATCH_LENGTH;;
+    int patchHeight = PATCH_LENGTH;
+    double cellArea = (double)(patchWidth*patchHeight);
 
-    int x = i * width;
-    int y = j * height;
+    int x = i * patchWidth;
+    int y = j * patchHeight;
 
     //One cell can flow into at most four others
     //Percents are calculated by target's area over area of a cell
@@ -82,13 +82,13 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     double newY = y + flowVector.y();
 
     //Target A
-    int iA = floor(newX/((double)width));
-    int jA = floor(newY/((double)height));
+    int iA = floor(newX/((double)patchWidth));
+    int jA = floor(newY/((double)patchHeight));
     if(i != iA && j != jA) {
         if(hydroFile->patchExists(iA, jA)) {
-            double targetWidthA = (double)((iA+1)*width) - newX;
-            double targetHeightA = (double)((jA+1)*height)-newY;
-            double targetAreaA = targetWidthA*targetHeightA;
+            double targetpatchWidthA = (double)((iA+1)*patchWidth) - newX;
+            double targetpatchHeightA = (double)((jA+1)*patchHeight)-newY;
+            double targetAreaA = targetpatchWidthA*targetpatchHeightA;
             float percentA = targetAreaA/cellArea;
             CarbonSource targetA(iA, jA, percentA);
             targets->append(targetA);
@@ -100,9 +100,9 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     int jB = jA;
     if((i != iB && j != jB)){
         if(hydroFile->patchExists(iB, jB)) {
-            double targetWidthB = (newX+width) - (double)((iA+1)*width);
-            double targetHeightB = (double)((jA+1)*height) - newY;
-            double targetAreaB = targetWidthB*targetHeightB;
+            double targetpatchWidthB = (newX+patchWidth) - (double)((iA+1)*patchWidth);
+            double targetpatchHeightB = (double)((jA+1)*patchHeight) - newY;
+            double targetAreaB = targetpatchWidthB*targetpatchHeightB;
             float percentB = targetAreaB/cellArea;
             CarbonSource targetB(iB, jB, percentB);
             targets->append(targetB);
@@ -114,9 +114,9 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     int jC = jA + 1;
     if((i != iC && j != jC)){
         if(hydroFile->patchExists(iC, jC)) {
-            double targetWidthC = (double)((iA+1)*width)-newX;
-            double targetHeightC = (newY+height) - (double)((jA+1)*height);
-            double targetAreaC = targetWidthC*targetHeightC;
+            double targetpatchWidthC = (double)((iA+1)*patchWidth)-newX;
+            double targetpatchHeightC = (newY+patchHeight) - (double)((jA+1)*patchHeight);
+            double targetAreaC = targetpatchWidthC*targetpatchHeightC;
             float percentC = targetAreaC/cellArea;
             CarbonSource targetC(iC, jC, percentC);
             targets->append(targetC);
@@ -128,9 +128,9 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     int jD = jA + 1;
     if((i != iD && j != jD)){
         if(hydroFile->patchExists(iD, jD)) {
-            double targetWidthD = (newX+width) - (double)((iA+1)*width);
-            double targetHeightD = (newY+height) - (double)((jA+1)*height);
-            double targetAreaD = targetWidthD*targetHeightD;
+            double targetpatchWidthD = (newX+patchWidth) - (double)((iA+1)*patchWidth);
+            double targetpatchHeightD = (newY+patchHeight) - (double)((jA+1)*patchHeight);
+            double targetAreaD = targetpatchWidthD*targetpatchHeightD;
             float percentD = targetAreaD/cellArea;
             CarbonSource targetD(iD, jD, percentD);
             targets->append(targetD);
