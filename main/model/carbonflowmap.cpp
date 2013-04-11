@@ -58,14 +58,15 @@ void CarbonFlowMap::pushCarbon(
         for( int j = 0; j < hydroFile->getMapHeight(); j++) {
             if(hydroFile->patchExists(i,j)) {
                 QVector<CarbonSource> * targets = getFlowTargets(i,j);
-                float carbonLost = 0.0;
+                float carbonPushedToOtherWaterPatches = 0.0;
                 for(int targetIndex = 0; targetIndex < targets->size(); targetIndex++){
                     CarbonSource carbonTarget = targets->at(targetIndex);
-                    carbonLost += carbonTarget.amount;
+                    carbonPushedToOtherWaterPatches += carbonTarget.amount;
                     QVector<CarbonSource> carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.amount);
                     dest(carbonTarget.x, carbonTarget.y).addSources(carbonPushed);
                 }
-
+                float percentStationaryCarbon = 1.0 - carbonPushedToOtherWaterPatches;
+                dest(i,j).addSources( source(i,j).getSourcesPercentage(percentStationaryCarbon) );
                 //TODO: Avoid new and deleting over and over...
                 delete targets;
             }

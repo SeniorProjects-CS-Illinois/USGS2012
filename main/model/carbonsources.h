@@ -22,11 +22,11 @@ class CarbonSourceCollection {
         CarbonSourceCollection(int newX, int newY);
 
         void addSource(int x, int y, float ammount);
-        void addSource(CarbonSource & source);
-        void addSources(QVector<CarbonSource> & sources);
-        void addSources(CarbonSourceCollection & collection);
+        void addSource(const CarbonSource & source);
+        void addSources(const QVector<CarbonSource> & sources);
+        void addSources(const CarbonSourceCollection & collection);
 
-        void subSources(CarbonSourceCollection & collection);
+        void subSources(const CarbonSourceCollection & collection);
 
         void removeSourcesPercent(float percent);
 
