@@ -22,6 +22,7 @@ HEADERS +=  GridTests.h \
             HydroFileTests.h \
             StatusTests.h \
             CarbonFlowMapTests.h \
+            CarbonSourceCollectionTests.h \
             carbonsources.h \
             carbonflowmap.h \
 
@@ -32,3 +33,4 @@ SOURCES +=  TestMain.cpp \
             HydroFileTests.cpp \
             StatusTests.cpp \
             CarbonFlowMapTests.cpp \
+            CarbonSourceCollectionTests.cpp \
