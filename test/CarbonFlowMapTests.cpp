@@ -27,22 +27,22 @@ void CarbonFlowMapTests::carbonFlowMapTest()
     QVector<CarbonSource> sourcesFromD = sourceD.getSources();
 
     QCOMPARE(sourcesFromA.size(), 1);
-    QCOMPARE(sourcesFromA[0].ammount, 1.0);
+    QCOMPARE(sourcesFromA[0].amount, 1.0);
 	QCOMPARE(sourcesFromA[0].x, 0);
     QCOMPARE(sourcesFromA[0].y, 1);
 
     QCOMPARE(sourcesFromB.size(), 1);
-    QCOMPARE(sourcesFromB[0].ammount, 1.0);
+    QCOMPARE(sourcesFromB[0].amount, 1.0);
 	QCOMPARE(sourcesFromB[0].x, 0);
     QCOMPARE(sourcesFromB[0].y, 0);
    
     QCOMPARE(sourcesFromC.size(), 1);
-    QCOMPARE(sourcesFromC[0].ammount, 1.0);
+    QCOMPARE(sourcesFromC[0].amount, 1.0);
 	QCOMPARE(sourcesFromC[0].x, 1);
     QCOMPARE(sourcesFromC[0].y, 0);
 
     QCOMPARE(sourcesFromD.size(), 1);
-    QCOMPARE(sourcesFromD[0].ammount, 1.0);
+    QCOMPARE(sourcesFromD[0].amount, 1.0);
 	QCOMPARE(sourcesFromD[0].x, 1);
     QCOMPARE(sourcesFromD[0].y, 1);
 }

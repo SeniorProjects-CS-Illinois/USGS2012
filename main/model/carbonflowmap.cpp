@@ -37,7 +37,7 @@ CarbonSourceCollection CarbonFlowMap::getPatchSources(int x, int y) const {
 void CarbonFlowMap::initializeCarbonCollection(Grid<CarbonSourceCollection> & sources){
     for(int i = 0; i < hydroFile->getMapWidth(); i++){
         for( int j = 0; j < hydroFile->getMapHeight(); j++){
-            sources(i,j).initializeSource(i,j);
+            sources(i,j) = CarbonSourceCollection(i,j);
         }
     }
 }
@@ -53,8 +53,8 @@ void CarbonFlowMap::pushCarbon(
                 float carbonLost = 0.0;
                 for(int targetIndex = 0; targetIndex < targets->size(); targetIndex++){
                     CarbonSource carbonTarget = targets->at(targetIndex);
-                    carbonLost += carbonTarget.ammount;
-                    QVector<CarbonSource> carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.ammount);
+                    carbonLost += carbonTarget.amount;
+                    QVector<CarbonSource> carbonPushed = source(i,j).getSourcesPercentage(carbonTarget.amount);
                     dest(carbonTarget.x, carbonTarget.y).addSources(carbonPushed);
                 }
 
