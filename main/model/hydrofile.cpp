@@ -89,6 +89,8 @@ void HydroFile::loadFromFile(QString filename) {
 }
 
 bool HydroFile::patchExists(int x, int y) const {
+    if(x >= width || x < 0 || y >= height || y < 0)
+        return false;
     int hashKey = getHashKey(x,y);
     return hydroDataSetIndices.contains(hashKey);
 }

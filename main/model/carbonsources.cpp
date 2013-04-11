@@ -47,15 +47,29 @@ void CarbonSourceCollection::removeSourcesPercent( float percent ) {
     }
 }
 
+void CarbonSourceCollection::subSources(CarbonSourceCollection &collection) {
+    for(int otherIndex = 0; otherIndex < collection.sources.size(); otherIndex++) {
+        CarbonSource otherSource = collection.sources[otherIndex];
+        for(int i = 0; i < sources.size(); i++) {
+            CarbonSource source = sources[i];
+            if(otherSource.x == source.x && otherSource.y == source.y) {
+                sources[i].amount - otherSource.amount;
+            }
+        }
+    }
+}
+
 const QVector<CarbonSource> CarbonSourceCollection::getSources() const {
     return sources;
 }
 
 const QVector<CarbonSource> CarbonSourceCollection::getSourcesPercentage(float percent) const {
     QVector<CarbonSource> pctSources;
+    pctSources.resize(sources.size());
     for( int i = 0; i < sources.size(); i++ ) {
-        CarbonSource newSource( sources[i].x, sources[i].y, sources[i].amount * percent );
-        pctSources.append( newSource );
+        pctSources[i].x = sources[i].x;
+        pctSources[i].y = sources[i].y;
+        pctSources[i].amount = sources[i].amount * percent;
     }
     return pctSources;
 }
