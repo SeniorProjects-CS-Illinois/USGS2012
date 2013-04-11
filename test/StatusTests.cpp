@@ -23,6 +23,7 @@ void StatusTests::timeTest() {
     modelStatus.setState(Status::READY);
     modelStatus.setState(Status::RUNNING);
 	QEXPECT_FAIL("", "FIXME: Need to fix this", Continue);
+    modelStatus.updateProgress();
     QVERIFY(modelStatus.getTimeElapsed() > 0);
     modelStatus.setState(Status::COMPLETE);
     int timeElapsed = modelStatus.getTimeElapsed();

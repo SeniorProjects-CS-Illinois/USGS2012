@@ -10,6 +10,8 @@ DEPENDPATH += . \
 SOURCES +=  ../main/model/configuration.cpp \
             ../main/model/hydrofile.cpp \
             ../main/model/status.cpp \
+            ../main/model/carbonsources.cpp \
+            ../main/model/carbonflowmap.cpp \
 
 INCLUDEPATH += ../main/model
 
@@ -19,6 +21,9 @@ HEADERS +=  GridTests.h \
             ConfigTests.h \
             HydroFileTests.h \
             StatusTests.h \
+            CarbonFlowMapTests.h \
+            carbonsources.h \
+            carbonflowmap.h \
 
 SOURCES +=  TestMain.cpp \
             GridTests.cpp \
@@ -26,3 +31,4 @@ SOURCES +=  TestMain.cpp \
             ConfigTests.cpp \
             HydroFileTests.cpp \
             StatusTests.cpp \
+            CarbonFlowMapTests.cpp \
