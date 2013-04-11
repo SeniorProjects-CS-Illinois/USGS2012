@@ -43,7 +43,7 @@ class River {
          * @brief Sets the hydromap to use in future calculations
          * @param currHydroFile HydroFile to use
          */
-        void setCurrentHydroFile(HydroFile * newHydroFile);
+        void setCurrentHydroData(HydroData * newHydroData);
 
         /**
          * @brief Sets the current water temp to use in future calculations
@@ -121,7 +121,7 @@ class River {
         PatchCollection p;
         Configuration config;
 
-        HydroFile * currHydroFile;
+        HydroData * currHydroData;
         double currWaterTemp;
         int currPAR;
 

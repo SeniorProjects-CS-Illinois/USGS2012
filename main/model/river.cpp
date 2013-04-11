@@ -5,7 +5,7 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 {
     config = newConfig;
 
-    currHydroFile = NULL;
+    currHydroData = NULL;
     currWaterTemp = -1.0;
     currPAR = -1;
 
@@ -15,8 +15,11 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 
 //TODO This function is relatively slow because of many hashtable lookups
 // in HydroFile class.  Consider pros and cons of using a grid instead.
-void River::setCurrentHydroFile(HydroFile *newHydroFile) {
+void River::setCurrentHydroData(HydroData *newHydroData) {
     // TODO Get rid of max_vector_component and g.COMPARE_MAX
+    HydroFile * newHydroFile = &newHydroData->hydroFile;
+    HydroFile * currHydroFile = &currHydroData->hydroFile;
+
     double max_vector_component = 0.0;
 
     for (int i = 0; i < p.getSize(); i++ ) {
@@ -86,7 +89,7 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
     // update the maximum vector for the timestep
     g.COMPARE_MAX = max_vector_component;
 
-    currHydroFile = newHydroFile;
+    currHydroData = newHydroData;
 }
 
 void River::setCurrentWaterTemperature(double newTemp) {
@@ -129,20 +132,13 @@ void River::setCurrentPAR(int newPAR) {
 }
 
 void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
-    //TODO Replace with CarbonFlowMap stuff
-
     copyFlowData(*dest);
     copyFlowData(*source);
 
-    int max_time = 60/config.timestep;
-    g.nan_trigger = false;
-    for (int t = 0; t < max_time; t++)
+    for (int t = 0; t < 60; t++)
     {
         std::swap(source, dest);
         flowSingleTimestep(*source, *dest, config);
-        if (g.nan_trigger) {
-            break;
-        }
     }
 
     storeFlowData(*dest);
@@ -215,95 +211,38 @@ double River::getMaxTimestep() {
 }
 
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
-    for(int x = 0; x < width; x++) {
-        for(int y = 0; y < height; y++) {
-            if( !source(x,y).hasWater || source(x,y).velocity <= 0.0 ) {
-                continue;
-            }
+    CarbonFlowMap * carbonFlowMap = &currHydroData->carbonFlowMap;
 
-            double px_vector = source(x,y).px_vector;
-            double py_vector = source(x,y).py_vector;
-
-            double corner_patch = fabs( py_vector * px_vector ) / PATCH_AREA;
-            double tb_patch = fabs( py_vector*( PATCH_LENGTH - fabs(px_vector) ) ) / PATCH_AREA;
-            double rl_patch = fabs( px_vector*( PATCH_LENGTH - fabs(py_vector) ) ) / PATCH_AREA;
-
-            // if a neighbor patch is dry, the carbon does not move in that direction
-            double max_timestep = getMaxTimestep();
-            int tb_moved = 0;
-            int corner_moved = 0;
-            int rl_moved = 0;
-
-            int px = (int)(max_timestep * px_vector);
-            int py = (int)(max_timestep * py_vector);
-
-            // is this the opposite of what is waned?
-            if (config.adjacent) {
-                if (px >= 1) {
-                    px = 1;
-                } else if (px <= -1) {
-                    px = -1;
-                } else {
-                    px = 0;
-                }
-
-                if (py >= 1) {
-                    py = 1;
-                } else if (py <= -1) {
-                    py = -1;
-                } else {
-                    py = 0;
-                }
-            }
-
-            // flow carbon to the top/bottom patches
-            if ( is_valid_patch(x, y+py) && (py!=0) ) {
-                if (is_calc_nan(x,y+py,tb_patch, dest)) {
-                    g.nan_trigger = true;
-                } else {
-                    dest(x, y+py).DOC += source(x,y).DOC*tb_patch;
-                    dest(x, y+py).POC += source(x,y).POC*tb_patch;
-                    dest(x, y+py).phyto += source(x,y).phyto*tb_patch;
-                    dest(x, y+py).waterdecomp += source(x,y).waterdecomp*tb_patch;
-                    tb_moved = 1;
-                }
-            }
-
-            // flow carbon to the corner patch
-            if ( is_valid_patch(x+px, y+py) && (px!=0) && (py!=0)) {
-                if (is_calc_nan(x+px,y+py,corner_patch, dest)) {
-                    g.nan_trigger = true;
-                } else {
-                    dest(x+px, y+py).DOC += source(x,y).DOC*corner_patch;
-                    dest(x+px, y+py).POC += source(x,y).POC*corner_patch;
-                    dest(x+px, y+py).phyto += source(x,y).phyto*corner_patch;
-                    dest(x+px, y+py).waterdecomp += source(x,y).waterdecomp*corner_patch;
-                    corner_moved = 1;
-                }
-            }
-
-            // flow carbon to the left/right patches
-            //TODO code pushes carbon onto land patches...
-            if ( is_valid_patch(x+px, y) && (px!=0) ) {
-                if ( is_calc_nan(x+px,y,rl_patch, dest) ) {
-                    g.nan_trigger = true;
-                } else {
-                    dest(x+px, y).DOC += source(x,y).DOC*rl_patch;
-                    dest(x+px, y).POC += source(x,y).POC*rl_patch;
-                    dest(x+px, y).phyto += source(x,y).phyto*rl_patch;
-                    dest(x+px, y).waterdecomp += source(x,y).waterdecomp*rl_patch;
-                    rl_moved = 1;
-                }
-            }
-
-            // how much components did we loose
-            double patch_loss = tb_patch*tb_moved + corner_patch*corner_moved + rl_patch*rl_moved;
-            dest(x,y).DOC = source(x,y).DOC - source(x,y).DOC*patch_loss;
-            dest(x,y).POC = source(x,y).POC - source(x,y).POC*patch_loss;
-            dest(x,y).phyto = source(x,y).phyto - source(x,y).phyto*patch_loss;
-            dest(x,y).waterdecomp = source(x,y).waterdecomp - source(x,y).waterdecomp*patch_loss;
-
+    #pragma omp parallel for
+    for(int i = 0; i < p.getSize(); i++) {
+        if( !p.hasWater[i] ) {
+            continue;
         }
+
+        int x = p.pxcor[i];
+        int y = p.pycor[i];
+
+        double DOC = 0.0;
+        double POC = 0.0;
+        double waterdecomp = 0.0;
+        double phyto = 0.0;
+
+        const QVector<CarbonSource> * patchCarbonSources = carbonFlowMap->getPatchSources(x,y).getSources();
+        for(int sourceIndex = 0; sourceIndex < patchCarbonSources->size(); sourceIndex++) {
+            int sourceX = (*patchCarbonSources)[sourceIndex].x;
+            int sourceY = (*patchCarbonSources)[sourceIndex].y;
+            float sourceAmount = (*patchCarbonSources)[sourceIndex].amount;
+
+            DOC += source(sourceX,sourceY).DOC * sourceAmount;
+            POC += source(sourceX,sourceY).POC * sourceAmount;
+            waterdecomp += source(sourceX,sourceY).waterdecomp * sourceAmount;
+            phyto += source(sourceX,sourceY).phyto * sourceAmount;
+        }
+
+        dest(x,y).DOC = DOC;
+        dest(x,y).POC = POC;
+        dest(x,y).waterdecomp = waterdecomp;
+        dest(x,y).phyto = phyto;
     }
 }
 
@@ -430,6 +369,8 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
     double velocity;
     double assimilation;
     double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consumer;
+
+    HydroFile * currHydroFile = &currHydroData->hydroFile;
 
     for(x = 0; x < width; x++) {
         for(y=0;y < height; y++) {

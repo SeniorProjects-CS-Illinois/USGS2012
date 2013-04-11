@@ -12,8 +12,9 @@
 
 class CarbonFlowMap {
     public:
+        CarbonFlowMap();
         CarbonFlowMap(HydroFile * hydroFile, int iterations);
-        CarbonSourceCollection getPatchSources(int x, int y) const;
+        const CarbonSourceCollection & getPatchSources(int x, int y) const;
 
     private:
         HydroFile * hydroFile;

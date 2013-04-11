@@ -31,6 +31,7 @@ HEADERS  +=  model/carbonflowmap.h \
     model/flowdata.h \
     model/globals.h \
     model/grid.h \
+    model/hydrodata.h \
     model/hydrofile.h \
     model/hydrofiledict.h \
     model/patchcollection.h \
@@ -40,7 +41,8 @@ HEADERS  +=  model/carbonflowmap.h \
     model/rivermodel.h \
     model/statistics.h \
     model/status.h \
-    model/utility.h \
+    model/utility.h
+
 
 
 # Update your personal (projctDir)/.git/info/excludes file if you alter SettingsOverrides

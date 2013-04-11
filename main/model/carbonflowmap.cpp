@@ -5,6 +5,10 @@ using std::cout;
 using std::endl;
 using std::swap;
 
+CarbonFlowMap::CarbonFlowMap() {
+
+}
+
 CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
     hydroFile = newHydroFile;
     iterations = numIterations;
@@ -18,7 +22,7 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
     for(int i = 0; i < iterations; i++){
         swap(source, dest);
         //We need a blank destination grid
-        for(int i = 0; i < dest->getArraySize(); i++){
+        for(unsigned int i = 0; i < dest->getArraySize(); i++){
             (*dest)(i) = CarbonSourceCollection();
         }
         pushCarbon(*source, *dest);
@@ -37,8 +41,8 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
 }
 
 
-CarbonSourceCollection CarbonFlowMap::getPatchSources(int x, int y) const {
-    return carbonSourceMapGrid->get(x,y);
+const CarbonSourceCollection & CarbonFlowMap::getPatchSources(int x, int y) const {
+    return (*carbonSourceMapGrid)(x,y);
 }
 
 void CarbonFlowMap::initializeCarbonCollection(Grid<CarbonSourceCollection> & sources){

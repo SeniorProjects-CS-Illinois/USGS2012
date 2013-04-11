@@ -55,8 +55,8 @@ void RiverModel::run() {
         QString hydroFileName = modelConfig.hydroMaps[hydroIndex];
         int daysToRunHydroFile = modelConfig.daysToRun[hydroIndex];
 
-        HydroFile * currHydroFile = hydroFileDict[hydroFileName];
-        river.setCurrentHydroFile(currHydroFile);
+        HydroData * currHydroData = hydroFileDict[hydroFileName];
+        river.setCurrentHydroData(currHydroData);
         cout << "RUNNING FILE: " << hydroFileName.toStdString() << " FOR " << daysToRunHydroFile << " DAYS" << endl;
 
         for(int dayOnHydroFile = 0; dayOnHydroFile < daysToRunHydroFile; dayOnHydroFile++) {

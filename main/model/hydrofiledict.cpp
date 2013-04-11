@@ -13,10 +13,17 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
         QString filename = filenames[i];
         if( !dict.contains(filename) ) {
             cout << "Loading: " << filename.toStdString() << endl;
-            HydroFile * newHydroFile = new HydroFile(filename);
-            dict.insert(filename, newHydroFile);
+            HydroData * newHydroData = new HydroData;
+            newHydroData->hydroFile = HydroFile(filename);
+            newHydroData->carbonFlowMap = CarbonFlowMap(&newHydroData->hydroFile, 1);
+
+            dict.insert(filename, newHydroData);
         }
     }
+
+    maxWidth = computeMaxWidth();
+    maxHeight = computeMaxHeight();
+
 }
 
 HydroFileDict::HydroFileDict(){
@@ -35,40 +42,39 @@ HydroFileDict & HydroFileDict::operator=(const HydroFileDict &rhs) {
     return *this;
 }
 
-HydroFile * & HydroFileDict::operator[](const QString filename)
+HydroData * & HydroFileDict::operator[](const QString filename)
 {
     return dict[filename];
 }
 
-const HydroFile * HydroFileDict::operator[](const QString filename) const
+const HydroData * HydroFileDict::operator[](const QString filename) const
 {
     return dict[filename];
 }
 
-//TODO Keep track of max width when adding hydrofiles and store in member variable
-int HydroFileDict::getMaxWidth() const
+int HydroFileDict::computeMaxWidth() const
 {
     int maxWidth = 0;
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
-        int mapWidth = dict[filename]->getMapWidth();
+        int mapWidth = dict[filename]->hydroFile.getMapWidth();
         if(mapWidth > maxWidth)
         {
             maxWidth = mapWidth;
         }
     }
+
     return maxWidth;
 }
 
-//TODO Keep track of max height when adding hydrofiles and store in member variable
-int HydroFileDict::getMaxHeight() const
+int HydroFileDict::computeMaxHeight() const
 {
     int maxHeight = 0;
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
-        int mapHeight = dict[filename]->getMapHeight();
+        int mapHeight = dict[filename]->hydroFile.getMapHeight();
         if(mapHeight > maxHeight)
         {
             maxHeight = mapHeight;
@@ -77,7 +83,14 @@ int HydroFileDict::getMaxHeight() const
     return maxHeight;
 }
 
-//TODO Create an assignment operator, otherwise we will loose our hydromaps.
+int HydroFileDict::getMaxWidth() const {
+    return maxWidth;
+}
+
+int HydroFileDict::getMaxHeight() const {
+    return maxHeight;
+}
+
 HydroFileDict::~HydroFileDict() {
     clear();
 }
@@ -92,7 +105,7 @@ const Grid<bool> HydroFileDict::getPatchUsageGrid() const {
             patchUsage.set(x,y,false);
             for(int i = 0; i < filenames.size(); i++) {
                 QString filename = filenames[i];
-                if (dict[filename]->patchExists(x,y)) {
+                if (dict[filename]->hydroFile.patchExists(x,y)) {
                     patchUsage.set(x,y,true);
                     continue;
                 }
@@ -104,7 +117,7 @@ const Grid<bool> HydroFileDict::getPatchUsageGrid() const {
 }
 
 void HydroFileDict::clear() {
-    for( QHash<QString, HydroFile *>::iterator i = dict.begin(); i != dict.end(); i++){
+    for( QHash<QString, HydroData *>::iterator i = dict.begin(); i != dict.end(); i++){
         delete *i;
     }
 }
@@ -113,9 +126,12 @@ void HydroFileDict::copy(const HydroFileDict &rhs) {
     filenames = QStringList(rhs.filenames);
     for(int i = 0; i < filenames.size(); i++) {
         QString filename = filenames[i];
-        HydroFile * hydroFileCopy = new HydroFile();
-        *hydroFileCopy = *(rhs.dict[filename]);
+        HydroData * hydroDataCopy = new HydroData();
+        *hydroDataCopy = *(rhs.dict[filename]);
 
-        dict.insert(filename, hydroFileCopy);
+        dict.insert(filename, hydroDataCopy);
     }
+
+    maxHeight = rhs.maxHeight;
+    maxWidth = rhs.maxWidth;
 }

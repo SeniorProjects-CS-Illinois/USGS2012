@@ -26,11 +26,9 @@ class CarbonSourceCollection {
         void addSources(const QVector<CarbonSource> & sources);
         void addSources(const CarbonSourceCollection & collection);
 
-        void subSources(const CarbonSourceCollection & collection);
-
         void removeSourcesPercent(float percent);
 
-        const QVector<CarbonSource> getSources() const;
+        const QVector<CarbonSource> * getSources() const;
         const QVector<CarbonSource> getSourcesPercentage(float percent) const;
 
     private:
