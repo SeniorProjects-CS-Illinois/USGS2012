@@ -3,7 +3,6 @@
 #include <cmath>
 #include <omp.h>
 #include "constants.h"
-#include "globals.h"
 #include "patchcollection.h"
 #include "configuration.h"
 #include "utility.h"

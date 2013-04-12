@@ -8,7 +8,6 @@
 #include "hydrofile.h"
 #include "grid.h"
 #include "carbonsources.h"
-#include "globals.h"
 
 class CarbonFlowMap {
     public:

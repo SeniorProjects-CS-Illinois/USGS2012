@@ -123,8 +123,6 @@ void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
 
 //TODO Move this to construct and add the "Big three" (CCtor, assignment operator, destructor)
 void RiverModel::initializeModel(const Configuration &config){
-    //TODO Get rid of these two functions if possible.
-    initialize_globals();
 
     initializeHydroMaps(modelConfig);
     initializeWaterTemps(modelConfig);

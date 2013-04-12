@@ -15,7 +15,6 @@
 #include "configuration.h"
 #include "constants.h"
 #include "flowdata.h"
-#include "globals.h"
 #include "hydrofile.h"
 #include "hydrofiledict.h"
 #include "patchcollection.h"
@@ -102,8 +101,6 @@ class River {
         //Temp functions, will be replaced in move to carbonFlowMap
         void copyFlowData(Grid<FlowData> & flowData);
         void storeFlowData(Grid<FlowData> & flowData);
-        bool is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst);
-        double getMaxTimestep();
         bool is_valid_patch(int x, int y);
 
         /**

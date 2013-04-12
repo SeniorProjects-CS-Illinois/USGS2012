@@ -16,11 +16,8 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 //TODO This function is relatively slow because of many hashtable lookups
 // in HydroFile class.  Consider pros and cons of using a grid instead.
 void River::setCurrentHydroData(HydroData *newHydroData) {
-    // TODO Get rid of max_vector_component and g.COMPARE_MAX
     HydroFile * newHydroFile = &newHydroData->hydroFile;
     HydroFile * currHydroFile = &currHydroData->hydroFile;
-
-    double max_vector_component = 0.0;
 
     for (int i = 0; i < p.getSize(); i++ ) {
         int x = p.pxcor[i];
@@ -40,13 +37,6 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.flowX[i] = flowX;
             p.flowY[i] = flowY;
             p.flowMagnitude[i] = flowMagnitude;
-
-            if (max_vector_component < fabs(flowX) ) {
-                max_vector_component = fabs(flowX);
-            }
-            if( max_vector_component < fabs(flowY)) {
-                max_vector_component = fabs(flowY);
-            }
 
         } else {
             p.hasWater[i] = false;
@@ -85,9 +75,6 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.detritus[i] *= 0.5;
         }
     }
-
-    // update the maximum vector for the timestep
-    g.COMPARE_MAX = max_vector_component;
 
     currHydroData = newHydroData;
 }
@@ -172,42 +159,6 @@ void River::storeFlowData(Grid<FlowData> & flowData) {
         p.phyto[i]       = flowData(x,y).phyto;
         p.waterdecomp[i] = flowData(x,y).waterdecomp;
     }
-}
-
-bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst) {
-    if ( /*isnan( dst(x,y).DOC + dst(x,y).DOC*move_factor )*/
-        dst(x,y).DOC + dst(x,y).DOC*move_factor
-            != dst(x,y).DOC + dst(x,y).DOC*move_factor)
-    {
-        return true;
-    }
-    if ( /*isnan( dst(x,y).POC + dst(x,y).POC*move_factor )*/
-            dst(x,y).POC + dst(x,y).POC*move_factor
-                != dst(x,y).POC + dst(x,y).POC*move_factor)
-    {
-        return true;
-    }
-    if ( /*isnan( dst(x,y).phyto + dst(x,y).phyto*move_factor )*/
-            dst(x,y).phyto + dst(x,y).phyto*move_factor
-                != dst(x,y).phyto + dst(x,y).phyto*move_factor)
-    {
-        return true;
-    }
-    if ( /*isnan( dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor )*/
-            dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor
-                != dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor)
-    {
-        return true;
-    }
-    return false;
-}
-
-double River::getMaxTimestep() {
-    if (g.COMPARE_MAX == 0.0)
-    {
-        return 1.0;
-    }
-    return (((double)PATCH_LENGTH)/((double)g.COMPARE_MAX));
 }
 
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
@@ -334,7 +285,21 @@ Statistics River::generateStatistics() {
     return stats;
 }
 
-//TODO Use QFile
+//TODO Use QFile for cleanliness and to get rid of this error in valigrind.
+/*
+==10508== Syscall param open(filename) points to unaddressable byte(s)
+==10508==    at 0x67326CD: ??? (syscall-template.S:82)
+==10508==    by 0x66C6628: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:233)
+==10508==    by 0x66BB265: __fopen_internal (iofopen.c:93)
+==10508==    by 0x414F79: River::saveCSV(QString, int) const (in /home/eric/USGS2012/RiverModel)
+==10508==    by 0x4192B7: RiverModel::run() (in /home/eric/USGS2012/RiverModel)
+==10508==    by 0x403D8C: main (in /home/eric/USGS2012/RiverModel)
+==10508==  Address 0xfcadc08 is 24 bytes inside a block of size 68 free'd
+==10508==    at 0x4C2A44B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10508==    by 0x41542D: River::saveCSV(QString, int) const (in /home/eric/USGS2012/RiverModel)
+==10508==    by 0x4192B7: RiverModel::run() (in /home/eric/USGS2012/RiverModel)
+==10508==    by 0x403D8C: main (in /home/eric/USGS2012/RiverModel)
+*/
 int River::saveCSV(QString displayedStock, int daysElapsed) const {
     QString file_name = "./results/data/map_data_";
     QDateTime date_time = QDateTime::currentDateTime();

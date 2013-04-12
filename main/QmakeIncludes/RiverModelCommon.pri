@@ -13,7 +13,6 @@ LIBS += -fopenmp
 SOURCES += model/carbonflowmap.cpp \
     model/carbonsources.cpp \
     model/configuration.cpp \
-    model/globals.cpp \    
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \    
     model/patchcollection.cpp \
@@ -29,7 +28,6 @@ HEADERS  +=  model/carbonflowmap.h \
     model/configuration.h \
     model/constants.h \
     model/flowdata.h \
-    model/globals.h \
     model/grid.h \
     model/hydrodata.h \
     model/hydrofile.h \
