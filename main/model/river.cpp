@@ -135,7 +135,7 @@ void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
     copyFlowData(*dest);
     copyFlowData(*source);
 
-    for (int t = 0; t < 60; t++)
+    for (int t = 0; t < 30; t++)
     {
         std::swap(source, dest);
         flowSingleTimestep(*source, *dest, config);
@@ -417,57 +417,66 @@ void River::generateImages(QVector<QImage> &images, QVector<QString> & stockName
                            QMutex &imageMutex, Statistics & stats)
 {
     imageMutex.lock();
-    for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
-        QColor color("black");
-        images[imageIndex].fill(color.rgb());
-    }
+    #pragma omp parallel
+    {
 
-    for(int i = 0; i < p.getSize(); i++){
-        if(!p.hasWater[i]) {
-            continue;
+     #pragma omp for
+        for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
+            QColor color("black");
+            images[imageIndex].fill(color.rgb());
         }
 
-        int x = p.pxcor[i];
-        int y = p.pycor[i];
+        #pragma omp for
+        for(int i = 0; i < p.getSize(); i++){
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
-        QColor macroColor = getHeatMapColor(p.macro[i], stats.avgMacro, stats.maxMacro);
-        QColor phytoColor = getHeatMapColor(p.phyto[i], stats.avgPhyto, stats.maxPhyto);
-        QColor herbivoreColor = getHeatMapColor(p.herbivore[i], stats.avgHerbivore, stats.maxHerbivore);
-        QColor waterDecompColor = getHeatMapColor(p.waterdecomp[i], stats.avgWaterDecomp, stats.maxWaterDecomp);
-        QColor sedDecompColor = getHeatMapColor(p.seddecomp[i], stats.avgSedDecomp, stats.maxSedDecomp);
-        QColor sedConsumerColor = getHeatMapColor(p.sedconsumer[i], stats.avgSedConsumer, stats.maxSedConsumer);
-        QColor consumColor = getHeatMapColor(p.consumer[i], stats.avgConsum, stats.maxConsum);
-        QColor DOCColor = getHeatMapColor(p.DOC[i], stats.avgDOC, stats.maxDOC);
-        QColor POCColor = getHeatMapColor(p.POC[i], stats.avgPOC, stats.maxPOC);
-        QColor detritusColor = getHeatMapColor(p.detritus[i], stats.avgDetritus, stats.maxDetritus);
+            int x = p.pxcor[i];
+            int y = p.pycor[i];
 
-        images[STOCK_MACRO].setPixel( x, y, macroColor.rgb());
-        images[STOCK_PHYTO].setPixel(x, y, phytoColor.rgb());
-        images[STOCK_HERBIVORE].setPixel(x, y, herbivoreColor.rgb());
-        images[STOCK_WATERDECOMP].setPixel( x, y, waterDecompColor.rgb());
-        images[STOCK_SEDDECOMP].setPixel(x, y, sedDecompColor.rgb());
-        images[STOCK_SEDCONSUMER].setPixel(x, y, sedConsumerColor.rgb());
-        images[STOCK_CONSUMER].setPixel(x, y, consumColor.rgb());
-        images[STOCK_DOC].setPixel(x, y, DOCColor.rgb());
-        images[STOCK_POC].setPixel(x, y, POCColor.rgb());
-        images[STOCK_DETRITUS].setPixel(x, y, detritusColor.rgb());
+            QColor macroColor = getHeatMapColor(p.macro[i], stats.avgMacro, stats.maxMacro);
+            QColor phytoColor = getHeatMapColor(p.phyto[i], stats.avgPhyto, stats.maxPhyto);
+            QColor herbivoreColor = getHeatMapColor(p.herbivore[i], stats.avgHerbivore, stats.maxHerbivore);
+            QColor waterDecompColor = getHeatMapColor(p.waterdecomp[i], stats.avgWaterDecomp, stats.maxWaterDecomp);
+            QColor sedDecompColor = getHeatMapColor(p.seddecomp[i], stats.avgSedDecomp, stats.maxSedDecomp);
+            QColor sedConsumerColor = getHeatMapColor(p.sedconsumer[i], stats.avgSedConsumer, stats.maxSedConsumer);
+            QColor consumColor = getHeatMapColor(p.consumer[i], stats.avgConsum, stats.maxConsum);
+            QColor DOCColor = getHeatMapColor(p.DOC[i], stats.avgDOC, stats.maxDOC);
+            QColor POCColor = getHeatMapColor(p.POC[i], stats.avgPOC, stats.maxPOC);
+            QColor detritusColor = getHeatMapColor(p.detritus[i], stats.avgDetritus, stats.maxDetritus);
 
-        int patchCarbon = p.macro[i] + p.phyto[i] + p.herbivore[i] + p.waterdecomp[i] + p.seddecomp[i]
-                + p.sedconsumer[i] + p.consumer[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
-        QColor allCarbonColor = getHeatMapColor(patchCarbon, stats.avgCarbon, stats.maxCarbon);
-        images[STOCK_ALL_CARBON].setPixel(x, y, allCarbonColor.rgb());
-    }
+            images[STOCK_MACRO].setPixel( x, y, macroColor.rgb());
+            images[STOCK_PHYTO].setPixel(x, y, phytoColor.rgb());
+            images[STOCK_HERBIVORE].setPixel(x, y, herbivoreColor.rgb());
+            images[STOCK_WATERDECOMP].setPixel( x, y, waterDecompColor.rgb());
+            images[STOCK_SEDDECOMP].setPixel(x, y, sedDecompColor.rgb());
+            images[STOCK_SEDCONSUMER].setPixel(x, y, sedConsumerColor.rgb());
+            images[STOCK_CONSUMER].setPixel(x, y, consumColor.rgb());
+            images[STOCK_DOC].setPixel(x, y, DOCColor.rgb());
+            images[STOCK_POC].setPixel(x, y, POCColor.rgb());
+            images[STOCK_DETRITUS].setPixel(x, y, detritusColor.rgb());
 
-    //Due to the layout of the hydrofiles, the river will appear upside down if we don't flip it.
-    for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
-        images[imageIndex] = images[imageIndex].mirrored(false,true);
+            int patchCarbon = p.macro[i] + p.phyto[i] + p.herbivore[i] + p.waterdecomp[i] + p.seddecomp[i]
+                    + p.sedconsumer[i] + p.consumer[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
+            QColor allCarbonColor = getHeatMapColor(patchCarbon, stats.avgCarbon, stats.maxCarbon);
+            images[STOCK_ALL_CARBON].setPixel(x, y, allCarbonColor.rgb());
+        }
+
+        //Due to the layout of the hydrofiles, the river will appear upside down if we don't flip it.
+        #pragma omp for
+        for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
+            images[imageIndex] = images[imageIndex].mirrored(false,true);
+        }
     }
     imageMutex.unlock();
 
-    QImageWriter writer;
-    writer.setFormat("png");
 
+
+    #pragma omp parallel for
     for(int i = 0; i < NUM_IMAGES; i++){
+        QImageWriter writer;
+        writer.setFormat("png");
         QString date_time_str = QDateTime::currentDateTime().toString("_MMM_d_H_mm_ss");
 
         QString fileName = "./results/images/" + stockNames[i] + date_time_str + ".png";
