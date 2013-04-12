@@ -58,6 +58,12 @@ class River {
         void setCurrentPAR(int newPAR);
 
         /**
+         * @brief Sets the current growth rate to use in future calculations
+         * @param newGrowthrate new growth rate to use.
+         */
+        void setCurrentGrowthRate(double newGrowthRate);
+
+        /**
          * @brief Iterates over the river and performs calculations on each patch
          */
         void processPatches();
@@ -124,6 +130,8 @@ class River {
         HydroFile * currHydroFile;
         double currWaterTemp;
         int currPAR;
+
+        double currGrowthRate;
 
         int width;
         int height;
