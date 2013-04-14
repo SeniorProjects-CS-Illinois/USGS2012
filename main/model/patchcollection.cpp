@@ -117,7 +117,6 @@ void PatchCollection::initializePatches(Configuration & config, int newSize) {
 
     Utility::initArray<double>(peri, newSize, 0.0);
     Utility::initArray<double>(bottom_light, newSize, 0.0);
-    Utility::initArray<double>(consumer, newSize, 0.0);
     Utility::initArray<double>(consumer_consumption, newSize, 0.0);
     Utility::initArray<double>(consumer_ingest_herbivore, newSize, 0.0);
     Utility::initArray<double>(consumer_pred_herbivore, newSize, 0.0);
