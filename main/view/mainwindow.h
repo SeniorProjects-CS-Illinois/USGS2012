@@ -350,9 +350,9 @@ public:
 private:
 
     /**
-     * Enum for the tab index.
+     * Enum for the tab index. The order here IS important.
      */
-    enum Tab { CONFIGURATION, STOCK, OUTPUT };
+    enum Tab { CONFIGURATION, HYDRO_FILES, STOCK, OUTPUT };
 
     Ui::MainWindow* ui;
 
