@@ -15,7 +15,7 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
             cout << "Loading: " << filename.toStdString() << endl;
             HydroData * newHydroData = new HydroData;
             newHydroData->hydroFile = HydroFile(filename);
-            newHydroData->carbonFlowMap = CarbonFlowMap(&newHydroData->hydroFile, 2);
+            newHydroData->carbonFlowMap = CarbonFlowMap(&newHydroData->hydroFile, 4);
 
             dict.insert(filename, newHydroData);
         }

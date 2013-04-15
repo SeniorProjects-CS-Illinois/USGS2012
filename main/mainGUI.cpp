@@ -19,7 +19,7 @@ void create_output_dirs(void) {
 }
 
 
-int main(void)
+int main(int argc, char *argv[])
 {
     create_output_dirs();
 

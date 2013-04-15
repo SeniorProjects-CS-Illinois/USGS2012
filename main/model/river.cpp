@@ -122,7 +122,7 @@ void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
     copyFlowData(*dest);
     copyFlowData(*source);
 
-    for (int t = 0; t < 30; t++)
+    for (int t = 0; t < 15; t++)
     {
         std::swap(source, dest);
         flowSingleTimestep(*source, *dest, config);
@@ -285,97 +285,40 @@ Statistics River::generateStatistics() {
     return stats;
 }
 
-//TODO Use QFile for cleanliness and to get rid of this error in valigrind.
-/*
-==10508== Syscall param open(filename) points to unaddressable byte(s)
-==10508==    at 0x67326CD: ??? (syscall-template.S:82)
-==10508==    by 0x66C6628: _IO_file_fopen@@GLIBC_2.2.5 (fileops.c:233)
-==10508==    by 0x66BB265: __fopen_internal (iofopen.c:93)
-==10508==    by 0x414F79: River::saveCSV(QString, int) const (in /home/eric/USGS2012/RiverModel)
-==10508==    by 0x4192B7: RiverModel::run() (in /home/eric/USGS2012/RiverModel)
-==10508==    by 0x403D8C: main (in /home/eric/USGS2012/RiverModel)
-==10508==  Address 0xfcadc08 is 24 bytes inside a block of size 68 free'd
-==10508==    at 0x4C2A44B: operator delete(void*) (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==10508==    by 0x41542D: River::saveCSV(QString, int) const (in /home/eric/USGS2012/RiverModel)
-==10508==    by 0x4192B7: RiverModel::run() (in /home/eric/USGS2012/RiverModel)
-==10508==    by 0x403D8C: main (in /home/eric/USGS2012/RiverModel)
-*/
-int River::saveCSV(QString displayedStock, int daysElapsed) const {
-    QString file_name = "./results/data/map_data_";
-    QDateTime date_time = QDateTime::currentDateTime();
-    QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
-    file_name.append(date_time_str);
-    file_name.append(".csv");
+void River::saveCSV(QString displayedStock, int daysElapsed) const {
+    QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+    QString fileName = "./results/data/map_data_" + dateAndTime + ".csv";
 
-    const char* cfile_name = file_name.toStdString().c_str();
-    FILE* f = fopen(cfile_name, "w");
-    if (f == NULL) {
-        printf("file name: %s could not be opened\n", cfile_name);
-        return 0;
-    }
+    ofstream csvFile;
+    csvFile.open(fileName.toStdString().c_str());
+    csvFile << "# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,"
+               << "sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,"
+               << "macro_vel_max,gross_macro_coef,which_stock" << endl;
 
-    // GUI variables used
-    fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
-
-    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
-            config.timestep, daysElapsed, config.tss,
-            config.kPhyto, config.kMacro, (config.macroSenescence/24),
-            (config.macroRespiration/24), config.macroTemp, config.macroMassMax,
-            config.macroVelocityMax, config.macroGross, displayedStock.toStdString().c_str());
+    csvFile << config.timestep << "," << daysElapsed << "," << config.tss << ","
+               << config.kPhyto << "," << config.kMacro << "," << (config.macroSenescence/24) << ","
+               << (config.macroRespiration/24) << "," << config.macroTemp << "," << config.macroMassMax << ","
+               << config.macroVelocityMax << "," << config.macroGross << "," << displayedStock.toStdString().c_str() << endl;
 
     //TODO Print out the hydrofile used for this simulated day.
+    csvFile << "# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,"
+               << "detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,"
+               << "peri,consum" << endl;
 
-    fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer");
-
-    int x,y;
-    int pxcor, pycor, pcolor;
-    double px_vector, py_vector;
-    double depth;
-    double velocity;
-    double assimilation;
-    double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consumer;
-
-    HydroFile * currHydroFile = &currHydroData->hydroFile;
-
-    for(x = 0; x < width; x++) {
-        for(y=0;y < height; y++) {
-            //Skip if cell doesn't exist or is land
-            if( !currHydroFile->patchExists(x,y) || currHydroFile->getDepth(x,y) <= 0.0 ) {
-                continue;
-            }
-
-            depth = currHydroFile->getDepth(x,y);
-
-            QVector2D flowVector = currHydroFile->getVector(x,y);
-            velocity = currHydroFile->getFileVelocity(x,y);
-
-            int i = p.getIndex(x,y);
-            pxcor = p.pxcor[i];
-            pycor = p.pycor[i];
-            pcolor = p.pcolor[i];
-            px_vector = flowVector.x();
-            py_vector = flowVector.y();
-            assimilation = p.assimilation[i];
-            detritus = p.detritus[i];
-            DOC = p.DOC[i];
-            POC = p.POC[i];
-            waterdecomp = p.waterdecomp[i];
-            seddecomp = p.seddecomp[i];
-            macro = p.macro[i];
-            phyto = p.phyto[i];
-            herbivore = p.herbivore[i];
-            sedconsumer = p.sedconsumer[i];
-            peri = p.peri[i];
-            consumer = p.consumer[i];
-
-
-            fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
-                      velocity,assimilation,detritus,DOC,POC,
-                      waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer);
+    for(int i = 0; i < p.getSize(); i++) {
+        //Skip if cell doesn't exist or is land
+        if(!p.hasWater[i]) {
+            continue;
         }
+
+        csvFile << p.pxcor[i] << "," << p.pycor[i] << "," << p.pcolor[i] << "," << p.flowX[i] << ","
+                   << p.flowY[i] << "," << p.depth[i] << "," << p.flowMagnitude[i] << ","
+                   << p.assimilation[i] << "," << p.detritus[i] << "," << p.DOC[i] << ","
+                   << p.POC[i] << "," << p.waterdecomp[i] << "," << p.seddecomp[i] << ","
+                   << p.macro[i] << "," << p.phyto[i] << "," << p.herbivore[i] << ","
+                   << p.sedconsumer[i] << "," << p.peri[i] << "," << p.consumer[i] << endl;
     }
-    fclose(f);
-    return 1;
+    csvFile.close();
 }
 
 void River::generateImages(QVector<QImage> &images, QVector<QString> & stockNames,
@@ -437,13 +380,10 @@ void River::generateImages(QVector<QImage> &images, QVector<QString> & stockName
     imageMutex.unlock();
 
 
-
-    #pragma omp parallel for
+    QImageWriter writer;
+    writer.setFormat("png");
     for(int i = 0; i < NUM_IMAGES; i++){
-        QImageWriter writer;
-        writer.setFormat("png");
         QString date_time_str = QDateTime::currentDateTime().toString("_MMM_d_H_mm_ss");
-
         QString fileName = "./results/images/" + stockNames[i] + date_time_str + ".png";
         writer.setFileName(fileName);
         writer.write(images[i]);

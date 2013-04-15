@@ -61,3 +61,13 @@ const QVector<CarbonSource> CarbonSourceCollection::getSourcesPercentage(double 
     }
     return pctSources;
 }
+
+void CarbonSourceCollection::trim(double percent) {
+    QVector<CarbonSource> newSources;
+    for( int i = 0; i < sources.size(); i++) {
+        if(sources[i].amount > percent) {
+            newSources.push_back(sources[i]);
+        }
+    }
+    sources = newSources;
+}

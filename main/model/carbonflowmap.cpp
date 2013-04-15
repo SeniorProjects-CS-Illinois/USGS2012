@@ -28,7 +28,6 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
         pushCarbon(*source, *dest);
     }
 
-
     /*
      * TODO: After pushing the carbon, store it all efficicently and
      * get rid of temp data.
@@ -36,6 +35,12 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
 
     delete source;
     carbonSourceMapGrid = dest;
+    for(unsigned int x = 0; x < carbonSourceMapGrid->getWidth(); x++) {
+        for(unsigned int y = 0; y < carbonSourceMapGrid->getHeight(); y++) {
+            (*carbonSourceMapGrid)(x,y).trim(0.0001);
+        }
+    }
+
     //delete dest;
 }
 

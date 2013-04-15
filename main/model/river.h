@@ -2,10 +2,11 @@
 #define RIVER_H
 
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 #include <omp.h>
 #include <QColor>
 #include <QDateTime>
-#include <QFile>
 #include <QImage>
 #include <QImageWriter>
 #include <QMutex>
@@ -21,7 +22,7 @@
 #include "patchcomputation.h"
 #include "statistics.h"
 
-#include <iostream>
+using std::ofstream;
 using std::cout;
 using std::endl;
 using std::max;
@@ -72,7 +73,7 @@ class River {
          * @param outputPath Location to save the file
          * @param filenamePrefix Prefix for filename
          */
-        int saveCSV(QString displayedStock, int daysElapsed) const;
+        void saveCSV(QString displayedStock, int daysElapsed) const;
 
         /**
          * @brief Produces a visualization of the river at the current point in the
