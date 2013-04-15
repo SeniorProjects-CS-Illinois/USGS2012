@@ -112,6 +112,11 @@ class RiverModel {
         void initializePARValues(const Configuration & config);
 
         /**
+         *@brief Initializes a QVector of growth rates based on temperatures
+         */
+        void initializeGrowthRates();
+
+        /**
          * @brief Initializes temp Grids of flowdata structs for the River's flow routine
          * @param hydroFileDict Hydrofiles so we know the width and height to use
          */
@@ -142,6 +147,8 @@ class RiverModel {
         HydroFileDict hydroFileDict;
         QVector<double> waterTemps;
         QVector<int> parValues;
+
+        QVector<double> growthRates;
 
         QString displayedStock;
         QVector<QString> stockNames;
