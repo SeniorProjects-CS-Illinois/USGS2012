@@ -128,6 +128,10 @@ void River::setCurrentPAR(int newPAR) {
     currPAR = newPAR;// - (int)(newPAR * g.par_dif);
 }
 
+void River::setCurrentGrowthRate(double newRate) {
+    currGrowthRate = newRate;
+}
+
 void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
     //TODO Replace with CarbonFlowMap stuff
 
@@ -568,16 +572,16 @@ void River::processPatches() {
     #pragma omp parallel
     {
         PatchComputation::updatePatches(p, config, currPAR);
-        PatchComputation::macro(p, config, currPAR, currWaterTemp);
-        PatchComputation::phyto(p, config, currPAR, currWaterTemp);
+        PatchComputation::macro(p, config, currPAR, currWaterTemp, currGrowthRate);
+        PatchComputation::phyto(p, config, currPAR, currWaterTemp, currGrowthRate);
         PatchComputation::herbivore(p, config);
         PatchComputation::waterDecomp(p, config);
         PatchComputation::sedDecomp(p, config);
         PatchComputation::sedConsumer(p, config);
         PatchComputation::consumer(p, config);
-        PatchComputation::DOC(p, config);
-        PatchComputation::POC(p);
-        PatchComputation::detritus(p, config);
+        PatchComputation::DOC(p, config, currGrowthRate);
+        PatchComputation::POC(p, currGrowthRate);
+        PatchComputation::detritus(p, config, currGrowthRate);
 
         #pragma omp for
         for(int i = 0; i < p.getSize(); i++) {
