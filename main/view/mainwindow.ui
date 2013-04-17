@@ -33,7 +33,7 @@
      <string/>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabConfig">
      <property name="toolTip">
@@ -1614,7 +1614,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC1">
+     <widget class="QLineEdit" name="lineEditInputPoc1">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -1633,7 +1633,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC1">
+     <widget class="QLineEdit" name="lineEditOutputPoc1">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -1652,7 +1652,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC1">
+     <widget class="QLineEdit" name="lineEditInputDoc1">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -1709,7 +1709,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC1">
+     <widget class="QLineEdit" name="lineEditOutputDoc1">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -1785,7 +1785,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC2">
+     <widget class="QLineEdit" name="lineEditInputPoc2">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -1823,7 +1823,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC2">
+     <widget class="QLineEdit" name="lineEditOutputDoc2">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -1842,7 +1842,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC2">
+     <widget class="QLineEdit" name="lineEditOutputPoc2">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -1899,7 +1899,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC2">
+     <widget class="QLineEdit" name="lineEditInputDoc2">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -1937,7 +1937,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC3">
+     <widget class="QLineEdit" name="lineEditInputPoc3">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -1975,7 +1975,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC3">
+     <widget class="QLineEdit" name="lineEditOutputDoc3">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -1994,7 +1994,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC3">
+     <widget class="QLineEdit" name="lineEditOutputPoc3">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2051,7 +2051,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC3">
+     <widget class="QLineEdit" name="lineEditInputDoc3">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -2089,7 +2089,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC4">
+     <widget class="QLineEdit" name="lineEditInputPoc4">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -2127,7 +2127,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC4">
+     <widget class="QLineEdit" name="lineEditOutputDoc4">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -2146,7 +2146,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC4">
+     <widget class="QLineEdit" name="lineEditOutputPoc4">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2203,7 +2203,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC4">
+     <widget class="QLineEdit" name="lineEditInputDoc4">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -2241,7 +2241,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC5">
+     <widget class="QLineEdit" name="lineEditInputPoc5">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -2279,7 +2279,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC5">
+     <widget class="QLineEdit" name="lineEditOutputDoc5">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -2298,7 +2298,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC5">
+     <widget class="QLineEdit" name="lineEditOutputPoc5">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2355,7 +2355,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC5">
+     <widget class="QLineEdit" name="lineEditInputDoc5">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -2393,7 +2393,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC6">
+     <widget class="QLineEdit" name="lineEditInputPoc6">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -2431,7 +2431,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC6">
+     <widget class="QLineEdit" name="lineEditOutputDoc6">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -2450,7 +2450,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC6">
+     <widget class="QLineEdit" name="lineEditOutputPoc6">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2507,7 +2507,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC6">
+     <widget class="QLineEdit" name="lineEditInputDoc6">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -2545,7 +2545,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC7">
+     <widget class="QLineEdit" name="lineEditInputPoc7">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -2583,7 +2583,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC7">
+     <widget class="QLineEdit" name="lineEditOutputDoc7">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -2602,7 +2602,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC7">
+     <widget class="QLineEdit" name="lineEditOutputPoc7">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2659,7 +2659,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC7">
+     <widget class="QLineEdit" name="lineEditInputDoc7">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -2697,7 +2697,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC8">
+     <widget class="QLineEdit" name="lineEditInputPoc8">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -2735,7 +2735,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC8">
+     <widget class="QLineEdit" name="lineEditOutputDoc8">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -2754,7 +2754,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC8">
+     <widget class="QLineEdit" name="lineEditOutputPoc8">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2811,7 +2811,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC8">
+     <widget class="QLineEdit" name="lineEditInputDoc8">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -2849,7 +2849,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC9">
+     <widget class="QLineEdit" name="lineEditInputPoc9">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -2887,7 +2887,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC9">
+     <widget class="QLineEdit" name="lineEditOutputDoc9">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -2906,7 +2906,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC9">
+     <widget class="QLineEdit" name="lineEditOutputPoc9">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -2963,7 +2963,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC9">
+     <widget class="QLineEdit" name="lineEditInputDoc9">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -3001,7 +3001,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputPOC10">
+     <widget class="QLineEdit" name="lineEditInputPoc10">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -3039,7 +3039,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputDOC10">
+     <widget class="QLineEdit" name="lineEditOutputDoc10">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -3058,7 +3058,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditOutputPOC10">
+     <widget class="QLineEdit" name="lineEditOutputPoc10">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -3115,7 +3115,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditInputDOC10">
+     <widget class="QLineEdit" name="lineEditInputDoc10">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -3134,7 +3134,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelIOPOC">
+     <widget class="QLabel" name="labelIoPoc">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -3150,7 +3150,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelInputPOC">
+     <widget class="QLabel" name="labelInputPoc">
       <property name="geometry">
        <rect>
         <x>370</x>
@@ -3166,7 +3166,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelOutputPOC">
+     <widget class="QLabel" name="labelOutputPoc">
       <property name="geometry">
        <rect>
         <x>420</x>
@@ -3182,7 +3182,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelIODOC">
+     <widget class="QLabel" name="labelIoDoc">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -3198,7 +3198,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelInputDOC">
+     <widget class="QLabel" name="labelInputDoc">
       <property name="geometry">
        <rect>
         <x>475</x>
@@ -3214,7 +3214,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelOutputDOC">
+     <widget class="QLabel" name="labelOutputDoc">
       <property name="geometry">
        <rect>
         <x>525</x>
@@ -3230,7 +3230,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelIOWaterdecomp">
+     <widget class="QLabel" name="labelIoWaterdecomp">
       <property name="geometry">
        <rect>
         <x>580</x>
@@ -3278,7 +3278,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelIOPhyto">
+     <widget class="QLabel" name="labelIoPhyto">
       <property name="geometry">
        <rect>
         <x>685</x>
@@ -6182,22 +6182,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>horizontalSliderTimestep</sender>
-   <signal>sliderMoved(int)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>timestepUpdate(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>366</x>
-     <y>504</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>404</x>
-     <y>480</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionSave_Configuration</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
@@ -6277,6 +6261,454 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>lineEditMaxDepth1</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth1Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth2</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth2Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth3</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth3Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth4</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth4Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>192</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth5</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth5Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth6</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth6Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>242</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth7</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth7Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>267</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth8</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth8Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>292</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMaxDepth9</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>maxDepth9Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>101</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth2</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth2Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth3</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth3Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth4</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth4Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>192</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth5</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth5Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth6</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth6Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>242</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth7</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth7Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>267</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth8</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth8Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>292</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth9</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth9Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEditMinDepth10</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>minDepth10Changed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>342</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile1</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile1Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile3Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>167</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile2Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>142</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile4</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile4Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>192</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile6</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile6Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>242</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile7</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile7Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>267</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile8</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile8Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>292</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile9</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile9Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile5</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile5Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButtonSelectHydroFile10</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>selectHydroFile10Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>166</x>
+     <y>342</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>424</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>selectHydroMapClicked()</slot>
@@ -6290,5 +6722,33 @@
   <slot>loadConfiguration()</slot>
   <slot>selectDischargeFileClicked()</slot>
   <slot>whichstockChanged(QString)</slot>
+  <slot>maxDepth1Changed()</slot>
+  <slot>maxDepth2Changed()</slot>
+  <slot>maxDepth3Changed()</slot>
+  <slot>maxDepth4Changed()</slot>
+  <slot>maxDepth5Changed()</slot>
+  <slot>maxDepth6Changed()</slot>
+  <slot>maxDepth7Changed()</slot>
+  <slot>maxDepth8Changed()</slot>
+  <slot>maxDepth9Changed()</slot>
+  <slot>minDepth2Changed()</slot>
+  <slot>minDepth3Changed()</slot>
+  <slot>minDepth4Changed()</slot>
+  <slot>minDepth5Changed()</slot>
+  <slot>minDepth6Changed()</slot>
+  <slot>minDepth7Changed()</slot>
+  <slot>minDepth8Changed()</slot>
+  <slot>minDepth9Changed()</slot>
+  <slot>minDepth10Changed()</slot>
+  <slot>selectHydroFile1Clicked()</slot>
+  <slot>selectHydroFile2Clicked()</slot>
+  <slot>selectHydroFile3Clicked()</slot>
+  <slot>selectHydroFile4Clicked()</slot>
+  <slot>selectHydroFile5Clicked()</slot>
+  <slot>selectHydroFile6Clicked()</slot>
+  <slot>selectHydroFile7Clicked()</slot>
+  <slot>selectHydroFile8Clicked()</slot>
+  <slot>selectHydroFile9Clicked()</slot>
+  <slot>selectHydroFile10Clicked()</slot>
  </slots>
 </ui>

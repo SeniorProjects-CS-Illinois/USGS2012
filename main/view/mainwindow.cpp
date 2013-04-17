@@ -123,34 +123,74 @@ void MainWindow::selectDischargeFileClicked()
 
 void MainWindow::selectTemperatureFileClicked()
 {
-    // open prompt to select file
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select Temperature Data File"),
-                                                    Files::defaultFileLocation(), tr("Text Files (*.txt)"));
-
-    // make sure a temperature file was selected
-    if (!selected.isEmpty())
-    {
-        uiConfig.tempFile = selected;
-        QString filename = Files::stripFile(selected);
-        ui->labelTempFile->setText(filename);
-        ui->labelTempFile->setToolTip(filename);
-    }
+    selectFile(ui->labelTempFile, uiConfig.tempFile,
+               tr("Select Temperature Data File"), tr("Text Files (*.txt)"));
 }
 
 void MainWindow::selectPARFileClicked()
 {
-    // open prompt to select file
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select PAR Data File"),
-                                                    Files::defaultFileLocation(), tr("Text Files (*.txt)"));
+    selectFile(ui->labelPARFile, uiConfig.parFile,
+               tr("Select PAR Data File"), tr("Text Files (*.txt)"));
+}
 
-    // make sure a par file was selected
-    if (!selected.isEmpty())
-    {
-        uiConfig.parFile = selected;
-        QString filename = Files::stripFile(selected);
-        ui->labelPARFile->setText(filename);
-        ui->labelPARFile->setToolTip(filename);
-    }
+void MainWindow::selectHydroFile1Clicked()
+{
+    selectFile(ui->labelHydroFile1, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile2Clicked()
+{
+    selectFile(ui->labelHydroFile2, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile3Clicked()
+{
+    selectFile(ui->labelHydroFile3, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile4Clicked()
+{
+    selectFile(ui->labelHydroFile4, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile5Clicked()
+{
+    selectFile(ui->labelHydroFile5, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile6Clicked()
+{
+    selectFile(ui->labelHydroFile6, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile7Clicked()
+{
+    selectFile(ui->labelHydroFile7, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile8Clicked()
+{
+    selectFile(ui->labelHydroFile8, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile9Clicked()
+{
+    selectFile(ui->labelHydroFile9, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
+}
+
+void MainWindow::selectHydroFile10Clicked()
+{
+    selectFile(ui->labelHydroFile10, uiConfig.parFile,
+               tr("Select Hydro File"), tr("Text Files (*.txt)"));
 }
 
 void MainWindow::runClicked()
@@ -212,6 +252,33 @@ void MainWindow::whichstockChanged(QString const & newStock)
         imageUpdate(model->getImage(newStock));
     }
 }
+
+void MainWindow::maxDepth1Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth1, ui->lineEditMinDepth2,  1); }
+void MainWindow::minDepth2Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth2, ui->lineEditMaxDepth1, -1); }
+
+void MainWindow::maxDepth2Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth2, ui->lineEditMinDepth3,  1); }
+void MainWindow::minDepth3Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth3, ui->lineEditMaxDepth2, -1); }
+
+void MainWindow::maxDepth3Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth3, ui->lineEditMinDepth4,  1); }
+void MainWindow::minDepth4Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth4, ui->lineEditMaxDepth3, -1); }
+
+void MainWindow::maxDepth4Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth4, ui->lineEditMinDepth5,  1); }
+void MainWindow::minDepth5Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth5, ui->lineEditMaxDepth4, -1); }
+
+void MainWindow::maxDepth5Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth5, ui->lineEditMinDepth6,  1); }
+void MainWindow::minDepth6Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth6, ui->lineEditMaxDepth5, -1); }
+
+void MainWindow::maxDepth6Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth6, ui->lineEditMinDepth7,  1); }
+void MainWindow::minDepth7Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth7, ui->lineEditMaxDepth6, -1); }
+
+void MainWindow::maxDepth7Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth7, ui->lineEditMinDepth8,  1); }
+void MainWindow::minDepth8Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth8, ui->lineEditMaxDepth7, -1); }
+
+void MainWindow::maxDepth8Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth8, ui->lineEditMinDepth9,  1); }
+void MainWindow::minDepth9Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth9, ui->lineEditMaxDepth8, -1); }
+
+void MainWindow::maxDepth9Changed()  { copyIntDisplaywithOffset(ui->lineEditMaxDepth9,  ui->lineEditMinDepth10,  1); }
+void MainWindow::minDepth10Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth10, ui->lineEditMaxDepth9,  -1); }
 
 void MainWindow::finished() const
 {
@@ -702,6 +769,26 @@ void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool dis
     }
 }
 
+void MainWindow::copyIntDisplaywithOffset(QLineEdit* from, QLineEdit* to, int offset) const
+{
+    to->setText(QString::number(from->text().toInt() + offset));
+}
+
+void MainWindow::selectFile(QLabel* displayLabel, QString & configVal, const QString & title, const QString & filter)
+{
+    // open prompt to select file
+    QString selected = QFileDialog::getOpenFileName(this, title, Files::defaultFileLocation(), filter);
+
+    // make sure file was selected
+    if (!selected.isEmpty())
+    {
+        configVal = selected;
+        QString filename = Files::stripFile(selected);
+        displayLabel->setText(filename);
+        displayLabel->setToolTip(selected);
+    }
+}
+
 void MainWindow::getAllInput(Configuration & c) const
 {
     c.hydroMaps = getHydroMaps();
@@ -717,7 +804,7 @@ void MainWindow::getAllInput(Configuration & c) const
     c.outputFreq = getOutputFreq();
     c.adjacent = getAdjacent();
 
-    getAllStockInput(c); // There are so many, it would be best to separate this
+    getAllStockInput(c);
 }
 
 void MainWindow::getAllStockInput(Configuration & c) const
@@ -808,6 +895,7 @@ void MainWindow::getAllStockInput(Configuration & c) const
     c.sedconsumerGiSeddecomp = getSedconsumerGiSeddecomp();
     c.sedconsumerPrefSeddecomp = getSedconsumerPrefSeddecomp();
     /****************************************/
+    // TODO: allow for this to be user input
     c.sedconsumerAiPeri = 2.0;
     c.sedconsumerGiPeri = 0.02;
     c.sedconsumerPrefPeri = 0.4;
@@ -827,490 +915,241 @@ void MainWindow::getAllStockInput(Configuration & c) const
 
 bool MainWindow::verifyAllInput() const
 {
-    // first check stocks
-    if (!verifyAllStockInput())
-    {
-        return false;
-    }
-
-    if (!UI::isBoxNumerical(ui->lineEditKMacro))
-    {
-        displayErrors("K-Macro value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditKPhyto))
-    {
-        displayErrors("K-Phyto value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditTSS))
-    {
-        displayErrors("TSS value not filled out or invalid");
-        return false;
-    }
-
-    /* Files */
-    if (!UI::isFileSelected(ui->labelTempFile))
-    {
-        displayErrors("Temperature File not selected");
-        return false;
-    }
-    if (!UI::isFileSelected(ui->labelPARFile))
-    {
-        displayErrors("PAR File not selected");
-        return false;
-    }
     if (getNumHydroMaps() == 0)
     {
         displayErrors("No Hydromap Files selected");
         return false;
     }
 
-    return true;
+    return  verifyAllStockInput() &&
+            verifyNumber(ui->lineEditKMacro, "K-Macro value not filled out or invalid") &&
+            verifyNumber(ui->lineEditKPhyto, "K-Phyto value not filled out or invalid") &&
+            verifyNumber(ui->lineEditTSS, "TSS value not filled out or invalid") &&
+            /* Hydro file depth */
+            verifyNumber(ui->lineEditMinDepth1, "Min depth for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth2, "Min depth for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth3, "Min depth for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth4, "Min depth for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth5, "Min depth for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth6, "Min depth for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth7, "Min depth for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth8, "Min depth for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth9, "Min depth for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinDepth10, "Min depth for the tenth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth1, "Max depth for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth2, "Max depth for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth3, "Max depth for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth4, "Max depth for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth5, "Max depth for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth6, "Max depth for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth7, "Max depth for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth8, "Max depth for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth9, "Max depth for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxDepth10, "Max depth for the tenth hydro file not filled out or invalid") &&
+            /* DOC input/output */
+            verifyNumber(ui->lineEditInputDoc1, "DOC input for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc2, "DOC input for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc3, "DOC input for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc4, "DOC input for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc5, "DOC input for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc6, "DOC input for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc7, "DOC input for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc8, "DOC input for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc9, "DOC input for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputDoc10, "DOC input for the for the tenth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc1, "DOC output for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc2, "DOC output for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc3, "DOC output for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc4, "DOC output for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc5, "DOC output for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc6, "DOC output for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc7, "DOC output for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc8, "DOC output for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc9, "DOC output for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputDoc10, "DOC output for the for the tenth hydro file not filled out or invalid") &&
+            /* POC input/output */
+            verifyNumber(ui->lineEditInputPoc1, "POC input for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc2, "POC input for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc3, "POC input for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc4, "POC input for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc5, "POC input for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc6, "POC input for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc7, "POC input for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc8, "POC input for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc9, "POC input for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPoc10, "POC input for the for the tenth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc1, "POC output for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc2, "POC output for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc3, "POC output for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc4, "POC output for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc5, "POC output for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc6, "POC output for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc7, "POC output for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc8, "POC output for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc9, "POC output for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPoc10, "POC output for the for the tenth hydro file not filled out or invalid") &&
+            /* Waterdecomp input/output */
+            verifyNumber(ui->lineEditInputWaterdecomp1, "Waterdecomp input for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp2, "Waterdecomp input for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp3, "Waterdecomp input for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp4, "Waterdecomp input for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp5, "Waterdecomp input for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp6, "Waterdecomp input for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp7, "Waterdecomp input for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp8, "Waterdecomp input for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp9, "Waterdecomp input for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputWaterdecomp10, "Waterdecomp input for the for the tenth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp1, "Waterdecomp output for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp2, "Waterdecomp output for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp3, "Waterdecomp output for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp4, "Waterdecomp output for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp5, "Waterdecomp output for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp6, "Waterdecomp output for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp7, "Waterdecomp output for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp8, "Waterdecomp output for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp9, "Waterdecomp output for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputWaterdecomp10, "Waterdecomp output for the for the tenth hydro file not filled out or invalid") &&
+            /* Phyto input/output */
+            verifyNumber(ui->lineEditInputPhyto1, "Phyto input for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto2, "Phyto input for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto3, "Phyto input for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto4, "Phyto input for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto5, "Phyto input for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto6, "Phyto input for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto7, "Phyto input for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto8, "Phyto input for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto9, "Phyto input for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditInputPhyto10, "Phyto input for the for the tenth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto1, "Phyto output for the for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto2, "Phyto output for the for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto3, "Phyto output for the for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto4, "Phyto output for the for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto5, "Phyto output for the for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto6, "Phyto output for the for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto7, "Phyto output for the for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto8, "Phyto output for the for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto9, "Phyto output for the for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditOutputPhyto10, "Phyto output for the for the tenth hydro file not filled out or invalid") &&
+            /* Files */
+            verifyFile(ui->labelTempFile, "Temperature File not selected") &&
+            verifyFile(ui->labelPARFile, "PAR File not selected");
 }
 
 bool MainWindow::verifyAllStockInput() const
 {
-    /* Consumer */
-    if (!UI::isBoxNumerical(ui->lineEditConsumer))
-    {
-        displayErrors("Consumer value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerAiHerbivore))
-    {
-        displayErrors("Consumer Ai Herbivore value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerAiSedconsumer))
-    {
-        displayErrors("Consumer Ai Sedconsumer value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerAj))
-    {
-        displayErrors("Consumer Aj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerEgestion))
-    {
-        displayErrors("Consumer Egestion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerExcretion))
-    {
-        displayErrors("Consumer Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerGiHerbivore))
-    {
-        displayErrors("Consumer Gi Herbivore value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerGiSedconsumer))
-    {
-        displayErrors("Consumer Gi Sedconsumer value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerGj))
-    {
-        displayErrors("Consumer Gj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerMax))
-    {
-        displayErrors("Consumer Max value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerPrefHerbivore))
-    {
-        displayErrors("Consumer Pref Herbivore value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerPrefSedconsumer))
-    {
-        displayErrors("Consumer Pref Sedconsumer value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerRespiration))
-    {
-        displayErrors("Consumer Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditConsumerSenescence))
-    {
-        displayErrors("Consumer Senescence value not filled out or invalid");
-        return false;
-    }
+    return  /* Consumer */
+            verifyNumber(ui->lineEditConsumer, "Consumer value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerAiHerbivore, "Consumer Ai Herbivore value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerAiSedconsumer, "Consumer Ai Sedconsumer value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerAj, "Consumer Aj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerEgestion, "Consumer Egestion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerExcretion, "Consumer Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerGiHerbivore, "Consumer Gi Herbivore value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerGiSedconsumer, "Consumer Gi Sedconsumer value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerGj, "Consumer Gj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerMax, "Consumer Max value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerPrefHerbivore, "Consumer Pref Herbivore value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerPrefSedconsumer, "Consumer Pref Sedconsumer value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerRespiration, "Consumer Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditConsumerSenescence, "Consumer Senescence value not filled out or invalid") &&
+            /* WaterDecomp */
+            verifyNumber(ui->lineEditDecomp, "Decomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompAiDoc, "Waterdecomp Ai DOC value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompAiPoc, "Waterdecomp Ai POC value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompAj, "Waterdecomp Aj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompExcretion, "Waterdecomp Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompGiDoc, "Waterdecomp Gi DOC value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompGiPoc, "Waterdecomp Gi POC value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompGj, "Waterdecomp Gj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompMax, "Waterdecomp Max value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompPrefDoc, "Waterdecomp Pref DOC value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompPrefPoc, "Waterdecomp Pref POC value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompRespiration, "Waterdecomp Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditWaterdecompSenescence, "Waterdecomp Senescence value not filled out or invalid") &&
+            /* Detritus */
+            verifyNumber(ui->lineEditDetritus, "Detritus value not filled out or invalid") &&
+            /* DOC */
+            verifyNumber(ui->lineEditDoc, "DOC value not filled out or invalid") &&
+            /* Herbivore */
+            verifyNumber(ui->lineEditHerbivore, "Herbivore value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreAiPeri, "Herbivore Ai Peri value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreAiPhyto, "Herbivore Ai Phyto value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreAiWaterdecomp, "Herbivore Ai Waterdecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreAj, "Herbivore Aj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreEgestion, "Herbivore Egestion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreExcretion, "Herbivore Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreGiPeri, "Herbivore Gi Peri value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreGiPhyto, "Herbivore Gi Phyto value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreGiWaterdecomp, "Herbivore Gi Waterdecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreGj, "Herbivore Gj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreMax, "Herbivore Max value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivorePrefPeri, "Herbivore Pref Peri value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivorePrefPhyto, "Herbivore Pref Phyto value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivorePrefWaterdecomp, "Herbivore Pref Waterdecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreRespiration, "Herbivore Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditHerbivoreSenescence, "Herbivore Senescence value not filled out or invalid") &&
+            /* Macro */
+            verifyNumber(ui->lineEditMacro, "Macro value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroExcretion, "Macro Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroGrossCoef, "Macro Gross Coefficient value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroMassMax, "Macro Mass Max value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroRespiration, "Macro Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroSenescence, "Macro Senescence value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroTemp, "Macro Temp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditMacroVelocityMax, "Macro Velocity Max value not filled out or invalid") &&
+            /* Phyto */
+            verifyNumber(ui->lineEditPhyto, "Phyto value not filled out or invalid") &&
+            verifyNumber(ui->lineEditPhytoAj, "Phyto Aj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditPhytoExcretion, "Phyto Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditPhytoGj, "Phyto Gj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditPhytoRespiration, "Phyto Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditPhytoSenescence, "Phyto Senescence value not filled out or invalid") &&
+            /* POC */
+            verifyNumber(ui->lineEditPoc, "POC value not filled out or invalid") &&
+            /* Sedconsumer */
+            verifyNumber(ui->lineEditSedconsumer, "Sedconsumer value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerAiDetritus, "Sedconsumer Ai Detritus value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerAiSeddecomp, "Sedconsumer Ai Seddecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerAj, "Sedconsumer Aj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerExcretion, "Sedconsumer Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerGiDetritus, "Sedconsumer Gi Detritus value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerGiSeddecomp, "Sedconsumer Gi Seddecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerGj, "Sedconsumer Gj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerMax, "Sedconsumer Max value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerPrefDetritus, "Sedconsumer Pref Detritus value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerPrefSeddecomp, "Sedconsumer Pref Seddecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerRespiration, "Sedconsumer Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSedconsumerSenescence, "Sedconsumer Senescence value not filled out or invalid") &&
+            /* Seddecomp */
+            verifyNumber(ui->lineEditSeddecomp, "Seddecomp value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompAiDetritus, "Seddecomp Ai Detritus value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompAj, "Seddecomp Aj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompExcretion, "Seddecomp Excretion value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompGiDetritus, "Seddecomp Gi Detritus value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompGj, "Seddecomp Gj value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompMax, "Seddecomp Max value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompPrefDetritus, "Seddecomp Pref Detritus value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompRespiration, "Seddecomp Respiration value not filled out or invalid") &&
+            verifyNumber(ui->lineEditSeddecompSenescence, "Seddecomp Senescence value not filled out or invalid or invalid");
+}
 
-    /* WaterDecomp */
-    if (!UI::isBoxNumerical(ui->lineEditDecomp))
+bool MainWindow::verifyNumber(QWidget* widget, const QString & errorMessage) const
+{
+    if (!UI::isBoxNumerical(widget))
     {
-        displayErrors("Decomp value not filled out or invalid");
+        displayErrors(errorMessage);
         return false;
     }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAiDoc))
-    {
-        displayErrors("Waterdecomp Ai DOC value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAiPoc))
-    {
-        displayErrors("Waterdecomp Ai POC value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompAj))
-    {
-        displayErrors("Waterdecomp Aj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompExcretion))
-    {
-        displayErrors("Waterdecomp Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGiDoc))
-    {
-        displayErrors("Waterdecomp Gi DOC value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGiPoc))
-    {
-        displayErrors("Waterdecomp Gi POC value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompGj))
-    {
-        displayErrors("Waterdecomp Gj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompMax))
-    {
-        displayErrors("Waterdecomp Max value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompPrefDoc))
-    {
-        displayErrors("Waterdecomp Pref DOC value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompPrefPoc))
-    {
-        displayErrors("Waterdecomp Pref POC value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompRespiration))
-    {
-        displayErrors("Waterdecomp Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditWaterdecompSenescence))
-    {
-        displayErrors("Waterdecomp Senescence value not filled out or invalid");
-        return false;
-    }
+    return true;
+}
 
-    /* Detritus */
-    if (!UI::isBoxNumerical(ui->lineEditDetritus))
+bool MainWindow::verifyFile(QWidget* widget, const QString & errorMessage) const
+{
+    if (!UI::isFileSelected(widget))
     {
-        displayErrors("Detritus value not filled out or invalid");
+        displayErrors(errorMessage);
         return false;
     }
-
-    /* DOC */
-    if (!UI::isBoxNumerical(ui->lineEditDoc))
-    {
-        displayErrors("DOC value not filled out or invalid");
-        return false;
-    }
-
-    /* Herbivore */
-    if (!UI::isBoxNumerical(ui->lineEditHerbivore))
-    {
-        displayErrors("Herbivore value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiPeri))
-    {
-        displayErrors("Herbivore Ai Peri value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiPhyto))
-    {
-        displayErrors("Herbivore Ai Phyto value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAiWaterdecomp))
-    {
-        displayErrors("Herbivore Ai Waterdecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreAj))
-    {
-        displayErrors("Herbivore Aj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreEgestion))
-    {
-        displayErrors("Herbivore Egestion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreExcretion))
-    {
-        displayErrors("Herbivore Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiPeri))
-    {
-        displayErrors("Herbivore Gi Peri value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiPhyto))
-    {
-        displayErrors("Herbivore Gi Phyto value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGiWaterdecomp))
-    {
-        displayErrors("Herbivore Gi Waterdecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreGj))
-    {
-        displayErrors("Herbivore Gj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreMax))
-    {
-        displayErrors("Herbivore Max value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefPeri))
-    {
-        displayErrors("Herbivore Pref Peri value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefPhyto))
-    {
-        displayErrors("Herbivore Pref Phyto value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivorePrefWaterdecomp))
-    {
-        displayErrors("Herbivore Pref Waterdecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreRespiration))
-    {
-        displayErrors("Herbivore Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditHerbivoreSenescence))
-    {
-        displayErrors("Herbivore Senescence value not filled out or invalid");
-        return false;
-    }
-
-    /* Macro */
-    if (!UI::isBoxNumerical(ui->lineEditMacro))
-    {
-        displayErrors("Macro value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroExcretion))
-    {
-        displayErrors("Macro Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroGrossCoef))
-    {
-        displayErrors("Macro Gross Coefficient value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroMassMax))
-    {
-        displayErrors("Macro Mass Max value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroRespiration))
-    {
-        displayErrors("Macro Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroSenescence))
-    {
-        displayErrors("Macro Senescence value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroTemp))
-    {
-        displayErrors("Macro Temp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditMacroVelocityMax))
-    {
-        displayErrors("Macro Velocity Max value not filled out or invalid");
-        return false;
-    }
-
-    /* Phyto */
-    if (!UI::isBoxNumerical(ui->lineEditPhyto))
-    {
-        displayErrors("Phyto value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditPhytoAj))
-    {
-        displayErrors("Phyto Aj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditPhytoExcretion))
-    {
-        displayErrors("Phyto Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditPhytoGj))
-    {
-        displayErrors("Phyto Gj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditPhytoRespiration))
-    {
-        displayErrors("Phyto Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditPhytoSenescence))
-    {
-        displayErrors("Phyto Senescence value not filled out or invalid");
-        return false;
-    }
-
-    /* POC */
-    if (!UI::isBoxNumerical(ui->lineEditPoc))
-    {
-        displayErrors("POC value not filled out or invalid");
-        return false;
-    }
-
-    /* Sedconsumer */
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumer))
-    {
-        displayErrors("Sedconsumer value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAiDetritus))
-    {
-        displayErrors("Sedconsumer Ai Detritus value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAiSeddecomp))
-    {
-        displayErrors("Sedconsumer Ai Seddecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerAj))
-    {
-        displayErrors("Sedconsumer Aj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerExcretion))
-    {
-        displayErrors("Sedconsumer Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGiDetritus))
-    {
-        displayErrors("Sedconsumer Gi Detritus value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGiSeddecomp))
-    {
-        displayErrors("Sedconsumer Gi Seddecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerGj))
-    {
-        displayErrors("Sedconsumer Gj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerMax))
-    {
-        displayErrors("Sedconsumer Max value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerPrefDetritus))
-    {
-        displayErrors("Sedconsumer Pref Detritus value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerPrefSeddecomp))
-    {
-        displayErrors("Sedconsumer Pref Seddecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerRespiration))
-    {
-        displayErrors("Sedconsumer Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSedconsumerSenescence))
-    {
-        displayErrors("Sedconsumer Senescence value not filled out or invalid");
-        return false;
-    }
-
-    /* Seddecomp */
-    if (!UI::isBoxNumerical(ui->lineEditSeddecomp))
-    {
-        displayErrors("Seddecomp value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompAiDetritus))
-    {
-        displayErrors("Seddecomp Ai Detritus value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompAj))
-    {
-        displayErrors("Seddecomp Aj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompExcretion))
-    {
-        displayErrors("Seddecomp Excretion value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompGiDetritus))
-    {
-        displayErrors("Seddecomp Gi Detritus value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompGj))
-    {
-        displayErrors("Seddecomp Gj value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompMax))
-    {
-        displayErrors("Seddecomp Max value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompPrefDetritus))
-    {
-        displayErrors("Seddecomp Pref Detritus value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompRespiration))
-    {
-        displayErrors("Seddecomp Respiration value not filled out or invalid");
-        return false;
-    }
-    if (!UI::isBoxNumerical(ui->lineEditSeddecompSenescence))
-    {
-        displayErrors("Seddecomp Senescence value not filled out or invalid or invalid");
-        return false;
-    }
-
     return true;
 }
 
