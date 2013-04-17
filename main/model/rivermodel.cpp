@@ -78,11 +78,25 @@ void RiverModel::run() {
                 hoursElapsed++;
             }
             //END OF DAY
-            Statistics stats = river.generateStatistics();
-            river.saveCSV(displayedStock, daysElapsed);
-            river.generateImages(images, stockNames, imageMutex, stats);
-            saveAverages(stats,daysElapsed);
-            modelStatus.hasNewImage(true);
+
+            Statistics stats;
+            #pragma omp parallel sections
+            {
+                #pragma omp section
+                {
+                    stats = river.generateStatistics();
+                    river.generateImages(images, stockNames, imageMutex, stats);
+                    modelStatus.hasNewImage(true);
+
+                    saveAverages(stats,daysElapsed);
+                }
+                #pragma omp section
+                {
+                    river.saveCSV(displayedStock, daysElapsed);
+                }
+            }
+
+
 
             daysElapsed++;
             if(daysElapsed % DAYS_PER_WEEK == 0){

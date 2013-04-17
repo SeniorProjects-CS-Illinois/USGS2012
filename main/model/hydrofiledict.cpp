@@ -10,13 +10,16 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
     filenames = newFilenames;
 
 
-    #pragma omp parallel for
+#pragma omp parallel for
     for(int i = 0; i < filenames.size(); i++)
     {
-        QString filename = filenames[i];
-
+        QString filename;
         #pragma omp critical
-        cout << "Loading: " << filename.toStdString() << endl;
+        {
+            filename = filenames[i];
+            cout << "Loading: " << filename.toStdString() << endl;
+        }
+
 
         HydroData * newHydroData = new HydroData;
         newHydroData->hydroFile = HydroFile(filename);
