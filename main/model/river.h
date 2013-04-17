@@ -7,10 +7,12 @@
 #include <omp.h>
 #include <QColor>
 #include <QDateTime>
+#include <QFile>
 #include <QImage>
 #include <QImageWriter>
 #include <QMutex>
 #include <QString>
+#include <QTextStream>
 #include <QVector2D>
 
 #include "configuration.h"

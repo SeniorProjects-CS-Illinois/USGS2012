@@ -286,22 +286,29 @@ Statistics River::generateStatistics() {
 }
 
 void River::saveCSV(QString displayedStock, int daysElapsed) const {
+
     QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
     QString fileName = "./results/data/map_data_" + dateAndTime + ".csv";
 
-    ofstream csvFile;
-    csvFile.open(fileName.toStdString().c_str());
-    csvFile << "# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,"
+    QFile csvFile(fileName.toStdString().c_str());
+    if( !csvFile.open(QIODevice::WriteOnly | QIODevice::Text) ) {
+        cout << "Failed to open the csv file for write." << endl;
+        exit(1);
+    }
+    QTextStream textStream(&csvFile);
+    textStream.setRealNumberNotation(QTextStream::FixedNotation);
+
+    textStream << "# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,"
                << "sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,"
                << "macro_vel_max,gross_macro_coef,which_stock" << endl;
 
-    csvFile << config.timestep << "," << daysElapsed << "," << config.tss << ","
+    textStream << config.timestep << "," << daysElapsed << "," << config.tss << ","
                << config.kPhyto << "," << config.kMacro << "," << (config.macroSenescence/24) << ","
                << (config.macroRespiration/24) << "," << config.macroTemp << "," << config.macroMassMax << ","
                << config.macroVelocityMax << "," << config.macroGross << "," << displayedStock.toStdString().c_str() << endl;
 
     //TODO Print out the hydrofile used for this simulated day.
-    csvFile << "# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,"
+    textStream << "# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,"
                << "detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,"
                << "peri,consum" << endl;
 
@@ -311,7 +318,7 @@ void River::saveCSV(QString displayedStock, int daysElapsed) const {
             continue;
         }
 
-        csvFile << p.pxcor[i] << "," << p.pycor[i] << "," << p.pcolor[i] << "," << p.flowX[i] << ","
+        textStream << p.pxcor[i] << "," << p.pycor[i] << "," << p.pcolor[i] << "," << p.flowX[i] << ","
                    << p.flowY[i] << "," << p.depth[i] << "," << p.flowMagnitude[i] << ","
                    << p.assimilation[i] << "," << p.detritus[i] << "," << p.DOC[i] << ","
                    << p.POC[i] << "," << p.waterdecomp[i] << "," << p.seddecomp[i] << ","
@@ -319,6 +326,7 @@ void River::saveCSV(QString displayedStock, int daysElapsed) const {
                    << p.sedconsumer[i] << "," << p.peri[i] << "," << p.consumer[i] << endl;
     }
     csvFile.close();
+
 }
 
 void River::generateImages(QVector<QImage> &images, QVector<QString> & stockNames,
