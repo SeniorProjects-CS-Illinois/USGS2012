@@ -6,19 +6,29 @@ using std::endl;
 
 HydroFileDict::HydroFileDict(QStringList newFilenames)
 {
+    newFilenames.removeDuplicates();
     filenames = newFilenames;
 
+
+    #pragma omp parallel for
     for(int i = 0; i < filenames.size(); i++)
     {
         QString filename = filenames[i];
-        if( !dict.contains(filename) ) {
-            cout << "Loading: " << filename.toStdString() << endl;
-            HydroData * newHydroData = new HydroData;
-            newHydroData->hydroFile = HydroFile(filename);
-            newHydroData->carbonFlowMap = CarbonFlowMap(&newHydroData->hydroFile, 4);
 
-            dict.insert(filename, newHydroData);
-        }
+        #pragma omp critical
+        cout << "Loading: " << filename.toStdString() << endl;
+
+        HydroData * newHydroData = new HydroData;
+        newHydroData->hydroFile = HydroFile(filename);
+
+
+        #pragma omp critical
+        cout << "Precomputing flows for: " << filename.toStdString() << endl;
+
+        newHydroData->carbonFlowMap = CarbonFlowMap(&newHydroData->hydroFile, 4);
+
+        #pragma omp critical
+        dict.insert(filename, newHydroData);
     }
 
     maxWidth = computeMaxWidth();
