@@ -250,6 +250,42 @@ int RiverModel::getDaysToRun(const Configuration &config) {
 }
 
 void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
+
+    int currentDay = daysElapsed + 1;
+
+
+    FILE* f;
+    if(averagesFilename.isEmpty()) {
+        //File does not yet exist.  We need to create a filename and add table headers
+        QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+        averagesFilename = "./results/data/carbon_avgs_" + dateAndTime + ".csv";
+
+
+        f = fopen(averagesFilename.toStdString().c_str(), "w");
+        if ( f == NULL ) {
+            cout << "Failed to open averagesFile for write." << endl;
+            abort();
+        }
+        fprintf(f, "%s\n","Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer, \
+                DOC,POC,Herbivore,Detritus,All Carbon" );
+    }else{
+        //File already exists, open for append
+        f = fopen(averagesFilename.toStdString().c_str(), "a");
+        if ( f == NULL ) {
+            cout << "Failed to open averagesFile for append." << endl;
+            abort();
+        }
+    }
+
+    fprintf(f, "%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", currentDay, stats.avgMacro,
+            stats.avgPhyto, stats.avgWaterDecomp, stats.avgSedDecomp, stats.avgSedConsumer,
+            stats.avgConsum, stats.avgDOC, stats.avgPOC, stats.avgHerbivore,
+            stats.avgDetritus, stats.avgCarbon);
+
+    fclose(f);
+
+
+    /*
     int currentDay = daysElapsed + 1;
 
     QFile averagesFile;
@@ -285,4 +321,6 @@ void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
 
 
     averagesFile.close();
+    */
+
 }

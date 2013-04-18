@@ -286,6 +286,70 @@ Statistics River::generateStatistics() {
 }
 
 void River::saveCSV(QString displayedStock, int daysElapsed) const {
+    QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+    QString filename = "./results/data/map_data_" + dateAndTime + ".csv";
+
+    FILE* f = fopen(filename.toStdString().c_str(), "w");
+    if (f == NULL) {
+        cout << "Failed to open the csv file for write." << endl;
+        exit(1);
+    }
+
+    // GUI variables used
+    fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
+
+    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
+            config.timestep, daysElapsed, config.tss,
+            config.kPhyto, config.kMacro, (config.macroSenescence/24),
+            (config.macroRespiration/24), config.macroTemp, config.macroMassMax,
+            config.macroVelocityMax, config.macroGross, displayedStock.toStdString().c_str());
+
+    //TODO Print out the hydrofile used for this simulated day.
+
+    fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer");
+
+    int pxcor, pycor, pcolor;
+    double px_vector, py_vector;
+    double depth;
+    double velocity;
+    double assimilation;
+    double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consumer;
+
+    for(int i = 0; i < p.getSize(); i++) {
+        //Skip if cell doesn't exist or is land
+        if(!p.hasWater[i]) {
+            continue;
+        }
+
+
+        depth = p.depth[i];
+        velocity = p.flowMagnitude[i];
+        pxcor = p.pxcor[i];
+        pycor = p.pycor[i];
+        pcolor = p.pcolor[i];
+        px_vector = p.flowX[i];
+        py_vector = p.flowY[i];
+        assimilation = p.assimilation[i];
+        detritus = p.detritus[i];
+        DOC = p.DOC[i];
+        POC = p.POC[i];
+        waterdecomp = p.waterdecomp[i];
+        seddecomp = p.seddecomp[i];
+        macro = p.macro[i];
+        phyto = p.phyto[i];
+        herbivore = p.herbivore[i];
+        sedconsumer = p.sedconsumer[i];
+        peri = p.peri[i];
+        consumer = p.consumer[i];
+
+
+        fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
+                  velocity,assimilation,detritus,DOC,POC,
+                  waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer);
+
+    }
+    fclose(f);
+    /*  This code is much slower than working directly with file descriptors.  :(
 
     QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
     QString fileName = "./results/data/map_data_" + dateAndTime + ".csv";
@@ -326,6 +390,7 @@ void River::saveCSV(QString displayedStock, int daysElapsed) const {
                    << p.sedconsumer[i] << "," << p.peri[i] << "," << p.consumer[i] << endl;
     }
     csvFile.close();
+    */
 
 }
 
