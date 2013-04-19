@@ -1,9 +1,7 @@
 TEMPLATE = app
-win32:CONFIG += static
 
 QMAKE_CXXFLAGS += -fopenmp
 LIBS += -fopenmp
-
 
 # Gprof flags for profiling the application.  Keep commented unless actively
 # profiling the program.  You should also disable openmp when profiling
