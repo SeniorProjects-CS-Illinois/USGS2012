@@ -34,19 +34,54 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
      */
 
     delete source;
-    carbonSourceMapGrid = dest;
-    for(unsigned int x = 0; x < carbonSourceMapGrid->getWidth(); x++) {
-        for(unsigned int y = 0; y < carbonSourceMapGrid->getHeight(); y++) {
-            (*carbonSourceMapGrid)(x,y).trim(0.0001);
+
+    int totalSources = 0;
+    for(unsigned int x = 0; x < dest->getWidth(); x++) {
+        for(unsigned int y = 0; y < dest->getHeight(); y++) {
+            if(hydroFile->patchExists(x,y)){
+                (*dest)(x,y).trim(0.0001);
+                totalSources += (*dest)(x,y).getSources()->size();
+            }
         }
     }
 
-    //delete dest;
+    sourceData.totalSources = totalSources;
+    sourceData.sizes = new Grid<int>(hydroFile->getMapWidth(), hydroFile->getMapHeight());
+    sourceData.offsets = new Grid<int>(hydroFile->getMapWidth(), hydroFile->getMapHeight());
+    sourceData.x = new int[totalSources];
+    sourceData.y = new int[totalSources];
+    sourceData.amount = new double[totalSources];
+
+
+
+    int currOffset = 0;
+    for(unsigned int x = 0; x < dest->getWidth(); x++) {
+        for(unsigned int y = 0; y < dest->getHeight(); y++) {
+            if(hydroFile->patchExists(x,y)){
+
+                const QVector<CarbonSource> * sources = (*dest)(x,y).getSources();
+
+                (*sourceData.offsets)(x,y) = currOffset;
+                (*sourceData.sizes)(x,y) = sources->size();
+                for(int i = 0; i < sources->size(); i++) {
+                    CarbonSource source = (*sources)[i];
+                    sourceData.x[currOffset + i] = source.x;
+                    sourceData.y[currOffset + i] = source.y;
+                    sourceData.amount[currOffset + i] = source.amount;
+                }
+                currOffset += sources->size();
+            }
+        }
+    }
+
+    delete dest;
 }
 
 
-const CarbonSourceCollection & CarbonFlowMap::getPatchSources(int x, int y) const {
-    return (*carbonSourceMapGrid)(x,y);
+
+
+const SourceArrays CarbonFlowMap::getSourceArrays() const {
+    return sourceData;
 }
 
 void CarbonFlowMap::initializeCarbonCollection(Grid<CarbonSourceCollection> & sources){
@@ -177,12 +212,16 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
 
 void CarbonFlowMap::printDebug(){
     //Debugging info
-    for(unsigned int x = 0; x < carbonSourceMapGrid->getWidth(); x++){
-        for(unsigned int y = 0; y < carbonSourceMapGrid->getHeight(); y++) {
-            const QVector<CarbonSource> & patchSources = *getPatchSources(x,y).getSources();
-            for(int i = 0; i < patchSources.size(); i++) {
-                cout << "(" << x << "," << y << ") receives " << patchSources[i].amount * 100.0 << "% from (";
-                cout << patchSources[i].x << "," << patchSources[i].y << ")" << endl;
+    for(unsigned int x = 0; x < sourceData.offsets->getWidth(); x++){
+        for(unsigned int y = 0; y < sourceData.offsets->getHeight(); y++) {
+            int currOffset = (*sourceData.offsets)(x,y);
+            int numSources = (*sourceData.sizes)(x,y);
+            for(int i = 0; i < numSources; i++) {
+
+                cout << "(" << x << "," << y << ") receives ";
+                cout << sourceData.amount[currOffset] * 100.0 << "% from (";
+                cout << sourceData.x[currOffset] << "," << sourceData.y[currOffset] << ")" << endl;
+
             }
         }
     }

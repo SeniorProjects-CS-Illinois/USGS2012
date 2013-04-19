@@ -9,11 +9,21 @@
 #include "grid.h"
 #include "carbonsources.h"
 
+struct SourceArrays {
+    int totalSources;
+    Grid<int> * offsets;
+    Grid<int> * sizes;
+    int * x;
+    int * y;
+    double * amount;
+};
+
+
 class CarbonFlowMap {
     public:
         CarbonFlowMap();
         CarbonFlowMap(HydroFile * hydroFile, int iterations);
-        const CarbonSourceCollection & getPatchSources(int x, int y) const;
+        const SourceArrays getSourceArrays() const;
 
         void printDebug();
 
@@ -25,8 +35,7 @@ class CarbonFlowMap {
         void pushCarbon(Grid<CarbonSourceCollection> & source, Grid<CarbonSourceCollection> & dest);
         QVector<CarbonSource> * getFlowTargets(int x, int y);
 
-        Grid<CarbonSourceCollection> * carbonSourceMapGrid;
-
+        SourceArrays sourceData;
 };
 
 #endif

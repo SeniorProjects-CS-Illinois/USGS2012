@@ -164,6 +164,7 @@ void River::storeFlowData(Grid<FlowData> & flowData) {
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
     CarbonFlowMap * carbonFlowMap = &currHydroData->carbonFlowMap;
 
+    SourceArrays sourceData = carbonFlowMap->getSourceArrays();
     #pragma omp parallel for
     for(int i = 0; i < p.getSize(); i++) {
         if( !p.hasWater[i] ) {
@@ -178,11 +179,13 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
         double waterdecomp = 0.0;
         double phyto = 0.0;
 
-        const QVector<CarbonSource> * patchCarbonSources = carbonFlowMap->getPatchSources(x,y).getSources();
-        for(int sourceIndex = 0; sourceIndex < patchCarbonSources->size(); sourceIndex++) {
-            int sourceX = (*patchCarbonSources)[sourceIndex].x;
-            int sourceY = (*patchCarbonSources)[sourceIndex].y;
-            double sourceAmount = (*patchCarbonSources)[sourceIndex].amount;
+
+        int currOffset = (*sourceData.offsets)(x,y);
+        int numSources = (*sourceData.sizes)(x,y);
+        for(int sourceIndex = 0; sourceIndex < numSources; sourceIndex++) {
+            int sourceX = sourceData.x[currOffset + sourceIndex];
+            int sourceY = sourceData.y[currOffset + sourceIndex];
+            double sourceAmount = sourceData.amount[currOffset + sourceIndex];
 
             DOC += source(sourceX,sourceY).DOC * sourceAmount;
             POC += source(sourceX,sourceY).POC * sourceAmount;
@@ -286,6 +289,7 @@ Statistics River::generateStatistics() {
 }
 
 void River::saveCSV(QString displayedStock, int daysElapsed) const {
+
     QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
     QString filename = "./results/data/map_data_" + dateAndTime + ".csv";
 
@@ -349,6 +353,9 @@ void River::saveCSV(QString displayedStock, int daysElapsed) const {
 
     }
     fclose(f);
+
+
+
     /*  This code is much slower than working directly with file descriptors.  :(
 
     QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
