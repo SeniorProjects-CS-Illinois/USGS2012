@@ -1,48 +1,90 @@
+#include <iostream>
 #include "CarbonFlowMapTests.h"
 #include "carbonsources.h"
 #include "carbonflowmap.h"
 
+using std::cout;
+using std::endl;
+
 /**
  *  _______
  * |   |   |   
- * | A | B |
+ * | C | D |
  * |___|___|
  * |   |   |  
- * | C | D |
+ * | A | B |
  * |___|___|
  * 
  */
 void CarbonFlowMapTests::carbonFlowMapTest()
 {
+    int sourcesOffset;
+    int sourcesSize;
+
     HydroFile file("../data/testData/carbonFlowHydroFile.txt");
     CarbonFlowMap carbonMap(&file, 1);
-    CarbonSourceCollection sourceA = carbonMap.getPatchSources(0,0);
-    CarbonSourceCollection sourceB = carbonMap.getPatchSources(1,0);
-    CarbonSourceCollection sourceC = carbonMap.getPatchSources(1,1);
-    CarbonSourceCollection sourceD = carbonMap.getPatchSources(0,1);
+    SourceArrays sourceData = carbonMap.getSourceArrays();
 
-    QVector<CarbonSource> sourcesFromA = sourceA.getSources();
-    QVector<CarbonSource> sourcesFromB = sourceB.getSources();
-    QVector<CarbonSource> sourcesFromC = sourceC.getSources();
-    QVector<CarbonSource> sourcesFromD = sourceD.getSources();
 
-    QCOMPARE(sourcesFromA.size(), 1);
-    QCOMPARE(sourcesFromA[0].ammount, 1.0);
-	QCOMPARE(sourcesFromA[0].x, 0);
-    QCOMPARE(sourcesFromA[0].y, 1);
 
-    QCOMPARE(sourcesFromB.size(), 1);
-    QCOMPARE(sourcesFromB[0].ammount, 1.0);
-	QCOMPARE(sourcesFromB[0].x, 0);
-    QCOMPARE(sourcesFromB[0].y, 0);
-   
-    QCOMPARE(sourcesFromC.size(), 1);
-    QCOMPARE(sourcesFromC[0].ammount, 1.0);
-	QCOMPARE(sourcesFromC[0].x, 1);
-    QCOMPARE(sourcesFromC[0].y, 0);
+    //Did carbon go from 0,1 to 0,0?
+    bool sourceOfAFound = false;
+    double totalA = 0.0;
+    sourcesOffset = (*sourceData.offsets)(0,0);
+    sourcesSize = (*sourceData.sizes)(0,0);
+    for(int i = 0; i < sourcesSize; i++) {
+        totalA += sourceData.amount[sourcesOffset + i];
+        if(sourceData.x[sourcesOffset + i] == 0 && sourceData.y[sourcesOffset + i] == 1){
+            sourceOfAFound = true;
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+        }
+    }
+    QCOMPARE(totalA, 1.0);
+    QCOMPARE(sourceOfAFound, true);
 
-    QCOMPARE(sourcesFromD.size(), 1);
-    QCOMPARE(sourcesFromD[0].ammount, 1.0);
-	QCOMPARE(sourcesFromD[0].x, 1);
-    QCOMPARE(sourcesFromD[0].y, 1);
+    //Did carbon go from 0,0 to 1,0?
+    bool sourceOfBFound = false;
+    double totalB = 0.0;
+    sourcesOffset = (*sourceData.offsets)(1,0);
+    sourcesSize = (*sourceData.sizes)(1,0);
+    for(int i = 0; i < sourcesSize; i++) {
+        totalB += sourceData.amount[sourcesOffset + i];
+        if(sourceData.x[sourcesOffset + i] == 0 && sourceData.y[sourcesOffset + i] == 0){
+            sourceOfBFound = true;
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+        }
+    }
+    QCOMPARE(totalB, 1.0);
+    QCOMPARE(sourceOfBFound, true);
+
+    //Did carbon go from 1,1 to 0,1?
+    bool sourceOfCFound = false;
+    double totalC = 0.0;
+    sourcesOffset = (*sourceData.offsets)(0,1);
+    sourcesSize = (*sourceData.sizes)(0,1);
+    for(int i = 0; i < sourcesSize; i++) {
+        totalC += sourceData.amount[sourcesOffset + i];
+        if(sourceData.x[sourcesOffset + i] == 1 && sourceData.y[sourcesOffset + i] == 1){
+            sourceOfCFound = true;
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+        }
+    }
+    QCOMPARE(totalC, 1.0);
+    QCOMPARE(sourceOfCFound, true);
+
+    //Did carbon go from 1,0 to 1,1?
+    bool sourceOfDFound = false;
+    double totalD = 0.0;
+    sourcesOffset = (*sourceData.offsets)(1,1);
+    sourcesSize = (*sourceData.sizes)(1,1);
+    for(int i = 0; i < sourcesSize; i++) {
+        totalD += sourceData.amount[sourcesOffset + i];
+        if(sourceData.x[sourcesOffset + i] == 1 && sourceData.y[sourcesOffset + i] == 0){
+            sourceOfDFound = true;
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+        }
+    }
+    QCOMPARE(totalD, 1.0);
+    QCOMPARE(sourceOfDFound, true);
+
 }

@@ -55,8 +55,8 @@ void RiverModel::run() {
         QString hydroFileName = modelConfig.hydroMaps[hydroIndex];
         int daysToRunHydroFile = modelConfig.daysToRun[hydroIndex];
 
-        HydroFile * currHydroFile = hydroFileDict[hydroFileName];
-        river.setCurrentHydroFile(currHydroFile);
+        HydroData * currHydroData = hydroFileDict[hydroFileName];
+        river.setCurrentHydroData(currHydroData);
         cout << "RUNNING FILE: " << hydroFileName.toStdString() << " FOR " << daysToRunHydroFile << " DAYS" << endl;
 
         for(int dayOnHydroFile = 0; dayOnHydroFile < daysToRunHydroFile; dayOnHydroFile++) {
@@ -78,11 +78,25 @@ void RiverModel::run() {
                 hoursElapsed++;
             }
             //END OF DAY
-            Statistics stats = river.generateStatistics();
-            river.saveCSV(displayedStock, daysElapsed);
-            river.generateImages(images, stockNames, imageMutex, stats);
-            saveAverages(stats,daysElapsed);
-            modelStatus.hasNewImage(true);
+
+            Statistics stats;
+            #pragma omp parallel sections
+            {
+                #pragma omp section
+                {
+                    stats = river.generateStatistics();
+                    river.generateImages(images, stockNames, imageMutex, stats);
+                    modelStatus.hasNewImage(true);
+
+                    saveAverages(stats,daysElapsed);
+                }
+                #pragma omp section
+                {
+                    river.saveCSV(displayedStock, daysElapsed);
+                }
+            }
+
+
 
             daysElapsed++;
             if(daysElapsed % DAYS_PER_WEEK == 0){
@@ -123,8 +137,6 @@ void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
 
 //TODO Move this to construct and add the "Big three" (CCtor, assignment operator, destructor)
 void RiverModel::initializeModel(const Configuration &config){
-    //TODO Get rid of these two functions if possible.
-    initialize_globals();
 
     initializeHydroMaps(modelConfig);
     initializeWaterTemps(modelConfig);
@@ -238,6 +250,42 @@ int RiverModel::getDaysToRun(const Configuration &config) {
 }
 
 void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
+
+    int currentDay = daysElapsed + 1;
+
+
+    FILE* f;
+    if(averagesFilename.isEmpty()) {
+        //File does not yet exist.  We need to create a filename and add table headers
+        QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+        averagesFilename = "./results/data/carbon_avgs_" + dateAndTime + ".csv";
+
+
+        f = fopen(averagesFilename.toStdString().c_str(), "w");
+        if ( f == NULL ) {
+            cout << "Failed to open averagesFile for write." << endl;
+            abort();
+        }
+        fprintf(f, "%s\n","Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer, \
+                DOC,POC,Herbivore,Detritus,All Carbon" );
+    }else{
+        //File already exists, open for append
+        f = fopen(averagesFilename.toStdString().c_str(), "a");
+        if ( f == NULL ) {
+            cout << "Failed to open averagesFile for append." << endl;
+            abort();
+        }
+    }
+
+    fprintf(f, "%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", currentDay, stats.avgMacro,
+            stats.avgPhyto, stats.avgWaterDecomp, stats.avgSedDecomp, stats.avgSedConsumer,
+            stats.avgConsum, stats.avgDOC, stats.avgPOC, stats.avgHerbivore,
+            stats.avgDetritus, stats.avgCarbon);
+
+    fclose(f);
+
+
+    /*
     int currentDay = daysElapsed + 1;
 
     QFile averagesFile;
@@ -273,4 +321,6 @@ void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
 
 
     averagesFile.close();
+    */
+
 }

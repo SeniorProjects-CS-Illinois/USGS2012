@@ -5,7 +5,7 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 {
     config = newConfig;
 
-    currHydroFile = NULL;
+    currHydroData = NULL;
     currWaterTemp = -1.0;
     currPAR = -1;
 
@@ -15,9 +15,9 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 
 //TODO This function is relatively slow because of many hashtable lookups
 // in HydroFile class.  Consider pros and cons of using a grid instead.
-void River::setCurrentHydroFile(HydroFile *newHydroFile) {
-    // TODO Get rid of max_vector_component and g.COMPARE_MAX
-    double max_vector_component = 0.0;
+void River::setCurrentHydroData(HydroData *newHydroData) {
+    HydroFile * newHydroFile = &newHydroData->hydroFile;
+    HydroFile * currHydroFile = &currHydroData->hydroFile;
 
     for (int i = 0; i < p.getSize(); i++ ) {
         int x = p.pxcor[i];
@@ -37,13 +37,6 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
             p.flowX[i] = flowX;
             p.flowY[i] = flowY;
             p.flowMagnitude[i] = flowMagnitude;
-
-            if (max_vector_component < fabs(flowX) ) {
-                max_vector_component = fabs(flowX);
-            }
-            if( max_vector_component < fabs(flowY)) {
-                max_vector_component = fabs(flowY);
-            }
 
         } else {
             p.hasWater[i] = false;
@@ -83,10 +76,7 @@ void River::setCurrentHydroFile(HydroFile *newHydroFile) {
         }
     }
 
-    // update the maximum vector for the timestep
-    g.COMPARE_MAX = max_vector_component;
-
-    currHydroFile = newHydroFile;
+    currHydroData = newHydroData;
 }
 
 void River::setCurrentWaterTemperature(double newTemp) {
@@ -129,20 +119,13 @@ void River::setCurrentPAR(int newPAR) {
 }
 
 void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
-    //TODO Replace with CarbonFlowMap stuff
-
     copyFlowData(*dest);
     copyFlowData(*source);
 
-    int max_time = 60/config.timestep;
-    g.nan_trigger = false;
-    for (int t = 0; t < max_time; t++)
+    for (int t = 0; t < 15; t++)
     {
         std::swap(source, dest);
         flowSingleTimestep(*source, *dest, config);
-        if (g.nan_trigger) {
-            break;
-        }
     }
 
     storeFlowData(*dest);
@@ -178,132 +161,42 @@ void River::storeFlowData(Grid<FlowData> & flowData) {
     }
 }
 
-bool River::is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst) {
-    if ( /*isnan( dst(x,y).DOC + dst(x,y).DOC*move_factor )*/
-        dst(x,y).DOC + dst(x,y).DOC*move_factor
-            != dst(x,y).DOC + dst(x,y).DOC*move_factor)
-    {
-        return true;
-    }
-    if ( /*isnan( dst(x,y).POC + dst(x,y).POC*move_factor )*/
-            dst(x,y).POC + dst(x,y).POC*move_factor
-                != dst(x,y).POC + dst(x,y).POC*move_factor)
-    {
-        return true;
-    }
-    if ( /*isnan( dst(x,y).phyto + dst(x,y).phyto*move_factor )*/
-            dst(x,y).phyto + dst(x,y).phyto*move_factor
-                != dst(x,y).phyto + dst(x,y).phyto*move_factor)
-    {
-        return true;
-    }
-    if ( /*isnan( dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor )*/
-            dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor
-                != dst(x,y).waterdecomp + dst(x,y).waterdecomp*move_factor)
-    {
-        return true;
-    }
-    return false;
-}
-
-double River::getMaxTimestep() {
-    if (g.COMPARE_MAX == 0.0)
-    {
-        return 1.0;
-    }
-    return (((double)PATCH_LENGTH)/((double)g.COMPARE_MAX));
-}
-
 void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Configuration &config) {
-    for(int x = 0; x < width; x++) {
-        for(int y = 0; y < height; y++) {
-            if( !source(x,y).hasWater || source(x,y).velocity <= 0.0 ) {
-                continue;
-            }
+    CarbonFlowMap * carbonFlowMap = &currHydroData->carbonFlowMap;
 
-            double px_vector = source(x,y).px_vector;
-            double py_vector = source(x,y).py_vector;
-
-            double corner_patch = fabs( py_vector * px_vector ) / PATCH_AREA;
-            double tb_patch = fabs( py_vector*( PATCH_LENGTH - fabs(px_vector) ) ) / PATCH_AREA;
-            double rl_patch = fabs( px_vector*( PATCH_LENGTH - fabs(py_vector) ) ) / PATCH_AREA;
-
-            // if a neighbor patch is dry, the carbon does not move in that direction
-            double max_timestep = getMaxTimestep();
-            int tb_moved = 0;
-            int corner_moved = 0;
-            int rl_moved = 0;
-
-            int px = (int)(max_timestep * px_vector);
-            int py = (int)(max_timestep * py_vector);
-
-            // is this the opposite of what is waned?
-            if (config.adjacent) {
-                if (px >= 1) {
-                    px = 1;
-                } else if (px <= -1) {
-                    px = -1;
-                } else {
-                    px = 0;
-                }
-
-                if (py >= 1) {
-                    py = 1;
-                } else if (py <= -1) {
-                    py = -1;
-                } else {
-                    py = 0;
-                }
-            }
-
-            // flow carbon to the top/bottom patches
-            if ( is_valid_patch(x, y+py) && (py!=0) ) {
-                if (is_calc_nan(x,y+py,tb_patch, dest)) {
-                    g.nan_trigger = true;
-                } else {
-                    dest(x, y+py).DOC += source(x,y).DOC*tb_patch;
-                    dest(x, y+py).POC += source(x,y).POC*tb_patch;
-                    dest(x, y+py).phyto += source(x,y).phyto*tb_patch;
-                    dest(x, y+py).waterdecomp += source(x,y).waterdecomp*tb_patch;
-                    tb_moved = 1;
-                }
-            }
-
-            // flow carbon to the corner patch
-            if ( is_valid_patch(x+px, y+py) && (px!=0) && (py!=0)) {
-                if (is_calc_nan(x+px,y+py,corner_patch, dest)) {
-                    g.nan_trigger = true;
-                } else {
-                    dest(x+px, y+py).DOC += source(x,y).DOC*corner_patch;
-                    dest(x+px, y+py).POC += source(x,y).POC*corner_patch;
-                    dest(x+px, y+py).phyto += source(x,y).phyto*corner_patch;
-                    dest(x+px, y+py).waterdecomp += source(x,y).waterdecomp*corner_patch;
-                    corner_moved = 1;
-                }
-            }
-
-            // flow carbon to the left/right patches
-            //TODO code pushes carbon onto land patches...
-            if ( is_valid_patch(x+px, y) && (px!=0) ) {
-                if ( is_calc_nan(x+px,y,rl_patch, dest) ) {
-                    g.nan_trigger = true;
-                } else {
-                    dest(x+px, y).DOC += source(x,y).DOC*rl_patch;
-                    dest(x+px, y).POC += source(x,y).POC*rl_patch;
-                    dest(x+px, y).phyto += source(x,y).phyto*rl_patch;
-                    dest(x+px, y).waterdecomp += source(x,y).waterdecomp*rl_patch;
-                    rl_moved = 1;
-                }
-            }
-
-            // how much components did we loose
-            double patch_loss = tb_patch*tb_moved + corner_patch*corner_moved + rl_patch*rl_moved;
-            dest(x,y).DOC = source(x,y).DOC - source(x,y).DOC*patch_loss;
-            dest(x,y).POC = source(x,y).POC - source(x,y).POC*patch_loss;
-            dest(x,y).phyto = source(x,y).phyto - source(x,y).phyto*patch_loss;
-            dest(x,y).waterdecomp = source(x,y).waterdecomp - source(x,y).waterdecomp*patch_loss;
-
+    SourceArrays sourceData = carbonFlowMap->getSourceArrays();
+    #pragma omp parallel for
+    for(int i = 0; i < p.getSize(); i++) {
+        if( !p.hasWater[i] ) {
+            continue;
         }
+
+        int x = p.pxcor[i];
+        int y = p.pycor[i];
+
+        double DOC = 0.0;
+        double POC = 0.0;
+        double waterdecomp = 0.0;
+        double phyto = 0.0;
+
+
+        int currOffset = (*sourceData.offsets)(x,y);
+        int numSources = (*sourceData.sizes)(x,y);
+        for(int sourceIndex = 0; sourceIndex < numSources; sourceIndex++) {
+            int sourceX = sourceData.x[currOffset + sourceIndex];
+            int sourceY = sourceData.y[currOffset + sourceIndex];
+            double sourceAmount = sourceData.amount[currOffset + sourceIndex];
+
+            DOC += source(sourceX,sourceY).DOC * sourceAmount;
+            POC += source(sourceX,sourceY).POC * sourceAmount;
+            waterdecomp += source(sourceX,sourceY).waterdecomp * sourceAmount;
+            phyto += source(sourceX,sourceY).phyto * sourceAmount;
+        }
+
+        dest(x,y).DOC = DOC;
+        dest(x,y).POC = POC;
+        dest(x,y).waterdecomp = waterdecomp;
+        dest(x,y).phyto = phyto;
     }
 }
 
@@ -395,19 +288,15 @@ Statistics River::generateStatistics() {
     return stats;
 }
 
-//TODO Use QFile
-int River::saveCSV(QString displayedStock, int daysElapsed) const {
-    QString file_name = "./results/data/map_data_";
-    QDateTime date_time = QDateTime::currentDateTime();
-    QString date_time_str = date_time.toString("MMM_d_H_mm_ss");
-    file_name.append(date_time_str);
-    file_name.append(".csv");
+void River::saveCSV(QString displayedStock, int daysElapsed) const {
 
-    const char* cfile_name = file_name.toStdString().c_str();
-    FILE* f = fopen(cfile_name, "w");
+    QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+    QString filename = "./results/data/map_data_" + dateAndTime + ".csv";
+
+    FILE* f = fopen(filename.toStdString().c_str(), "w");
     if (f == NULL) {
-        printf("file name: %s could not be opened\n", cfile_name);
-        return 0;
+        cout << "Failed to open the csv file for write." << endl;
+        exit(1);
     }
 
     // GUI variables used
@@ -423,7 +312,6 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
 
     fprintf(f,"%s\n","# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer");
 
-    int x,y;
     int pxcor, pycor, pcolor;
     double px_vector, py_vector;
     double depth;
@@ -431,104 +319,151 @@ int River::saveCSV(QString displayedStock, int daysElapsed) const {
     double assimilation;
     double detritus, DOC, POC, waterdecomp, seddecomp, macro, phyto, herbivore, sedconsumer, peri, consumer;
 
-    for(x = 0; x < width; x++) {
-        for(y=0;y < height; y++) {
-            //Skip if cell doesn't exist or is land
-            if( !currHydroFile->patchExists(x,y) || currHydroFile->getDepth(x,y) <= 0.0 ) {
-                continue;
-            }
-
-            depth = currHydroFile->getDepth(x,y);
-
-            QVector2D flowVector = currHydroFile->getVector(x,y);
-            velocity = currHydroFile->getFileVelocity(x,y);
-
-            int i = p.getIndex(x,y);
-            pxcor = p.pxcor[i];
-            pycor = p.pycor[i];
-            pcolor = p.pcolor[i];
-            px_vector = flowVector.x();
-            py_vector = flowVector.y();
-            assimilation = p.assimilation[i];
-            detritus = p.detritus[i];
-            DOC = p.DOC[i];
-            POC = p.POC[i];
-            waterdecomp = p.waterdecomp[i];
-            seddecomp = p.seddecomp[i];
-            macro = p.macro[i];
-            phyto = p.phyto[i];
-            herbivore = p.herbivore[i];
-            sedconsumer = p.sedconsumer[i];
-            peri = p.peri[i];
-            consumer = p.consumer[i];
-
-
-            fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
-                      velocity,assimilation,detritus,DOC,POC,
-                      waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer);
+    for(int i = 0; i < p.getSize(); i++) {
+        //Skip if cell doesn't exist or is land
+        if(!p.hasWater[i]) {
+            continue;
         }
+
+
+        depth = p.depth[i];
+        velocity = p.flowMagnitude[i];
+        pxcor = p.pxcor[i];
+        pycor = p.pycor[i];
+        pcolor = p.pcolor[i];
+        px_vector = p.flowX[i];
+        py_vector = p.flowY[i];
+        assimilation = p.assimilation[i];
+        detritus = p.detritus[i];
+        DOC = p.DOC[i];
+        POC = p.POC[i];
+        waterdecomp = p.waterdecomp[i];
+        seddecomp = p.seddecomp[i];
+        macro = p.macro[i];
+        phyto = p.phyto[i];
+        herbivore = p.herbivore[i];
+        sedconsumer = p.sedconsumer[i];
+        peri = p.peri[i];
+        consumer = p.consumer[i];
+
+
+        fprintf(f,"%d,%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",pxcor,pycor,pcolor,px_vector,py_vector,depth,
+                  velocity,assimilation,detritus,DOC,POC,
+                  waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,peri,consumer);
+
     }
     fclose(f);
-    return 1;
+
+
+
+    /*  This code is much slower than working directly with file descriptors.  :(
+
+    QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
+    QString fileName = "./results/data/map_data_" + dateAndTime + ".csv";
+
+    QFile csvFile(fileName.toStdString().c_str());
+    if( !csvFile.open(QIODevice::WriteOnly | QIODevice::Text) ) {
+        cout << "Failed to open the csv file for write." << endl;
+        exit(1);
+    }
+    QTextStream textStream(&csvFile);
+    textStream.setRealNumberNotation(QTextStream::FixedNotation);
+
+    textStream << "# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,"
+               << "sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,"
+               << "macro_vel_max,gross_macro_coef,which_stock" << endl;
+
+    textStream << config.timestep << "," << daysElapsed << "," << config.tss << ","
+               << config.kPhyto << "," << config.kMacro << "," << (config.macroSenescence/24) << ","
+               << (config.macroRespiration/24) << "," << config.macroTemp << "," << config.macroMassMax << ","
+               << config.macroVelocityMax << "," << config.macroGross << "," << displayedStock.toStdString().c_str() << endl;
+
+    //TODO Print out the hydrofile used for this simulated day.
+    textStream << "# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,"
+               << "detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,"
+               << "peri,consum" << endl;
+
+    for(int i = 0; i < p.getSize(); i++) {
+        //Skip if cell doesn't exist or is land
+        if(!p.hasWater[i]) {
+            continue;
+        }
+
+        textStream << p.pxcor[i] << "," << p.pycor[i] << "," << p.pcolor[i] << "," << p.flowX[i] << ","
+                   << p.flowY[i] << "," << p.depth[i] << "," << p.flowMagnitude[i] << ","
+                   << p.assimilation[i] << "," << p.detritus[i] << "," << p.DOC[i] << ","
+                   << p.POC[i] << "," << p.waterdecomp[i] << "," << p.seddecomp[i] << ","
+                   << p.macro[i] << "," << p.phyto[i] << "," << p.herbivore[i] << ","
+                   << p.sedconsumer[i] << "," << p.peri[i] << "," << p.consumer[i] << endl;
+    }
+    csvFile.close();
+    */
+
 }
 
 void River::generateImages(QVector<QImage> &images, QVector<QString> & stockNames,
                            QMutex &imageMutex, Statistics & stats)
 {
     imageMutex.lock();
-    for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
-        QColor color("black");
-        images[imageIndex].fill(color.rgb());
-    }
+    #pragma omp parallel
+    {
 
-    for(int i = 0; i < p.getSize(); i++){
-        if(!p.hasWater[i]) {
-            continue;
+     #pragma omp for
+        for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
+            QColor color("black");
+            images[imageIndex].fill(color.rgb());
         }
 
-        int x = p.pxcor[i];
-        int y = p.pycor[i];
+        #pragma omp for
+        for(int i = 0; i < p.getSize(); i++){
+            if(!p.hasWater[i]) {
+                continue;
+            }
 
-        QColor macroColor = getHeatMapColor(p.macro[i], stats.avgMacro, stats.maxMacro);
-        QColor phytoColor = getHeatMapColor(p.phyto[i], stats.avgPhyto, stats.maxPhyto);
-        QColor herbivoreColor = getHeatMapColor(p.herbivore[i], stats.avgHerbivore, stats.maxHerbivore);
-        QColor waterDecompColor = getHeatMapColor(p.waterdecomp[i], stats.avgWaterDecomp, stats.maxWaterDecomp);
-        QColor sedDecompColor = getHeatMapColor(p.seddecomp[i], stats.avgSedDecomp, stats.maxSedDecomp);
-        QColor sedConsumerColor = getHeatMapColor(p.sedconsumer[i], stats.avgSedConsumer, stats.maxSedConsumer);
-        QColor consumColor = getHeatMapColor(p.consumer[i], stats.avgConsum, stats.maxConsum);
-        QColor DOCColor = getHeatMapColor(p.DOC[i], stats.avgDOC, stats.maxDOC);
-        QColor POCColor = getHeatMapColor(p.POC[i], stats.avgPOC, stats.maxPOC);
-        QColor detritusColor = getHeatMapColor(p.detritus[i], stats.avgDetritus, stats.maxDetritus);
+            int x = p.pxcor[i];
+            int y = p.pycor[i];
 
-        images[STOCK_MACRO].setPixel( x, y, macroColor.rgb());
-        images[STOCK_PHYTO].setPixel(x, y, phytoColor.rgb());
-        images[STOCK_HERBIVORE].setPixel(x, y, herbivoreColor.rgb());
-        images[STOCK_WATERDECOMP].setPixel( x, y, waterDecompColor.rgb());
-        images[STOCK_SEDDECOMP].setPixel(x, y, sedDecompColor.rgb());
-        images[STOCK_SEDCONSUMER].setPixel(x, y, sedConsumerColor.rgb());
-        images[STOCK_CONSUMER].setPixel(x, y, consumColor.rgb());
-        images[STOCK_DOC].setPixel(x, y, DOCColor.rgb());
-        images[STOCK_POC].setPixel(x, y, POCColor.rgb());
-        images[STOCK_DETRITUS].setPixel(x, y, detritusColor.rgb());
+            QColor macroColor = getHeatMapColor(p.macro[i], stats.avgMacro, stats.maxMacro);
+            QColor phytoColor = getHeatMapColor(p.phyto[i], stats.avgPhyto, stats.maxPhyto);
+            QColor herbivoreColor = getHeatMapColor(p.herbivore[i], stats.avgHerbivore, stats.maxHerbivore);
+            QColor waterDecompColor = getHeatMapColor(p.waterdecomp[i], stats.avgWaterDecomp, stats.maxWaterDecomp);
+            QColor sedDecompColor = getHeatMapColor(p.seddecomp[i], stats.avgSedDecomp, stats.maxSedDecomp);
+            QColor sedConsumerColor = getHeatMapColor(p.sedconsumer[i], stats.avgSedConsumer, stats.maxSedConsumer);
+            QColor consumColor = getHeatMapColor(p.consumer[i], stats.avgConsum, stats.maxConsum);
+            QColor DOCColor = getHeatMapColor(p.DOC[i], stats.avgDOC, stats.maxDOC);
+            QColor POCColor = getHeatMapColor(p.POC[i], stats.avgPOC, stats.maxPOC);
+            QColor detritusColor = getHeatMapColor(p.detritus[i], stats.avgDetritus, stats.maxDetritus);
 
-        int patchCarbon = p.macro[i] + p.phyto[i] + p.herbivore[i] + p.waterdecomp[i] + p.seddecomp[i]
-                + p.sedconsumer[i] + p.consumer[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
-        QColor allCarbonColor = getHeatMapColor(patchCarbon, stats.avgCarbon, stats.maxCarbon);
-        images[STOCK_ALL_CARBON].setPixel(x, y, allCarbonColor.rgb());
-    }
+            images[STOCK_MACRO].setPixel( x, y, macroColor.rgb());
+            images[STOCK_PHYTO].setPixel(x, y, phytoColor.rgb());
+            images[STOCK_HERBIVORE].setPixel(x, y, herbivoreColor.rgb());
+            images[STOCK_WATERDECOMP].setPixel( x, y, waterDecompColor.rgb());
+            images[STOCK_SEDDECOMP].setPixel(x, y, sedDecompColor.rgb());
+            images[STOCK_SEDCONSUMER].setPixel(x, y, sedConsumerColor.rgb());
+            images[STOCK_CONSUMER].setPixel(x, y, consumColor.rgb());
+            images[STOCK_DOC].setPixel(x, y, DOCColor.rgb());
+            images[STOCK_POC].setPixel(x, y, POCColor.rgb());
+            images[STOCK_DETRITUS].setPixel(x, y, detritusColor.rgb());
 
-    //Due to the layout of the hydrofiles, the river will appear upside down if we don't flip it.
-    for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
-        images[imageIndex] = images[imageIndex].mirrored(false,true);
+            int patchCarbon = p.macro[i] + p.phyto[i] + p.herbivore[i] + p.waterdecomp[i] + p.seddecomp[i]
+                    + p.sedconsumer[i] + p.consumer[i] + p.DOC[i] + p.POC[i] + p.detritus[i];
+            QColor allCarbonColor = getHeatMapColor(patchCarbon, stats.avgCarbon, stats.maxCarbon);
+            images[STOCK_ALL_CARBON].setPixel(x, y, allCarbonColor.rgb());
+        }
+
+        //Due to the layout of the hydrofiles, the river will appear upside down if we don't flip it.
+        #pragma omp for
+        for(int imageIndex = 0; imageIndex < NUM_IMAGES; imageIndex++){
+            images[imageIndex] = images[imageIndex].mirrored(false,true);
+        }
     }
     imageMutex.unlock();
 
+
     QImageWriter writer;
     writer.setFormat("png");
-
     for(int i = 0; i < NUM_IMAGES; i++){
         QString date_time_str = QDateTime::currentDateTime().toString("_MMM_d_H_mm_ss");
-
         QString fileName = "./results/images/" + stockNames[i] + date_time_str + ".png";
         writer.setFileName(fileName);
         writer.write(images[i]);

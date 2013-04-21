@@ -1,47 +1,73 @@
 #include "carbonsources.h"
 
-void CarbonSourceCollection::initializeSource(int newX, int newY) {
-    addSource( newX, newY, 1.0);
-    x = newX;
-    y = newY;
+CarbonSourceCollection::CarbonSourceCollection() {
+
 }
 
-void CarbonSourceCollection::addSource(int x, int y, float ammount) {
+CarbonSourceCollection::CarbonSourceCollection(int newX, int newY) {
+    initializeCollection(newX,newY);
+}
+
+
+void CarbonSourceCollection::initializeCollection(int newX, int newY) {
+    sources.clear();
+    addSource( newX, newY, 1.0);
+}
+
+void CarbonSourceCollection::addSource(int x, int y, double amount) {
     for( int i = 0; i < sources.size(); i++ ) {
         if( sources[i].x == x && sources[i].y == y ) {
-            sources[i].ammount += ammount;
+            sources[i].amount += amount;
             return;
         }
     }
-    CarbonSource newSource( x, y, ammount );
+
+    //Source not already in the collection
+    CarbonSource newSource( x, y, amount );
     sources.append( newSource );
 }
 
-void CarbonSourceCollection::addSource( CarbonSource & newSource ) {
-    addSource( newSource.x, newSource.y, newSource.ammount );
+void CarbonSourceCollection::addSource( const CarbonSource & newSource ) {
+    addSource( newSource.x, newSource.y, newSource.amount );
 }
 
-void CarbonSourceCollection::addSources( QVector<CarbonSource> & newSources ) {
+void CarbonSourceCollection::addSources( const QVector<CarbonSource> & newSources ) {
     for( int i = 0; i < newSources.size(); i++ ) {
         addSource( newSources[i] );
     }
 }
 
-void CarbonSourceCollection::removeSourcesPercent( float percent ) {
+void CarbonSourceCollection::addSources( const CarbonSourceCollection & newCollection ) {
+    addSources(newCollection.sources);
+}
+
+void CarbonSourceCollection::removeSourcesPercent( double percent ) {
     for( int i = 0; i < sources.size(); i++) {
-        sources[i].ammount *= (1.0 - percent);
+        sources[i].amount *= (1.0 - percent);
     }
 }
 
-const QVector<CarbonSource> CarbonSourceCollection::getSources() const {
-    return sources;
+const QVector<CarbonSource> * CarbonSourceCollection::getSources() const {
+    return &sources;
 }
 
-const QVector<CarbonSource> CarbonSourceCollection::getSourcesPercentage(float percent) const {
+const QVector<CarbonSource> CarbonSourceCollection::getSourcesPercentage(double percent) const {
     QVector<CarbonSource> pctSources;
+    pctSources.resize(sources.size());
     for( int i = 0; i < sources.size(); i++ ) {
-        CarbonSource newSource( sources[i].x, sources[i].y, sources[i].ammount * percent );
-        pctSources.append( newSource );
+        pctSources[i].x = sources[i].x;
+        pctSources[i].y = sources[i].y;
+        pctSources[i].amount = sources[i].amount * percent;
     }
     return pctSources;
+}
+
+void CarbonSourceCollection::trim(double percent) {
+    QVector<CarbonSource> newSources;
+    for( int i = 0; i < sources.size(); i++) {
+        if(sources[i].amount > percent) {
+            newSources.push_back(sources[i]);
+        }
+    }
+    sources = newSources;
 }

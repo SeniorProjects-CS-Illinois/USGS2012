@@ -12,7 +12,6 @@
 
 #include "configuration.h"
 #include "constants.h"
-#include "globals.h"
 #include "hydrofile.h"
 #include "hydrofiledict.h"
 #include "river.h"
