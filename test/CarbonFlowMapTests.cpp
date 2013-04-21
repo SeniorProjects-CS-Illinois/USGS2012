@@ -105,12 +105,12 @@ void CarbonFlowMapTests::carbonFlowMapTest2()
     sourcesSize = sourceData.getSize(0,0);
     for(int i = 0; i < sourcesSize; i++) {
         totalA += sourceData.amount[sourcesOffset + i];
-        if(sourceData.x[sourcesOffset + i] == 0 && sourceData.y[sourcesOffset + i] == 1){
+        if(sourceData.x[sourcesOffset + i] == 0 && sourceData.y[sourcesOffset + i] == 0){
             sourceOfAFound = true;
-            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 0.25);
         }
     }
-    QCOMPARE(totalA, 1.25);
+    QCOMPARE(totalA, 0.25);
     QCOMPARE(sourceOfAFound, true);
 
     //Did carbon go from 0,0 to 1,0?
@@ -125,7 +125,7 @@ void CarbonFlowMapTests::carbonFlowMapTest2()
             QCOMPARE(sourceData.amount[sourcesOffset + i], 0.25);
         }
     }
-    QCOMPARE(totalB, 0.25);
+    QCOMPARE(totalB, 1.25);
     QCOMPARE(sourceOfBFound, true);
 
     //Did carbon go from 1,1 to 0,1?
@@ -135,9 +135,9 @@ void CarbonFlowMapTests::carbonFlowMapTest2()
     sourcesSize = sourceData.getSize(0,1);
     for(int i = 0; i < sourcesSize; i++) {
         totalC += sourceData.amount[sourcesOffset + i];
-        if(sourceData.x[sourcesOffset + i] == 1 && sourceData.y[sourcesOffset + i] == 1){
+        if(sourceData.x[sourcesOffset + i] == 0 && sourceData.y[sourcesOffset + i] == 0){
             sourceOfCFound = true;
-            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 0.25);
         }
     }
     QCOMPARE(totalC, 1.25);
@@ -150,9 +150,9 @@ void CarbonFlowMapTests::carbonFlowMapTest2()
     sourcesSize = sourceData.getSize(1,1);
     for(int i = 0; i < sourcesSize; i++) {
         totalD += sourceData.amount[sourcesOffset + i];
-        if(sourceData.x[sourcesOffset + i] == 1 && sourceData.y[sourcesOffset + i] == 0){
+        if(sourceData.x[sourcesOffset + i] == 0 && sourceData.y[sourcesOffset + i] == 0){
             sourceOfDFound = true;
-            QCOMPARE(sourceData.amount[sourcesOffset + i], 1.0);
+            QCOMPARE(sourceData.amount[sourcesOffset + i], 0.25);
         }
     }
     QCOMPARE(totalD, 1.25);
