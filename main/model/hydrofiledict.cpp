@@ -28,7 +28,8 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
         #pragma omp critical
         cout << "Precomputing flows for: " << filename.toStdString() << endl;
 
-        newHydroData->carbonFlowMap = CarbonFlowMap(&newHydroData->hydroFile, 4);
+        newHydroData->carbonFlowMap =
+                CarbonFlowMap(&newHydroData->hydroFile, ITERATIONS_TO_PRECOMPUTE_FLOWS);
 
         #pragma omp critical
         dict.insert(filename, newHydroData);

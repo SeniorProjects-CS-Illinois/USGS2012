@@ -11,6 +11,7 @@
 #include <QVector2D>
 #include <QVector>
 #include "grid.h"
+#include "constants.h"
 
 class HydroFile {
     public:
@@ -28,9 +29,9 @@ class HydroFile {
         void loadFromFile(QString filename);
 
         /**
-         * \brief Checks if a water cell exists at the given (x,y) coordinate
-         * \param[in] x The x coordinate
-         * \param[in] y The y coordinate
+         * @brief Checks if a water cell exists at the given (x,y) coordinate
+         * @param[in] x The x coordinate
+         * @param[in] y The y coordinate
          */
         bool patchExists(int x, int y) const;
 

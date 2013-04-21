@@ -91,7 +91,7 @@ void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
     copyFlowData(*dest);
     copyFlowData(*source);
 
-    for (int t = 0; t < 15; t++)
+    for (int t = 0; t < ITERATIONS_TO_FLOW_RIVER; t++)
     {
         std::swap(source, dest);
         flowSingleTimestep(*source, *dest, config);

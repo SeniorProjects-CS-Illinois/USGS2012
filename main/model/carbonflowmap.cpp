@@ -40,7 +40,7 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
     for(unsigned int x = 0; x < dest->getWidth(); x++) {
         for(unsigned int y = 0; y < dest->getHeight(); y++) {
             if(hydroFile->patchExists(x,y)){
-                (*dest)(x,y).trim(0.0001);
+                (*dest)(x,y).trim(PRECOMPUTED_FLOW_TRIM_THRESHOLD);
                 totalSources += (*dest)(x,y).getSources()->size();
             }
         }
