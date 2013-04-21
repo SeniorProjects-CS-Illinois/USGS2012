@@ -263,10 +263,9 @@ void CarbonFlowMap::printDebug(){
     //Debugging info
     for(unsigned int x = 0; x < sourceData.offsets->getWidth(); x++){
         for(unsigned int y = 0; y < sourceData.offsets->getHeight(); y++) {
-            int currOffset = (*sourceData.offsets)(x,y);
-            int numSources = (*sourceData.sizes)(x,y);
+            int currOffset = sourceData.getOffset(x,y);
+            int numSources = sourceData.getSize(x,y);
             for(int i = 0; i < numSources; i++) {
-
                 cout << "(" << x << "," << y << ") receives ";
                 cout << sourceData.amount[currOffset + i] * 100.0 << "% from (";
                 cout << sourceData.x[currOffset + i] << "," << sourceData.y[currOffset + i] << ")" << endl;

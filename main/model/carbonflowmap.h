@@ -16,6 +16,9 @@ struct SourceArrays {
     int * x;
     int * y;
     double * amount;
+
+    int getOffset(int x, int y) { return (*offsets)(x,y); }
+    int getSize(int x, int y) {return (*sizes)(x,y); }
 };
 
 /**

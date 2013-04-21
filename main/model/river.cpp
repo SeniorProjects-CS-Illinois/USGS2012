@@ -149,8 +149,8 @@ void River::flowSingleTimestep(Grid<FlowData> &source, Grid<FlowData> &dest, Con
         double phyto = 0.0;
 
 
-        int currOffset = (*sourceData.offsets)(x,y);
-        int numSources = (*sourceData.sizes)(x,y);
+        int currOffset = sourceData.getOffset(x,y);
+        int numSources = sourceData.getSize(x,y);
         for(int sourceIndex = 0; sourceIndex < numSources; sourceIndex++) {
             int sourceX = sourceData.x[currOffset + sourceIndex];
             int sourceY = sourceData.y[currOffset + sourceIndex];
@@ -327,52 +327,6 @@ void River::saveCSV(QString displayedStock, int daysElapsed) const {
 
     }
     fclose(f);
-
-
-
-    /*  This code is much slower than working directly with file descriptors.  :(
-
-    QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
-    QString fileName = "./results/data/map_data_" + dateAndTime + ".csv";
-
-    QFile csvFile(fileName.toStdString().c_str());
-    if( !csvFile.open(QIODevice::WriteOnly | QIODevice::Text) ) {
-        cout << "Failed to open the csv file for write." << endl;
-        exit(1);
-    }
-    QTextStream textStream(&csvFile);
-    textStream.setRealNumberNotation(QTextStream::FixedNotation);
-
-    textStream << "# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,"
-               << "sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,"
-               << "macro_vel_max,gross_macro_coef,which_stock" << endl;
-
-    textStream << config.timestep << "," << daysElapsed << "," << config.tss << ","
-               << config.kPhyto << "," << config.kMacro << "," << (config.macroSenescence/24) << ","
-               << (config.macroRespiration/24) << "," << config.macroTemp << "," << config.macroMassMax << ","
-               << config.macroVelocityMax << "," << config.macroGross << "," << displayedStock.toStdString().c_str() << endl;
-
-    //TODO Print out the hydrofile used for this simulated day.
-    textStream << "# pxcor,pycor,pcolor,px_vector,py_vector,depth,velocity,assimilation,"
-               << "detritus,DOC,POC,waterdecomp,seddecomp,macro,phyto,herbivore,sedconsumer,"
-               << "peri,consum" << endl;
-
-    for(int i = 0; i < p.getSize(); i++) {
-        //Skip if cell doesn't exist or is land
-        if(!p.hasWater[i]) {
-            continue;
-        }
-
-        textStream << p.pxcor[i] << "," << p.pycor[i] << "," << p.pcolor[i] << "," << p.flowX[i] << ","
-                   << p.flowY[i] << "," << p.depth[i] << "," << p.flowMagnitude[i] << ","
-                   << p.assimilation[i] << "," << p.detritus[i] << "," << p.DOC[i] << ","
-                   << p.POC[i] << "," << p.waterdecomp[i] << "," << p.seddecomp[i] << ","
-                   << p.macro[i] << "," << p.phyto[i] << "," << p.herbivore[i] << ","
-                   << p.sedconsumer[i] << "," << p.peri[i] << "," << p.consumer[i] << endl;
-    }
-    csvFile.close();
-    */
-
 }
 
 void River::generateImages(QVector<QImage> &images, QVector<QString> & stockNames,
