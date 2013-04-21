@@ -15,32 +15,44 @@ class Status {
         /**
          * @brief Returns a percent complete for the current run.
          */
-        float getProgress(void);
+        float getProgress(void) const ;
 
         /**
          * @brief Returns the state of the model.
          */
-        ModelState getState(void);
+        ModelState getState(void) const;
 
         /**
          * @brief Returns an error message if an error occurred.
          */
-        QString getErrorMessage(void);
+        QString getErrorMessage(void) const;
+
+        /**
+         * @brief Retrieves the message the model wants displayed by the GUI
+         * @return String to display
+         */
+        QString getMessage(void) const;
+
+        /**
+         * @brief Message to be displayed by gui
+         * @param message String to display
+         */
+        void setMessage(QString message);
 
         /**
          * @brief Returns the time elapsed in seconds.
          */
-        int getTimeElapsed(void);
+        int getTimeElapsed(void) const;
 
         /**
          * @brief Returns the estimated time remaining in seconds.
          */
-        int getTimeRemaining(void);
+        int getTimeRemaining(void) const;
 
         /**
          * @brief Returns true if a new image exists.
          */
-        bool hasNewImage(void);
+        bool hasNewImage(void) const;
 
         /**
          * @brief Sets image availability to boolean parameter
@@ -101,6 +113,7 @@ class Status {
         bool newImageExists;
         QTime timer;
         QString errorMessage;
+        QString message;
         int timeElapsedBeforePauseState;
 };
 
