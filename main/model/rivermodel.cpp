@@ -22,7 +22,9 @@ RiverModel & RiverModel::operator=(const RiverModel & rhs) {
 }
 
 Status RiverModel::getStatus(void){
+    statusMutex.lock();
     Status modelStatusGUI = modelStatus;
+    statusMutex.unlock();
 
     //After we get a copy for the GUI, reset the new image flag.
     modelStatus.hasNewImage(false);
@@ -66,7 +68,9 @@ void RiverModel::run() {
 
     //Creates the river and initializes its patches
     River river(modelConfig, hydroFileDict);
+    statusMutex.lock();
     modelStatus.setState(Status::RUNNING);
+    statusMutex.unlock();
 
     //Get a hydrofile to process
     for (int hydroIndex = 0; hydroIndex < modelConfig.hydroMaps.size(); hydroIndex++) {
@@ -75,6 +79,8 @@ void RiverModel::run() {
         int daysToRunHydroFile = modelConfig.daysToRun[hydroIndex];
 
         HydroData * currHydroData = hydroFileDict[hydroFileName];
+
+        setStatusMessage("Transitioning to hydroFile: " + hydroFileName);
         river.setCurrentHydroData(currHydroData);
         cout << "RUNNING FILE: " << hydroFileName.toStdString() << " FOR " << daysToRunHydroFile << " DAYS" << endl;
 
@@ -93,20 +99,25 @@ void RiverModel::run() {
                 river.setCurrentPAR( parValues[hoursElapsed] );
                 river.processPatches();
                 river.flow(source, dest);
+                statusMutex.lock();
                 modelStatus.updateProgress();
+                statusMutex.unlock();
 
                 hoursElapsed++;
             }
             //END OF DAY
 
             Statistics stats;
+            setStatusMessage("Computing stats and writing output.");
             #pragma omp parallel sections
             {
                 #pragma omp section
                 {
                     stats = river.generateStatistics();
                     river.generateImages(images, stockNames, imageMutex, stats);
+                    statusMutex.lock();
                     modelStatus.hasNewImage(true);
+                    statusMutex.unlock();
 
                     saveAverages(stats,currentDay);
                 }
@@ -132,8 +143,11 @@ void RiverModel::run() {
 
     //TODO Run program in valgrind to make sure all memory is freed.
 
+    setStatusMessage("Simulation complete.");
     cout << endl << "PROCESSING COMPLETE" << endl;
+    statusMutex.lock();
     modelStatus.setState(Status::COMPLETE);
+    statusMutex.unlock();
 }
 
 void RiverModel::setConfiguration(const Configuration & configuration)
@@ -148,6 +162,12 @@ void RiverModel::setWhichStock(QString stockName)
 }
 
 void RiverModel::printHourlyMessage(int currentDay, int hourOfDay) {
+    QString message = "Flowing River: Day ";
+    message.append(currentDay);
+    message.append(" Hour: ");
+    message.append(hourOfDay);
+
+    setStatusMessage(message);
     cout << "Day: " << currentDay << " - Hour: " << hourOfDay \
         << " | Progress: " << (int)(modelStatus.getProgress()*100) \
         << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
@@ -156,9 +176,13 @@ void RiverModel::printHourlyMessage(int currentDay, int hourOfDay) {
 
 //TODO Move this to construct and add the "Big three" (CCtor, assignment operator, destructor)
 void RiverModel::initializeModel(const Configuration &config){
-
+    setStatusMessage("Loading HydroFiles and precomputing flows... please wait.");
     initializeHydroMaps(modelConfig);
+
+    setStatusMessage("Loading water temperatures from file.");
     initializeWaterTemps(modelConfig);
+
+    setStatusMessage("Loading par values from file.");
     initializePARValues(modelConfig);
 
     // These are temp structures used in the flowing of the river.  Created
@@ -300,6 +324,12 @@ void RiverModel::saveAverages(Statistics & stats, int currentDay) {
             stats.avgDetritus, stats.avgCarbon);
 
     fclose(f);
+}
+
+void RiverModel::setStatusMessage(QString message) {
+    statusMutex.lock();
+    modelStatus.setMessage(message);
+    statusMutex.unlock();
 }
 
 void RiverModel::copy(const RiverModel & other) {

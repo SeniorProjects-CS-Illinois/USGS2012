@@ -79,6 +79,7 @@ class RiverModel {
 
         QVector<QImage> images;
         QMutex imageMutex;
+        QMutex statusMutex;
 
         Grid<FlowData> * source;
         Grid<FlowData> * dest;
@@ -153,6 +154,12 @@ class RiverModel {
          * @param daysElapsed Days Elapsed to write
          */
         void saveAverages(Statistics & stats, int currentDay);
+
+        /**
+         * @brief Sets the modelStatus object's message.  Thread safe.
+         * @param message The message to set
+         */
+        void setStatusMessage(QString message);
 
         void copy(const RiverModel & other);
         void clear();
