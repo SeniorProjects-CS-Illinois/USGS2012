@@ -1,7 +1,7 @@
 TEMPLATE = app
 
-QMAKE_CXXFLAGS += -fopenmp
-LIBS += -fopenmp
+#QMAKE_CXXFLAGS += -fopenmp
+#LIBS += -fopenmp
 
 # Gprof flags for profiling the application.  Keep commented unless actively
 # profiling the program.  You should also disable openmp when profiling

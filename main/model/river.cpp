@@ -80,42 +80,11 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
 }
 
 void River::setCurrentWaterTemperature(double newTemp) {
-    /*
-     * TODO I don't know what this calculation is doing...
-     * Is it really the "temperature" anymore after this?
-     * If not, my member variable's name should change. -ECP
-     *
-     * Edit: temp_dif is only assigned a value of 0...  Removing for now. Something
-     * to ask Kevin I suppose... -ECP
-     *
-     * Here is original 2011 team's function:
-     *
-     * g.temperature_index++;
-     * g.temperature = g.temperature_data[g.temperature_index];
-     * g.temperature = g.temperature - ((g.temperature - 17.0) * g.temp_dif);
-     */
-
-    currWaterTemp = newTemp;// - ((newTemp - 17.0) * g.temp_dif);
+    currWaterTemp = newTemp;
 }
 
 void River::setCurrentPAR(int newPAR) {
-    /*
-     * TODO I don't know what this calculation is doing...
-     * Is it really the "PAR" anymore after this?
-     * If not, my member variable's name should change.
-     * Also, is integer truncation the right thing to do or should it round? -ECP
-     *
-     * Edit: par_dif is only assigned a value of 0...  Removing for now. Something
-     * to ask Kevin I suppose... -ECP
-     *
-     * Here is original 2011 team's function:
-     *
-     * g.photo_radiation_index++;
-     * g.photo_radiation = g.photo_radiation_data[g.photo_radiation_index];
-     * g.photo_radiation = g.photo_radiation - (int)(g.photo_radiation * g.par_dif);
-     */
-
-    currPAR = newPAR;// - (int)(newPAR * g.par_dif);
+    currPAR = newPAR;
 }
 
 void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
@@ -289,6 +258,11 @@ Statistics River::generateStatistics() {
 }
 
 void River::saveCSV(QString displayedStock, int daysElapsed) const {
+    /* We are using file descriptors and fprintf after discovering horrible performance on
+     * Windows when using QFile or ofstream...
+     *
+     * Note: QFile is still prefered when NOT saving a file in the program's main loop.
+     */
 
     QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
     QString filename = "./results/data/map_data_" + dateAndTime + ".csv";

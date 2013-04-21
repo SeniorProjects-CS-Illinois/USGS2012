@@ -1,7 +1,24 @@
 #include "rivermodel.h"
 
 RiverModel::RiverModel() {
+    source = NULL;
+    dest = NULL;
+}
 
+RiverModel::RiverModel(const RiverModel &other) {
+    copy(other);
+}
+
+RiverModel::~RiverModel(){
+    clear();
+}
+
+RiverModel & RiverModel::operator=(const RiverModel & rhs) {
+    if(this != &rhs){
+        clear();
+        copy(rhs);
+    }
+    return *this;
 }
 
 Status RiverModel::getStatus(void){
@@ -41,6 +58,8 @@ QImage RiverModel::getImage(QString stockName){
 void RiverModel::run() {
     initializeModel(modelConfig);
 
+    int daysToRun = getDaysToRun(modelConfig);
+
     int weeksElapsed = 0;
     int daysElapsed = 0;
     int hoursElapsed = 0;
@@ -65,11 +84,12 @@ void RiverModel::run() {
                 river.setCurrentWaterTemperature( waterTemps[weeksElapsed] );
             }
             //BEGINNING OF DAY
+            int currentDay = daysElapsed+1;
 
 
             for(int hour = 0; hour < HOURS_PER_DAY; hour++) {
                 //NEW HOUR
-                printHourlyMessage(daysElapsed, hour);
+                printHourlyMessage(currentDay, hour);
                 river.setCurrentPAR( parValues[hoursElapsed] );
                 river.processPatches();
                 river.flow(source, dest);
@@ -88,11 +108,14 @@ void RiverModel::run() {
                     river.generateImages(images, stockNames, imageMutex, stats);
                     modelStatus.hasNewImage(true);
 
-                    saveAverages(stats,daysElapsed);
+                    saveAverages(stats,currentDay);
                 }
                 #pragma omp section
                 {
-                    river.saveCSV(displayedStock, daysElapsed);
+                    //Make sure to output on final day.
+                    if(currentDay % modelConfig.outputFreq == 0 || currentDay == daysToRun) {
+                        river.saveCSV(displayedStock, daysElapsed);
+                    }
                 }
             }
 
@@ -106,9 +129,6 @@ void RiverModel::run() {
             }
         }
     }
-
-    //Remove temp structures used for flowing river
-    deleteTempGrids();
 
     //TODO Run program in valgrind to make sure all memory is freed.
 
@@ -127,8 +147,7 @@ void RiverModel::setWhichStock(QString stockName)
     displayedStock = stockName;
 }
 
-void RiverModel::printHourlyMessage(int daysElapsed, int hourOfDay) {
-    int currentDay = daysElapsed + 1;
+void RiverModel::printHourlyMessage(int currentDay, int hourOfDay) {
     cout << "Day: " << currentDay << " - Hour: " << hourOfDay \
         << " | Progress: " << (int)(modelStatus.getProgress()*100) \
         << "% - Time Elapsed/Remaining (sec): " << modelStatus.getTimeElapsed() \
@@ -227,16 +246,12 @@ void RiverModel::initializePARValues(const Configuration &config) {
 void RiverModel::initializeTempGrids(HydroFileDict &hydroFileDict){
     int width = hydroFileDict.getMaxWidth();
     int height = hydroFileDict.getMaxHeight();
+    delete source;
+    delete dest;
     source = new Grid<FlowData>(width, height);
     dest = new Grid<FlowData>(width, height);
 }
 
-
-//TODO Move to destructor when one is added.
-void RiverModel::deleteTempGrids(){
-    delete source;
-    delete dest;
-}
 
 int RiverModel::getDaysToRun(const Configuration &config) {
     int daysToRun = 0;
@@ -249,10 +264,12 @@ int RiverModel::getDaysToRun(const Configuration &config) {
     return daysToRun;
 }
 
-void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
-
-    int currentDay = daysElapsed + 1;
-
+void RiverModel::saveAverages(Statistics & stats, int currentDay) {
+    /* We are using file descriptors and fprintf after discovering horrible performance on
+     * Windows when using QFile or ofstream...
+     *
+     * Note: QFile is still prefered when NOT saving a file in the program's main loop.
+     */
 
     FILE* f;
     if(averagesFilename.isEmpty()) {
@@ -283,44 +300,29 @@ void RiverModel::saveAverages(Statistics & stats, int daysElapsed) {
             stats.avgDetritus, stats.avgCarbon);
 
     fclose(f);
+}
 
-
-    /*
-    int currentDay = daysElapsed + 1;
-
-    QFile averagesFile;
-    QTextStream textStream;
-    if(averagesFilename.isEmpty()) {
-        //File does not yet exist.  We need to create a filename and add table headers
-        QString dateAndTime = QDateTime::currentDateTime().toString("MMM_d_H_mm_ss");
-        averagesFilename = "./results/data/carbon_avgs_" + dateAndTime + ".csv";
-        averagesFile.setFileName(averagesFilename);
-        if ( !averagesFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            cout << "Failed to open averagesFile for write." << endl;
-            abort();
-        }
-        textStream.setDevice(&averagesFile);
-        textStream << "Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer,"
-                   << "DOC,POC,Herbivore,Detritus,All Carbon\n";
-
-    }else{
-        //File already exists, open for append
-        averagesFile.setFileName(averagesFilename);
-        if ( !averagesFile.open(QIODevice::Append | QIODevice::Text)) {
-            cout << "Failed to open averagesFile for append." << endl;
-            abort();
-        }
-        textStream.setDevice(&averagesFile);
+void RiverModel::copy(const RiverModel & other) {
+    modelStatus = other.modelStatus;
+    if(modelStatus.getState() == Status::RUNNING) {
+        abort();
     }
 
-    textStream << currentDay << "," << stats.avgMacro << "," << stats.avgPhyto << ","
-               << stats.avgWaterDecomp << "," << stats.avgSedDecomp << ","
-               << stats.avgSedConsumer << "," << stats.avgConsum << ","
-               << stats.avgDOC << "," << stats.avgPOC << "," << stats.avgHerbivore << ","
-               << stats.avgDetritus << "," << stats.avgCarbon << "\n";
+    modelStatus = other.modelStatus;
+    modelConfig = other.modelConfig;
+    hydroFileDict = other.hydroFileDict;
+    waterTemps = other.waterTemps;
+    parValues = other.parValues;
+    displayedStock = other.displayedStock;
+    stockNames = other.stockNames;
+    averagesFilename = other.averagesFilename;
+    source = new Grid<FlowData>(*other.source);
+    dest = new Grid<FlowData>(*other.dest);
 
+    images = other.images;
+}
 
-    averagesFile.close();
-    */
-
+void RiverModel::clear() {
+    delete source;
+    delete dest;
 }

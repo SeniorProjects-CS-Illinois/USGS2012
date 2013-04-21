@@ -6,7 +6,7 @@ using std::endl;
 using std::swap;
 
 CarbonFlowMap::CarbonFlowMap() {
-
+    initialized = false;
 }
 
 CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
@@ -28,12 +28,13 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
         pushCarbon(*source, *dest);
     }
 
-    /*
-     * TODO: After pushing the carbon, store it all efficicently and
-     * get rid of temp data.
-     */
-
     delete source;
+
+    /*
+     * At this point we have data on where each cell gets its carbon from in the specified
+     * number of iterations.  Now we need to store it so that we optimize spacial locality
+     * and so it could be eventually used with OpenCl
+     */
 
     int totalSources = 0;
     for(unsigned int x = 0; x < dest->getWidth(); x++) {
@@ -75,9 +76,24 @@ CarbonFlowMap::CarbonFlowMap(HydroFile * newHydroFile, int numIterations) {
     }
 
     delete dest;
+    initialized = true;
 }
 
+CarbonFlowMap::CarbonFlowMap(const CarbonFlowMap &other) {
+    copy(other);
+}
 
+CarbonFlowMap::~CarbonFlowMap() {
+    clear();
+}
+
+CarbonFlowMap & CarbonFlowMap::operator=(const CarbonFlowMap & rhs) {
+    if(this != &rhs) {
+        clear();
+        copy(rhs);
+    }
+    return *this;
+}
 
 
 const SourceArrays CarbonFlowMap::getSourceArrays() const {
@@ -208,6 +224,39 @@ QVector<CarbonSource> * CarbonFlowMap::getFlowTargets(int i, int j){
     }
 
     return targets;
+}
+
+void CarbonFlowMap::copy(const CarbonFlowMap &other) {
+    initialized = other.initialized;
+    hydroFile = other.hydroFile;
+    iterations = other.iterations;
+
+    sourceData.totalSources = other.sourceData.totalSources;
+    sourceData.offsets = new Grid<int>(*other.sourceData.offsets);
+    sourceData.sizes = new Grid<int>(*other.sourceData.sizes);
+
+    sourceData.x = new int[sourceData.totalSources];
+    sourceData.y = new int[sourceData.totalSources];
+    sourceData.amount = new double[sourceData.totalSources];
+
+    for(int i = 0; i < sourceData.totalSources; i++) {
+        sourceData.x[i] = other.sourceData.x[i];
+        sourceData.y[i] = other.sourceData.y[i];
+        sourceData.amount[i] = other.sourceData.amount[i];
+    }
+}
+
+void CarbonFlowMap::clear() {
+    /* Note: We do not delete hydroFile as that is created/deleted
+     * elsewhere and we only point to it.
+     */
+    if(initialized) {
+        delete [] sourceData.x;
+        delete [] sourceData.y;
+        delete [] sourceData.amount;
+        delete sourceData.offsets;
+        delete sourceData.sizes;
+    }
 }
 
 void CarbonFlowMap::printDebug(){

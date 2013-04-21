@@ -29,7 +29,10 @@ using std::cout;
 using std::endl;
 using std::max;
 
-
+/**
+ * @brief The River class os the model's concept of a river.  It provides means to
+ *        make the river flow and output its data.
+ */
 class River {
     public:
 
@@ -121,6 +124,7 @@ class River {
         PatchCollection p;
         Configuration config;
 
+        //Points to an external hydroData object that exists for the duration of the simulation
         HydroData * currHydroData;
         double currWaterTemp;
         int currPAR;

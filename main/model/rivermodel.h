@@ -27,6 +27,11 @@ class RiverModel {
          */
         RiverModel();
 
+        //Big 3, Regardless, copies should not be made during a running simulation.
+        RiverModel(const RiverModel & other);
+        ~RiverModel();
+        RiverModel & operator=(const RiverModel & rhs);
+
         /**
          * @brief Starts the simulation
          */
@@ -61,12 +66,30 @@ class RiverModel {
         void setWhichStock(QString stockName);
 
     private:
+        Status modelStatus;
+        Configuration modelConfig;
+        HydroFileDict hydroFileDict;
+        QVector<double> waterTemps;
+        QVector<int> parValues;
+
+        QString displayedStock;
+        QVector<QString> stockNames;
+
+        QString averagesFilename;
+
+        QVector<QImage> images;
+        QMutex imageMutex;
+
+        Grid<FlowData> * source;
+        Grid<FlowData> * dest;
+
+
         /**
          * @brief Writes a status message to a terminal window every simulated hour
          * @param daysElapsed The days elapsed in the simulation
          * @param hourOfDay The hour of the currect day in the simulation
          */
-        void printHourlyMessage(int daysElapsed, int hourOfDay);
+        void printHourlyMessage(int currentDay, int hourOfDay);
 
         /**
          * @brief Initializes entire model
@@ -116,10 +139,6 @@ class RiverModel {
          */
         void initializeTempGrids(HydroFileDict & hydroFileDict);
 
-        /**
-         * @brief Deletes the temp Grids of flowdata used by the River's flow routine
-         */
-        void deleteTempGrids();
 
         /**
          * @brief Calculates the number of days the the simulation will run
@@ -133,24 +152,10 @@ class RiverModel {
          * @param stats Source of the averages to write
          * @param daysElapsed Days Elapsed to write
          */
-        void saveAverages(Statistics & stats, int daysElapsed);
+        void saveAverages(Statistics & stats, int currentDay);
 
+        void copy(const RiverModel & other);
+        void clear();
 
-        Status modelStatus;
-        Configuration modelConfig;
-        HydroFileDict hydroFileDict;
-        QVector<double> waterTemps;
-        QVector<int> parValues;
-
-        QString displayedStock;
-        QVector<QString> stockNames;
-
-        QString averagesFilename;
-
-        QVector<QImage> images;
-        QMutex imageMutex;
-
-        Grid<FlowData> * source;
-        Grid<FlowData> * dest;
 };
 #endif
