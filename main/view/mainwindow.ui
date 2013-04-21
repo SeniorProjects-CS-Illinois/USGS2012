@@ -33,7 +33,7 @@
      <string/>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabConfig">
      <property name="toolTip">
@@ -1202,7 +1202,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth1">
+     <widget class="QLineEdit" name="lineEditMaxFlow1">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1221,7 +1221,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth2">
+     <widget class="QLineEdit" name="lineEditMaxFlow2">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1240,7 +1240,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth3">
+     <widget class="QLineEdit" name="lineEditMaxFlow3">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1259,7 +1259,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth4">
+     <widget class="QLineEdit" name="lineEditMaxFlow4">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1278,7 +1278,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth5">
+     <widget class="QLineEdit" name="lineEditMaxFlow5">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1297,7 +1297,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth6">
+     <widget class="QLineEdit" name="lineEditMaxFlow6">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1316,7 +1316,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth7">
+     <widget class="QLineEdit" name="lineEditMaxFlow7">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1335,7 +1335,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth8">
+     <widget class="QLineEdit" name="lineEditMaxFlow8">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1354,7 +1354,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth9">
+     <widget class="QLineEdit" name="lineEditMaxFlow9">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1373,7 +1373,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMaxDepth10">
+     <widget class="QLineEdit" name="lineEditMaxFlow10">
       <property name="geometry">
        <rect>
         <x>75</x>
@@ -1392,7 +1392,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth6">
+     <widget class="QLineEdit" name="lineEditMinFlow6">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1411,7 +1411,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth9">
+     <widget class="QLineEdit" name="lineEditMinFlow9">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1430,7 +1430,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth8">
+     <widget class="QLineEdit" name="lineEditMinFlow8">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1449,7 +1449,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth1">
+     <widget class="QLineEdit" name="lineEditMinFlow1">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1468,7 +1468,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth10">
+     <widget class="QLineEdit" name="lineEditMinFlow10">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1487,7 +1487,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth2">
+     <widget class="QLineEdit" name="lineEditMinFlow2">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1506,7 +1506,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth3">
+     <widget class="QLineEdit" name="lineEditMinFlow3">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1525,7 +1525,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth5">
+     <widget class="QLineEdit" name="lineEditMinFlow5">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1544,7 +1544,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth7">
+     <widget class="QLineEdit" name="lineEditMinFlow7">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1563,7 +1563,7 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="lineEditMinDepth4">
+     <widget class="QLineEdit" name="lineEditMinFlow4">
       <property name="geometry">
        <rect>
         <x>15</x>
@@ -1592,7 +1592,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Min Depth</string>
+       <string>Min Flow</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1608,7 +1608,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Max Depth</string>
+       <string>Max Flow</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -6262,10 +6262,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth1</sender>
+   <sender>lineEditMaxFlow1</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth1Changed()</slot>
+   <slot>maxFlow1Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6278,10 +6278,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth2</sender>
+   <sender>lineEditMaxFlow2</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth2Changed()</slot>
+   <slot>maxFlow2Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6294,10 +6294,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth3</sender>
+   <sender>lineEditMaxFlow3</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth3Changed()</slot>
+   <slot>maxFlow3Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6310,10 +6310,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth4</sender>
+   <sender>lineEditMaxFlow4</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth4Changed()</slot>
+   <slot>maxFlow4Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6326,10 +6326,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth5</sender>
+   <sender>lineEditMaxFlow5</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth5Changed()</slot>
+   <slot>maxFlow5Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6342,10 +6342,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth6</sender>
+   <sender>lineEditMaxFlow6</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth6Changed()</slot>
+   <slot>maxFlow6Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6358,10 +6358,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth7</sender>
+   <sender>lineEditMaxFlow7</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth7Changed()</slot>
+   <slot>maxFlow7Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6374,10 +6374,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth8</sender>
+   <sender>lineEditMaxFlow8</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth8Changed()</slot>
+   <slot>maxFlow8Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6390,10 +6390,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMaxDepth9</sender>
+   <sender>lineEditMaxFlow9</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>maxDepth9Changed()</slot>
+   <slot>maxFlow9Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>101</x>
@@ -6406,10 +6406,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth2</sender>
+   <sender>lineEditMinFlow2</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth2Changed()</slot>
+   <slot>minFlow2Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6422,10 +6422,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth3</sender>
+   <sender>lineEditMinFlow3</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth3Changed()</slot>
+   <slot>minFlow3Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6438,10 +6438,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth4</sender>
+   <sender>lineEditMinFlow4</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth4Changed()</slot>
+   <slot>minFlow4Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6454,10 +6454,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth5</sender>
+   <sender>lineEditMinFlow5</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth5Changed()</slot>
+   <slot>minFlow5Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6470,10 +6470,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth6</sender>
+   <sender>lineEditMinFlow6</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth6Changed()</slot>
+   <slot>minFlow6Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6486,10 +6486,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth7</sender>
+   <sender>lineEditMinFlow7</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth7Changed()</slot>
+   <slot>minFlow7Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6502,10 +6502,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth8</sender>
+   <sender>lineEditMinFlow8</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth8Changed()</slot>
+   <slot>minFlow8Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6518,10 +6518,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth9</sender>
+   <sender>lineEditMinFlow9</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth9Changed()</slot>
+   <slot>minFlow9Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6534,10 +6534,10 @@
    </hints>
   </connection>
   <connection>
-   <sender>lineEditMinDepth10</sender>
+   <sender>lineEditMinFlow10</sender>
    <signal>textEdited(QString)</signal>
    <receiver>MainWindow</receiver>
-   <slot>minDepth10Changed()</slot>
+   <slot>minFlow10Changed()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
@@ -6722,24 +6722,24 @@
   <slot>loadConfiguration()</slot>
   <slot>selectDischargeFileClicked()</slot>
   <slot>whichstockChanged(QString)</slot>
-  <slot>maxDepth1Changed()</slot>
-  <slot>maxDepth2Changed()</slot>
-  <slot>maxDepth3Changed()</slot>
-  <slot>maxDepth4Changed()</slot>
-  <slot>maxDepth5Changed()</slot>
-  <slot>maxDepth6Changed()</slot>
-  <slot>maxDepth7Changed()</slot>
-  <slot>maxDepth8Changed()</slot>
-  <slot>maxDepth9Changed()</slot>
-  <slot>minDepth2Changed()</slot>
-  <slot>minDepth3Changed()</slot>
-  <slot>minDepth4Changed()</slot>
-  <slot>minDepth5Changed()</slot>
-  <slot>minDepth6Changed()</slot>
-  <slot>minDepth7Changed()</slot>
-  <slot>minDepth8Changed()</slot>
-  <slot>minDepth9Changed()</slot>
-  <slot>minDepth10Changed()</slot>
+  <slot>maxFlow1Changed()</slot>
+  <slot>maxFlow2Changed()</slot>
+  <slot>maxFlow3Changed()</slot>
+  <slot>maxFlow4Changed()</slot>
+  <slot>maxFlow5Changed()</slot>
+  <slot>maxFlow6Changed()</slot>
+  <slot>maxFlow7Changed()</slot>
+  <slot>maxFlow8Changed()</slot>
+  <slot>maxFlow9Changed()</slot>
+  <slot>minFlow2Changed()</slot>
+  <slot>minFlow3Changed()</slot>
+  <slot>minFlow4Changed()</slot>
+  <slot>minFlow5Changed()</slot>
+  <slot>minFlow6Changed()</slot>
+  <slot>minFlow7Changed()</slot>
+  <slot>minFlow8Changed()</slot>
+  <slot>minFlow9Changed()</slot>
+  <slot>minFlow10Changed()</slot>
   <slot>selectHydroFile1Clicked()</slot>
   <slot>selectHydroFile2Clicked()</slot>
   <slot>selectHydroFile3Clicked()</slot>

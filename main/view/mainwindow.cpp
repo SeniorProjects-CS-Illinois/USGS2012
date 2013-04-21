@@ -253,32 +253,32 @@ void MainWindow::whichstockChanged(QString const & newStock)
     }
 }
 
-void MainWindow::maxDepth1Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth1, ui->lineEditMinDepth2,  1); }
-void MainWindow::minDepth2Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth2, ui->lineEditMaxDepth1, -1); }
+void MainWindow::maxFlow1Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow1, ui->lineEditMinFlow2,  1); }
+void MainWindow::minFlow2Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow2, ui->lineEditMaxFlow1, -1); }
 
-void MainWindow::maxDepth2Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth2, ui->lineEditMinDepth3,  1); }
-void MainWindow::minDepth3Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth3, ui->lineEditMaxDepth2, -1); }
+void MainWindow::maxFlow2Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow2, ui->lineEditMinFlow3,  1); }
+void MainWindow::minFlow3Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow3, ui->lineEditMaxFlow2, -1); }
 
-void MainWindow::maxDepth3Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth3, ui->lineEditMinDepth4,  1); }
-void MainWindow::minDepth4Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth4, ui->lineEditMaxDepth3, -1); }
+void MainWindow::maxFlow3Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow3, ui->lineEditMinFlow4,  1); }
+void MainWindow::minFlow4Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow4, ui->lineEditMaxFlow3, -1); }
 
-void MainWindow::maxDepth4Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth4, ui->lineEditMinDepth5,  1); }
-void MainWindow::minDepth5Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth5, ui->lineEditMaxDepth4, -1); }
+void MainWindow::maxFlow4Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow4, ui->lineEditMinFlow5,  1); }
+void MainWindow::minFlow5Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow5, ui->lineEditMaxFlow4, -1); }
 
-void MainWindow::maxDepth5Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth5, ui->lineEditMinDepth6,  1); }
-void MainWindow::minDepth6Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth6, ui->lineEditMaxDepth5, -1); }
+void MainWindow::maxFlow5Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow5, ui->lineEditMinFlow6,  1); }
+void MainWindow::minFlow6Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow6, ui->lineEditMaxFlow5, -1); }
 
-void MainWindow::maxDepth6Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth6, ui->lineEditMinDepth7,  1); }
-void MainWindow::minDepth7Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth7, ui->lineEditMaxDepth6, -1); }
+void MainWindow::maxFlow6Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow6, ui->lineEditMinFlow7,  1); }
+void MainWindow::minFlow7Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow7, ui->lineEditMaxFlow6, -1); }
 
-void MainWindow::maxDepth7Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth7, ui->lineEditMinDepth8,  1); }
-void MainWindow::minDepth8Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth8, ui->lineEditMaxDepth7, -1); }
+void MainWindow::maxFlow7Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow7, ui->lineEditMinFlow8,  1); }
+void MainWindow::minFlow8Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow8, ui->lineEditMaxFlow7, -1); }
 
-void MainWindow::maxDepth8Changed() { copyIntDisplaywithOffset(ui->lineEditMaxDepth8, ui->lineEditMinDepth9,  1); }
-void MainWindow::minDepth9Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth9, ui->lineEditMaxDepth8, -1); }
+void MainWindow::maxFlow8Changed() { copyIntDisplaywithOffset(ui->lineEditMaxFlow8, ui->lineEditMinFlow9,  1); }
+void MainWindow::minFlow9Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow9, ui->lineEditMaxFlow8, -1); }
 
-void MainWindow::maxDepth9Changed()  { copyIntDisplaywithOffset(ui->lineEditMaxDepth9,  ui->lineEditMinDepth10,  1); }
-void MainWindow::minDepth10Changed() { copyIntDisplaywithOffset(ui->lineEditMinDepth10, ui->lineEditMaxDepth9,  -1); }
+void MainWindow::maxFlow9Changed()  { copyIntDisplaywithOffset(ui->lineEditMaxFlow9,  ui->lineEditMinFlow10,  1); }
+void MainWindow::minFlow10Changed() { copyIntDisplaywithOffset(ui->lineEditMinFlow10, ui->lineEditMaxFlow9,  -1); }
 
 void MainWindow::finished() const
 {
@@ -925,27 +925,27 @@ bool MainWindow::verifyAllInput() const
             verifyNumber(ui->lineEditKMacro, "K-Macro value not filled out or invalid") &&
             verifyNumber(ui->lineEditKPhyto, "K-Phyto value not filled out or invalid") &&
             verifyNumber(ui->lineEditTSS, "TSS value not filled out or invalid") &&
-            /* Hydro file depth */
-            verifyNumber(ui->lineEditMinDepth1, "Min depth for the first hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth2, "Min depth for the second hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth3, "Min depth for the third hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth4, "Min depth for the fourth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth5, "Min depth for the fifth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth6, "Min depth for the sixth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth7, "Min depth for the seventh hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth8, "Min depth for the eigth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth9, "Min depth for the ninth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMinDepth10, "Min depth for the tenth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth1, "Max depth for the first hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth2, "Max depth for the second hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth3, "Max depth for the third hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth4, "Max depth for the fourth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth5, "Max depth for the fifth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth6, "Max depth for the sixth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth7, "Max depth for the seventh hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth8, "Max depth for the eigth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth9, "Max depth for the ninth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditMaxDepth10, "Max depth for the tenth hydro file not filled out or invalid") &&
+            /* Hydro file flow */
+            verifyNumber(ui->lineEditMinFlow1, "Min flow for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow2, "Min flow for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow3, "Min flow for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow4, "Min flow for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow5, "Min flow for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow6, "Min flow for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow7, "Min flow for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow8, "Min flow for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow9, "Min flow for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMinFlow10, "Min flow for the tenth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow1, "Max flow for the first hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow2, "Max flow for the second hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow3, "Max flow for the third hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow4, "Max flow for the fourth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow5, "Max flow for the fifth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow6, "Max flow for the sixth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow7, "Max flow for the seventh hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow8, "Max flow for the eigth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow9, "Max flow for the ninth hydro file not filled out or invalid") &&
+            verifyNumber(ui->lineEditMaxFlow10, "Max flow for the tenth hydro file not filled out or invalid") &&
             /* DOC input/output */
             verifyNumber(ui->lineEditInputDoc1, "DOC input for the for the first hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputDoc2, "DOC input for the for the second hydro file not filled out or invalid") &&
@@ -1133,7 +1133,7 @@ bool MainWindow::verifyAllStockInput() const
             verifyNumber(ui->lineEditSeddecompSenescence, "Seddecomp Senescence value not filled out or invalid or invalid");
 }
 
-bool MainWindow::verifyNumber(QWidget* widget, const QString & errorMessage) const
+bool MainWindow::verifyNumber(QLineEdit* widget, const QString & errorMessage) const
 {
     if (!UI::isBoxNumerical(widget))
     {
@@ -1143,7 +1143,7 @@ bool MainWindow::verifyNumber(QWidget* widget, const QString & errorMessage) con
     return true;
 }
 
-bool MainWindow::verifyFile(QWidget* widget, const QString & errorMessage) const
+bool MainWindow::verifyFile(QLabel* widget, const QString & errorMessage) const
 {
     if (!UI::isFileSelected(widget))
     {

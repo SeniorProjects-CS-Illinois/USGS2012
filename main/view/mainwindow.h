@@ -129,58 +129,58 @@ public slots:
     void whichstockChanged(const QString & newStock);
 
     /**
-     * @brief Change the max depth 1 and min depth 2.
+     * @brief Change the max flow 1 and min flow 2.
      */
-    void maxDepth1Changed();
-    void minDepth2Changed();
+    void maxFlow1Changed();
+    void minFlow2Changed();
 
     /**
-     * @brief Change the max depth 2 and min depth 3.
+     * @brief Change the max flow 2 and min flow 3.
      */
-    void maxDepth2Changed();
-    void minDepth3Changed();
+    void maxFlow2Changed();
+    void minFlow3Changed();
 
     /**
-     * @brief Change the max depth 3 and min depth 4.
+     * @brief Change the max flow 3 and min flow 4.
      */
-    void maxDepth3Changed();
-    void minDepth4Changed();
+    void maxFlow3Changed();
+    void minFlow4Changed();
 
     /**
-     * @brief Change the max depth 4 and min depth 5.
+     * @brief Change the max flow 4 and min flow 5.
      */
-    void maxDepth4Changed();
-    void minDepth5Changed();
+    void maxFlow4Changed();
+    void minFlow5Changed();
 
     /**
-     * @brief Change the max depth 5 and min depth 6.
+     * @brief Change the max flow 5 and min flow 6.
      */
-    void maxDepth5Changed();
-    void minDepth6Changed();
+    void maxFlow5Changed();
+    void minFlow6Changed();
 
     /**
-     * @brief Change the max depth 6 and min depth 7.
+     * @brief Change the max flow 6 and min flow 7.
      */
-    void maxDepth6Changed();
-    void minDepth7Changed();
+    void maxFlow6Changed();
+    void minFlow7Changed();
 
     /**
-     * @brief Change the max depth 7 and min depth 8.
+     * @brief Change the max flow 7 and min flow 8.
      */
-    void maxDepth7Changed();
-    void minDepth8Changed();
+    void maxFlow7Changed();
+    void minFlow8Changed();
 
     /**
-     * @brief Change the max depth 8 and min depth 9.
+     * @brief Change the max flow 8 and min flow 9.
      */
-    void maxDepth8Changed();
-    void minDepth9Changed();
+    void maxFlow8Changed();
+    void minFlow9Changed();
 
     /**
-     * @brief Change the max depth 9 and min depth 10.
+     * @brief Change the max flow 9 and min flow 10.
      */
-    void maxDepth9Changed();
-    void minDepth10Changed();
+    void maxFlow9Changed();
+    void minFlow10Changed();
 
     /**
      * @brief Finish up the running model.
@@ -534,7 +534,7 @@ private:
      * @param errorMessage the message to display if it fails.
      * @return true if the widget has a numerical value.
      */
-    bool verifyNumber(QWidget* widget, const QString & errorMessage) const;
+    bool verifyNumber(QLineEdit* widget, const QString & errorMessage) const;
 
     /**
      * @brief Verify that the widget represents a selected file.
@@ -542,7 +542,7 @@ private:
      * @param errorMessage the message to display if it fails.
      * @return true if the widget has a string for a file.
      */
-    bool verifyFile(QWidget* widget, const QString & errorMessage) const;
+    bool verifyFile(QLabel* widget, const QString & errorMessage) const;
 
     /**
      * @brief Takes a discharge file and populates hydro map information.
