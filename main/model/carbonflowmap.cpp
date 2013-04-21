@@ -268,8 +268,8 @@ void CarbonFlowMap::printDebug(){
             for(int i = 0; i < numSources; i++) {
 
                 cout << "(" << x << "," << y << ") receives ";
-                cout << sourceData.amount[currOffset] * 100.0 << "% from (";
-                cout << sourceData.x[currOffset] << "," << sourceData.y[currOffset] << ")" << endl;
+                cout << sourceData.amount[currOffset + i] * 100.0 << "% from (";
+                cout << sourceData.x[currOffset + i] << "," << sourceData.y[currOffset + i] << ")" << endl;
 
             }
         }
