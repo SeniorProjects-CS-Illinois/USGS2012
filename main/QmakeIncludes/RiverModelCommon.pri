@@ -10,7 +10,9 @@ LIBS += -fopenmp
 #QMAKE_CXXFLAGS += -pg
 #QMAKE_LFLAGS += -pg
 
-SOURCES += model/configuration.cpp \
+SOURCES += model/carbonflowmap.cpp \
+    model/carbonsources.cpp \
+    model/configuration.cpp \
     model/globals.cpp \    
     model/hydrofile.cpp \
     model/hydrofiledict.cpp \    
@@ -22,7 +24,9 @@ SOURCES += model/configuration.cpp \
     model/status.cpp \
     model/utility.cpp \
 
-HEADERS  +=model/configuration.h \
+HEADERS  +=  model/carbonflowmap.h \
+    model/carbonsources.h \
+    model/configuration.h \
     model/constants.h \
     model/flowdata.h \
     model/globals.h \
