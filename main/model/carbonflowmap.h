@@ -23,7 +23,9 @@ struct SourceArrays {
 
 /**
  * @brief The CarbonFlowMap class is used to determine where a cell retrieves its
- *        carbon.  For example, normally to simulate an hour of the river flowing we
+ *        carbon.  
+ * 
+ *        For example, normally to simulate an hour of the river flowing we
  *        would "push" the carbon from a cell to destination cells based on the flow vector
  *        in the hydroFile class.  However, it is possible that two cells could push to the
  *        same location.  This results in a race condition and prevents us from easily

@@ -11,8 +11,11 @@ class CarbonFlowMapTests : public QObject
     Q_OBJECT
     private slots:
     void testFullFlow();
+    void testFullFlow2iter();
     void testPartialFlow();
+    void testPartialFlow2iter();
     void testLandFlow();
+    void testLandFlow2iter();
 };
 
 #endif
