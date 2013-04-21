@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
         QTest::qExec(&rgt, argc, argv) ||
         QTest::qExec(&ct, argc, argv) ||
         QTest::qExec(&hft, argc, argv) ||
-        QTest::qExec(&csct, argc, argv) ||
 		QTest::qExec(&cft, argc, argv) ||
-        QTest::qExec(&st, argc, argv)
+        QTest::qExec(&st, argc, argv) ||
+        QTest::qExec(&csct, argc, argv)
 		;
 }
