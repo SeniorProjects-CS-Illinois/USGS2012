@@ -307,8 +307,7 @@ void RiverModel::saveAverages(Statistics & stats, int currentDay) {
             cout << "Failed to open averagesFile for write." << endl;
             abort();
         }
-        fprintf(f, "%s\n","Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer, \
-                DOC,POC,Herbivore,Detritus,All Carbon" );
+        fprintf(f, "%s\n","Day,Macro,Phyto,Waterdecomp,Seddecomp,Sedconsumer,Consumer,DOC,POC,Herbivore,Detritus,All Carbon" );
     }else{
         //File already exists, open for append
         f = fopen(averagesFilename.toStdString().c_str(), "a");
