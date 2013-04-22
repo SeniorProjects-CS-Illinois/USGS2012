@@ -318,7 +318,7 @@ void RiverModel::saveAverages(Statistics & stats, int currentDay) {
         }
     }
 
-    fprintf(f, "%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f", currentDay, stats.avgMacro,
+    fprintf(f, "%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n", currentDay, stats.avgMacro,
             stats.avgPhyto, stats.avgWaterDecomp, stats.avgSedDecomp, stats.avgSedConsumer,
             stats.avgConsum, stats.avgDOC, stats.avgPOC, stats.avgHerbivore,
             stats.avgDetritus, stats.avgCarbon);
