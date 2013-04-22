@@ -17,7 +17,10 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 // in HydroFile class.  Consider pros and cons of using a grid instead.
 void River::setCurrentHydroData(HydroData *newHydroData) {
     HydroFile * newHydroFile = &newHydroData->hydroFile;
-    HydroFile * currHydroFile = &currHydroData->hydroFile;
+    HydroFile * currHydroFile = NULL;
+    if(currHydroData != NULL) {
+        currHydroFile = &currHydroData->hydroFile;
+    }
 
     for (int i = 0; i < p.getSize(); i++ ) {
         int x = p.pxcor[i];
@@ -70,8 +73,10 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.consumer[i] = 0.0;
         }
 
+        //TODO: Instead of handling this here, process detritus daily in land patches
+        //    via processPatches and with a potentially diff percentage.
         // Land -> Water
-        if (current_depth == 0.0 && p.depth[i] > 0.0) {
+        if (currHydroFile != NULL && current_depth == 0.0 && p.depth[i] > 0.0) {
             p.detritus[i] *= 0.5;
         }
     }
