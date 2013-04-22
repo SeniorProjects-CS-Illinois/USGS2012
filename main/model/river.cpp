@@ -257,7 +257,7 @@ Statistics River::generateStatistics() {
     return stats;
 }
 
-void River::saveCSV(QString displayedStock, int daysElapsed) const {
+void River::saveCSV(QString displayedStock, int currentDay, QString currHydroFileName) const {
     /* We are using file descriptors and fprintf after discovering horrible performance on
      * Windows when using QFile or ofstream...
      *
@@ -273,14 +273,17 @@ void River::saveCSV(QString displayedStock, int daysElapsed) const {
         exit(1);
     }
 
+    //TODO: Investigate if we need hydro_group.
+    //I think it was a remenant of the python/c implemenation and does not make sense now. -ecp
     // GUI variables used
-    fprintf(f,"%s\n","# timestep_factor,hydro_group,days_to_run,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock");
+    fprintf(f,"%s\n","# timestep_factor,hydro_group,current_day,tss,k_phyto,k_macro,sen_macro_coef,resp_macro_coef,macro_base_temp,macro_mass_max,macro_vel_max,gross_macro_coef,which_stock,hydroFile");
 
-    fprintf(f,"%d,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n",
-            config.timestep, daysElapsed, config.tss,
+    fprintf(f,"%d,,%d,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s,%s\n\n",
+            config.timestep, currentDay, config.tss,
             config.kPhyto, config.kMacro, (config.macroSenescence/24),
             (config.macroRespiration/24), config.macroTemp, config.macroMassMax,
-            config.macroVelocityMax, config.macroGross, displayedStock.toStdString().c_str());
+            config.macroVelocityMax, config.macroGross, displayedStock.toStdString().c_str(),
+            currHydroFileName.toStdString().c_str());
 
     //TODO Print out the hydrofile used for this simulated day.
 

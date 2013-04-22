@@ -125,7 +125,7 @@ void RiverModel::run() {
                 {
                     //Make sure to output on final day.
                     if(currentDay % modelConfig.outputFreq == 0 || currentDay == daysToRun) {
-                        river.saveCSV(displayedStock, daysElapsed);
+                        river.saveCSV(displayedStock, currentDay, hydroFileName);
                     }
                 }
             }
