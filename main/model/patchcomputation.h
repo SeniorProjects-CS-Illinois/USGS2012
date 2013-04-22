@@ -15,15 +15,15 @@ namespace PatchComputation {
 
     void updatePatches(PatchCollection & p, const Configuration & config, int currPAR);
     void macro(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp, double currGrowthRate);
-    void phyto(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp, double currGrowthRate);
+    void phyto(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp);
     void herbivore(PatchCollection & p, const Configuration & config);
     void waterDecomp(PatchCollection & p, const Configuration & config);
     void sedDecomp(PatchCollection & p, const Configuration & config);
     void sedConsumer(PatchCollection & p, const Configuration & config);
     void consumer(PatchCollection & p, const Configuration & config);
-    void DOC(PatchCollection & p, const Configuration & config, double currGrowthRate);
-    void POC(PatchCollection & p, double currGrowthRate);
-    void detritus(PatchCollection & p, const Configuration & config, double currGrowthRate);
+    void DOC(PatchCollection & p, const Configuration & config);
+    void POC(PatchCollection & p);
+    void detritus(PatchCollection & p, const Configuration & config);
 
     void predPhyto(PatchCollection & p, int i);
     void predHerbivore(PatchCollection & p, int i);

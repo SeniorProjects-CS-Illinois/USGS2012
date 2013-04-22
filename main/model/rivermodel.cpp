@@ -212,38 +212,6 @@ void RiverModel::initializePARValues(const Configuration &config) {
     parFile.close();
 }
 
-void RiverModel::initializeGrowthRates() {
-    for(int i = 0; i < waterTemps.size(); i++) {
-        int temp = waterTemps.at(i);
-        if(temp < 7) {
-            growthRates.append(0);
-        }else if(temp < 10) {
-            growthRates.append(0.07725);
-        }else if(temp < 12) {
-            growthRates.append(0.17);
-        }else if(temp < 16) {
-            growthRates.append(0.24);
-        }else if(temp < 20) {
-            growthRates.append(0.45);
-        }else if(temp < 24) {
-            growthRates.append(0.67);
-        }else if(temp < 28) {
-            growthRates.append(0.81);
-        }else if(temp < 32) {
-            growthRates.append(1);
-        }else if(temp < 34) {
-            growthRates.append(0.89);
-        }else if(temp < 36) {
-            growthRates.append(0.84);
-        }else if(temp < 38) {
-            growthRates.append(0.78);
-        }else if(temp < 40) {
-            growthRates.append(0.73);
-        }else{
-            growthRates.append(0.68);
-        }
-    }
-}
 
 void RiverModel::initializeTempGrids(HydroFileDict &hydroFileDict){
     int width = hydroFileDict.getMaxWidth();

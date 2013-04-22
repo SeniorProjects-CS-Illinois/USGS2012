@@ -58,10 +58,10 @@ class River {
         void setCurrentPAR(int newPAR);
 
         /**
-         * @brief Sets the current growth rate to use in future calculations
-         * @param newGrowthrate new growth rate to use.
+         * @brief gets the current growth rate to use in future calculations
+         * @param temp used as index into array that holds growth rates.
          */
-        void setCurrentGrowthRate(double newGrowthRate);
+        int getNewGrowthRate(int temp);
 
         /**
          * @brief Iterates over the river and performs calculations on each patch
@@ -132,6 +132,8 @@ class River {
         int currPAR;
 
         double currGrowthRate;
+
+        QList<double> growthRates;
 
         int width;
         int height;

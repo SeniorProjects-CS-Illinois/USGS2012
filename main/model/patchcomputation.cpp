@@ -85,7 +85,7 @@ void PatchComputation::macro(PatchCollection & p, const Configuration & config, 
     }
 }
 
-void PatchComputation::phyto(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp, double currGrowthRate) {
+void PatchComputation::phyto(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp) {
     #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
@@ -126,8 +126,8 @@ void PatchComputation::phyto(PatchCollection & p, const Configuration & config, 
                 * (p.phyto[i] / p.turbidity[i]) * Q10;
         p.excretion_phyto[i] = (config.phytoExcretion / HOURS_PER_DAY) * p.phyto[i];
         p.senescence_phyto[i] = (config.phytoSenescence / HOURS_PER_DAY) * p.phyto[i];
-        p.growth_phyto[i] = (p.gross_photo_phyto[i] - p.excretion_phyto[i] -
-                p.respiration_phyto[i] - p.senescence_phyto[i]) * currGrowthRate;
+        p.growth_phyto[i] = p.gross_photo_phyto[i] - p.excretion_phyto[i] -
+                p.respiration_phyto[i] - p.senescence_phyto[i];
     }
 }
 
@@ -356,7 +356,7 @@ void PatchComputation::consumer(PatchCollection & p, const Configuration & confi
     }
 }
 
-void PatchComputation::DOC(PatchCollection & p, const Configuration & config, double currGrowthRate){
+void PatchComputation::DOC(PatchCollection & p, const Configuration & config){
     #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
@@ -382,11 +382,11 @@ void PatchComputation::DOC(PatchCollection & p, const Configuration & config, do
         // *need reference
         p.flocculation[i] = .01 * p.DOC[i];
 
-        p.DOC_growth[i] = (p.macro_exudation[i] + p.micro_death[i] + p.excretion[i]) * currGrowthRate;
+        p.DOC_growth[i] = p.macro_exudation[i] + p.micro_death[i] + p.excretion[i];
     }
 }
 
-void PatchComputation::POC(PatchCollection & p, double currGrowthRate) {
+void PatchComputation::POC(PatchCollection & p) {
     #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
@@ -412,11 +412,11 @@ void PatchComputation::POC(PatchCollection & p, double currGrowthRate) {
                 0.7 + 0.3 * p.peri_senescence[i];
 
         // flocculation, leaching approximation
-        p.POC_growth[i] = (p.flocculation[i] + p.detritus_POC_transfer[i]) * currGrowthRate;
+        p.POC_growth[i] = p.flocculation[i] + p.detritus_POC_transfer[i];
     }
 }
 
-void PatchComputation::detritus(PatchCollection & p, const Configuration & config, double currGrowthRate) {
+void PatchComputation::detritus(PatchCollection & p, const Configuration & config) {
     #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
@@ -450,8 +450,8 @@ void PatchComputation::detritus(PatchCollection & p, const Configuration & confi
 
         p.egestion[i] = config.herbivoreEgestion + p.sedconsumer_egestion[i] + config.consumerEgestion;
 
-        p.detritus_growth[i] = (p.large_death[i] + p.POC_detritus_transfer[i] +
-                p.egestion[i] + p.macro_death[i]) * currGrowthRate;
+        p.detritus_growth[i] = p.large_death[i] + p.POC_detritus_transfer[i] +
+                p.egestion[i] + p.macro_death[i];
     }
 }
 

@@ -3,6 +3,10 @@
 River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
     : p(newConfig,hydroFileDict)
 {
+    growthRates << 0 << 0 << 0 << 0 << 0 << 0 << 0 << 0.07725 << 0.07725 << 0.07725 << 0.17 << 0.17 << 0.24 << 0.24 << 0.24 << 0.24 << 0.45 << 0.45 << 0.45 << 0.45
+        << 0.67 << 0.67 << 0.67 << 0.67 << 0.81 << 0.81 << 0.81 << 0.81 << 1.0 << 1.0 << 1.0 << 1.0 << 0.89 << 0.89 << 0.84 << 0.84 << 0.78 << 0.78 << 0.73 << 0.73
+        << 0.68;
+
     config = newConfig;
 
     currHydroFile = NULL;
@@ -11,6 +15,7 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 
     width = hydroFileDict.getMaxWidth();
     height = hydroFileDict.getMaxHeight();
+
 }
 
 //TODO This function is relatively slow because of many hashtable lookups
@@ -106,6 +111,8 @@ void River::setCurrentWaterTemperature(double newTemp) {
      */
 
     currWaterTemp = newTemp;// - ((newTemp - 17.0) * g.temp_dif);
+
+    currGrowthRate = River::getNewGrowthRate(currWaterTemp);
 }
 
 void River::setCurrentPAR(int newPAR) {
@@ -128,8 +135,13 @@ void River::setCurrentPAR(int newPAR) {
     currPAR = newPAR;// - (int)(newPAR * g.par_dif);
 }
 
-void River::setCurrentGrowthRate(double newRate) {
-    currGrowthRate = newRate;
+int River::getNewGrowthRate(int temp) {
+    if(temp < 0) {
+        return 0;
+    } else if (temp > growthRates.length()) {
+        return 0.68;
+    }
+    return growthRates[temp];
 }
 
 void River::flow(Grid<FlowData> * source, Grid<FlowData> * dest) {
@@ -573,15 +585,15 @@ void River::processPatches() {
     {
         PatchComputation::updatePatches(p, config, currPAR);
         PatchComputation::macro(p, config, currPAR, currWaterTemp, currGrowthRate);
-        PatchComputation::phyto(p, config, currPAR, currWaterTemp, currGrowthRate);
+        PatchComputation::phyto(p, config, currPAR, currWaterTemp);
         PatchComputation::herbivore(p, config);
         PatchComputation::waterDecomp(p, config);
         PatchComputation::sedDecomp(p, config);
         PatchComputation::sedConsumer(p, config);
         PatchComputation::consumer(p, config);
-        PatchComputation::DOC(p, config, currGrowthRate);
-        PatchComputation::POC(p, currGrowthRate);
-        PatchComputation::detritus(p, config, currGrowthRate);
+        PatchComputation::DOC(p, config);
+        PatchComputation::POC(p);
+        PatchComputation::detritus(p, config);
 
         #pragma omp for
         for(int i = 0; i < p.getSize(); i++) {
