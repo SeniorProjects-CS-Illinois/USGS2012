@@ -1,18 +1,26 @@
 #include "status.h"
 
-float Status::getProgress(void){
+float Status::getProgress(void) const {
     return workUnitsProcessed / (float)workUnits;
 }
 
-Status::ModelState Status::getState(void){
+Status::ModelState Status::getState(void) const {
     return currentState;
 }
 
-QString Status::getErrorMessage(void){
+QString Status::getErrorMessage(void) const {
     return errorMessage;
 }
 
-int Status::getTimeElapsed(void){
+QString Status::getMessage(void) const {
+    return message;
+}
+
+void Status::setMessage(QString message) {
+    this->message = message;
+}
+
+int Status::getTimeElapsed(void) const {
     //Convert from milliseconds to seconds before we return.
     if(currentState == RUNNING) {
         return (timeElapsedBeforePauseState + timer.elapsed()) / 1000 ;
@@ -21,15 +29,14 @@ int Status::getTimeElapsed(void){
     }
 }
 
-int Status::getTimeRemaining(void){
-    if( workUnitsProcessed == 0) 
-    {
+int Status::getTimeRemaining(void) const {
+    if( workUnitsProcessed == 0) {
         return INT_MAX;
     }
     return (int)(( (workUnits - workUnitsProcessed) * getTimeElapsed() )/ (float)workUnitsProcessed);
 }
 
-bool Status::hasNewImage(void){
+bool Status::hasNewImage(void) const {
     return newImageExists;
 }
 

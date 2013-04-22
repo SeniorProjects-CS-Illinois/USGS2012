@@ -11,6 +11,7 @@
 #include <QVector2D>
 #include <QVector>
 #include "grid.h"
+#include "constants.h"
 
 class HydroFile {
     public:

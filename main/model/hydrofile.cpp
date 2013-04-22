@@ -89,6 +89,8 @@ void HydroFile::loadFromFile(QString filename) {
 }
 
 bool HydroFile::patchExists(int x, int y) const {
+    if(x >= width || x < 0 || y >= height || y < 0)
+        return false;
     int hashKey = getHashKey(x,y);
     return hydroDataSetIndices.contains(hashKey);
 }
@@ -202,7 +204,7 @@ QImage HydroFile::generateVisualization(int imageCellSize){
                 double endLineI   = (startLineI + imageCellSize);
                 double endLineJ   = (startLineJ + imageCellSize);
 
-                for(double t = 0.0; t < 1.0; t += 1.0/30.0) {
+                for(double t = 0.0; t < 1.0; t += 1.0/PATCH_LENGTH) {
                     int i = (1.0 - t)*startLineI + t*endLineI;
                     int j = (1.0 - t)*startLineJ + t*endLineJ;
 
@@ -221,8 +223,8 @@ QImage HydroFile::generateVisualization(int imageCellSize){
         for(int y = 0; y < height; y++) {
             if(patchExists(x,y) && getDepth(x,y) > 0) {
                 QVector2D cellFlowVector = getVector(x,y);
-                double dx = cellFlowVector.x()* (imageCellSize / 30.0)*60;
-                double dy = cellFlowVector.y()* (imageCellSize / 30.0)*60;
+                double dx = cellFlowVector.x()* (imageCellSize / PATCH_LENGTH)*60;
+                double dy = cellFlowVector.y()* (imageCellSize / PATCH_LENGTH)*60;
                 double cellI = x*imageCellSize;
                 double cellJ = y*imageCellSize;
 

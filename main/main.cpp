@@ -1,13 +1,7 @@
-#include <sys/types.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <QDir>
 
 #include "model/rivermodel.h"
 #include "model/configuration.h"
-#include "model/globals.h"
 
 //TODO: move this function to somewhere more appropriate.
 //Adds a location for the images and csv files.
@@ -22,8 +16,7 @@ void create_output_dirs(void) {
     path.mkpath("./results/images");
 }
 
-int main(int argc, char *argv[]) {
-    initialize_globals();
+int main(void) {
     create_output_dirs();
 
     RiverModel model;

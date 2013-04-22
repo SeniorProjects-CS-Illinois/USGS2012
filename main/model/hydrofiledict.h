@@ -5,6 +5,8 @@
 #include <QString>
 #include <QStringList>
 #include "hydrofile.h"
+#include "carbonflowmap.h"
+#include "hydrodata.h"
 #include "grid.h"
 
 class HydroFileDict
@@ -13,7 +15,7 @@ class HydroFileDict
     public:
 
         /**
-         * @brief Constructor that initializes the unique set of hydrofiles
+         * @brief Constructor that initializes the unique set of hydrofiles and carbonFlowMaps
          *    referenced in the QStringList
          * @param newFilenames A complete list of hydrofiles used in this simulation.
          */
@@ -43,18 +45,18 @@ class HydroFileDict
         ~HydroFileDict();
 
         /**
-         * @brief operator [] Retrieves and stores hydroFile pointers
-         * @param filename A string indicating the hydrofile to access
-         * @return A pointer to the referenced hydrofile
+         * @brief operator [] Retrieves and stores hydroData pointers
+         * @param filename A string indicating the hydrodata to access
+         * @return A pointer to the referenced hydrodata
          */
-        HydroFile * & operator[](const QString filename);
+        HydroData * & operator[](const QString filename);
 
         /**
          * @brief Const version of operator[]
-         * @param filename A string indicating the hydrofile to access
-         * @return A const pointer to the referenced hydrofile
+         * @param filename A string indicating the hydrodata to access
+         * @return A const pointer to the referenced hydrodata
          */
-        const HydroFile * operator[](const QString filename) const;
+        const HydroData * operator[](const QString filename) const;
 
         /**
          * @brief Returns the max width of all the hydrofiles
@@ -76,7 +78,9 @@ class HydroFileDict
 
     private:
         QStringList filenames;
-        QHash<QString, HydroFile *> dict;
+        QHash<QString, HydroData *> dict;
+        int maxWidth;
+        int maxHeight;
 
         /**
          * @brief copy constructor helper
@@ -88,6 +92,18 @@ class HydroFileDict
          * @brief Destructor helper
          */
         void clear();
+
+        /**
+         * @brief computeMaxWidth
+         * @return The max width of all the hydroFiles.
+         */
+        int computeMaxWidth() const;
+
+        /**
+         * @brief computeMaxHeight
+         * @return The max height of all the hydroFiles
+         */
+        int computeMaxHeight() const;
 
 };
 
