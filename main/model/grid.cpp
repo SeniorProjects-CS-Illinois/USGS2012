@@ -1,6 +1,14 @@
 //See header file for documentation.
 
 template <typename T>
+Grid<T>::Grid() {
+    width = 0;
+    height = 0;
+    size = 0;
+    array = NULL;
+}
+
+template <typename T>
 Grid<T>::Grid(std::size_t xDim, std::size_t yDim) {
     width = xDim;
     height = yDim;

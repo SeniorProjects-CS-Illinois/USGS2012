@@ -2,6 +2,8 @@
 #define RIVER_H
 
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 #include <omp.h>
 #include <QColor>
 #include <QDateTime>
@@ -10,24 +12,27 @@
 #include <QImageWriter>
 #include <QMutex>
 #include <QString>
+#include <QTextStream>
 #include <QVector2D>
 
 #include "configuration.h"
 #include "constants.h"
 #include "flowdata.h"
-#include "globals.h"
 #include "hydrofile.h"
 #include "hydrofiledict.h"
 #include "patchcollection.h"
 #include "patchcomputation.h"
 #include "statistics.h"
 
-#include <iostream>
+using std::ofstream;
 using std::cout;
 using std::endl;
 using std::max;
 
-
+/**
+ * @brief The River class os the model's concept of a river.  It provides means to
+ *        make the river flow and output its data.
+ */
 class River {
     public:
 
@@ -43,7 +48,7 @@ class River {
          * @brief Sets the hydromap to use in future calculations
          * @param currHydroFile HydroFile to use
          */
-        void setCurrentHydroFile(HydroFile * newHydroFile);
+        void setCurrentHydroData(HydroData * newHydroData);
 
         /**
          * @brief Sets the current water temp to use in future calculations
@@ -79,7 +84,7 @@ class River {
          * @param outputPath Location to save the file
          * @param filenamePrefix Prefix for filename
          */
-        int saveCSV(QString displayedStock, int daysElapsed) const;
+        void saveCSV(QString displayedStock, int daysElapsed) const;
 
         /**
          * @brief Produces a visualization of the river at the current point in the
@@ -108,8 +113,6 @@ class River {
         //Temp functions, will be replaced in move to carbonFlowMap
         void copyFlowData(Grid<FlowData> & flowData);
         void storeFlowData(Grid<FlowData> & flowData);
-        bool is_calc_nan(int x, int y, double move_factor, Grid<FlowData> & dst);
-        double getMaxTimestep();
         bool is_valid_patch(int x, int y);
 
         /**
@@ -127,7 +130,8 @@ class River {
         PatchCollection p;
         Configuration config;
 
-        HydroFile * currHydroFile;
+        //Points to an external hydroData object that exists for the duration of the simulation
+        HydroData * currHydroData;
         double currWaterTemp;
         int currPAR;
 

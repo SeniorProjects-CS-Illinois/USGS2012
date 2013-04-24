@@ -1,7 +1,6 @@
 #include <QDir>
 
 #include "model/rivermodel.h"
-#include "model/globals.h"
 
 #include <QtWidgets/QApplication>
 #include "view/mainwindow.h"
@@ -22,7 +21,6 @@ void create_output_dirs(void) {
 
 int main(int argc, char *argv[])
 {
-    initialize_globals();
     create_output_dirs();
 
     QApplication a(argc, argv);

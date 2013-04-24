@@ -6,8 +6,13 @@
 
 #define NUM_IMAGES 11
 
-#define PATCH_LENGTH 30
+#define PATCH_LENGTH 30.0
 #define PATCH_AREA (PATCH_LENGTH * PATCH_LENGTH)
+
+//The following constant MUST be a factor of 60
+#define ITERATIONS_TO_PRECOMPUTE_FLOWS 4
+#define ITERATIONS_TO_FLOW_RIVER (60 / ITERATIONS_TO_PRECOMPUTE_FLOWS)
+#define PRECOMPUTED_FLOW_TRIM_THRESHOLD 0.0001
 
 //TODO find out if there is a better name for this...
 #define THETA 1.072

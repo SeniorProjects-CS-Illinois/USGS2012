@@ -10,7 +10,7 @@
 template <typename T>
 class Grid {
     public:
-        Grid(){}
+        Grid();
 
         /**
          * @brief Grid copy constructor
