@@ -13,7 +13,7 @@
 namespace PatchComputation {
 
     void updatePatches(PatchCollection & p, const Configuration & config, int currPAR);
-    void macro(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp);
+    void macro(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp, double currGrowthRate);
     void phyto(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp);
     void herbivore(PatchCollection & p, const Configuration & config);
     void waterDecomp(PatchCollection & p, const Configuration & config);

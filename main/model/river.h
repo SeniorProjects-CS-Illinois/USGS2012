@@ -63,6 +63,12 @@ class River {
         void setCurrentPAR(int newPAR);
 
         /**
+         * @brief gets the current growth rate to use in future calculations
+         * @param temp used as index into array that holds growth rates.
+         */
+        int getNewGrowthRate(int temp);
+
+        /**
          * @brief Iterates over the river and performs calculations on each patch
          */
         void processPatches();
@@ -128,6 +134,10 @@ class River {
         HydroData * currHydroData;
         double currWaterTemp;
         int currPAR;
+
+        double currGrowthRate;
+
+        QList<double> growthRates;
 
         int width;
         int height;

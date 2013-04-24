@@ -33,7 +33,7 @@ void PatchComputation::updatePatches(PatchCollection & p, const Configuration & 
     }
 }
 
-void PatchComputation::macro(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp) {
+void PatchComputation::macro(PatchCollection & p, const Configuration & config, int currPAR, int currWaterTemp, double currGrowthRate) {
     #pragma omp for
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
@@ -71,8 +71,8 @@ void PatchComputation::macro(PatchCollection & p, const Configuration & config, 
         p.senescence_macro[i] = (config.macroSenescence / HOURS_PER_DAY)
                 * (p.macro[i] / HOURS_PER_DAY);
 
-        p.growth_macro[i] = p.gross_photo_macro[i] - p.respiration_macro[i]
-                - p.senescence_macro[i] - p.scouring_macro[i];
+        p.growth_macro[i] = (p.gross_photo_macro[i] - p.respiration_macro[i]
+                - p.senescence_macro[i] - p.scouring_macro[i]) * currGrowthRate;
 
         p.macro[i] += p.growth_macro[i];
 
