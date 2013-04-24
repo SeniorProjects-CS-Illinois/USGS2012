@@ -5,20 +5,15 @@ void PatchComputation::updatePatches(PatchCollection & p, const Configuration & 
     for(int i = 0; i < p.getSize(); i++) {
         //Only process patches if they currently contain water
         if(!p.hasWater[i]) {
+            //TODO: Augment detritus before continuing.
+            // (Once done, remove land->water detritus augmentation from river.cpp)
             continue;
         }
 
-
-
         // From 2011 team's update_patches function
 
-        p.turbidity[i] = ( .29587 + config.tss)
-                + (config.kPhyto * (p.phyto[i]/ 900.0) )
-                + (config.kMacro * (p.macro[i] / 900.0) );
-
-        if(p.turbidity[i] < 0.0){
-            p.turbidity[i] = 0.01;
-        }
+        p.turbidity[i] = TURBIDITY_YINTERCEPT + (TURBIDITY_SLOPE * config.tss);
+        Utility::boundLower(p.turbidity[i], 0.01);
 
         //the amount of light that reaches the bottom of a water column
         p.bottom_light[i] = currPAR
