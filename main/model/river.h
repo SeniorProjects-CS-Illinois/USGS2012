@@ -84,7 +84,7 @@ class River {
          * @param outputPath Location to save the file
          * @param filenamePrefix Prefix for filename
          */
-        void saveCSV(QString displayedStock, int daysElapsed) const;
+        void saveCSV(QString displayedStock, int currentDay, QString currHydroFileName) const;
 
         /**
          * @brief Produces a visualization of the river at the current point in the
