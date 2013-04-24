@@ -267,6 +267,7 @@ void RiverModel::initializePARValues(const Configuration &config) {
     parFile.close();
 }
 
+
 void RiverModel::initializeTempGrids(HydroFileDict &hydroFileDict){
     int width = hydroFileDict.getMaxWidth();
     int height = hydroFileDict.getMaxHeight();
