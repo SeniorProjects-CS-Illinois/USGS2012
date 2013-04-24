@@ -90,22 +90,8 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
 }
 
 void River::setCurrentWaterTemperature(double newTemp) {
-    /*
-     * TODO I don't know what this calculation is doing...
-     * Is it really the "temperature" anymore after this?
-     * If not, my member variable's name should change. -ECP
-     *
-     * Edit: temp_dif is only assigned a value of 0...  Removing for now. Something
-     * to ask Kevin I suppose... -ECP
-     *
-     * Here is original 2011 team's function:
-     *
-     * g.temperature_index++;
-     * g.temperature = g.temperature_data[g.temperature_index];
-     * g.temperature = g.temperature - ((g.temperature - 17.0) * g.temp_dif);
-     */
 
-    currWaterTemp = newTemp;// - ((newTemp - 17.0) * g.temp_dif);
+    currWaterTemp = newTemp;
 
     currGrowthRate = River::getNewGrowthRate(currWaterTemp);
 }
@@ -117,7 +103,7 @@ void River::setCurrentPAR(int newPAR) {
 int River::getNewGrowthRate(int temp) {
     if(temp < 0) {
         return 0;
-    } else if (temp == growthRates.length()) {
+    } else if (temp >= growthRates.length()) {
         return 0.68;
     }
     return growthRates[temp];
