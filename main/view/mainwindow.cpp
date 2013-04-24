@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(&progressThread, SIGNAL(progressTimeUpdate(int, int)), this, SLOT(progressTimeUpdate(int, int)));
     connect(&progressThread, SIGNAL(finished()), this, SLOT(finished()));
     connect(&progressThread, SIGNAL(imageUpdate(QImage)), this, SLOT(imageUpdate(QImage)));
+    connect(&progressThread, SIGNAL(statusMessageUpdate(QString)), this, SLOT(statusMessageUpdate(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -271,6 +272,11 @@ void MainWindow::imageUpdate(QImage const & stockImage) const
 
     // show image
     ui->labelImageOutput->show();
+}
+
+void MainWindow::statusMessageUpdate(const QString & message) const
+{
+    ui->labelModelStatusMessage->setText(message);
 }
 
 /* END public slots */

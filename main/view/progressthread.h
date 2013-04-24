@@ -14,8 +14,9 @@ public:
     /**
      * Constructor for this thread object. Takes in parent
      * for QT compliance and RiverModel to be run.
+     * @param interval sleep time in milliseconds
      */
-    explicit ProgressThread(QObject* parent = NULL, RiverModel* rModel = NULL, unsigned long interval = 1L);
+    explicit ProgressThread(QObject* parent = NULL, RiverModel* rModel = NULL, unsigned long interval = 100L);
 
     /**
      * Set the model for this thread to run.
@@ -30,22 +31,32 @@ public:
 
 signals:
     /**
-     * Tells the GUI of current percentage completed.
+     * @brief Tells the GUI of current percentage completed.
+     * @param level the approximate percentage complete.
      */
     void progressPercentUpdate(int level);
 
     /**
-     * Tells the GUI of current time elapsed/remaining.
+     * @brief Tells the GUI of current time elapsed/remaining.
+     * @param elapsed the time that has elapsed thus far.
+     * @param remaining the approximate amount of time remaining.
      */
     void progressTimeUpdate(int elapsed, int remaining);
 
     /**
-     * Tells the GUI of most recent image computed.
+     * @brief Tells the GUI of most recent image computed.
+     * @param stockImage the most recent image computed.
      */
     void imageUpdate(QImage stockImage);
 
     /**
-     * Tells the GUI that the model is done. Cuurently
+     * @brief Tells the GUI of status message of the model.
+     * @param message the current status for the model.
+     */
+    void statusMessageUpdate(QString message);
+
+    /**
+     * @brief Tells the GUI that the model is done. Cuurently
      * this just re-enables the run button.
      */
     void finished();
@@ -56,7 +67,7 @@ public slots:
 private:
     RiverModel* model;
 
-    unsigned long sleepTimeSeconds;
+    unsigned long sleepTimeMilliseconds;
 
     /**
      * Emit the signals involved in progress updates.

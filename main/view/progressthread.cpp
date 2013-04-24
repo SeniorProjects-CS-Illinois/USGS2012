@@ -3,7 +3,7 @@
 ProgressThread::ProgressThread(QObject* parent, RiverModel *rModel, unsigned long interval) :
     QThread(parent),
     model(rModel), // intentional shallow copy
-    sleepTimeSeconds(interval)
+    sleepTimeMilliseconds(interval)
 {
     // No work needed in constructor
 }
@@ -18,6 +18,7 @@ void ProgressThread::run()
     {
         // get the current status
         Status currentStatus = model->getStatus();
+        emit statusMessageUpdate(currentStatus.getMessage());
 
         // see if there is a new image to be displayed
         if (currentStatus.hasNewImage())
@@ -33,8 +34,6 @@ void ProgressThread::run()
             percentageDone = (int)(100*currentStatus.getProgress());
             timeElapsed = currentStatus.getTimeElapsed();
             timeRemaining = currentStatus.getTimeRemaining();
-
-            // emit progress signals to GUI
             emitProgress(percentageDone, timeElapsed, timeRemaining);
         }
 
@@ -45,7 +44,7 @@ void ProgressThread::run()
         }
 
         // sleep for now so it doesn't spend too much time in this thread
-        sleep(sleepTimeSeconds);
+        msleep(sleepTimeMilliseconds);
     }
 
     // fix the values for the progress
