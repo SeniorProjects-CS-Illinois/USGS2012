@@ -138,7 +138,7 @@ void River::setCurrentPAR(int newPAR) {
 int River::getNewGrowthRate(int temp) {
     if(temp < 0) {
         return 0;
-    } else if (temp > growthRates.length()) {
+    } else if (temp == growthRates.length()) {
         return 0.68;
     }
     return growthRates[temp];
