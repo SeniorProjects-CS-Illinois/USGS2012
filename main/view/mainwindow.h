@@ -303,8 +303,8 @@ public:
     QVector<double> getWaterdecompInput() const;
     QVector<double> getPhytoInput() const;
 
-    QVector<int> getMinFlow() const;
-    QVector<int> getMaxFlow() const;
+    QVector<int> getMinFlowBounds() const;
+    QVector<int> getMaxFlowBounds() const;
 
     /* SETTERS */
 

@@ -608,7 +608,7 @@ QVector<double> MainWindow::getPhytoInput() const
     return input;
 }
 
-QVector<int> MainWindow::getMinFlow() const
+QVector<int> MainWindow::getMinFlowBounds() const
 {
     QVector<int> flow;
     flow.append(ui->lineEditMinFlow1->text().toInt());
@@ -624,7 +624,7 @@ QVector<int> MainWindow::getMinFlow() const
     return flow;
 }
 
-QVector<int> MainWindow::getMaxFlow() const
+QVector<int> MainWindow::getMaxFlowBounds() const
 {
     QVector<int> flow;
     flow.append(ui->lineEditMaxFlow1->text().toInt());
@@ -912,8 +912,8 @@ void MainWindow::getAllInput(Configuration & c) const
     c.docInput = getDocInput();
     c.waterdecompInput = getWaterdecompInput();
     c.phytoInput = getPhytoInput();
-    c.minFlow = getMinFlow();
-    c.maxFlow = getMaxFlow();
+    c.minFlow = getMinFlowBounds();
+    c.maxFlow = getMaxFlowBounds();
     c.parFile = getPARFile();
     c.tempFile = getTempFile();
     c.timestep = getTimestep();
@@ -1251,7 +1251,7 @@ void MainWindow::dischargeToHydro(const QString & file)
     {
         std::getline(fStream, str);
         int hydro = atoi(str.c_str());
-        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBasePath);
+        QString hydroFile = HydroMaps::intToHydroFile(hydro, hydroMapBasePath, getMinFlowBounds(), getMaxFlowBounds());
         addHydroMap(hydroFile, 1, true, false);
     }
     fStream.close();
