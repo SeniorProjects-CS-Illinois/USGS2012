@@ -163,9 +163,9 @@ void RiverModel::setWhichStock(QString stockName)
 
 void RiverModel::printHourlyMessage(int currentDay, int hourOfDay) {
     QString message = "Flowing River: Day ";
-    message.append(currentDay);
+    message.append(QString::number(currentDay));
     message.append(" Hour: ");
-    message.append(hourOfDay);
+    message.append(QString::number(hourOfDay));
 
     setStatusMessage(message);
     cout << "Day: " << currentDay << " - Hour: " << hourOfDay \

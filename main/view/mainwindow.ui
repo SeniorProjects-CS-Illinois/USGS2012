@@ -6041,6 +6041,22 @@
        </property>
       </item>
      </widget>
+     <widget class="QLabel" name="labelModelStatusMessage">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>485</y>
+        <width>600</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Model Status</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

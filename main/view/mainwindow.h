@@ -218,6 +218,12 @@ public slots:
     void imageUpdate(const QImage & stockImage) const;
 
     /**
+     * @brief Update the message for the status of the model.
+     * @param message the message to display
+     */
+    void statusMessageUpdate(const QString & message) const;
+
+    /**
      * @brief Save the current configuration to a file.
      */
     void saveConfiguration();
