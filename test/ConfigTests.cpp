@@ -7,8 +7,8 @@ void ConfigTests::configTest()
     config.adjacent = false;
 //    config.numStocks = 1;
     config.numHydroMaps = 2;
-    config.hydroMaps.append("10k.txt");
-    config.hydroMaps.append("20k.txt");
+    config.hydroMapsSelected.append("10k.txt");
+    config.hydroMapsSelected.append("20k.txt");
     config.daysToRun.append(10);
     config.daysToRun.append(20);
     config.outputFreq = 3;
@@ -180,9 +180,9 @@ void ConfigTests::configTest()
 //    QCOMPARE(config2.numStocks, 1);
 
     QCOMPARE(config2.numHydroMaps, (uint16_t)2);
-    QCOMPARE(config2.hydroMaps.size(), 2);
-    QCOMPARE(config2.hydroMaps[0], QString("10k.txt"));
-    QCOMPARE(config2.hydroMaps[1], QString("20k.txt"));
+    QCOMPARE(config2.hydroMapsSelected.size(), 2);
+    QCOMPARE(config2.hydroMapsSelected[0], QString("10k.txt"));
+    QCOMPARE(config2.hydroMapsSelected[1], QString("20k.txt"));
     QCOMPARE(config2.daysToRun.size(), 2);
     QCOMPARE(config2.daysToRun[0], (uint16_t)10);
     QCOMPARE(config2.daysToRun[1], (uint16_t)20);
