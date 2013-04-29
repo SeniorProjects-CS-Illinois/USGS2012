@@ -1619,26 +1619,7 @@
        <rect>
         <x>370</x>
         <y>50</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>7016.58</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc1">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>50</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1657,7 +1638,7 @@
        <rect>
         <x>475</x>
         <y>50</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1676,7 +1657,7 @@
        <rect>
         <x>580</x>
         <y>50</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1695,64 +1676,7 @@
        <rect>
         <x>685</x>
         <y>50</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>23937.83</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc1">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>50</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>5923.00</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp1">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>50</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>2536.39</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto1">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>50</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1771,7 +1695,7 @@
        <rect>
         <x>580</x>
         <y>75</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1790,64 +1714,7 @@
        <rect>
         <x>370</x>
         <y>75</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>13278.62</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp2">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>75</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>6190.40</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc2">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>75</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>11694.07</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc2">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>75</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1866,26 +1733,7 @@
        <rect>
         <x>685</x>
         <y>75</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>33332.74</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto2">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>75</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1904,7 +1752,7 @@
        <rect>
         <x>475</x>
         <y>75</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1923,7 +1771,7 @@
        <rect>
         <x>580</x>
         <y>100</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -1942,64 +1790,7 @@
        <rect>
         <x>370</x>
         <y>100</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>25129.33</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp3">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>100</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>15108.54</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc3">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>100</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>23088.21</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc3">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>100</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2018,26 +1809,7 @@
        <rect>
         <x>685</x>
         <y>100</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>46414.88</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto3">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>100</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2056,7 +1828,7 @@
        <rect>
         <x>475</x>
         <y>100</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2075,7 +1847,7 @@
        <rect>
         <x>580</x>
         <y>125</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2094,64 +1866,7 @@
        <rect>
         <x>370</x>
         <y>125</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>47556.36</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp4">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>125</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>36874.49</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc4">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>125</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>45584.25</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc4">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>125</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2170,26 +1885,7 @@
        <rect>
         <x>685</x>
         <y>125</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>64631.39</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto4">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>125</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2208,7 +1904,7 @@
        <rect>
         <x>475</x>
         <y>125</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2227,7 +1923,7 @@
        <rect>
         <x>580</x>
         <y>150</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2246,64 +1942,7 @@
        <rect>
         <x>370</x>
         <y>150</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>89998.73</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp5">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>150</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>89997.33</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc5">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>150</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>89999.34</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc5">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>150</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2322,26 +1961,7 @@
        <rect>
         <x>685</x>
         <y>150</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>89997.35</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto5">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>150</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2360,7 +1980,7 @@
        <rect>
         <x>475</x>
         <y>150</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2379,7 +1999,7 @@
        <rect>
         <x>580</x>
         <y>175</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2398,64 +2018,7 @@
        <rect>
         <x>370</x>
         <y>175</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>170319.41</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp6">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>175</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>219651.03</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc6">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>175</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>177690.33</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc6">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>175</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2474,26 +2037,7 @@
        <rect>
         <x>685</x>
         <y>175</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>125318.71</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto6">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>175</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2512,7 +2056,7 @@
        <rect>
         <x>475</x>
         <y>175</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2531,7 +2075,7 @@
        <rect>
         <x>580</x>
         <y>200</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2550,64 +2094,7 @@
        <rect>
         <x>370</x>
         <y>200</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>322323.45</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp7">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>200</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>536088.93</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc7">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>200</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>350823.16</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc7">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>200</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2626,26 +2113,7 @@
        <rect>
         <x>685</x>
         <y>200</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>174502.69</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto7">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>200</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2664,7 +2132,7 @@
        <rect>
         <x>475</x>
         <y>200</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2683,7 +2151,7 @@
        <rect>
         <x>580</x>
         <y>225</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2702,64 +2170,7 @@
        <rect>
         <x>370</x>
         <y>225</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>609985.73</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp8">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>225</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>1308399.68</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc8">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>225</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>692648.25</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc8">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>225</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2778,26 +2189,7 @@
        <rect>
         <x>685</x>
         <y>225</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>242989.97</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto8">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>225</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2816,7 +2208,7 @@
        <rect>
         <x>475</x>
         <y>225</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2835,7 +2227,7 @@
        <rect>
         <x>580</x>
         <y>250</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2854,64 +2246,7 @@
        <rect>
         <x>370</x>
         <y>250</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>1154376.39</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp9">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>250</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>3193331.65</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc9">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>250</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>1367531.12</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc9">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>250</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2930,26 +2265,7 @@
        <rect>
         <x>685</x>
         <y>250</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>338356.53</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto9">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>250</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2968,7 +2284,7 @@
        <rect>
         <x>475</x>
         <y>250</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -2987,7 +2303,7 @@
        <rect>
         <x>580</x>
         <y>275</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -3006,64 +2322,7 @@
        <rect>
         <x>370</x>
         <y>275</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>2184616.45</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputWaterdecomp10">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>275</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>7793770.61</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputDoc10">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>275</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>2699987.14</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPoc10">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>275</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -3082,26 +2341,7 @@
        <rect>
         <x>685</x>
         <y>275</y>
-        <width>50</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>471151.72</string>
-      </property>
-      <property name="cursorPosition">
-       <number>0</number>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="lineEditOutputPhyto10">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>275</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -3120,7 +2360,7 @@
        <rect>
         <x>475</x>
         <y>275</y>
-        <width>50</width>
+        <width>75</width>
         <height>25</height>
        </rect>
       </property>
@@ -3134,12 +2374,12 @@
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelIoPoc">
+     <widget class="QLabel" name="labelInputPoc">
       <property name="geometry">
        <rect>
         <x>370</x>
-        <y>10</y>
-        <width>100</width>
+        <y>30</y>
+        <width>75</width>
         <height>15</height>
        </rect>
       </property>
@@ -3150,44 +2390,12 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelInputPoc">
-      <property name="geometry">
-       <rect>
-        <x>370</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Input</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelOutputPoc">
-      <property name="geometry">
-       <rect>
-        <x>420</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Output</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelIoDoc">
+     <widget class="QLabel" name="labelInputDoc">
       <property name="geometry">
        <rect>
         <x>475</x>
-        <y>10</y>
-        <width>100</width>
+        <y>30</y>
+        <width>75</width>
         <height>15</height>
        </rect>
       </property>
@@ -3198,44 +2406,12 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelInputDoc">
-      <property name="geometry">
-       <rect>
-        <x>475</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Input</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelOutputDoc">
-      <property name="geometry">
-       <rect>
-        <x>525</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Output</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelIoWaterdecomp">
+     <widget class="QLabel" name="labelInputWaterdecomp">
       <property name="geometry">
        <rect>
         <x>580</x>
-        <y>10</y>
-        <width>100</width>
+        <y>30</y>
+        <width>75</width>
         <height>15</height>
        </rect>
       </property>
@@ -3246,44 +2422,12 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelInputWaterdecomp">
-      <property name="geometry">
-       <rect>
-        <x>580</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Input</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelOutputWaterdecomp">
-      <property name="geometry">
-       <rect>
-        <x>630</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Output</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelIoPhyto">
+     <widget class="QLabel" name="labelInputPhyto">
       <property name="geometry">
        <rect>
         <x>685</x>
-        <y>10</y>
-        <width>100</width>
+        <y>30</y>
+        <width>75</width>
         <height>15</height>
        </rect>
       </property>
@@ -3294,33 +2438,17 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="labelInputPhyto">
+     <widget class="QLabel" name="labelInput">
       <property name="geometry">
        <rect>
-        <x>685</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
+        <x>370</x>
+        <y>10</y>
+        <width>390</width>
+        <height>13</height>
        </rect>
       </property>
       <property name="text">
        <string>Input</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-     <widget class="QLabel" name="labelOutputPhyto">
-      <property name="geometry">
-       <rect>
-        <x>735</x>
-        <y>30</y>
-        <width>50</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Output</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>

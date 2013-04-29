@@ -8,6 +8,8 @@
 #include <fstream>
 #include <string>
 
+#define NUM_UNIQUE_HYDRO_MAPS 10
+
 class Configuration
 {
 
@@ -16,12 +18,17 @@ class Configuration
   *             Item                            (type)
   *---------------------------------------------------------
   *     Adjacent cells                          (bool)
-  *     Waterdecomp stock selected              (bool)
   *     Temperature file name                   (char*)
   *     PAR file name                           (char*)
   *     Number of hydro maps                    (int)
   *     Hydro Map file names (one per line)     (char*)
   *     Days to Run (one per line)              (int)
+  *     POC input values (one per line)         (float)
+  *     DOC input values (one per line)         (float)
+  *     Waterdecomp input values (one per line) (float)
+  *     Phyto input values (one per line)       (float)
+  *     Min flow for discharge (one per line)   (int)
+  *     Max flow for discharge (one per line)   (int)
   *     Output frequency                        (int)
   *     Timestep                                (int)
   *     TSS                                     (float)
@@ -144,7 +151,15 @@ public:
 
     QString tempFile;
     QString parFile;
-    QVector<QString> hydroMaps;
+    QVector<QString> hydroMapsSelected;
+
+    QVector<double> pocInput;
+    QVector<double> docInput;
+    QVector<double> waterdecompInput;
+    QVector<double> phytoInput;
+
+    QVector<int> minFlow;
+    QVector<int> maxFlow;
 
     uint8_t numStocks;
     uint16_t numHydroMaps;
@@ -269,12 +284,17 @@ private:
     /**
      * @brief Read the next line of the file as an integer.
      */
-    uint16_t nextInt(std::ifstream & file, std::string & str);
+    int nextInt(std::ifstream & file, std::string & str);
 
     /**
      * @brief Read the next line of the file as a float.
      */
     float nextFloat(std::ifstream & file, std::string & str);
+
+    /**
+     * @brief Read the next line of the file as a double.
+     */
+    double nextDouble(std::ifstream & file, std::string & str);
 
     /**
      * @brief Read the next line of the file as a string.

@@ -73,9 +73,9 @@ void RiverModel::run() {
     statusMutex.unlock();
 
     //Get a hydrofile to process
-    for (int hydroIndex = 0; hydroIndex < modelConfig.hydroMaps.size(); hydroIndex++) {
+    for (int hydroIndex = 0; hydroIndex < modelConfig.hydroMapsSelected.size(); hydroIndex++) {
         //NEW HYDROFILE
-        QString hydroFileName = modelConfig.hydroMaps[hydroIndex];
+        QString hydroFileName = modelConfig.hydroMapsSelected[hydroIndex];
         int daysToRunHydroFile = modelConfig.daysToRun[hydroIndex];
 
         HydroData * currHydroData = hydroFileDict[hydroFileName];
@@ -228,8 +228,8 @@ void RiverModel::initializeStockNames() {
 void RiverModel::initializeHydroMaps(const Configuration &config) {
     cout << "LOADING HYDROFILES" << endl;
     QStringList hydroFileNames;
-    for(int i = 0; i < config.hydroMaps.size(); i++) {
-        hydroFileNames.append(config.hydroMaps[i]);
+    for(int i = 0; i < config.hydroMapsSelected.size(); i++) {
+        hydroFileNames.append(config.hydroMapsSelected[i]);
     }
     hydroFileDict = HydroFileDict(hydroFileNames);
 }

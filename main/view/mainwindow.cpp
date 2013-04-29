@@ -33,9 +33,9 @@ MainWindow::~MainWindow()
 void MainWindow::selectHydroMapClicked()
 {
     // if the currently selected hydro map was not added, remove it
-    if (uiConfig.hydroMaps.size() != uiConfig.daysToRun.size())
+    if (uiConfig.hydroMapsSelected.size() != uiConfig.daysToRun.size())
     {
-        uiConfig.hydroMaps.pop_back();
+        uiConfig.hydroMapsSelected.pop_back();
     }
 
     // open prompt to select file
@@ -45,7 +45,7 @@ void MainWindow::selectHydroMapClicked()
     // make sure a hydro map file was selected
     if (!selected.isEmpty())
     {
-        uiConfig.hydroMaps.append(selected);
+        uiConfig.hydroMapsSelected.append(selected);
         QString filename = Files::stripFile(selected);
         ui->labelHydroMap->setText(filename);
         ui->labelHydroMap->setToolTip(filename);
@@ -76,7 +76,7 @@ void MainWindow::addHydroMapClicked()
 void MainWindow::removeHydroMapClicked()
 {
     QListWidget* list = ui->listWidgetHydroMap;
-    QMutableVectorIterator<QString> itHydro(uiConfig.hydroMaps);
+    QMutableVectorIterator<QString> itHydro(uiConfig.hydroMapsSelected);
     QMutableVectorIterator<uint16_t> itDays(uiConfig.daysToRun);
     bool anyRemoved = false;
     size_t size = list->count();
@@ -484,7 +484,9 @@ void MainWindow::loadConfiguration(QString const & file)
     // files
     setTempFile(conf.tempFile);
     setPARFile(conf.parFile);
-    setHydroMaps(conf.hydroMaps, conf.daysToRun, conf.numHydroMaps);
+    setHydroMaps(conf.hydroMapsSelected, conf.daysToRun, conf.numHydroMaps);
+    setInputs(conf.pocInput, conf.docInput, conf.waterdecompInput, conf.phytoInput);
+    setFlows(conf.minFlow, conf.maxFlow);
 }
 
 /* END private slots */
@@ -496,7 +498,7 @@ bool MainWindow::getAdjacent() const { return ui->checkBoxAdjacentCells->isCheck
 
 uint8_t MainWindow::getOutputFreq() const { return ui->lineEditOutputFreq->text().toInt(); }
 uint8_t MainWindow::getTimestep() const { return ui->horizontalSliderTimestep->value(); }
-uint16_t MainWindow::getNumHydroMaps() const { return uiConfig.hydroMaps.size(); }
+uint16_t MainWindow::getNumHydroMaps() const { return uiConfig.hydroMapsSelected.size(); }
 
 float MainWindow::getTSS() const { return ui->lineEditTSS->text().toFloat(); }
 float MainWindow::getKPhyto() const { return ui->lineEditKPhyto->text().toFloat(); }
@@ -600,7 +602,103 @@ QString MainWindow::getTempFile() const { return uiConfig.tempFile; }
 QString MainWindow::getPARFile() const { return uiConfig.parFile; }
 
 QVector<uint16_t> MainWindow::getDaysToRun() const { return uiConfig.daysToRun; }
-QVector<QString> MainWindow::getHydroMaps() const { return uiConfig.hydroMaps; }
+QVector<QString> MainWindow::getHydroMaps() const { return uiConfig.hydroMapsSelected; }
+
+QVector<double> MainWindow::getPocInput() const
+{
+    QVector<double> input;
+    input.append(ui->lineEditInputPoc1->text().toDouble());
+    input.append(ui->lineEditInputPoc2->text().toDouble());
+    input.append(ui->lineEditInputPoc3->text().toDouble());
+    input.append(ui->lineEditInputPoc4->text().toDouble());
+    input.append(ui->lineEditInputPoc5->text().toDouble());
+    input.append(ui->lineEditInputPoc6->text().toDouble());
+    input.append(ui->lineEditInputPoc7->text().toDouble());
+    input.append(ui->lineEditInputPoc8->text().toDouble());
+    input.append(ui->lineEditInputPoc9->text().toDouble());
+    input.append(ui->lineEditInputPoc10->text().toDouble());
+    return input;
+}
+
+QVector<double> MainWindow::getDocInput() const
+{
+    QVector<double> input;
+    input.append(ui->lineEditInputDoc1->text().toDouble());
+    input.append(ui->lineEditInputDoc2->text().toDouble());
+    input.append(ui->lineEditInputDoc3->text().toDouble());
+    input.append(ui->lineEditInputDoc4->text().toDouble());
+    input.append(ui->lineEditInputDoc5->text().toDouble());
+    input.append(ui->lineEditInputDoc6->text().toDouble());
+    input.append(ui->lineEditInputDoc7->text().toDouble());
+    input.append(ui->lineEditInputDoc8->text().toDouble());
+    input.append(ui->lineEditInputDoc9->text().toDouble());
+    input.append(ui->lineEditInputDoc10->text().toDouble());
+    return input;
+}
+
+QVector<double> MainWindow::getWaterdecompInput() const
+{
+    QVector<double> input;
+    input.append(ui->lineEditInputWaterdecomp1->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp2->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp3->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp4->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp5->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp6->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp7->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp8->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp9->text().toDouble());
+    input.append(ui->lineEditInputWaterdecomp10->text().toDouble());
+    return input;
+}
+
+QVector<double> MainWindow::getPhytoInput() const
+{
+    QVector<double> input;
+    input.append(ui->lineEditInputPhyto1->text().toDouble());
+    input.append(ui->lineEditInputPhyto2->text().toDouble());
+    input.append(ui->lineEditInputPhyto3->text().toDouble());
+    input.append(ui->lineEditInputPhyto4->text().toDouble());
+    input.append(ui->lineEditInputPhyto5->text().toDouble());
+    input.append(ui->lineEditInputPhyto6->text().toDouble());
+    input.append(ui->lineEditInputPhyto7->text().toDouble());
+    input.append(ui->lineEditInputPhyto8->text().toDouble());
+    input.append(ui->lineEditInputPhyto9->text().toDouble());
+    input.append(ui->lineEditInputPhyto10->text().toDouble());
+    return input;
+}
+
+QVector<int> MainWindow::getMinFlow() const
+{
+    QVector<int> flow;
+    flow.append(ui->lineEditMinFlow1->text().toInt());
+    flow.append(ui->lineEditMinFlow2->text().toInt());
+    flow.append(ui->lineEditMinFlow3->text().toInt());
+    flow.append(ui->lineEditMinFlow4->text().toInt());
+    flow.append(ui->lineEditMinFlow5->text().toInt());
+    flow.append(ui->lineEditMinFlow6->text().toInt());
+    flow.append(ui->lineEditMinFlow7->text().toInt());
+    flow.append(ui->lineEditMinFlow8->text().toInt());
+    flow.append(ui->lineEditMinFlow9->text().toInt());
+    flow.append(ui->lineEditMinFlow10->text().toInt());
+    return flow;
+}
+
+QVector<int> MainWindow::getMaxFlow() const
+{
+    QVector<int> flow;
+    flow.append(ui->lineEditMaxFlow1->text().toInt());
+    flow.append(ui->lineEditMaxFlow2->text().toInt());
+    flow.append(ui->lineEditMaxFlow3->text().toInt());
+    flow.append(ui->lineEditMaxFlow4->text().toInt());
+    flow.append(ui->lineEditMaxFlow5->text().toInt());
+    flow.append(ui->lineEditMaxFlow6->text().toInt());
+    flow.append(ui->lineEditMaxFlow7->text().toInt());
+    flow.append(ui->lineEditMaxFlow8->text().toInt());
+    flow.append(ui->lineEditMaxFlow9->text().toInt());
+    flow.append(ui->lineEditMaxFlow10->text().toInt());
+    return flow;
+}
 
 
 /* SETTERS */
@@ -733,6 +831,85 @@ void MainWindow::setHydroMaps(const QVector<QString> & filenames, const QVector<
     }
 }
 
+void MainWindow::setInputs(const QVector<double> & poc, const QVector<double> & doc,
+                           const QVector<double> & waterdecomp, const QVector<double> & phyto)
+{
+    // POC
+    ui->lineEditInputPoc1->setText(QString("%1").arg(poc[0], 0, 'f', 2));
+    ui->lineEditInputPoc2->setText(QString("%1").arg(poc[1], 0, 'f', 2));
+    ui->lineEditInputPoc3->setText(QString("%1").arg(poc[2], 0, 'f', 2));
+    ui->lineEditInputPoc4->setText(QString("%1").arg(poc[3], 0, 'f', 2));
+    ui->lineEditInputPoc5->setText(QString("%1").arg(poc[4], 0, 'f', 2));
+    ui->lineEditInputPoc6->setText(QString("%1").arg(poc[5], 0, 'f', 2));
+    ui->lineEditInputPoc7->setText(QString("%1").arg(poc[6], 0, 'f', 2));
+    ui->lineEditInputPoc8->setText(QString("%1").arg(poc[7], 0, 'f', 2));
+    ui->lineEditInputPoc9->setText(QString("%1").arg(poc[8], 0, 'f', 2));
+    ui->lineEditInputPoc10->setText(QString("%1").arg(poc[9], 0, 'f', 2));
+
+    // DOC
+    ui->lineEditInputDoc1->setText(QString::number(doc[0], 'f', 2));
+    ui->lineEditInputDoc2->setText(QString::number(doc[1], 'f', 2));
+    ui->lineEditInputDoc3->setText(QString::number(doc[2], 'f', 2));
+    ui->lineEditInputDoc4->setText(QString::number(doc[3], 'f', 2));
+    ui->lineEditInputDoc5->setText(QString::number(doc[4], 'f', 2));
+    ui->lineEditInputDoc6->setText(QString::number(doc[5], 'f', 2));
+    ui->lineEditInputDoc7->setText(QString::number(doc[6], 'f', 2));
+    ui->lineEditInputDoc8->setText(QString::number(doc[7], 'f', 2));
+    ui->lineEditInputDoc9->setText(QString::number(doc[8], 'f', 2));
+    ui->lineEditInputDoc10->setText(QString::number(doc[9], 'f', 2));
+
+    // Waterdecomp
+    ui->lineEditInputWaterdecomp1->setText(QString::number(waterdecomp[0], 'f', 2));
+    ui->lineEditInputWaterdecomp2->setText(QString::number(waterdecomp[1], 'f', 2));
+    ui->lineEditInputWaterdecomp3->setText(QString::number(waterdecomp[2], 'f', 2));
+    ui->lineEditInputWaterdecomp4->setText(QString::number(waterdecomp[3], 'f', 2));
+    ui->lineEditInputWaterdecomp5->setText(QString::number(waterdecomp[4], 'f', 2));
+    ui->lineEditInputWaterdecomp6->setText(QString::number(waterdecomp[5], 'f', 2));
+    ui->lineEditInputWaterdecomp7->setText(QString::number(waterdecomp[6], 'f', 2));
+    ui->lineEditInputWaterdecomp8->setText(QString::number(waterdecomp[7], 'f', 2));
+    ui->lineEditInputWaterdecomp9->setText(QString::number(waterdecomp[8], 'f', 2));
+    ui->lineEditInputWaterdecomp10->setText(QString::number(waterdecomp[9], 'f', 2));
+
+    // Phyto
+    ui->lineEditInputPhyto1->setText(QString::number(phyto[0], 'f', 2));
+    ui->lineEditInputPhyto2->setText(QString::number(phyto[1], 'f', 2));
+    ui->lineEditInputPhyto3->setText(QString::number(phyto[2], 'f', 2));
+    ui->lineEditInputPhyto4->setText(QString::number(phyto[3], 'f', 2));
+    ui->lineEditInputPhyto5->setText(QString::number(phyto[4], 'f', 2));
+    ui->lineEditInputPhyto6->setText(QString::number(phyto[5], 'f', 2));
+    ui->lineEditInputPhyto7->setText(QString::number(phyto[6], 'f', 2));
+    ui->lineEditInputPhyto8->setText(QString::number(phyto[7], 'f', 2));
+    ui->lineEditInputPhyto9->setText(QString::number(phyto[8], 'f', 2));
+    ui->lineEditInputPhyto10->setText(QString::number(phyto[9], 'f', 2));
+}
+
+void MainWindow::setFlows(const QVector<int> & min, const QVector<int> & max)
+{
+    // minimum bounds
+    ui->lineEditMinFlow1->setText(QString::number(min[0]));
+    ui->lineEditMinFlow2->setText(QString::number(min[1]));
+    ui->lineEditMinFlow3->setText(QString::number(min[2]));
+    ui->lineEditMinFlow4->setText(QString::number(min[3]));
+    ui->lineEditMinFlow5->setText(QString::number(min[4]));
+    ui->lineEditMinFlow6->setText(QString::number(min[5]));
+    ui->lineEditMinFlow7->setText(QString::number(min[6]));
+    ui->lineEditMinFlow8->setText(QString::number(min[7]));
+    ui->lineEditMinFlow9->setText(QString::number(min[8]));
+    ui->lineEditMinFlow10->setText(QString::number(min[9]));
+
+    // maximum bounds
+    ui->lineEditMaxFlow1->setText(QString::number(max[0]));
+    ui->lineEditMaxFlow2->setText(QString::number(max[1]));
+    ui->lineEditMaxFlow3->setText(QString::number(max[2]));
+    ui->lineEditMaxFlow4->setText(QString::number(max[3]));
+    ui->lineEditMaxFlow5->setText(QString::number(max[4]));
+    ui->lineEditMaxFlow6->setText(QString::number(max[5]));
+    ui->lineEditMaxFlow7->setText(QString::number(max[6]));
+    ui->lineEditMaxFlow8->setText(QString::number(max[7]));
+    ui->lineEditMaxFlow9->setText(QString::number(max[8]));
+    ui->lineEditMaxFlow10->setText(QString::number(max[9]));
+}
+
 /* END public functions */
 
 /* BEGIN private functions */
@@ -755,7 +932,7 @@ void MainWindow::addHydroMap(QString file, uint16_t days, bool addInfo, bool dis
 {
     if (addInfo)
     {
-        uiConfig.hydroMaps.append(file);
+        uiConfig.hydroMapsSelected.append(file);
         uiConfig.daysToRun.append(days);
         file = Files::stripFile(file);
     }
@@ -788,9 +965,15 @@ void MainWindow::selectFile(QLabel* displayLabel, QString & configVal, const QSt
 
 void MainWindow::getAllInput(Configuration & c) const
 {
-    c.hydroMaps = getHydroMaps();
-    c.numHydroMaps = c.hydroMaps.size();
+    c.hydroMapsSelected = getHydroMaps();
+    c.numHydroMaps = c.hydroMapsSelected.size();
     c.daysToRun = getDaysToRun();
+    c.pocInput = getPocInput();
+    c.docInput = getDocInput();
+    c.waterdecompInput = getWaterdecompInput();
+    c.phytoInput = getPhytoInput();
+    c.minFlow = getMinFlow();
+    c.maxFlow = getMaxFlow();
     c.parFile = getPARFile();
     c.tempFile = getTempFile();
     c.timestep = getTimestep();
@@ -954,16 +1137,6 @@ bool MainWindow::verifyAllInput() const
             verifyNumber(ui->lineEditInputDoc8, "DOC input for the for the eigth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputDoc9, "DOC input for the for the ninth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputDoc10, "DOC input for the for the tenth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc1, "DOC output for the for the first hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc2, "DOC output for the for the second hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc3, "DOC output for the for the third hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc4, "DOC output for the for the fourth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc5, "DOC output for the for the fifth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc6, "DOC output for the for the sixth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc7, "DOC output for the for the seventh hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc8, "DOC output for the for the eigth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc9, "DOC output for the for the ninth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputDoc10, "DOC output for the for the tenth hydro file not filled out or invalid") &&
             /* POC input/output */
             verifyNumber(ui->lineEditInputPoc1, "POC input for the for the first hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputPoc2, "POC input for the for the second hydro file not filled out or invalid") &&
@@ -975,16 +1148,6 @@ bool MainWindow::verifyAllInput() const
             verifyNumber(ui->lineEditInputPoc8, "POC input for the for the eigth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputPoc9, "POC input for the for the ninth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputPoc10, "POC input for the for the tenth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc1, "POC output for the for the first hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc2, "POC output for the for the second hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc3, "POC output for the for the third hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc4, "POC output for the for the fourth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc5, "POC output for the for the fifth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc6, "POC output for the for the sixth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc7, "POC output for the for the seventh hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc8, "POC output for the for the eigth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc9, "POC output for the for the ninth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPoc10, "POC output for the for the tenth hydro file not filled out or invalid") &&
             /* Waterdecomp input/output */
             verifyNumber(ui->lineEditInputWaterdecomp1, "Waterdecomp input for the for the first hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputWaterdecomp2, "Waterdecomp input for the for the second hydro file not filled out or invalid") &&
@@ -996,16 +1159,6 @@ bool MainWindow::verifyAllInput() const
             verifyNumber(ui->lineEditInputWaterdecomp8, "Waterdecomp input for the for the eigth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputWaterdecomp9, "Waterdecomp input for the for the ninth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputWaterdecomp10, "Waterdecomp input for the for the tenth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp1, "Waterdecomp output for the for the first hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp2, "Waterdecomp output for the for the second hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp3, "Waterdecomp output for the for the third hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp4, "Waterdecomp output for the for the fourth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp5, "Waterdecomp output for the for the fifth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp6, "Waterdecomp output for the for the sixth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp7, "Waterdecomp output for the for the seventh hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp8, "Waterdecomp output for the for the eigth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp9, "Waterdecomp output for the for the ninth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputWaterdecomp10, "Waterdecomp output for the for the tenth hydro file not filled out or invalid") &&
             /* Phyto input/output */
             verifyNumber(ui->lineEditInputPhyto1, "Phyto input for the for the first hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputPhyto2, "Phyto input for the for the second hydro file not filled out or invalid") &&
@@ -1017,16 +1170,6 @@ bool MainWindow::verifyAllInput() const
             verifyNumber(ui->lineEditInputPhyto8, "Phyto input for the for the eigth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputPhyto9, "Phyto input for the for the ninth hydro file not filled out or invalid") &&
             verifyNumber(ui->lineEditInputPhyto10, "Phyto input for the for the tenth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto1, "Phyto output for the for the first hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto2, "Phyto output for the for the second hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto3, "Phyto output for the for the third hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto4, "Phyto output for the for the fourth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto5, "Phyto output for the for the fifth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto6, "Phyto output for the for the sixth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto7, "Phyto output for the for the seventh hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto8, "Phyto output for the for the eigth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto9, "Phyto output for the for the ninth hydro file not filled out or invalid") &&
-            verifyNumber(ui->lineEditOutputPhyto10, "Phyto output for the for the tenth hydro file not filled out or invalid") &&
             /* Files */
             verifyFile(ui->labelTempFile, "Temperature File not selected") &&
             verifyFile(ui->labelPARFile, "PAR File not selected");
@@ -1176,20 +1319,20 @@ void MainWindow::dischargeToHydro(const QString & file)
 
 void MainWindow::compressHydroFiles()
 {
-    if (uiConfig.hydroMaps.isEmpty())
+    if (uiConfig.hydroMapsSelected.isEmpty())
     {
         return;
     }
 
     QVector<QString> newFiles;
     QVector<uint16_t> newDays;
-    size_t size = uiConfig.hydroMaps.size();
+    size_t size = uiConfig.hydroMapsSelected.size();
 
-    QString currFile = uiConfig.hydroMaps.front();
+    QString currFile = uiConfig.hydroMapsSelected.front();
     size_t count = uiConfig.daysToRun.front();
     for (size_t i = 1; i < size; i++)
     {
-        if (currFile.compare(uiConfig.hydroMaps[i]) == 0) // they are the same
+        if (currFile.compare(uiConfig.hydroMapsSelected[i]) == 0) // they are the same
         {
             count += uiConfig.daysToRun[i];
         }
@@ -1197,14 +1340,14 @@ void MainWindow::compressHydroFiles()
         {
             newFiles.append(currFile);
             newDays.append(count);
-            currFile = uiConfig.hydroMaps[i];
+            currFile = uiConfig.hydroMapsSelected[i];
             count = uiConfig.daysToRun[i];
         }
     }
     newFiles.append(currFile);
     newDays.append(count);
 
-    uiConfig.hydroMaps = newFiles;
+    uiConfig.hydroMapsSelected = newFiles;
     uiConfig.daysToRun = newDays;
     displayHydroFiles();
 }
@@ -1214,7 +1357,7 @@ void MainWindow::displayHydroFiles()
     clearHydroFilesDisplay();
     for (size_t i = 0; i < getNumHydroMaps(); i++)
     {
-        addHydroMap(Files::stripFile(uiConfig.hydroMaps[i]), uiConfig.daysToRun[i], false);
+        addHydroMap(Files::stripFile(uiConfig.hydroMapsSelected[i]), uiConfig.daysToRun[i], false);
     }
 }
 
@@ -1226,7 +1369,7 @@ void MainWindow::clearHydroFilesDisplay() const
 void MainWindow::clearHydroFiles()
 {
     clearHydroFilesDisplay();
-    uiConfig.hydroMaps.clear();
+    uiConfig.hydroMapsSelected.clear();
     uiConfig.daysToRun.clear();
 }
 

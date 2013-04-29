@@ -348,6 +348,14 @@ public:
     QVector<uint16_t> getDaysToRun() const;
     QVector<QString> getHydroMaps() const;
 
+    QVector<double> getPocInput() const;
+    QVector<double> getDocInput() const;
+    QVector<double> getWaterdecompInput() const;
+    QVector<double> getPhytoInput() const;
+
+    QVector<int> getMinFlow() const;
+    QVector<int> getMaxFlow() const;
+
     /* SETTERS */
 
     void setAdjacent(bool val);
@@ -456,6 +464,8 @@ public:
     void setTempFile(const QString & filename);
     void setPARFile(const QString & filename);
     void setHydroMaps(const QVector<QString> & filenames, const QVector<uint16_t> & days, size_t num);
+    void setInputs(const QVector<double> & poc, const QVector<double> & doc, const QVector<double> & waterdecomp, const QVector<double> & phyto);
+    void setFlows(const QVector<int> & min, const QVector<int> & max);
 
 private:
 
