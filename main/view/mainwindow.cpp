@@ -93,11 +93,7 @@ void MainWindow::removeHydroMapClicked()
         }
     }
 
-    if (!anyRemoved)
-    {
-        displayErrors("No files selected for removal");
-    }
-    else
+    if (anyRemoved)
     {
         displayHydroFiles(); // this will clear and refresh the list
     }
@@ -115,11 +111,6 @@ void MainWindow::selectDischargeFileClicked()
         dischargeToHydro(selected);
         compressHydroFiles();
     }
-    else
-    {
-        displayErrors("No discharge file selected");
-    }
-
 }
 
 void MainWindow::selectTemperatureFileClicked()
