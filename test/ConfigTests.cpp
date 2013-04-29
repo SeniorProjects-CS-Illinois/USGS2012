@@ -108,6 +108,66 @@ void ConfigTests::configTest()
 	config.sedconsumerMax = 95.0;
 	config.periAj = 96.0;
 	config.periGj = 97.0;
+    config.pocInput.append(1.1);
+    config.pocInput.append(1.2);
+    config.pocInput.append(1.3);
+    config.pocInput.append(1.4);
+    config.pocInput.append(1.5);
+    config.pocInput.append(1.6);
+    config.pocInput.append(1.7);
+    config.pocInput.append(1.8);
+    config.pocInput.append(1.9);
+    config.pocInput.append(1.10);
+    config.docInput.append(1.1);
+    config.docInput.append(1.2);
+    config.docInput.append(1.3);
+    config.docInput.append(1.4);
+    config.docInput.append(1.5);
+    config.docInput.append(1.6);
+    config.docInput.append(1.7);
+    config.docInput.append(1.8);
+    config.docInput.append(1.9);
+    config.docInput.append(1.10);
+    config.waterdecompInput.append(1.1);
+    config.waterdecompInput.append(1.2);
+    config.waterdecompInput.append(1.3);
+    config.waterdecompInput.append(1.4);
+    config.waterdecompInput.append(1.5);
+    config.waterdecompInput.append(1.6);
+    config.waterdecompInput.append(1.7);
+    config.waterdecompInput.append(1.8);
+    config.waterdecompInput.append(1.9);
+    config.waterdecompInput.append(1.10);
+    config.phytoInput.append(1.1);
+    config.phytoInput.append(1.2);
+    config.phytoInput.append(1.3);
+    config.phytoInput.append(1.4);
+    config.phytoInput.append(1.5);
+    config.phytoInput.append(1.6);
+    config.phytoInput.append(1.7);
+    config.phytoInput.append(1.8);
+    config.phytoInput.append(1.9);
+    config.phytoInput.append(1.10);
+    config.minFlow.append(0);
+    config.minFlow.append(10);
+    config.minFlow.append(20);
+    config.minFlow.append(30);
+    config.minFlow.append(40);
+    config.minFlow.append(50);
+    config.minFlow.append(60);
+    config.minFlow.append(70);
+    config.minFlow.append(80);
+    config.minFlow.append(90);
+    config.maxFlow.append(9);
+    config.maxFlow.append(19);
+    config.maxFlow.append(29);
+    config.maxFlow.append(39);
+    config.maxFlow.append(49);
+    config.maxFlow.append(59);
+    config.maxFlow.append(69);
+    config.maxFlow.append(79);
+    config.maxFlow.append(89);
+    config.maxFlow.append(99);
 
 	qDebug("First config write");
 	config.write("testconfig.txt");
@@ -115,6 +175,7 @@ void ConfigTests::configTest()
 	Configuration config2;
 	qDebug("Load config");
 	config2.read("testconfig.txt");
+
 	QCOMPARE(config2.adjacent, false);
 //    QCOMPARE(config2.numStocks, 1);
 
@@ -223,4 +284,13 @@ void ConfigTests::configTest()
 	QCOMPARE(config2.sedconsumerMax, 95.0);
 	QCOMPARE(config2.periAj, 96.0);
 	QCOMPARE(config2.periGj, 97.0);
+    for (int i = 0; i < 10; i++)
+    {
+            QCOMPARE(config2.pocInput[i], config.pocInput[i]);
+            QCOMPARE(config2.docInput[i], config.docInput[i]);
+            QCOMPARE(config2.waterdecompInput[i], config.waterdecompInput[i]);
+            QCOMPARE(config2.phytoInput[i], config.phytoInput[i]);
+            QCOMPARE(config2.minFlow[i], config.minFlow[i]);
+            QCOMPARE(config2.maxFlow[i], config.maxFlow[i]);
+    }
 }
