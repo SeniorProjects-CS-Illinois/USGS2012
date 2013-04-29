@@ -23,7 +23,7 @@ namespace HydroMaps
     /**
      * Finds the appropriate hydro file based on the given integer.
      */
-    QString intToHydroFile(int hydro, QString baseDir);
+    QString intToHydroFile(int hydro, const QString & baseDir, const QVector<int> & minBounds, const QVector<int> & maxBounds);
 }
 
 #endif // HYDROMAPS_H

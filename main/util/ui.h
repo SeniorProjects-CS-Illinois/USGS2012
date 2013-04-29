@@ -11,12 +11,12 @@ namespace UI
     /**
      * Check if given input box has data.
      */
-    bool isBoxFilled(QLineEdit * const input);
+    bool isBoxFilled(QLineEdit* const input);
 
     /**
      * Check if given input box has numerical data.
      */
-    bool isBoxNumerical(QLineEdit * const input);
+    bool isBoxNumerical(QLineEdit* const input);
 
     /**
      * Check if file has been selected. The check
@@ -25,17 +25,17 @@ namespace UI
      * Therefore, this is true if and only if the
      * label text is nonempty and not 'None'.
      */
-    bool isFileSelected(QLabel * const input);
+    bool isFileSelected(QLabel* const input);
 
     /**
      * Disable the input button.
      */
-    void disableButton(QPushButton * input);
+    void disableButton(QPushButton* input);
 
     /**
      * Enable the input button.
      */
-    void enableButton(QPushButton * input);
+    void enableButton(QPushButton* input);
 
     /**
      * Get the index of the given string in the stock combo box.

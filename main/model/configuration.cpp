@@ -115,29 +115,55 @@ void Configuration::write(QString const & filename) const
     ofstream file;
     file.open(filename.toStdString().c_str());
 
-    // write booleans
     file << adjacent << endl;
 
-    // write file names
+    // write environment file names
     file << tempFile.toStdString().c_str() << endl;
     file << parFile.toStdString().c_str() << endl;
 
     // for hydro maps, need number of maps first
     file << (int)numHydroMaps << endl;
-    for (int hydro = 0; hydro < numHydroMaps; hydro++)
+    for (size_t hydro = 0; hydro < numHydroMaps; hydro++)
     {
-        file << hydroMaps[hydro].toStdString().c_str() << endl;
+        file << hydroMapsSelected[hydro].toStdString().c_str() << endl;
     }
 
-    // write integer values
-    for (int hydro = 0; hydro < numHydroMaps; hydro++)
+    for (size_t hydro = 0; hydro < numHydroMaps; hydro++)
     {
         file << (int)daysToRun[hydro] << endl;
     }
+
+    // write input values (horrible workaround for ofstream precision loss)
+    for (int i = 0; i < pocInput.size(); i++)
+    {
+        file << (QString("%1").arg(pocInput[i], 0, 'f', 2)).toStdString() << endl;
+    }
+    for (int i = 0; i < docInput.size(); i++)
+    {
+        file << (QString("%1").arg(docInput[i], 0, 'f', 2)).toStdString() << endl;
+    }
+    for (int i = 0; i < waterdecompInput.size(); i++)
+    {
+        file << (QString("%1").arg(waterdecompInput[i], 0, 'f', 2)).toStdString() << endl;
+    }
+    for (int i = 0; i < phytoInput.size(); i++)
+    {
+        file << (QString("%1").arg(phytoInput[i], 0, 'f', 2)).toStdString() << endl;
+    }
+
+    //write flow bounds
+    for (int i = 0; i < minFlow.size(); i++)
+    {
+        file << minFlow[i] << endl;
+    }
+    for (int i = 0; i < maxFlow.size(); i++)
+    {
+        file << maxFlow[i] << endl;
+    }
+
     file << (int)outputFreq << endl;
     file << (int)timestep << endl;
 
-    // write floating point values
     file << tss << endl;
     file << kPhyto << endl;
     file << kMacro << endl;
@@ -261,12 +287,39 @@ void Configuration::read(QString const & filename)
 
     for (size_t i = 0; i < numHydroMaps; i++)
     {
-        hydroMaps.append(QString::fromStdString(nextLine(file, str)));
+        hydroMapsSelected.append(QString::fromStdString(nextLine(file, str)));
     }
-
     for (size_t i = 0; i < numHydroMaps; i++)
     {        
         daysToRun.append(nextInt(file, str));
+    }
+
+    // load inputs
+    for (size_t i = 0; i < NUM_UNIQUE_HYDRO_MAPS; i++)
+    {
+        pocInput.append(nextDouble(file, str));
+    }
+    for (size_t i = 0; i < NUM_UNIQUE_HYDRO_MAPS; i++)
+    {
+        docInput.append(nextDouble(file, str));
+    }
+    for (size_t i = 0; i < NUM_UNIQUE_HYDRO_MAPS; i++)
+    {
+        waterdecompInput.append(nextDouble(file, str));
+    }
+    for (size_t i = 0; i < NUM_UNIQUE_HYDRO_MAPS; i++)
+    {
+        phytoInput.append(nextDouble(file, str));
+    }
+
+    // load flow bounds
+    for (size_t i = 0; i < NUM_UNIQUE_HYDRO_MAPS; i++)
+    {
+        minFlow.append(nextInt(file, str));
+    }
+    for (size_t i = 0; i < NUM_UNIQUE_HYDRO_MAPS; i++)
+    {
+        maxFlow.append(nextInt(file, str));
     }
 
     outputFreq = nextInt(file, str);
@@ -384,7 +437,7 @@ bool Configuration::nextBool(ifstream & file, string & str)
     return nextLine(file, str)[0] == '1';
 }
 
-uint16_t Configuration::nextInt(ifstream & file, string & str)
+int Configuration::nextInt(ifstream & file, string & str)
 {
     return QString::fromStdString(nextLine(file, str)).toInt();
 }
@@ -392,6 +445,11 @@ uint16_t Configuration::nextInt(ifstream & file, string & str)
 float Configuration::nextFloat(ifstream & file, string & str)
 {
     return QString::fromStdString(nextLine(file, str)).toFloat();
+}
+
+double Configuration::nextDouble(ifstream & file, string & str)
+{
+    return QString::fromStdString(nextLine(file, str)).toDouble();
 }
 
 string & Configuration::nextLine(ifstream & file, string & str) const
