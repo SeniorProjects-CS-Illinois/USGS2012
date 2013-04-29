@@ -912,147 +912,17 @@
      <attribute name="title">
       <string>Hydro Files</string>
      </attribute>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile1">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>50</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile2">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>75</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile10">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>275</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile3">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>100</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile4">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>125</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile5">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>150</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile6">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>175</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile7">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>200</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile8">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>225</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="pushButtonSelectHydroFile9">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>250</y>
-        <width>70</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Select File</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="labelHydroFile1">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>55</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>10K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1061,14 +931,14 @@
      <widget class="QLabel" name="labelHydroFile2">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>80</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>20K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1077,14 +947,14 @@
      <widget class="QLabel" name="labelHydroFile3">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>105</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>30K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1093,14 +963,14 @@
      <widget class="QLabel" name="labelHydroFile4">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>130</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>40K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1109,14 +979,14 @@
      <widget class="QLabel" name="labelHydroFile5">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>155</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>50K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1125,14 +995,14 @@
      <widget class="QLabel" name="labelHydroFile6">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>180</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>60K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1141,14 +1011,14 @@
      <widget class="QLabel" name="labelHydroFile7">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>205</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>70K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1157,14 +1027,14 @@
      <widget class="QLabel" name="labelHydroFile8">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>230</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>80K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1173,14 +1043,14 @@
      <widget class="QLabel" name="labelHydroFile9">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>255</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>90K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1189,14 +1059,14 @@
      <widget class="QLabel" name="labelHydroFile10">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>150</x>
         <y>280</y>
-        <width>150</width>
+        <width>200</width>
         <height>15</height>
        </rect>
       </property>
       <property name="text">
-       <string>None</string>
+       <string>100K Hydro File</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -5685,166 +5555,6 @@
    <hints>
     <hint type="sourcelabel">
      <x>41</x>
-     <y>342</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile1</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile1Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>117</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile3</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile3Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>167</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile2</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile2Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>142</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile4</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile4Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>192</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile6</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile6Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>242</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile7</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile7Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>267</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile8</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile8Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>292</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile9</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile9Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>317</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile5</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile5Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
-     <y>217</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButtonSelectHydroFile10</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>selectHydroFile10Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>166</x>
      <y>342</y>
     </hint>
     <hint type="destinationlabel">

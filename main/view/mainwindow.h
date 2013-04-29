@@ -69,56 +69,6 @@ public slots:
     void selectPARFileClicked();
 
     /**
-     * @brief Open dialog for selecting highest hydro file.
-     */
-    void selectHydroFile1Clicked();
-
-    /**
-     * @brief Open dialog for selecting second highest hydro file.
-     */
-    void selectHydroFile2Clicked();
-
-    /**
-     * @brief Open dialog for selecting third highest hydro file.
-     */
-    void selectHydroFile3Clicked();
-
-    /**
-     * @brief Open dialog for selecting fourth highest hydro file.
-     */
-    void selectHydroFile4Clicked();
-
-    /**
-     * @brief Open dialog for selecting fifth highest hydro file.
-     */
-    void selectHydroFile5Clicked();
-
-    /**
-     * @brief Open dialog for selecting sixth highest hydro file.
-     */
-    void selectHydroFile6Clicked();
-
-    /**
-     * @brief Open dialog for selecting seventh highest hydro file.
-     */
-    void selectHydroFile7Clicked();
-
-    /**
-     * @brief Open dialog for selecting eigth highest hydro file.
-     */
-    void selectHydroFile8Clicked();
-
-    /**
-     * @brief Open dialog for selecting ninth highest hydro file.
-     */
-    void selectHydroFile9Clicked();
-
-    /**
-     * @brief Open dialog for selecting tenth highest hydro file.
-     */
-    void selectHydroFile10Clicked();
-
-    /**
      * @brief Run the model with current configuration.
      */
     void runClicked();

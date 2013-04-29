@@ -125,66 +125,6 @@ void MainWindow::selectPARFileClicked()
                tr("Select PAR Data File"), tr("Text Files (*.txt)"));
 }
 
-void MainWindow::selectHydroFile1Clicked()
-{
-    selectFile(ui->labelHydroFile1, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile2Clicked()
-{
-    selectFile(ui->labelHydroFile2, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile3Clicked()
-{
-    selectFile(ui->labelHydroFile3, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile4Clicked()
-{
-    selectFile(ui->labelHydroFile4, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile5Clicked()
-{
-    selectFile(ui->labelHydroFile5, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile6Clicked()
-{
-    selectFile(ui->labelHydroFile6, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile7Clicked()
-{
-    selectFile(ui->labelHydroFile7, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile8Clicked()
-{
-    selectFile(ui->labelHydroFile8, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile9Clicked()
-{
-    selectFile(ui->labelHydroFile9, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
-void MainWindow::selectHydroFile10Clicked()
-{
-    selectFile(ui->labelHydroFile10, uiConfig.parFile,
-               tr("Select Hydro File"), tr("Text Files (*.txt)"));
-}
-
 void MainWindow::runClicked()
 {
     clearOutput();
