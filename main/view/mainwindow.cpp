@@ -32,29 +32,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::selectHydroMapClicked()
 {
-    // if the currently selected hydro map was not added, remove it
-    if (uiConfig.hydroMaps.size() != uiConfig.daysToRun.size())
-    {
-        uiConfig.hydroMaps.pop_back();
-    }
 
     // open prompt to select file
-    QString selected = QFileDialog::getOpenFileName(this, tr("Select Hydro Map File"),
+    selectedHydroMap = QFileDialog::getOpenFileName(this, tr("Select Hydro Map File"),
                                                     Files::defaultFileLocation(), tr("Text Files (*.txt)"));
 
     // make sure a hydro map file was selected
-    if (!selected.isEmpty())
+    if (!selectedHydroMap.isEmpty())
     {
-        uiConfig.hydroMaps.append(selected);
-        QString filename = Files::stripFile(selected);
+        QString filename = Files::stripFile(selectedHydroMap);
         ui->labelHydroMap->setText(filename);
-        ui->labelHydroMap->setToolTip(filename);
+        ui->labelHydroMap->setToolTip(selectedHydroMap);
     }
 }
 
 void MainWindow::addHydroMapClicked()
 {
-    QString errorMessage;
     if (!UI::isBoxNumerical(ui->lineEditDaysToRun))
     {
         displayErrors("Need to insert # days to run");
@@ -66,11 +59,8 @@ void MainWindow::addHydroMapClicked()
         return;
     }
 
-    // filename already added to list, but days to run not added
     uint16_t days = ui->lineEditDaysToRun->text().toInt();
-    uiConfig.daysToRun.append(days);
-
-    addHydroMap(ui->labelHydroMap->text(), days, false);
+    addHydroMap(selectedHydroMap, days, true);
 }
 
 void MainWindow::removeHydroMapClicked()
