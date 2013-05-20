@@ -13,7 +13,7 @@
 #include <QVector>
 #include "grid.h"
 #include "constants.h"
-#include "riverIOFile.h"
+#include "riveriofile.h"
 
 class HydroFile {
     public:

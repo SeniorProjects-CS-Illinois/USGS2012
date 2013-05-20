@@ -1,12 +1,6 @@
-#include "RiverIOFile.h"
+#include "riveriofile.h"
 
 RiverIOFile::RiverIOFile(QString filename) {
-    
-    bool comp = false;
-
-    comp = (QPoint(1,1) == QPoint(1,1));
-    
-
     QFile ioFile(filename);
 
     bool inputRead = false;

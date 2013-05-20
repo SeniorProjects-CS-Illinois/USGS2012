@@ -9,7 +9,7 @@
 #include "carbonflowmap.h"
 #include "hydrodata.h"
 #include "grid.h"
-#include "riverIOFile.h"
+#include "riveriofile.h"
 
 class HydroFileDict
 {

@@ -5,7 +5,7 @@
 #include <QString>
 #include <QVector>
 
-#include "RiverIOFile.h"
+#include "riveriofile.h"
 
 class RiverIOFileTests : public QObject
 {
