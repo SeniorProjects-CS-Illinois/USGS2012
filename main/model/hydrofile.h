@@ -17,16 +17,19 @@ class HydroFile {
     public:
         /**
          * @brief Constructor. We need to know the max size of all the hydromaps...
+         * @param[in] filename The name of the file to load
+         * @param[in] riverIOFile File specifying the inputs and output of the river.
          */
-        HydroFile(QString filename);
+        HydroFile(QString filename, RiverIOFile riverIOFile);
         HydroFile();
 
         /**
          * @brief Loads the current hydroFile using a file, only if not previously initialized.
          * Otherwise, this function does nothing.
          * @param[in] filename The name of the file to load
+         * @param[in] riverIOFile File specifying the inputs and output of the river.
          */
-        void loadFromFile(QString filename);
+        void loadFromFile(QString filename, RiverIOFile riverIOFile);
 
         /**
          * @brief Checks if a water cell exists at the given (x,y) coordinate
@@ -68,6 +71,22 @@ class HydroFile {
         int getMapHeight(void) const;
 
         /**
+         * @brief isInput Signifies whether the specified cell is an input.
+         * @param x X Coordinate
+         * @param y Y Coordinate
+         * @return Bool indicating if cell is river input
+         */
+        bool isInput(int x, int y);
+
+        /**
+         * @brief isOutput Signifies whether the specified cell is an output.
+         * @param x X Coordinate
+         * @param y Y Coordinate
+         * @return Bool indicating if cell is river output
+         */
+        bool isOutput(int x, int y);
+
+        /**
          * @brief Generates a QImage representation of the hydromap.
          */
         // TODO: Refactor this function. (low priority)
@@ -82,6 +101,8 @@ class HydroFile {
             // doesn't match what is calculated using component vectors
             double fileVelocity;
             double depth;
+            bool isInput;
+            bool isOutput;
         };
 
         bool hydroFileLoaded;

@@ -4,9 +4,9 @@ using std::cout;
 using std::endl;
 
 
-HydroFile::HydroFile(QString filename){
+HydroFile::HydroFile(QString filename, RiverIOFile riverIOFile){
     hydroFileLoaded = false;
-    loadFromFile(filename);
+    loadFromFile(filename, riverIOFile);
 }
 
 HydroFile::HydroFile() {
@@ -14,7 +14,7 @@ HydroFile::HydroFile() {
 }
 
 
-void HydroFile::loadFromFile(QString filename) {
+void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
 
     /* Once loaded, a hydrofile represents only one hydromap. */
     if( hydroFileLoaded )
@@ -56,6 +56,10 @@ void HydroFile::loadFromFile(QString filename) {
         data.flowVector.setX( hydroFileData[index + 3].toDouble() );
         data.flowVector.setY( hydroFileData[index + 4].toDouble() );
         data.fileVelocity   = hydroFileData[index + 5].toDouble();
+
+        //The following will be set when we read the IO file.  Setting to false for now.
+        data.isInput = false;
+        data.isOutput = false;
 
         hydroData(patch_x, patch_y) = data;
 
@@ -113,6 +117,14 @@ int HydroFile::getMapHeight() const {
 
 int HydroFile::getMapWidth() const {
     return width;
+}
+
+bool HydroFile::isInput(int x, int y) const {
+    return getData(x,y).isInput;
+}
+
+bool HydroFile::isOutput(int x, int y) const {
+    return getData(x,y).isOutput;
 }
 
 void HydroFile::setMapSize(QStringList & hydroFileData) {
