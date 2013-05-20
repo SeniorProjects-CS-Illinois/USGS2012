@@ -45,6 +45,8 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.flowX[i] = flowX;
             p.flowY[i] = flowY;
             p.flowMagnitude[i] = flowMagnitude;
+            p.isInput[i] = newHydroFile->isInput(x,y);
+            p.isOutput[i] = newHydroFile->isOutput(x,y);
 
         } else {
             p.hasWater[i] = false;
@@ -52,6 +54,8 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.flowX[i] = 0.0;
             p.flowY[i] = 0.0;
             p.flowMagnitude[i] = 0.0;
+            p.isInput[i] = false;
+            p.isOutput[i] = false;
         }
 
         // update miscellanous variables inside the patch

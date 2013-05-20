@@ -125,8 +125,18 @@ void CarbonFlowMap::pushCarbon(
                     QVector<CarbonSource> carbonPushed = source(x,y).getSourcesPercentage(carbonTarget.amount);
                     dest(carbonTarget.x, carbonTarget.y).addSources(carbonPushed);
                 }
-                double percentStationaryCarbon = 1.0 - carbonPushedToOtherWaterPatches;
-                dest(x,y).addSources( source(x,y).getSourcesPercentage(percentStationaryCarbon) );
+
+                //When output cells push to land the carbon is lost.
+                if(!hydroFile->isOutput(x,y)) {
+                    double percentStationaryCarbon = 1.0 - carbonPushedToOtherWaterPatches;
+                    dest(x,y).addSources( source(x,y).getSourcesPercentage(percentStationaryCarbon) );
+                }
+
+                //Input cells do not get carbon from other cells.  They keep 100% of their carbon per iteration.
+                if(hydroFile->isInput(x,y)){
+                    dest(x,y) = CarbonSourceCollection(x,y);
+                }
+
                 //TODO: Avoid new and deleting over and over...
                 delete targets;
             }
