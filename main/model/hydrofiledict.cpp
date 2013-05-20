@@ -8,7 +8,7 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
 {
     newFilenames.removeDuplicates();
     filenames = newFilenames;
-
+    RiverIOFile riverIOFile("");
 
 #pragma omp parallel for
     for(int i = 0; i < filenames.size(); i++)
@@ -22,7 +22,7 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
 
 
         HydroData * newHydroData = new HydroData;
-        newHydroData->hydroFile = HydroFile(filename);
+        newHydroData->hydroFile = HydroFile(filename, riverIOFile);
 
 
         #pragma omp critical

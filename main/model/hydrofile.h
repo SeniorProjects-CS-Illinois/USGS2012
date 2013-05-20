@@ -8,10 +8,12 @@
 #include <QHash>
 #include <QImage>
 #include <QRgb>
+#include <QPoint>
 #include <QVector2D>
 #include <QVector>
 #include "grid.h"
 #include "constants.h"
+#include "riverIOFile.h"
 
 class HydroFile {
     public:

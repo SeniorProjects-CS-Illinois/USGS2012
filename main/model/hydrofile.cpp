@@ -57,10 +57,6 @@ void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
         data.flowVector.setY( hydroFileData[index + 4].toDouble() );
         data.fileVelocity   = hydroFileData[index + 5].toDouble();
 
-        //The following will be set when we read the IO file.  Setting to false for now.
-        data.isInput = false;
-        data.isOutput = false;
-
         hydroData(patch_x, patch_y) = data;
 
         if(data.depth > 0){
@@ -72,6 +68,20 @@ void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
                 maxFlow = data.flowVector.length();
             }
         }
+    }
+
+    for(int i = 0; i < riverIOFile.inputs.size(); i++){
+        QPoint point = riverIOFile.inputs[i];
+        int hashKey = getHashKey(point.x(), point.y());
+        int index = hydroDataSetIndices[hashKey];
+        hydroDataSet[index].isInput = true;
+    }
+
+    for(int i = 0; i < riverIOFile.outputs.size(); i++){
+        QPoint point = riverIOFile.outputs[i];
+        int hashKey = getHashKey(point.x(), point.y());
+        int index = hydroDataSetIndices[hashKey];
+        hydroDataSet[index].isOutput = true;
     }
 
     /* Now we move the data from the grid and place it in a vector whose
@@ -119,11 +129,11 @@ int HydroFile::getMapWidth() const {
     return width;
 }
 
-bool HydroFile::isInput(int x, int y) const {
+bool HydroFile::isInput(int x, int y) {
     return getData(x,y).isInput;
 }
 
-bool HydroFile::isOutput(int x, int y) const {
+bool HydroFile::isOutput(int x, int y) {
     return getData(x,y).isOutput;
 }
 
