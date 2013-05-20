@@ -7,7 +7,7 @@ RiverIOFile::RiverIOFile(QString filename) {
     bool outputRead = false;
 
     if( !ioFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
-        cerr << "Error opening file!" << endl;
+        cerr << "Error opening RiverIOFile file!" << endl;
         //TODO: Send exception
         exit(-1);
 	}

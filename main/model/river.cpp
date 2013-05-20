@@ -205,7 +205,7 @@ Statistics River::generateStatistics() {
     Statistics stats;
 
     for(int i = 0; i < p.getSize(); i++) {
-        if(!p.hasWater[i]) {
+        if(!p.hasWater[i] /*|| p.isInput[i]*/) {
             continue;
         }
 
