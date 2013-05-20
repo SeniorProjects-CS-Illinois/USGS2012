@@ -1,6 +1,7 @@
 #ifndef __HYDROFILEDICT_H__
 #define __HYDROFILEDICT_H__
 
+#include <QDir>
 #include <QHash>
 #include <QString>
 #include <QStringList>

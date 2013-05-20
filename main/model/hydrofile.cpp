@@ -70,18 +70,26 @@ void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
         }
     }
 
+    /*
+     * We need to check if a patch exists because the riverIO file is for all hydroFiles
+     * and not tailored to each individually (at least for now)
+     */
     for(int i = 0; i < riverIOFile.inputs.size(); i++){
         QPoint point = riverIOFile.inputs[i];
-        int hashKey = getHashKey(point.x(), point.y());
-        int index = hydroDataSetIndices[hashKey];
-        hydroDataSet[index].isInput = true;
+        if(patchExists(point.x(), point.y()) ) {
+            int hashKey = getHashKey(point.x(), point.y());
+            int index = hydroDataSetIndices[hashKey];
+            hydroDataSet[index].isInput = true;
+        }
     }
 
     for(int i = 0; i < riverIOFile.outputs.size(); i++){
         QPoint point = riverIOFile.outputs[i];
-        int hashKey = getHashKey(point.x(), point.y());
-        int index = hydroDataSetIndices[hashKey];
-        hydroDataSet[index].isOutput = true;
+        if(patchExists(point.x(), point.y()) ) {
+            int hashKey = getHashKey(point.x(), point.y());
+            int index = hydroDataSetIndices[hashKey];
+            hydroDataSet[index].isOutput = true;
+        }
     }
 
     /* Now we move the data from the grid and place it in a vector whose

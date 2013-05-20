@@ -8,7 +8,9 @@ HydroFileDict::HydroFileDict(QStringList newFilenames)
 {
     newFilenames.removeDuplicates();
     filenames = newFilenames;
-    RiverIOFile riverIOFile("");
+
+    //TODO Move IO data to hydrofiles or move file selection to GUI
+    RiverIOFile riverIOFile(QDir::currentPath().append("/data/inputsoutputs.txt"));
 
 #pragma omp parallel for
     for(int i = 0; i < filenames.size(); i++)
