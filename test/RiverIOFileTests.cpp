@@ -44,3 +44,17 @@ void RiverIOFileTests::RiverIOFileTest(){
     QVERIFY(!file.outputs.contains(QPoint(11,10)));
     QVERIFY(!file.outputs.contains(QPoint(10,11)));
 }
+
+void RiverIOFileTests::testEmptyFile()
+{
+    RiverIOFile file("../data/testData/emptyIOTestData.txt"); 
+    QVERIFY(!file.inputs.contains(QPoint(0,0)));
+    QVERIFY(!file.inputs.contains(QPoint(0,1)));
+    QVERIFY(!file.inputs.contains(QPoint(1,0)));
+    QVERIFY(!file.inputs.contains(QPoint(1,1)));
+
+    QVERIFY(!file.outputs.contains(QPoint(0,0)));
+    QVERIFY(!file.outputs.contains(QPoint(0,1)));
+    QVERIFY(!file.outputs.contains(QPoint(1,0)));
+    QVERIFY(!file.outputs.contains(QPoint(1,1)));
+}

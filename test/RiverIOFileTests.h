@@ -12,6 +12,7 @@ class RiverIOFileTests : public QObject
     Q_OBJECT
     private slots:
         void RiverIOFileTest();
+        void testEmptyFile();
 
 };
 
