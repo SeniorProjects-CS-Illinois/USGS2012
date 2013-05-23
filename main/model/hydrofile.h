@@ -73,6 +73,13 @@ class HydroFile {
         int getMapHeight(void) const;
 
         /**
+         * @brief getHydroIndex The input values for the river are stored in vectors in the config.
+         *       This gets the index for those vectors.
+         * @return Index of this hydroFile
+         */
+        int getHydroIndex() const;
+
+        /**
          * @brief isInput Signifies whether the specified cell is an input.
          * @param x X Coordinate
          * @param y Y Coordinate
@@ -115,12 +122,21 @@ class HydroFile {
         int maxFlow;
         int maxDepth;
 
+        int hydroIndex;
+
 
 
         /**
          * @brief Reads the datafile to determine the dimension of the map.
          */
         void setMapSize(QStringList & hydroFileData);
+
+        /**
+         * @brief setHydroFileIndex The input values for the river are stored in vectors in the config.
+         *       This sets the index of this hydroFile to align with those vectors.
+         * @param filename
+         */
+        void setHydroIndex(QString filename);
 
         /**
          * @brief Initializes the input grid with default (zeroized) data.
