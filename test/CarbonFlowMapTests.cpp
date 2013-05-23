@@ -384,7 +384,7 @@ void CarbonFlowMapTests::testRiverIO()
     int sourcesOffset;
     int sourcesSize;
 
-    RiverIOFile riverIO("../data/testData/emptyIOTestData.txt");
+    RiverIOFile riverIO("../data/testData/ioTestData3.txt");
     HydroFile file("../data/testData/carbonFlowHydroFile.txt", riverIO);
     CarbonFlowMap carbonMap(&file, 1);
     SourceArrays sourceData = carbonMap.getSourceArrays();
