@@ -56,6 +56,8 @@ void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
         data.flowVector.setX( hydroFileData[index + 3].toDouble() );
         data.flowVector.setY( hydroFileData[index + 4].toDouble() );
         data.fileVelocity   = hydroFileData[index + 5].toDouble();
+        data.isInput = false;
+        data.isOutput = false;
 
         hydroData(patch_x, patch_y) = data;
 
@@ -66,6 +68,21 @@ void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
             }
             if(data.flowVector.length() > maxFlow) {
                 maxFlow = data.flowVector.length();
+            }
+        }
+    }
+
+
+    /* Now we move the data from the grid and place it in a vector whose
+     * element indices are hashed using the x,y coordinates of corresponding
+     * cells   
+     */
+    for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
+        for(unsigned int y = 0; y < hydroData.getHeight(); y++) {
+            if(hydroData(x,y).depth != 0) {
+                hydroDataSet.append(hydroData(x,y));
+                int index = getHashKey(x,y);
+                hydroDataSetIndices.insert(index,hydroDataSet.size()-1); 
             }
         }
     }
@@ -89,20 +106,6 @@ void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
             int hashKey = getHashKey(point.x(), point.y());
             int index = hydroDataSetIndices[hashKey];
             hydroDataSet[index].isOutput = true;
-        }
-    }
-
-    /* Now we move the data from the grid and place it in a vector whose
-     * element indices are hashed using the x,y coordinates of corresponding
-     * cells   
-     */
-    for(unsigned int x = 0; x < hydroData.getWidth(); x++) {
-        for(unsigned int y = 0; y < hydroData.getHeight(); y++) {
-            if(hydroData(x,y).depth != 0) {
-                hydroDataSet.append(hydroData(x,y));
-                int index = getHashKey(x,y);
-                hydroDataSetIndices.insert(index,hydroDataSet.size()-1); 
-            }
         }
     }
 
