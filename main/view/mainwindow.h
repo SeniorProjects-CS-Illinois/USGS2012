@@ -430,6 +430,7 @@ private:
     ProgressThread progressThread;
 
     Configuration uiConfig;
+    QString selectedHydroMap;
 
     /**
      * @brief Display an error message in a popup window.
