@@ -8,25 +8,30 @@
 #include <QHash>
 #include <QImage>
 #include <QRgb>
+#include <QPoint>
 #include <QVector2D>
 #include <QVector>
 #include "grid.h"
 #include "constants.h"
+#include "riveriofile.h"
 
 class HydroFile {
     public:
         /**
          * @brief Constructor. We need to know the max size of all the hydromaps...
+         * @param[in] filename The name of the file to load
+         * @param[in] riverIOFile File specifying the inputs and output of the river.
          */
-        HydroFile(QString filename);
+        HydroFile(QString filename, RiverIOFile riverIOFile);
         HydroFile();
 
         /**
          * @brief Loads the current hydroFile using a file, only if not previously initialized.
          * Otherwise, this function does nothing.
          * @param[in] filename The name of the file to load
+         * @param[in] riverIOFile File specifying the inputs and output of the river.
          */
-        void loadFromFile(QString filename);
+        void loadFromFile(QString filename, RiverIOFile riverIOFile);
 
         /**
          * @brief Checks if a water cell exists at the given (x,y) coordinate
@@ -68,6 +73,29 @@ class HydroFile {
         int getMapHeight(void) const;
 
         /**
+         * @brief getHydroIndex The input values for the river are stored in vectors in the config.
+         *       This gets the index for those vectors.
+         * @return Index of this hydroFile
+         */
+        int getHydroIndex() const;
+
+        /**
+         * @brief isInput Signifies whether the specified cell is an input.
+         * @param x X Coordinate
+         * @param y Y Coordinate
+         * @return Bool indicating if cell is river input
+         */
+        bool isInput(int x, int y);
+
+        /**
+         * @brief isOutput Signifies whether the specified cell is an output.
+         * @param x X Coordinate
+         * @param y Y Coordinate
+         * @return Bool indicating if cell is river output
+         */
+        bool isOutput(int x, int y);
+
+        /**
          * @brief Generates a QImage representation of the hydromap.
          */
         // TODO: Refactor this function. (low priority)
@@ -82,6 +110,8 @@ class HydroFile {
             // doesn't match what is calculated using component vectors
             double fileVelocity;
             double depth;
+            bool isInput;
+            bool isOutput;
         };
 
         bool hydroFileLoaded;
@@ -92,12 +122,21 @@ class HydroFile {
         int maxFlow;
         int maxDepth;
 
+        int hydroIndex;
+
 
 
         /**
          * @brief Reads the datafile to determine the dimension of the map.
          */
         void setMapSize(QStringList & hydroFileData);
+
+        /**
+         * @brief setHydroFileIndex The input values for the river are stored in vectors in the config.
+         *       This sets the index of this hydroFile to align with those vectors.
+         * @param filename
+         */
+        void setHydroIndex(QString filename);
 
         /**
          * @brief Initializes the input grid with default (zeroized) data.

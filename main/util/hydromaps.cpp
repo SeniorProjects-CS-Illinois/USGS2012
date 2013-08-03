@@ -18,7 +18,8 @@ QString HydroMaps::parseHydroMapName(QListWidgetItem* item)
     return text.mid(0, colonIndex);
 }
 
-QString HydroMaps::intToHydroFile(int hydro, QString baseDir)
+QString HydroMaps::intToHydroFile(int hydro,  const QString & baseDir,
+                                  const QVector<int> & minBounds, const QVector<int> & maxBounds)
 {
     // TODO: make more general
     QString file("0k-new.txt");
@@ -30,7 +31,14 @@ QString HydroMaps::intToHydroFile(int hydro, QString baseDir)
     {
         hydro = MAX_HYDRO_DEPTH;
     }
-    hydro += 5000; // this is to make rounding accurate
-    file.prepend(QString::number(hydro/10000));
+
+    for (int i = 0; i < minBounds.size() && i < maxBounds.size(); i++)
+    {
+        if (hydro >= minBounds[i] && hydro <= maxBounds[i])
+        {
+            file.prepend(i+1);
+        }
+    }
+
     return baseDir + QDir::separator() + file;
 }

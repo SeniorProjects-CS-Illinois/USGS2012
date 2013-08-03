@@ -18,6 +18,7 @@ SOURCES += model/carbonflowmap.cpp \
     model/patchcomputation.cpp \    
     model/reducedgrid.cpp \
     model/river.cpp \
+    model/riveriofile.cpp \
     model/rivermodel.cpp \
     model/status.cpp \
     model/utility.cpp \
@@ -35,6 +36,7 @@ HEADERS  +=  model/carbonflowmap.h \
     model/patchcomputation.h \
     model/reducedgrid.h \
     model/river.h \
+    model/riveriofile.h \
     model/rivermodel.h \
     model/statistics.h \
     model/status.h \

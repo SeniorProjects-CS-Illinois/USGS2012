@@ -6,12 +6,14 @@
 #include "StatusTests.h"
 #include "CarbonFlowMapTests.h"
 #include "CarbonSourceCollectionTests.h"
+#include "RiverIOFileTests.h"
 
 int main(int argc, char *argv[])
 {
     GridTests gt;
     ReducedGridTests rgt;
     ConfigTests ct;
+    RiverIOFileTests riot;
     HydroFileTests hft;
     StatusTests st;
     CarbonFlowMapTests cft;
@@ -20,6 +22,7 @@ int main(int argc, char *argv[])
         QTest::qExec(&gt, argc, argv) ||
         QTest::qExec(&rgt, argc, argv) ||
         QTest::qExec(&ct, argc, argv) ||
+        QTest::qExec(&riot, argc, argv) ||
         QTest::qExec(&hft, argc, argv) ||
 		QTest::qExec(&cft, argc, argv) ||
         QTest::qExec(&st, argc, argv) ||

@@ -1,6 +1,7 @@
 #ifndef __HYDROFILEDICT_H__
 #define __HYDROFILEDICT_H__
 
+#include <QDir>
 #include <QHash>
 #include <QString>
 #include <QStringList>
@@ -8,6 +9,7 @@
 #include "carbonflowmap.h"
 #include "hydrodata.h"
 #include "grid.h"
+#include "riveriofile.h"
 
 class HydroFileDict
 {

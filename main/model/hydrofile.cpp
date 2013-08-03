@@ -4,9 +4,9 @@ using std::cout;
 using std::endl;
 
 
-HydroFile::HydroFile(QString filename){
+HydroFile::HydroFile(QString filename, RiverIOFile riverIOFile){
     hydroFileLoaded = false;
-    loadFromFile(filename);
+    loadFromFile(filename, riverIOFile);
 }
 
 HydroFile::HydroFile() {
@@ -14,11 +14,13 @@ HydroFile::HydroFile() {
 }
 
 
-void HydroFile::loadFromFile(QString filename) {
+void HydroFile::loadFromFile(QString filename, RiverIOFile riverIOFile) {
 
     /* Once loaded, a hydrofile represents only one hydromap. */
     if( hydroFileLoaded )
         return;
+
+    setHydroIndex(filename);
 
     hydroMapFileName = filename;
 
@@ -56,6 +58,8 @@ void HydroFile::loadFromFile(QString filename) {
         data.flowVector.setX( hydroFileData[index + 3].toDouble() );
         data.flowVector.setY( hydroFileData[index + 4].toDouble() );
         data.fileVelocity   = hydroFileData[index + 5].toDouble();
+        data.isInput = false;
+        data.isOutput = false;
 
         hydroData(patch_x, patch_y) = data;
 
@@ -70,6 +74,7 @@ void HydroFile::loadFromFile(QString filename) {
         }
     }
 
+
     /* Now we move the data from the grid and place it in a vector whose
      * element indices are hashed using the x,y coordinates of corresponding
      * cells   
@@ -81,6 +86,28 @@ void HydroFile::loadFromFile(QString filename) {
                 int index = getHashKey(x,y);
                 hydroDataSetIndices.insert(index,hydroDataSet.size()-1); 
             }
+        }
+    }
+
+    /*
+     * We need to check if a patch exists because the riverIO file is for all hydroFiles
+     * and not tailored to each individually (at least for now)
+     */
+    for(int i = 0; i < riverIOFile.inputs.size(); i++){
+        QPoint point = riverIOFile.inputs[i];
+        if(patchExists(point.x(), point.y()) ) {
+            int hashKey = getHashKey(point.x(), point.y());
+            int index = hydroDataSetIndices[hashKey];
+            hydroDataSet[index].isInput = true;
+        }
+    }
+
+    for(int i = 0; i < riverIOFile.outputs.size(); i++){
+        QPoint point = riverIOFile.outputs[i];
+        if(patchExists(point.x(), point.y()) ) {
+            int hashKey = getHashKey(point.x(), point.y());
+            int index = hydroDataSetIndices[hashKey];
+            hydroDataSet[index].isOutput = true;
         }
     }
 
@@ -113,6 +140,18 @@ int HydroFile::getMapHeight() const {
 
 int HydroFile::getMapWidth() const {
     return width;
+}
+
+int HydroFile::getHydroIndex() const {
+    return hydroIndex;
+}
+
+bool HydroFile::isInput(int x, int y) {
+    return getData(x,y).isInput;
+}
+
+bool HydroFile::isOutput(int x, int y) {
+    return getData(x,y).isOutput;
 }
 
 void HydroFile::setMapSize(QStringList & hydroFileData) {
@@ -150,6 +189,31 @@ HydroFile::HydroData & HydroFile::getData(int x, int y) {
     int hashKey = getHashKey(x,y);
     int index = hydroDataSetIndices[hashKey];
     return hydroDataSet[index];
+}
+
+void HydroFile::setHydroIndex(QString filename) {
+    //If you know a more elegant way of doing this, please implement it.
+    if ( filename.contains("10k")) {
+        hydroIndex = 0;
+    } else if (filename.contains("20k")) {
+        hydroIndex = 1;
+    } else if (filename.contains("30k")) {
+        hydroIndex = 2;
+    } else if (filename.contains("40k")) {
+        hydroIndex = 3;
+    } else if (filename.contains("50k")) {
+        hydroIndex = 4;
+    } else if (filename.contains("60k")) {
+        hydroIndex = 5;
+    } else if (filename.contains("70k")) {
+        hydroIndex = 6;
+    } else if (filename.contains("80k")) {
+        hydroIndex = 7;
+    } else if (filename.contains("90k")) {
+        hydroIndex = 8;
+    } else if (filename.contains("100k")) {
+        hydroIndex = 9;
+    }
 }
 
 void HydroFile::zeroHydroData(Grid<HydroData> & hydroData) {

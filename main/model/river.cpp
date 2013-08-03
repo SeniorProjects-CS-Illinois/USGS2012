@@ -23,6 +23,8 @@ River::River(Configuration & newConfig, HydroFileDict & hydroFileDict)
 void River::setCurrentHydroData(HydroData *newHydroData) {
     HydroFile * newHydroFile = &newHydroData->hydroFile;
     HydroFile * currHydroFile = NULL;
+
+    int hydroIndex = newHydroFile->getHydroIndex();
     if(currHydroData != NULL) {
         currHydroFile = &currHydroData->hydroFile;
     }
@@ -45,6 +47,8 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.flowX[i] = flowX;
             p.flowY[i] = flowY;
             p.flowMagnitude[i] = flowMagnitude;
+            p.isInput[i] = newHydroFile->isInput(x,y);
+            p.isOutput[i] = newHydroFile->isOutput(x,y);
 
         } else {
             p.hasWater[i] = false;
@@ -52,6 +56,8 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
             p.flowX[i] = 0.0;
             p.flowY[i] = 0.0;
             p.flowMagnitude[i] = 0.0;
+            p.isInput[i] = false;
+            p.isOutput[i] = false;
         }
 
         // update miscellanous variables inside the patch
@@ -60,6 +66,17 @@ void River::setCurrentHydroData(HydroData *newHydroData) {
         if(currHydroFile != NULL && currHydroFile->patchExists(x,y)){
             current_depth = currHydroFile->getDepth(x,y);
         }
+
+        //non-input -> input
+        if(p.isInput[i]){
+            p.DOC[i] = config.docInput[hydroIndex];
+            p.POC[i] = config.pocInput[hydroIndex];
+            p.phyto[i] = config.phytoInput[hydroIndex];
+            p.waterdecomp[i] = config.waterdecompInput[hydroIndex];
+        }
+
+        //input -> non-input
+        //TODO: If we start using one riverIO file per hydromap this transition must be handled.
 
         // Water -> Land
         if (current_depth > 0.0 && p.depth[i] == 0.0) {
@@ -201,7 +218,7 @@ Statistics River::generateStatistics() {
     Statistics stats;
 
     for(int i = 0; i < p.getSize(); i++) {
-        if(!p.hasWater[i]) {
+        if(!p.hasWater[i] /*|| p.isInput[i]*/) {
             continue;
         }
 

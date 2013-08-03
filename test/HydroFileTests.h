@@ -8,6 +8,7 @@ class HydroFileTests : public QObject
 {
     private:
     HydroFile hydroFile_;
+    HydroFile hydroFileWithIO_;
 
     Q_OBJECT
     private slots:
@@ -18,6 +19,7 @@ class HydroFileTests : public QObject
     void depthTest();
     void vectorTest();
     void velocityTest();
+    void testIO();
 
 };
 
