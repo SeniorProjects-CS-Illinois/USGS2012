@@ -81,6 +81,9 @@ void PatchCollection::initializePatches(Configuration & config, int newSize) {
     Utility::initArray<double>(depth, newSize, 0.0);
     Utility::initArray<bool>(hasWater, newSize, false);
 
+    Utility::initArray<bool>(isInput, newSize, false);
+    Utility::initArray<bool>(isOutput, newSize, false);
+
     Utility::initArray<double>(waterdecomp_doc_prey_limitation, newSize, 0.0);
     Utility::initArray<double>(waterdecomp_poc_prey_limitation, newSize, 0.0);
     Utility::initArray<double>(peri_doc_prey_limitation, newSize, 0.0);
@@ -229,6 +232,9 @@ void PatchCollection::clear(){
     delete [] flowMagnitude;
     delete [] depth;
     delete [] hasWater;
+
+    delete [] isInput;
+    delete [] isOutput;
 
     delete [] pcolor;
 
@@ -387,6 +393,9 @@ void PatchCollection::copy(const PatchCollection &other) {
     flowMagnitude = Utility::copyArray<double>(other.flowMagnitude, other.size);
     depth = Utility::copyArray<double>(other.depth, other.size);
     hasWater = Utility::copyArray<bool>(other.hasWater, other.size);
+
+    isInput = Utility::copyArray<bool>(other.isInput, other.size);
+    isOutput = Utility::copyArray<bool>(other.isOutput, other.size);
 
     pcolor = Utility::copyArray<int>(other.pcolor, other.size);
 

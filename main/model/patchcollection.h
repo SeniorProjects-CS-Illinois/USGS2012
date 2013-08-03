@@ -78,6 +78,9 @@ class PatchCollection {
         double * depth;          ///< depth of the water
         bool * hasWater;         ///< indicates whether or not the patch has water
 
+        bool * isInput;          //Indicates whether the water flows into the river at this cell
+        bool * isOutput;         //Indicates whether the water flows out of the river at this cell
+
         int * pcolor;
 
         int * aqa_point;        ///< biomass estimates of macro from USGS

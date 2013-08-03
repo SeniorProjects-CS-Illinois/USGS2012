@@ -1,7 +1,9 @@
 #include "HydroFileTests.h"
 
 void HydroFileTests::initTestCase() {
-    hydroFile_.loadFromFile("../data/testData/testHydroFile.txt");
+
+    RiverIOFile riverIO("../data/testData/ioTestData2.txt");
+    hydroFile_.loadFromFile("../data/testData/testHydroFile.txt", riverIO);
 }
 
 void HydroFileTests::dimensionsTest() {
@@ -54,4 +56,16 @@ void HydroFileTests::velocityTest() {
     QCOMPARE(3.3, hydroFile_.getFileVelocity(3,3));
     QCOMPARE(4.3, hydroFile_.getFileVelocity(4,4));
     QCOMPARE(5.3, hydroFile_.getFileVelocity(5,5));
+}
+
+void HydroFileTests::testIO() {
+    QVERIFY(hydroFile_.isInput(1,1));
+    QVERIFY(hydroFile_.isInput(2,2));
+
+    QVERIFY(hydroFile_.isOutput(3,3));
+    QVERIFY(hydroFile_.isOutput(4,4));
+
+
+    QVERIFY(!hydroFile_.isInput(5,5));
+    QVERIFY(!hydroFile_.isOutput(5,5));
 }

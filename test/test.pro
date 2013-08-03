@@ -12,6 +12,7 @@ SOURCES +=  ../main/model/configuration.cpp \
             ../main/model/status.cpp \
             ../main/model/carbonsources.cpp \
             ../main/model/carbonflowmap.cpp \
+			../main/model/RiverIOFile.cpp \
 
 INCLUDEPATH += ../main/model
 
@@ -25,6 +26,8 @@ HEADERS +=  GridTests.h \
             CarbonSourceCollectionTests.h \
             carbonsources.h \
             carbonflowmap.h \
+			RiverIOFile.h \
+			RiverIOFileTests.h \
 
 SOURCES +=  TestMain.cpp \
             GridTests.cpp \
@@ -34,3 +37,4 @@ SOURCES +=  TestMain.cpp \
             StatusTests.cpp \
             CarbonFlowMapTests.cpp \
             CarbonSourceCollectionTests.cpp \
+			RiverIOFileTests.cpp \

@@ -16,6 +16,7 @@ class CarbonFlowMapTests : public QObject
     void testPartialFlow2iter();
     void testLandFlow();
     void testLandFlow2iter();
+    void testRiverIO();
 };
 
 #endif

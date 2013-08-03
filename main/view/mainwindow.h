@@ -25,91 +25,145 @@ class MainWindow : public QMainWindow
     
 public:
     /**
-     * Default constructor, basic initialization of
+     * @brief Default constructor, basic initialization of
      * member variables. Also, makes connections of
      * thread siganls to GUI slots.
      */
     explicit MainWindow(QWidget * parent = 0);
 
     /**
-     * Destructor for deleting dynamic member variables.
+     * @brief Destructor for deleting dynamic member variables.
      */
     ~MainWindow();
 
 public slots:
 
     /**
-     * Open dialog for selecting hydromap file.
+     * @brief Open dialog for selecting hydromap file.
      */
     void selectHydroMapClicked();
 
     /**
-     * Adds the selected hydromap to the model.
+     * @brief Adds the selected hydromap to the model.
      */
     void addHydroMapClicked();
 
     /**
-     * Removes the selected hydromap(s) from the model.
+     * @brief Removes the selected hydromap(s) from the model.
      */
     void removeHydroMapClicked();
 
     /**
-     * Open dialog for selecting a discharge file.
+     * @brief Open dialog for selecting a discharge file.
      */
     void selectDischargeFileClicked();
 
     /**
-     * Open dialog for selecting temperature file.
+     * @brief Open dialog for selecting temperature file.
      */
     void selectTemperatureFileClicked();
 
     /**
-     * Open dialog for selecting PAR file.
+     * @brief Open dialog for selecting PAR file.
      */
     void selectPARFileClicked();
 
     /**
-     * Run the model with current configuration.
+     * @brief Run the model with current configuration.
      */
     void runClicked();
 
     /**
-     * Update which stock image to show.
+     * @brief Update which stock image to show.
      */
     void whichstockChanged(const QString & newStock);
 
     /**
-     * Finish up the running model.
+     * @brief Change the max flow 1 and min flow 2.
+     */
+    void maxFlow1Changed();
+    void minFlow2Changed();
+
+    /**
+     * @brief Change the max flow 2 and min flow 3.
+     */
+    void maxFlow2Changed();
+    void minFlow3Changed();
+
+    /**
+     * @brief Change the max flow 3 and min flow 4.
+     */
+    void maxFlow3Changed();
+    void minFlow4Changed();
+
+    /**
+     * @brief Change the max flow 4 and min flow 5.
+     */
+    void maxFlow4Changed();
+    void minFlow5Changed();
+
+    /**
+     * @brief Change the max flow 5 and min flow 6.
+     */
+    void maxFlow5Changed();
+    void minFlow6Changed();
+
+    /**
+     * @brief Change the max flow 6 and min flow 7.
+     */
+    void maxFlow6Changed();
+    void minFlow7Changed();
+
+    /**
+     * @brief Change the max flow 7 and min flow 8.
+     */
+    void maxFlow7Changed();
+    void minFlow8Changed();
+
+    /**
+     * @brief Change the max flow 8 and min flow 9.
+     */
+    void maxFlow8Changed();
+    void minFlow9Changed();
+
+    /**
+     * @brief Change the max flow 9 and min flow 10.
+     */
+    void maxFlow9Changed();
+    void minFlow10Changed();
+
+    /**
+     * @brief Finish up the running model.
      */
     void finished() const;
 
     /**
-     * Allow the user to click the run button.
+     * @brief Allow the user to click the run button.
      */
     void enableRun() const;
 
     /**
-     * Disallow the user to click the run button.
+     * @brief Disallow the user to click the run button.
      */
     void disableRun() const;
 
     /**
-     * Update timestep slider information.
+     * @brief Update timestep slider information.
      */
     void timestepUpdate(int newVal) const;
 
     /**
-     * Update progress bar information.
+     * @brief Update progress bar information.
      */
     void progressPercentUpdate(int percent) const;
 
     /**
-     * Update progress time information.
+     * @brief Update progress time information.
      */
     void progressTimeUpdate(int elapsed, int remaining) const;
 
     /**
-     * Update the displayed stock image.
+     * @brief Update the displayed stock image.
      */
     void imageUpdate(const QImage & stockImage) const;
 
@@ -120,12 +174,12 @@ public slots:
     void statusMessageUpdate(const QString & message) const;
 
     /**
-     * Save the current configuration to a file.
+     * @brief Save the current configuration to a file.
      */
     void saveConfiguration();
 
     /**
-     * Load a configuration file.
+     * @brief Load a configuration file.
      */
     void loadConfiguration();
 
@@ -244,6 +298,14 @@ public:
     QVector<uint16_t> getDaysToRun() const;
     QVector<QString> getHydroMaps() const;
 
+    QVector<double> getPocInput() const;
+    QVector<double> getDocInput() const;
+    QVector<double> getWaterdecompInput() const;
+    QVector<double> getPhytoInput() const;
+
+    QVector<int> getMinFlowBounds() const;
+    QVector<int> getMaxFlowBounds() const;
+
     /* SETTERS */
 
     void setAdjacent(bool val);
@@ -352,13 +414,15 @@ public:
     void setTempFile(const QString & filename);
     void setPARFile(const QString & filename);
     void setHydroMaps(const QVector<QString> & filenames, const QVector<uint16_t> & days, size_t num);
+    void setInputs(const QVector<double> & poc, const QVector<double> & doc, const QVector<double> & waterdecomp, const QVector<double> & phyto);
+    void setFlows(const QVector<int> & min, const QVector<int> & max);
 
 private:
 
     /**
-     * Enum for the tab index.
+     * Enum for the tab index. The order here IS important.
      */
-    enum Tab { CONFIGURATION, STOCK, OUTPUT };
+    enum Tab { CONFIGURATION, HYDRO_FILES, STOCK, OUTPUT };
 
     Ui::MainWindow* ui;
 
@@ -366,79 +430,114 @@ private:
     ProgressThread progressThread;
 
     Configuration uiConfig;
+    QString selectedHydroMap;
 
     /**
-     * Display an error message in a popup window.
+     * @brief Display an error message in a popup window.
      */
     void displayErrors(const QString & message) const;
 
     /**
-     * Clear any previous output in the output tab.
+     * @brief Clear any previous output in the output tab.
      */
     void clearOutput() const;
 
     /**
-     * Add hydromap information to list.
+     * @brief Add hydromap information to list.
      */
     void addHydroMap(QString file, uint16_t days, bool addInfo, bool display = true);
 
     /**
-     * Save the configuration to the given file.
+     * @brief Copy value from one display to another, with an offset.
+     * @param from   the display to copy data from.
+     * @param to     the display to copy data to.
+     * @param offset the value to offset.
+     */
+    void copyIntDisplaywithOffset(QLineEdit* from, QLineEdit* to, int offset) const;
+
+    /**
+     * @brief select a file from a dialog.
+     * @param displayLabel the label to display the selected file to.
+     * @param configVal    the config value to store the whole path.
+     * @param title        the title of the selection dialog.
+     * @param filter       a filter for selecting files.
+     * @see QFileDialog
+     */
+    void selectFile(QLabel* displayLabel, QString & configVal, const QString & title, const QString & filter);
+
+    /**
+     * @brief Save the configuration to the given file.
      */
     void saveConfiguration(const QString & file) const;
 
     /**
-     * Load the configuration from the given file.
+     * @brief Load the configuration from the given file.
      */
     void loadConfiguration(const QString & file);
 
     /**
-     * Get all the input from the GUI and set appropriate globals.
+     * @brief Get all the input from the GUI and set appropriate globals.
      */
     void getAllInput(Configuration & c) const;
 
     /**
-     * Get all the stock input from the GUI and set globals.
+     * @brief Get all the stock input from the GUI and set globals.
      */
     void getAllStockInput(Configuration & c) const;
 
     /**
-     * Get all the input from the GUI and set appropriate globals.
+     * @brief Verify all the input from the GUI and set appropriate globals.
      */
     bool verifyAllInput() const;
 
     /**
-     * Get all the stock input from the GUI and set globals.
+     * @brief Verify all the stock input from the GUI and set globals.
      */
     bool verifyAllStockInput() const;
 
     /**
-     * Takes a discharge file and populates hydro map information.
+     * @brief Verify that the widget is a number.
+     * @param widget       the widget to check.
+     * @param errorMessage the message to display if it fails.
+     * @return true if the widget has a numerical value.
+     */
+    bool verifyNumber(QLineEdit* widget, const QString & errorMessage) const;
+
+    /**
+     * @brief Verify that the widget represents a selected file.
+     * @param widget       the widget to check.
+     * @param errorMessage the message to display if it fails.
+     * @return true if the widget has a string for a file.
+     */
+    bool verifyFile(QLabel* widget, const QString & errorMessage) const;
+
+    /**
+     * @brief Takes a discharge file and populates hydro map information.
      */
     void dischargeToHydro(const QString & file);
 
     /**
-     * Combines all adjacent same-name files and sums their DTR.
+     * @brief Combines all adjacent same-name files and sums their DTR.
      */
     void compressHydroFiles();
 
     /**
-     * Write all hydro map data to screen.
+     * @brief Write all hydro map data to screen.
      */
     void displayHydroFiles();
 
     /**
-     * Clear the display of all hydro map data on the screen.
+     * @brief Clear the display of all hydro map data on the screen.
      */
     void clearHydroFilesDisplay() const;
 
     /**
-     * Clear the display and the stored information of the hydro files.
+     * @brief Clear the display and the stored information of the hydro files.
      */
     void clearHydroFiles();
 
     /**
-     * Set the displayed tab to the given tab.
+     * @brief Set the displayed tab to the given tab.
      */
     void setTab(Tab tab) const;
 };
