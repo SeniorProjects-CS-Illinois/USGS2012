@@ -1,6 +1,5 @@
-
 #
-# Random comments that may explain the file and should be discarded
+# This file tells the simulator which cells are water flow inputs and outputs for the section being simulated.
 #
 
 #inputs
